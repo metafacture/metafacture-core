@@ -170,7 +170,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
             final String field = params.get(0);
             final Value newValue = newArray(params.subList(1, params.size()).stream().map(Value::new));
             record.set(field, newValue);
-            newValue.asArray().forEach(value -> value.withPathSet(newValue.getPath() + "." + value.getPath()));
+            newValue.asArray().forEach(value -> value.withPathSet(newValue.getPath() + Value.FIELD_PATH_SEPARATOR + value.getPath()));
         }
     },
     add_field {
@@ -408,19 +408,25 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
     set_array {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            add_array.apply(metafix, record, params, options);
+            if (parentFieldExists(record, params.get(0))) {
+                add_array.apply(metafix, record, params, options);
+            }
         }
     },
     set_field {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            add_field.apply(metafix, record, params, options);
+            if (parentFieldExists(record, params.get(0))) {
+                add_field.apply(metafix, record, params, options);
+            }
         }
     },
     set_hash {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            add_hash.apply(metafix, record, params, options);
+            if (parentFieldExists(record, params.get(0))) {
+                add_hash.apply(metafix, record, params, options);
+            }
         }
     },
     timestamp {

@@ -164,10 +164,10 @@ public class MetafixRecordTest {
     }
 
     @Test
-    public void setEmpty() {
+    public void addEmpty() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_field('my.nested.name','patrick')",
-                "set_field('your.nested.name','nicolas')"),
+                "add_field('my.nested.name','patrick')",
+                "add_field('your.nested.name','nicolas')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
@@ -181,6 +181,20 @@ public class MetafixRecordTest {
                 o.get().startEntity("nested");
                 o.get().literal("name", "nicolas");
                 f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void setEmpty() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_field('my.nested.name','patrick')",
+                "set_field('your.nested.name','nicolas')"),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
                 o.get().endRecord();
             });
     }
@@ -1966,6 +1980,424 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void addArrayAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_array('array[].$append')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.literal("1", "foo");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().literal("1", "foo");
+                o.get().startEntity("2[]");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void addArrayAppendNested() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_array('array[].$append.test[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.literal("1", "foo");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().literal("1", "foo");
+                o.get().startEntity("2");
+                o.get().startEntity("test[]");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void setArrayAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('array[].$append')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.literal("1", "foo");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().literal("1", "foo");
+                o.get().startEntity("2[]");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void setArrayAppendNested() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('array[].$append.test[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.literal("1", "foo");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().literal("1", "foo");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void setArrayLast() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('array[].$last')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.literal("1", "foo");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().startEntity("1[]");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void setArrayLastNested() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('array[].$last.test[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.startEntity("1");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().startEntity("1");
+                o.get().startEntity("test[]");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void addFieldAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('array[].$append', 'test')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.literal("1", "foo");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().literal("1", "foo");
+                o.get().literal("2", "test");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void addFieldAppendNested() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('array[].$append.test', 'bar')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.literal("1", "foo");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().literal("1", "foo");
+                o.get().startEntity("2");
+                o.get().literal("test", "bar");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void setFieldAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_field('array[].$append', 'test')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.literal("1", "foo");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().literal("1", "foo");
+                o.get().literal("2", "test");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void setFieldAppendNested() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_field('array[].$append.test', 'bar')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.literal("1", "foo");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().literal("1", "foo");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void setFieldLast() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_field('array[].$last', 'test')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.literal("1", "foo");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().literal("1", "test");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void setFieldLastNested() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_field('array[].$last.test', 'baz')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.startEntity("1");
+                i.literal("foo", "bar");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().startEntity("1");
+                o.get().literal("foo", "bar");
+                o.get().literal("test", "baz");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void addHashAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_hash('array[].$append')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.literal("1", "foo");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().literal("1", "foo");
+                o.get().startEntity("2");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void addHashAppendNested() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_hash('array[].$append.test')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.literal("1", "foo");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().literal("1", "foo");
+                o.get().startEntity("2");
+                o.get().startEntity("test");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void setHashAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_hash('array[].$append')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.literal("1", "foo");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().literal("1", "foo");
+                o.get().startEntity("2");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void setHashAppendNested() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_hash('array[].$append.test')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.literal("1", "foo");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().literal("1", "foo");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void setHashLast() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_hash('array[].$last')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.literal("1", "foo");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().startEntity("1");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void setHashLastNested() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_hash('array[].$last.test')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("array[]");
+                i.startEntity("1");
+                i.literal("foo", "bar");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("array[]");
+                o.get().startEntity("1");
+                o.get().literal("foo", "bar");
+                o.get().startEntity("test");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void paste() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "paste('my.string','m.n.z','m.n.a','m.n.b','m.n.c','m.n.d','m.n.e')",
@@ -2435,7 +2867,7 @@ public class MetafixRecordTest {
     public void mixedArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('@context[]', 'https://w3id.org/kim/lrmi-profile/draft/context.jsonld')",
-                "set_hash('@context[].$append', '@language': 'de')"),
+                "add_hash('@context[].$append', '@language': 'de')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();

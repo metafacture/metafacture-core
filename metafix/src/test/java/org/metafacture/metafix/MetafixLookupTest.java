@@ -994,9 +994,9 @@ public class MetafixLookupTest {
     private void shouldLookupInCopiedNestedArraysCreatedWith(final String reservedField) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "put_map('rswk-indicator', s: 'SubjectHeading')",
-                "set_array('subject[]')",
-                "set_array('subject[]." + reservedField + ".componentList[]')",
-                "set_array('subject[].$last.componentList[]." + reservedField + ".type[]')",
+                "add_array('subject[]')",
+                "add_array('subject[]." + reservedField + ".componentList[]')",
+                "add_array('subject[].$last.componentList[]." + reservedField + ".type[]')",
                 "do list(path: 'D', 'var': '$i')",
                 "  copy_field('$i', 'subject[].$last.componentList[].$last.type[]." + reservedField + "')",
                 "end",

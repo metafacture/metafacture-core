@@ -52,7 +52,8 @@ import java.util.stream.Stream;
  */
 public class Value implements JsonValue { // checkstyle-disable-line ClassDataAbstractionCoupling
 
-    private static final String FIELD_PATH_SEPARATOR = "\\.";
+    public static final String FIELD_PATH_SEPARATOR = ".";
+    /*package-private*/ static final String FIELD_PATH_SEPARATOR_PATTERN = Pattern.quote(FIELD_PATH_SEPARATOR);
 
     private final Array array;
     private final Hash hash;
@@ -409,7 +410,7 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
     }
 
     /*package-private*/ static String[] split(final String fieldPath) {
-        return fieldPath.split(FIELD_PATH_SEPARATOR);
+        return fieldPath.split(FIELD_PATH_SEPARATOR_PATTERN);
     }
 
     /**
@@ -431,7 +432,7 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
     }
 
     private Value withPathAppend(final String field) {
-        return withPathSet(path == null || path.isEmpty() ? field : path + "." + field);
+        return withPathSet(path == null || path.isEmpty() ? field : path + FIELD_PATH_SEPARATOR + field);
     }
 
     /*package-private*/ Value copy() {
@@ -574,7 +575,7 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
             final Map<T, Collection<String>> retainFields = new HashMap<>();
 
             fields.forEach(p -> {
-                final String[] parts = p.split(FIELD_PATH_SEPARATOR, 2);
+                final String[] parts = p.split(FIELD_PATH_SEPARATOR_PATTERN, 2);
 
                 function.apply(parts[0]).forEach(f -> {
                     final Collection<String> retainNested = retainFields.computeIfAbsent(f, k -> new HashSet<>());

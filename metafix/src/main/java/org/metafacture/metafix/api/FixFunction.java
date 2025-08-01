@@ -18,6 +18,7 @@ package org.metafacture.metafix.api;
 
 import org.metafacture.framework.StandardEventNames;
 import org.metafacture.io.ObjectWriter;
+import org.metafacture.metafix.FixPath;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
@@ -192,6 +193,19 @@ public interface FixFunction {
                     .ifArray(a -> c.accept(flatten(a.stream())))
                     .orElse(w -> c.accept(Stream.of(w)))
         ));
+    }
+
+    /**
+     * Checks whether the given field's parent field exists in the record.
+     *
+     * @param record the record
+     * @param field the field
+     *
+     * @return true if the given field's parent field exists in the record
+     */
+    default boolean parentFieldExists(final Record record, final String field) {
+        final FixPath parentPath = new FixPath(field).getParentPath();
+        return parentPath == null || !parentPath.isAddingToArray() && record.containsPath(parentPath.toString());
     }
 
 }

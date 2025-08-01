@@ -2818,11 +2818,9 @@ public class MetafixMethodTest {
     private void addFieldWithReplaceAllArray(final boolean replaceAll) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do list(path: 'contribution[]', 'var': '$i')",
-                "  set_array('$i.agent.altLabel[]')",
                 "  add_field('$i.agent.altLabel[].$append', 'contribution')",
                 "end",
                 "do list(path: 'subject[]', 'var': '$i')",
-                "  set_array('$i.altLabel[]')",
                 "  add_field('$i.altLabel[].$append', 'subject')",
                 "end",
                 replaceAll ? "replace_all('contribution[].*.agent.altLabel[].*', 't', '')" : "",
@@ -2875,10 +2873,10 @@ public class MetafixMethodTest {
     private void setArrayWithReplaceAll(final boolean replaceAll) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do list(path: 'contribution[]', 'var': '$i')",
-                "  set_array('$i.agent.altLabel[]', 'contribution')",
+                "  add_array('$i.agent.altLabel[]', 'contribution')",
                 "end",
                 "do list(path: 'subject[]', 'var': '$i')",
-                "  set_array('$i.altLabel[]', 'subject')",
+                "  add_array('$i.altLabel[]', 'subject')",
                 "end",
                 replaceAll ? "replace_all('contribution[].*.agent.altLabel[].*', 't', '')" : "",
                 replaceAll ? "replace_all('subject[].*.altLabel[].*', 't', '')" : ""
@@ -2930,11 +2928,9 @@ public class MetafixMethodTest {
     private void copyFieldWithReplaceAllArray(final boolean replaceAll) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do list(path: 'contribution[]', 'var': '$i')",
-                "  set_array('$i.agent.altLabel[]')",
                 "  copy_field('$i.label', '$i.agent.altLabel[].$append')",
                 "end",
                 "do list(path: 'subject[]', 'var': '$i')",
-                "  set_array('$i.altLabel[]')",
                 "  copy_field('$i.label', '$i.altLabel[].$append')",
                 "end",
                 replaceAll ? "replace_all('contribution[].*.agent.altLabel[].*', 't', '')" : "",
@@ -2987,11 +2983,9 @@ public class MetafixMethodTest {
     private void pasteWithReplaceAll(final boolean replaceAll) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do list(path: 'contribution[]', 'var': '$i')",
-                "  set_array('$i.agent.altLabel[]')",
                 "  paste('$i.agent.altLabel[].$append', '$i.label', '~!')",
                 "end",
                 "do list(path: 'subject[]', 'var': '$i')",
-                "  set_array('$i.altLabel[]')",
                 "  paste('$i.altLabel[].$append', '$i.label', '~!')",
                 "end",
                 replaceAll ? "replace_all('contribution[].*.agent.altLabel[].*', ' !', '')" : "",

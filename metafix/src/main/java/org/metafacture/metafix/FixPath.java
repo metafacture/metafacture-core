@@ -29,14 +29,22 @@ import java.util.Map;
  * With all get/set/update/create/delete logic collected here.
  *
  * @author Fabian Steeg (fsteeg)
- *
  */
-/*package-private*/ class FixPath {
+public class FixPath {
 
     private static final String ASTERISK = "*";
+
+    private static final String INDEX_SUBPATH_PATTERN = Value.FIELD_PATH_SEPARATOR_PATTERN + "\\d" + Value.FIELD_PATH_SEPARATOR_PATTERN;
+    private static final String ASTERISK_SUBPATH = Value.FIELD_PATH_SEPARATOR + ASTERISK + Value.FIELD_PATH_SEPARATOR;
+
     private String[] path;
 
-    /*package-private*/ FixPath(final String path) {
+    /**
+     * Creates an instance of {@link FixPath} based on the given path string.
+     *
+     * @param path the path string
+     */
+    public FixPath(final String path) {
         this(Value.split(path));
     }
 
@@ -111,7 +119,7 @@ import java.util.Map;
 
     @Override
     public String toString() {
-        return String.join(".", path);
+        return String.join(Value.FIELD_PATH_SEPARATOR, path);
     }
 
     /*package-private*/ int size() {
@@ -141,7 +149,9 @@ import java.util.Map;
     }
 
     private boolean matches(final String thatPath) {
-        return thatPath != null && thatPath.replaceAll("\\.\\d+\\.", ".*.").equals(String.join(".", this.path));
+        return thatPath != null && thatPath
+            .replaceAll(INDEX_SUBPATH_PATTERN, ASTERISK_SUBPATH)
+            .equals(String.join(Value.FIELD_PATH_SEPARATOR, this.path));
     }
 
     private String[] replaceInPath(final String find, final int i) {
@@ -299,9 +309,29 @@ import java.util.Map;
         }
     }
 
+    /**
+     * Checks whether the given field is adding to an array.
+     *
+     * @param field the field
+     *
+     * @return true if the given field is adding to an array
+     */
+    public static boolean isAddingToArray(final String field) {
+        return field.equals(ReservedField.$prepend.name()) || field.equals(ReservedField.$append.name());
+    }
+
+    /**
+     * Checks whether any of the path segments are adding to an array.
+     *
+     * @return true if any of the path segments are adding to an array
+     */
+    public boolean isAddingToArray() {
+        return Arrays.stream(path).anyMatch(FixPath::isAddingToArray);
+    }
+
     private Value getContainerValue(final Hash hash, final String field, final String newPath, final String nextField) {
         Value result = hash.get(field);
-        final boolean isAddingToArray = nextField.equals(ReservedField.$prepend.name()) || nextField.equals(ReservedField.$append.name());
+        final boolean isAddingToArray = isAddingToArray(nextField);
         if (result == null) {
             result = (isAddingToArray ? Value.newArray() : Value.newHash()).withPathSet(newPath);
             hash.put(field, result);
@@ -318,6 +348,15 @@ import java.util.Map;
 
     private String[] tail(final String[] fields) {
         return Arrays.copyOfRange(fields, 1, fields.length);
+    }
+
+    /**
+     * Creates an instance of {@link FixPath} based on the parent path.
+     *
+     * @return an instance of {@link FixPath}, or {@code null} if already at the top level
+     */
+    public FixPath getParentPath() {
+        return path.length > 1 ? new FixPath(Arrays.copyOfRange(path, 0, path.length - 1)) : null;
     }
 
     private enum ReservedField {
