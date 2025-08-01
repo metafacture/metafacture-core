@@ -204,9 +204,8 @@ public interface FixFunction {
      * @return true if the given field's parent field exists in the record
      */
     default boolean parentFieldExists(final Record record, final String field) {
-        final FixPath path = new FixPath(field);
-        final FixPath parentPath = path.getParentPath();
-        return parentPath == null || !path.isAddingToArray() && record.containsPath(parentPath.toString());
+        final FixPath parentPath = new FixPath(field).getParentPath();
+        return parentPath == null || !parentPath.isAddingToArray() && record.containsPath(parentPath.toString());
     }
 
 }
