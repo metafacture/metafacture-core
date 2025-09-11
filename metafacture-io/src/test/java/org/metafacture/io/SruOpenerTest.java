@@ -1,31 +1,20 @@
 package org.metafacture.io;
 
-import org.junit.*;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
-
-import com.github.tomakehurst.wiremock.client.MappingBuilder;
-import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
-import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.http.RequestMethod;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
-import com.github.tomakehurst.wiremock.matching.StringValuePattern;
-import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
-import org.metafacture.framework.helpers.DefaultObjectReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Arrays;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 
 public final class SruOpenerTest {
@@ -60,13 +49,11 @@ public final class SruOpenerTest {
             public void process(final Reader reader) {
                 int size;
                 try {
-                    while ((size = reader.read(buffer)) != -1) {
-                        int offset = 0;
-                        for (int i = 0; i < size; ++i) {
-                            resultCollector.append(buffer, offset, size - offset);
-                            offset = i + 1;
+                        BufferedReader bufferedReader = new BufferedReader(reader);
+                        String line;
+                        while ((line = bufferedReader.readLine()) != null) {
+                            resultCollector.append(line+"\n");
                         }
-                    }
                 }
                 catch (final IOException e) {
                     throw new MetafactureException(e);
