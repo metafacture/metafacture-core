@@ -27,6 +27,8 @@ import org.metafacture.metamorph.maps.FileMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.jsoup.Jsoup;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -518,6 +520,12 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
                         }
                     })
             );
+        }
+    },
+    html_to_text {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            record.transform(params.get(0), s -> Jsoup.parse(s).wholeText());
         }
     },
     index {
