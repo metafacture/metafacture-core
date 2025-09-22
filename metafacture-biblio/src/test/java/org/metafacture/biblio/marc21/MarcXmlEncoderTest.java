@@ -46,6 +46,9 @@ public class MarcXmlEncoderTest {
     private static final String XML_MARC_COLLECTION_END_TAG = "</marc:collection>";
     private static final String RECORD_ID = "92005291";
 
+    private static final int UNICODE_CODE_POINT = 1048576;
+    private static final String UNICODE_STRING = Character.toString(UNICODE_CODE_POINT);
+
     private StringBuilder resultCollector;
     private int resultCollectorsResetStreamCount;
     private MarcXmlEncoder encoder;
@@ -166,6 +169,33 @@ public class MarcXmlEncoderTest {
         encoder.onResetStream();
         final String expected = XML_DECLARATION + XML_ROOT_OPEN + "<marc:record>" +
                 "<marc:controlfield tag=\"001\">&amp;&lt;&gt;&quot;</marc:controlfield>" + "</marc:record>" +
+                XML_MARC_COLLECTION_END_TAG;
+        final String actual = resultCollector.toString();
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void createARecordWithoutEscapedUnicode() {
+        encoder.startRecord(RECORD_ID);
+        encoder.literal("001", UNICODE_STRING);
+        encoder.endRecord();
+        encoder.onResetStream();
+        final String expected = XML_DECLARATION + XML_ROOT_OPEN + "<marc:record>" +
+                "<marc:controlfield tag=\"001\">\000</marc:controlfield>" + "</marc:record>" +
+                XML_MARC_COLLECTION_END_TAG;
+        final String actual = resultCollector.toString();
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void createARecordWithEscapedUnicode() {
+        encoder.setEscapeUnicode(true);
+        encoder.startRecord(RECORD_ID);
+        encoder.literal("001", UNICODE_STRING);
+        encoder.endRecord();
+        encoder.onResetStream();
+        final String expected = XML_DECLARATION + XML_ROOT_OPEN + "<marc:record>" +
+                "<marc:controlfield tag=\"001\">&#" + UNICODE_CODE_POINT + ";</marc:controlfield>" + "</marc:record>" +
                 XML_MARC_COLLECTION_END_TAG;
         final String actual = resultCollector.toString();
         Assert.assertEquals(expected, actual);

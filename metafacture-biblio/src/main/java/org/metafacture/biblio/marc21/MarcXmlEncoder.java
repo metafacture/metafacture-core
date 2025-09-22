@@ -185,6 +185,15 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         encoder.setFormatted(formatted);
     }
 
+    /**
+     * Flags whether to escape Unicode.
+     *
+     * @param escapeUnicode true if Unicode should be escaped
+     */
+    public void setEscapeUnicode(final boolean escapeUnicode) {
+        encoder.setEscapeUnicode(escapeUnicode);
+    }
+
     @Override
     public void startRecord(final String identifier) {
         pipe.startRecord(identifier);
@@ -242,6 +251,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         private Object[] namespacePrefix = new Object[]{NAMESPACE_PREFIX};
 
         private int indentationLevel;
+        private boolean escapeUnicode;
         private boolean formatted = PRETTY_PRINTED;
         private int recordAttributeOffset;
         private int recordLeaderOffset;
@@ -268,6 +278,10 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
         public void setFormatted(final boolean formatted) {
             this.formatted = formatted;
+        }
+
+        public void setEscapeUnicode(final boolean escapeUnicode) {
+            this.escapeUnicode = escapeUnicode;
         }
 
         @Override
@@ -434,7 +448,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
          * @param str the unescaped sequence to be written
          */
         private void writeEscaped(final String str) {
-            builder.append(XmlUtil.escape(str, false));
+            builder.append(XmlUtil.escape(str, escapeUnicode));
         }
 
         private void writeLeader() {
