@@ -166,4 +166,15 @@ public class MetafixTest {
         // TODO: Test logging statements
     }
 
+    @Test
+    public void shouldMatchTwoDigitIndexInPath() {
+        final String wildcardPath = "field.*.field";
+        final String concretePath = "field.10.field";
+        final Value value = new Value("").withPathSet(concretePath);
+        final FixPath result = new FixPath(wildcardPath).to(value, 15);
+        // `value` has a `concretePath` matching the `wildcardPath`, so
+        // `result` should be that path, not a path using the passed index:
+        Assertions.assertEquals(concretePath, result.toString());
+    }
+
 }

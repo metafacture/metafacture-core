@@ -34,7 +34,7 @@ public class FixPath {
 
     private static final String ASTERISK = "*";
 
-    private static final String INDEX_SUBPATH_PATTERN = Value.FIELD_PATH_SEPARATOR_PATTERN + "\\d" + Value.FIELD_PATH_SEPARATOR_PATTERN;
+    private static final String INDEX_SUBPATH_PATTERN = Value.FIELD_PATH_SEPARATOR_PATTERN + "\\d+" + Value.FIELD_PATH_SEPARATOR_PATTERN;
     private static final String ASTERISK_SUBPATH = Value.FIELD_PATH_SEPARATOR + ASTERISK + Value.FIELD_PATH_SEPARATOR;
 
     private String[] path;
