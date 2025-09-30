@@ -422,7 +422,14 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         return path;
     }
 
-    /*package-private*/ Value withPathSet(final String p) {
+    /**
+     * Sets the value's path.
+     *
+     * @param p the path
+     *
+     * @return the Value
+     */
+    public Value withPathSet(final String p) {
         this.path = p;
         return this;
     }

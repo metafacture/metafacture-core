@@ -46,7 +46,7 @@ public class MetafixScriptTest {
     private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
     private static final String TSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.tsv";
 
-    @Mock(name = "org.metafacture.metafix.FixMethod")
+    @Mock(name = "org.metafacture.metafix.method.script.Log")
     private Logger fixMethodLogger;
 
     @Mock

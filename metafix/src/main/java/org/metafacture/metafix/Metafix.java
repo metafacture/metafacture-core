@@ -190,7 +190,14 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         vars.putAll(newVars);
     }
 
-    /*package-private*/ static boolean isFixFile(final String fixDef) {
+    /**
+     * Checks whether the given Fix definition indicates a Fix file.
+     *
+     * @param fixDef the Fix definition
+     *
+     * @return true if the given Fix definition indicates a Fix file
+     */
+    public static boolean isFixFile(final String fixDef) {
         return fixDef.endsWith(FIX_EXTENSION);
     }
 
