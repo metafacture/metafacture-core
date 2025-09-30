@@ -53,6 +53,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * Transforms a data stream sent via the {@link StreamReceiver} interface. Uses
@@ -119,7 +120,17 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
      * @param vars the Fix variables as a Map
      */
     public Metafix(final Map<String, String> vars) {
-        init(vars);
+        this(m -> vars);
+    }
+
+    /**
+     * Creates an instance of {@link Metafix}.
+     *
+     * @param function an optional function that accepts the Metafix instance
+     *                 and returns the Fix variables as a Map, or {@code null}
+     */
+    public Metafix(final Function<Metafix, Map<String, String>> function) {
+        init(function);
         recordTransformer = null;
     }
 
@@ -143,7 +154,20 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
      * @throws IOException if an I/O error occurs
      */
     public Metafix(final String fixDef, final Map<String, String> vars) throws IOException {
-        init(vars);
+        this(fixDef, m -> vars);
+    }
+
+    /**
+     * Creates an instance of {@link Metafix}.
+     *
+     * @param fixDef   the Fix definition
+     * @param function an optional function that accepts the Metafix instance
+     *                 and returns the Fix variables as a Map, or {@code null}
+     *
+     * @throws IOException if an I/O error occurs
+     */
+    public Metafix(final String fixDef, final Function<Metafix, Map<String, String>> function) throws IOException {
+        init(function);
 
         if (isFixFile(fixDef)) {
             fixFile = fixDef;
@@ -172,11 +196,22 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
      * @param vars   the Fix variables as a Map
      */
     public Metafix(final Reader fixDef, final Map<String, String> vars) {
-        init(vars);
+        this(fixDef, m -> vars);
+    }
+
+    /**
+     * Creates an instance of {@link Metafix}.
+     *
+     * @param fixDef   the Fix definition
+     * @param function an optional function that accepts the Metafix instance
+     *                 and returns the Fix variables as a Map, or {@code null}
+     */
+    public Metafix(final Reader fixDef, final Function<Metafix, Map<String, String>> function) {
+        init(function);
         recordTransformer = getRecordTransformer(fixDef);
     }
 
-    private void init(final Map<String, String> newVars) {
+    private void init(final Function<Metafix, Map<String, String>> function) {
         flattener.setReceiver(new DefaultStreamReceiver() {
 
             @Override
@@ -189,7 +224,12 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
 
         });
 
-        vars.putAll(newVars);
+        if (function != null) {
+            final Map<String, String> newVars = function.apply(this);
+            if (newVars != null) {
+                vars.putAll(newVars);
+            }
+        }
     }
 
     /**

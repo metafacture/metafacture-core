@@ -315,6 +315,24 @@ public class MetafixTest {
         Assertions.assertThrows(NullPointerException.class, () -> registry.registerCommand(name, clazz));
     }
 
+    @Test
+    public void shouldRegisterCommandInConstructor() {
+        final String name = "bla";
+        final Class<?> clazz = Once.class;
+
+        final Metafix metafix = new Metafix(m -> {
+            final FixRegistry registry = m.getRegistry();
+
+            Assertions.assertFalse(registry.isRegisteredCommand(name));
+            Assertions.assertTrue(registry.registerCommand(name, clazz));
+
+            return null;
+        });
+
+        final FixRegistry registry = metafix.getRegistry();
+        Assertions.assertTrue(registry.isRegisteredCommand(name));
+    }
+
     @FixCommand("test_command")
     private static class TestCommand1 implements FixFunction {
 
