@@ -299,7 +299,12 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
                 resource.getURI(), node.getStartLine(), NodeModelUtils.getTokenText(node));
     }
 
-    /*package-private*/ void setVars(final Map<String, String> staticVars) {
+    /**
+     * Sets static variables.
+     *
+     * @param staticVars the static variables
+     */
+    public void setVars(final Map<String, String> staticVars) {
         setVars(Vars.STATIC, staticVars);
     }
 

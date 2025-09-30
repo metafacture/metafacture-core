@@ -1099,7 +1099,7 @@ end
 
 Iterates over each element of an array. In contrast to Catmandu, it can also iterate over a single object or string.
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixBind.java+"+list+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/bind/List.java)
 
 ```perl
 do list(path: "<sourceField>")
@@ -1127,7 +1127,7 @@ Iterates over each _named_ element of an array (like [`do list`](#do-list) with 
 
 [Example in Playground](https://metafacture.org/playground/?example=do+list_as)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixBind.java+"+list_as+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/bind/ListAs.java)
 
 ```perl
 do list_as(element_1: "<sourceField_1>"[, ...])
@@ -1160,7 +1160,7 @@ end
 
 [Example in Playground](https://metafacture.org/playground/?example=do_once)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixBind.java+"+once+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/bind/Once.java)
 
 In order to execute multiple blocks only once, tag them with unique identifiers:
 
@@ -1200,7 +1200,7 @@ call_macro("<macroName>"[, <dynamicLocalVariables>...])
 
 [Example in Playground](https://metafacture.org/playground/?example=do_put_macro)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixBind.java+"+put_macro+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/bind/PutMacro.java)
 
 ### Conditionals
 
