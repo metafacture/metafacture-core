@@ -28,6 +28,7 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamReceiver;
 import org.metafacture.mangling.StreamFlattener;
+import org.metafacture.metafix.api.FixRegistry;
 import org.metafacture.metafix.fix.Expression;
 import org.metafacture.metamorph.api.Maps;
 
@@ -83,6 +84,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
     private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
 
     private final Deque<Integer> entityCountStack = new LinkedList<>();
+    private final FixRegistry registry = new FixRegistry();
     private final List<Closeable> resources = new ArrayList<>();
     private final List<Expression> expressions = new ArrayList<>();
     private final Map<String, Map<String, String>> maps = new HashMap<>();
@@ -306,6 +308,15 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
      */
     public List<Expression> getExpressions() {
         return expressions;
+    }
+
+    /**
+     * Returns the Fix registry.
+     *
+     * @return the Fix registry
+     */
+    public FixRegistry getRegistry() {
+        return registry;
     }
 
     @Override

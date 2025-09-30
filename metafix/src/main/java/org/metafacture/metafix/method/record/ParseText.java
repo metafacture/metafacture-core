@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix.method.record;
 
+import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@FixCommand("parse_text")
 public class ParseText implements FixFunction {
 
     private static final Pattern NAMED_GROUP_PATTERN = Pattern.compile("\\(\\?<(.+?)>");

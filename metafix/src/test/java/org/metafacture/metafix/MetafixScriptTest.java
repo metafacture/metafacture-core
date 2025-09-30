@@ -554,7 +554,7 @@ public class MetafixScriptTest {
 
     @Test
     public void shouldAbortProcessOnProcessException() {
-        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "No enum constant org.metafacture.metafix.FixMethod.foo", () ->
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Unsupported Fix method: foo", () ->
                 assertStrictness(Metafix.Strictness.EXPRESSION, "foo()", false, null, o -> {
                 })
         );

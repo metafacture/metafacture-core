@@ -14,28 +14,24 @@
  * limitations under the License.
  */
 
-package org.metafacture.metafix.method.script;
+package org.metafacture.metafix;
 
-import org.metafacture.metafix.FixCommand;
-import org.metafacture.metafix.Metafix;
-import org.metafacture.metafix.Record;
-import org.metafacture.metafix.api.FixFunction;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.util.List;
-import java.util.Map;
-
-@FixCommand("put_vars")
-public class PutVars implements FixFunction {
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface FixCommand {
 
     /**
-     * Creates an instance of {@link PutVars}.
+     * Returns the Fix command name.
+     *
+     * @return Fix command name
      */
-    public PutVars() {
-    }
-
-    @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-        metafix.getVars().putAll(options);
-    }
+    String value();
 
 }

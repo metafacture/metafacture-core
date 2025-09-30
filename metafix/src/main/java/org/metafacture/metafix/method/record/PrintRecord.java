@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix.method.record;
 
+import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.LongAdder;
 
+@FixCommand("print_record")
 public class PrintRecord implements FixFunction {
 
     private static final Map<Metafix, LongAdder> SCOPED_COUNTER = new HashMap<>();

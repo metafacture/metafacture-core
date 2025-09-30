@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix.method.field;
 
+import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+@FixCommand("filter")
 public class Filter implements FixFunction {
 
     /**

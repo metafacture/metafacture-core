@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix.method.field;
 
+import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
@@ -30,6 +31,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.function.Consumer;
 
+@FixCommand("lookup")
 public class Lookup implements FixFunction {
 
     private static final Map<Metafix, LongAdder> SCOPED_COUNTER = new HashMap<>();

@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix.bind;
 
+import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.RecordTransformer;
@@ -26,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@FixCommand("list_as")
 public class ListAs implements FixContext {
 
     /**

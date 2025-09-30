@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix.conditional;
 
+import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
@@ -24,6 +25,7 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
+@FixCommand("is_array")
 public class IsArray implements FixPredicate {
 
     /**

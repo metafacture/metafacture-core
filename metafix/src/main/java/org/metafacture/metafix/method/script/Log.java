@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix.method.script;
 
+import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@FixCommand("log")
 public class Log implements FixFunction {
 
     private static final Logger LOG = LoggerFactory.getLogger(Log.class);

@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix.method.record;
 
+import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
+@FixCommand("rename")
 public class Rename implements FixFunction {
 
     /**

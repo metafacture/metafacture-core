@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix.method.field;
 
+import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.JsonValue;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+@FixCommand("from_json")
 public class FromJson implements FixFunction {
 
     /**

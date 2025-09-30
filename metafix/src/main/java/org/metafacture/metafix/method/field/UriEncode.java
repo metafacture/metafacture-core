@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix.method.field;
 
+import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
@@ -24,6 +25,7 @@ import org.metafacture.metamorph.functions.URLEncode;
 import java.util.List;
 import java.util.Map;
 
+@FixCommand("uri_encode")
 public class UriEncode implements FixFunction {
 
     /**

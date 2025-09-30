@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix.method.script;
 
+import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
@@ -24,6 +25,7 @@ import org.metafacture.metamorph.maps.FileMap;
 import java.util.List;
 import java.util.Map;
 
+@FixCommand("put_filemap")
 public class PutFileMap implements FixFunction {
 
     private static final String FILEMAP_SEPARATOR_OPTION = "sep_char";

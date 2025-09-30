@@ -22,6 +22,7 @@ import org.metafacture.framework.MetafactureException;
 import org.metafacture.metafix.api.FixContext;
 import org.metafacture.metafix.api.FixFunction;
 import org.metafacture.metafix.api.FixPredicate;
+import org.metafacture.metafix.api.FixRegistry;
 import org.metafacture.metafix.fix.Do;
 import org.metafacture.metafix.fix.ElsIf;
 import org.metafacture.metafix.fix.Else;
@@ -62,6 +63,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
 
     private static final Logger LOG = LoggerFactory.getLogger(RecordTransformer.class);
 
+    private final FixRegistry registry;
     private final List<Consumer<Record>> consumers = new LinkedList<>();
     private final List<Map<String, String>> vars = new ArrayList<>(Collections.nCopies(Vars.values().length, null));
     private final Metafix metafix;
@@ -82,6 +84,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     private RecordTransformer(final Metafix metafix, final List<Expression> expressions, final RecordTransformer parent) {
         this.metafix = metafix;
         this.parent = parent;
+        this.registry = metafix.getRegistry();
 
         expressions.forEach(e -> {
             final Params params = new Params(e.getParams(), this);
@@ -143,7 +146,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
 
     private void processDo(final Do expression, final Params params, final Options options) {
         processFix(() -> executionExceptionMessage(expression), () -> {
-            final FixContext context = getInstance(expression.getName(), FixContext.class, FixBind::valueOf);
+            final FixContext context = getInstance(expression.getName(), FixContext.class, registry::getBind);
             final RecordTransformer recordTransformer = childTransformer(expression.getElements());
 
             return record -> context.execute(metafix, record, params.resolve(), options.resolve(), recordTransformer);
@@ -158,10 +161,10 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         final Supplier<String> elseMessageSupplier = () -> executionExceptionMessage(elseExpression, elseExpression.eResource());
 
         processFix(() -> executionExceptionMessage(ifExpression, ifExpression.eResource()), () -> {
-            final FixPredicate ifPredicate = getInstance(ifExpression.getName(), FixPredicate.class, FixConditional::valueOf);
+            final FixPredicate ifPredicate = getInstance(ifExpression.getName(), FixPredicate.class, registry::getConditional);
             final RecordTransformer ifTransformer = childTransformer(ifExpression.getElements());
 
-            final List<FixPredicate> elseIfPredicates = mapList(elseIfExpressions, e -> getInstance(e.getName(), FixPredicate.class, FixConditional::valueOf));
+            final List<FixPredicate> elseIfPredicates = mapList(elseIfExpressions, e -> getInstance(e.getName(), FixPredicate.class, registry::getConditional));
             final List<Params> elseIfParamsList = mapList(elseIfExpressions, e -> new Params(e.getParams(), this));
             final List<Options> elseIfOptionsList = mapList(elseIfExpressions, e -> new Options(e.getOptions(), this));
             final List<RecordTransformer> elseIfTransformers = mapList(elseIfExpressions, e -> childTransformer(e.getElements()));
@@ -200,7 +203,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
 
     private void processUnless(final Unless expression, final Params params, final Options options) {
         processFix(() -> executionExceptionMessage(expression, expression.eResource()), () -> {
-            final FixPredicate predicate = getInstance(expression.getName(), FixPredicate.class, FixConditional::valueOf);
+            final FixPredicate predicate = getInstance(expression.getName(), FixPredicate.class, registry::getConditional);
             final RecordTransformer recordTransformer = childTransformer(expression.getElements());
 
             return record -> {
@@ -213,7 +216,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
 
     private void processFunction(final MethodCall expression, final Params params, final Options options) {
         processFix(() -> executionExceptionMessage(expression), () -> {
-            final FixFunction function = getInstance(expression.getName(), FixFunction.class, FixMethod::valueOf);
+            final FixFunction function = getInstance(expression.getName(), FixFunction.class, registry::getMethod);
             return record -> function.apply(metafix, record, params.resolve(), options.resolve());
         });
     }

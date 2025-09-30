@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix.method.record;
 
+import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
@@ -25,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+@FixCommand("format")
 public class Format implements FixFunction {
 
     /**
