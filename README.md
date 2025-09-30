@@ -1240,7 +1240,7 @@ Executes the functions if/unless the field contains the value. If it is an array
 
 [Example in Playground](https://metafacture.org/playground/?example=all_contain)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+all_contain+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/AllContain.java)
 
 ##### `any_contain`
 
@@ -1248,7 +1248,7 @@ Executes the functions if/unless the field contains the value. If it is an array
 
 [Example in Playground](https://metafacture.org/playground/?example=any_contain)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+any_contain+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/AnyContain.java)
 
 ##### `none_contain`
 
@@ -1256,7 +1256,7 @@ Executes the functions if/unless the field does not contain the value. If it is 
 
 [Example in Playground](https://metafacture.org/playground/?example=none_contain)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+none_contain+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/NoneContain.java)
 
 ##### `str_contain`
 
@@ -1264,7 +1264,7 @@ Executes the functions if/unless the first string contains the second string.
 
 [Example in Playground](https://metafacture.org/playground/?example=str_contain)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+str_contain+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/StrContain.java)
 
 #### `equal`
 
@@ -1274,7 +1274,7 @@ Executes the functions if/unless the field value equals the string. If it is an 
 
 [Example in Playground](https://metafacture.org/playground/?example=all_equal)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+all_equal+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/AllEqual.java)
 
 ##### `any_equal`
 
@@ -1282,7 +1282,7 @@ Executes the functions if/unless the field value equals the string. If it is an 
 
 [Example in Playground](https://metafacture.org/playground/?example=any_equal)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+any_equal+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/AnyEqual.java)
 
 ##### `none_equal`
 
@@ -1290,7 +1290,7 @@ Executes the functions if/unless the field value does not equal the string. If i
 
 [Example in Playground](https://metafacture.org/playground/?example=none_equal)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+none_equal+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/NoneEqual.java)
 
 ##### `str_equal`
 
@@ -1298,7 +1298,7 @@ Executes the functions if/unless the first string equals the second string.
 
 [Example in Playground](https://metafacture.org/playground/?example=str_equal)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+str_equal+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/StrEqual.java)
 
 #### `exists`
 
@@ -1310,7 +1310,7 @@ if exists("<sourceField>")
 
 [Example in Playground](https://metafacture.org/playground/?example=exists)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+exists+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/Exists.java)
 
 #### `greater_than`
 
@@ -1318,7 +1318,7 @@ Executes the functions if/unless the field value is greater than the given value
 
 [Example in Playground](https://metafacture.org/playground/?example=greater_than)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+greater_than+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/GreaterThan.java)
 
 #### `in`
 
@@ -1328,11 +1328,13 @@ _Also aliased as [`is_contained_in`](#is_contained_in)._
 
 [Example in Playground](https://metafacture.org/playground/?example=in)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+in+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/In.java)
 
 #### `is_contained_in`
 
 _Alias for [`in`](#in)._
+
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/IsContainedIn.java)
 
 #### `is_array`
 
@@ -1340,7 +1342,7 @@ Executes the functions if/unless the field value is an array.
 
 [Example in Playground](https://metafacture.org/playground/?example=is_array)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+is_array+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/IsArray.java)
 
 #### `is_empty`
 
@@ -1348,7 +1350,7 @@ Executes the functions if/unless the field value is empty.
 
 [Example in Playground](https://metafacture.org/playground/?example=is_empty)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+is_empty+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/IsEmpty.java)
 
 #### `is_false`
 
@@ -1356,7 +1358,7 @@ Executes the functions if/unless the field value equals `false` or `0`.
 
 [Example in Playground](https://metafacture.org/playground/?example=is_false)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+is_false+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/IsFalse.java)
 
 #### `is_hash`
 
@@ -1364,7 +1366,7 @@ _Alias for [`is_object`](#is_object)._
 
 [Example in Playground](https://metafacture.org/playground/?example=is_hash)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+is_hash+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/IsHash.java)
 
 #### `is_number`
 
@@ -1372,7 +1374,7 @@ Executes the functions if/unless the field value is a number.
 
 [Example in Playground](https://metafacture.org/playground/?example=is_number)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+is_number+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/IsNumber.java)
 
 #### `is_object`
 
@@ -1380,13 +1382,15 @@ Executes the functions if/unless the field value is a hash (object).
 
 _Also aliased as [`is_hash`](#is_hash)._
 
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/IsObject.java)
+
 #### `is_string`
 
 Executes the functions if/unless the field value is a string (and not a number).
 
 [Example in Playground](https://metafacture.org/playground/?example=is_string)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+is_string+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/IsString.java)
 
 #### `is_true`
 
@@ -1394,7 +1398,7 @@ Executes the functions if/unless the field value equals `true` or `1`.
 
 [Example in Playground](https://metafacture.org/playground/?example=is_true)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+is_true+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/IsTrue.java)
 
 #### `less_than`
 
@@ -1402,7 +1406,7 @@ Executes the functions if/unless the field value is less than the given value.
 
 [Example in Playground](https://metafacture.org/playground/?example=less_than)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+less_than+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/LessThan.java)
 
 #### `match`
 
@@ -1412,7 +1416,7 @@ Executes the functions if/unless the field value matches the regular expression 
 
 [Example in Playground](https://metafacture.org/playground/?example=all_match)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+all_match+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/AllMatch.java)
 
 ##### `any_match`
 
@@ -1420,7 +1424,7 @@ Executes the functions if/unless the field value matches the regular expression 
 
 [Example in Playground](https://metafacture.org/playground/?example=any_match)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+any_match+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/AnyMatch.java)
 
 ##### `none_match`
 
@@ -1428,7 +1432,7 @@ Executes the functions if/unless the field value does not match the regular expr
 
 [Example in Playground](https://metafacture.org/playground/?example=none_match)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+none_match+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/NoneMatch.java)
 
 ##### `str_match`
 
@@ -1436,7 +1440,7 @@ Executes the functions if/unless the string matches the regular expression patte
 
 [Example in Playground](https://metafacture.org/playground/?example=str_match)
 
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+str_match+{")
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/StrMatch.java)
 
 ## Xtext
 
