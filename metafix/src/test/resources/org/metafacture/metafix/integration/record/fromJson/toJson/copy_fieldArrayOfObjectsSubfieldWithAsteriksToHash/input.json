@@ -1,0 +1,46 @@
+{
+  "data": [
+    {
+      "type": "Course",
+      "id": "096c4cba-efe2-428a-968a-3eca66914256",
+      "attributes": {
+        "name": "IWB 4.0",
+        "url": "https:\/\/lernen.oncampus.de\/weiterbildung\/moocs\/iwb-40",
+        "license": [
+          {
+            "identifier": "CC BY 4.0",
+            "url": "https:\/\/creativecommons.org\/licenses\/by\/4.0\/"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Course",
+      "id": "f966208d-fabf-49f3-b545-52d81f6b2f1d",
+      "attributes": {
+        "name": "Volleyball-TrainerMOOC #2",
+        "url": "https:\/\/lernen.oncampus.de\/weiterbildung\/moocs\/volleyball-trainer-mooc-2",
+        "license": [
+          {
+            "identifier": "CC BY-SA 3.0 DE",
+            "url": "https:\/\/creativecommons.org\/licenses\/by-sa\/3.0\/de\/"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Course",
+      "id": "aa81ea14-233d-4982-8b03-f18c5c0c537a",
+      "attributes": {
+        "name": "Citizenship Education MOOC",
+        "url": "https:\/\/lernen.oncampus.de\/mooc\/citizenedu",
+        "license": [
+          {
+            "identifier": "CC BY-SA 4.0",
+            "url": "https:\/\/creativecommons.org\/licenses\/by-sa\/4.0\/"
+          }
+        ]
+      }
+    }
+  ]
+}
