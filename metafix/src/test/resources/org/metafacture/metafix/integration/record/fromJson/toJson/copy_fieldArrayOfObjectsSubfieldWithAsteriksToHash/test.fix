@@ -1,0 +1,8 @@
+# ------ license ---
+copy_field("attributes.license[].*.url","license.id")
+copy_field("attributes.license[].*.id","license.id")
+
+# ------ license2 ---
+copy_field("attributes.license[].*.url","license2.id")
+
+retain("license","license2")
