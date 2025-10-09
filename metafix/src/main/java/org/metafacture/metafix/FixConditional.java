@@ -22,7 +22,8 @@ import org.metafacture.metafix.conditional.*; // checkstyle-disable-line AvoidSt
 import java.util.List;
 import java.util.Map;
 
-public enum FixConditional implements FixPredicate { // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
+@Deprecated(since = "7.1.0", forRemoval = true) // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
+public enum FixConditional implements FixPredicate {
 
     all_contain {
         @Override

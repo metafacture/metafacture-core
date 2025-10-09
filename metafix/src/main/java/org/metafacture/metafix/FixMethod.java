@@ -24,7 +24,8 @@ import org.metafacture.metafix.method.script.*; // checkstyle-disable-line Avoid
 import java.util.List;
 import java.util.Map;
 
-public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
+@Deprecated(since = "7.1.0", forRemoval = true) // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
+public enum FixMethod implements FixFunction {
 
     // SCRIPT-LEVEL METHODS:
 

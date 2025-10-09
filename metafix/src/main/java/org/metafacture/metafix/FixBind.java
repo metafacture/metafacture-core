@@ -22,6 +22,7 @@ import org.metafacture.metafix.bind.*; // checkstyle-disable-line AvoidStarImpor
 import java.util.List;
 import java.util.Map;
 
+@Deprecated(since = "7.1.0", forRemoval = true)
 public enum FixBind implements FixContext {
 
     list {
