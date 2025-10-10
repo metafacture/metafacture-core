@@ -1,0 +1,30 @@
+add_field("@person.$append.__dummy__", "")
+do list(path: "$i.a", "var": "$j")
+  replace_all("$j", "(?<!\\p{Upper})[.]$|[,]$", "")
+  copy_field("$j", "@person.$last.personName")
+end
+do list(path: "$i.b", "var": "$j")
+  replace_all("$j", "[,]$", "")
+  copy_field("$j", "@person.$last.personNumbering")
+end
+add_array("@person.$last.personTitle[]")
+do list(path: "$i.c", "var": "$j")
+  replace_all("$j", "[,]$", "")
+  copy_field("$j", "@person.$last.personTitle[].$append")
+end
+replace_all("$i.d", "[.]$", "")
+copy_field("$i.d", "@person.$last.personBio")
+add_array("@person.$last.personRole[]")
+do list(path: "$i.e", "var": "$j")
+  paste("@personRole", "~[", "$j", "~]", join_char: "")
+  move_field("@personRole", "@person.$last.personRole[].$append")
+end
+add_array("@person.$last.personIdentifier[]")
+add_array("@person.$last.identifierGND[]")
+do list(path: "$i.0", "var": "$j")
+  if any_match("$j", "\\(DE-588\\).*")
+    copy_field("$j", "@person.$last.personIdentifier[].$append")
+    replace_all("$j", "^\\(DE-588\\)", "")
+    copy_field("$j", "@person.$last.identifierGND[].$append")
+  end
+end

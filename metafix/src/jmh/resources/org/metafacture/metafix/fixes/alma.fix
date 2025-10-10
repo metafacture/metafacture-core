@@ -1,0 +1,2264 @@
+put_vars(
+  "catalogid":          "DE-605",
+  "deletion-literal":   "DEL",
+  "deletion-source":    "DEL??.a",
+  "deletion-value":     "Y",
+  "id-suffix":          "",
+  "institution-code":   "6441",
+  "isil":               "DE-605",
+  "member":             "49HBZ_NETWORK",
+  "network":            "49HBZ_NETWORK",
+  "regexp.description": ".*",
+  "sigel":              "605"
+)
+
+put_map("institution-code-to-isil", "6441": "DE-605")
+
+include("./maps.fix")
+include("./maps/alma-branches.fix")
+include("./maps/alma-extended-type.fix")
+include("./maps/alma-format-carrier.fix")
+include("./maps/alma-record-codes.fix")
+include("./maps/alma-taxonomy.fix")
+include("./maps/alma-type-monograph.fix")
+include("./maps/alma-type-periodical.fix")
+
+#hbz.limetrans.function.DropLocal()
+
+# MARC/leader
+copy_field("leader", "@LeaderPos05")
+substring("@LeaderPos05", "5", "1")
+copy_field("leader", "@LeaderPos06")
+substring("@LeaderPos06", "6", "1")
+copy_field("leader", "@LeaderPos07")
+substring("@LeaderPos07", "7", "1")
+copy_field("leader", "@LeaderPos19")
+substring("@LeaderPos19", "19", "1")
+copy_field("008", "@008Pos06")
+substring("@008Pos06", "6", "1")
+# MARC/006
+do list(path: "006", "var": "$i")
+  copy_field("$i", "@006Pos00_i")
+  substring("@006Pos00_i", "0", "1")
+  move_field("@006Pos00_i", "@006Pos00")
+  copy_field("$i", "@006Pos04_i")
+  substring("@006Pos04_i", "4", "2")
+  move_field("@006Pos04_i", "@006Pos04")
+  copy_field("$i", "@006Pos06_i")
+  substring("@006Pos06_i", "6", "1")
+  move_field("@006Pos06_i", "@006Pos06")
+  copy_field("$i", "@006Pos07_i")
+  substring("@006Pos07_i", "7", "1")
+  move_field("@006Pos07_i", "@006Pos07")
+  copy_field("$i", "@006Pos08_i")
+  substring("@006Pos08_i", "8", "1")
+  move_field("@006Pos08_i", "@006Pos08")
+  copy_field("$i", "@006Pos09_i")
+  substring("@006Pos09_i", "9", "1")
+  move_field("@006Pos09_i", "@006Pos09")
+  copy_field("$i", "@006Pos10_i")
+  substring("@006Pos10_i", "10", "1")
+  move_field("@006Pos10_i", "@006Pos10")
+  copy_field("$i", "@006Pos11_i")
+  substring("@006Pos11_i", "11", "1")
+  move_field("@006Pos11_i", "@006Pos11")
+  copy_field("$i", "@006Pos12_i")
+  substring("@006Pos12_i", "12", "1")
+  move_field("@006Pos12_i", "@006Pos12")
+  copy_field("$i", "@006Pos13_i")
+  substring("@006Pos13_i", "13", "1")
+  move_field("@006Pos13_i", "@006Pos13")
+  copy_field("$i", "@006Pos14_i")
+  substring("@006Pos14_i", "14", "1")
+  move_field("@006Pos14_i", "@006Pos14")
+  copy_field("$i", "@006Pos16_i")
+  substring("@006Pos16_i", "16", "1")
+  move_field("@006Pos16_i", "@006Pos16")
+  copy_field("$i", "@006Pos17_i")
+  substring("@006Pos17_i", "17", "1")
+  move_field("@006Pos17_i", "@006Pos17")
+end
+# MARC/007
+do list(path: "007", "var": "$i")
+  copy_field("$i", "@007Pos00_i")
+  substring("@007Pos00_i", "0", "1")
+  move_field("@007Pos00_i", "@007Pos00")
+  copy_field("$i", "@007Pos01_i")
+  substring("@007Pos01_i", "1", "1")
+  move_field("@007Pos01_i", "@007Pos01")
+end
+# MARC/008
+copy_field("008", "@008Pos07")
+substring("@008Pos07", "7", "4")
+copy_field("008", "@008Pos11")
+substring("@008Pos11", "11", "4")
+copy_field("008", "@008Pos21")
+substring("@008Pos21", "21", "1")
+copy_field("008", "@008Pos23")
+substring("@008Pos23", "23", "1")
+copy_field("008", "@008Pos24")
+substring("@008Pos24", "24", "1")
+copy_field("008", "@008Pos25")
+substring("@008Pos25", "25", "1")
+copy_field("008", "@008Pos26")
+substring("@008Pos26", "26", "1")
+copy_field("008", "@008Pos27")
+substring("@008Pos27", "27", "1")
+copy_field("008", "@008Pos28")
+substring("@008Pos28", "28", "1")
+copy_field("008", "@008Pos29")
+substring("@008Pos29", "29", "1")
+copy_field("008", "@008Pos30")
+substring("@008Pos30", "30", "1")
+copy_field("008", "@008Pos31")
+substring("@008Pos31", "31", "1")
+copy_field("008", "@008Pos33")
+substring("@008Pos33", "33", "1")
+copy_field("008", "@008Pos34")
+substring("@008Pos34", "34", "1")
+
+copy_field("@LeaderPos06", "@type")
+lookup("@type", "typeLeader06", delete: "true")
+if any_equal("@LeaderPos06", "a")
+  if any_match("@LeaderPos07", "[acdm]")
+    add_field("@type", "B")
+  elsif any_match("@LeaderPos07", "[bis]")
+    add_field("@type", "CR")
+  end
+end
+
+paste("@006Pos00__006Pos04", "@006Pos00", "@006Pos04", join_char: "#")
+paste("@006Pos00__006Pos06", "@006Pos00", "@006Pos06", join_char: "#")
+paste("@006Pos00__006Pos07", "@006Pos00", "@006Pos07", join_char: "#")
+paste("@006Pos00__006Pos08", "@006Pos00", "@006Pos08", join_char: "#")
+paste("@006Pos00__006Pos09", "@006Pos00", "@006Pos09", join_char: "#")
+paste("@006Pos00__006Pos10", "@006Pos00", "@006Pos10", join_char: "#")
+paste("@006Pos00__006Pos11", "@006Pos00", "@006Pos11", join_char: "#")
+paste("@006Pos00__006Pos12", "@006Pos00", "@006Pos12", join_char: "#")
+paste("@006Pos00__006Pos13", "@006Pos00", "@006Pos13", join_char: "#")
+paste("@006Pos00__006Pos14", "@006Pos00", "@006Pos14", join_char: "#")
+paste("@006Pos00__006Pos16", "@006Pos00", "@006Pos16", join_char: "#")
+paste("@006Pos00__006Pos17", "@006Pos00", "@006Pos17", join_char: "#")
+paste("@007Pos00__007Pos01", "@007Pos00", "@007Pos01", join_char: "#")
+paste("@type__008Pos21", "@type", "@008Pos21", join_char: "#")
+paste("@type__008Pos23", "@type", "@008Pos23", join_char: "#")
+paste("@type__008Pos24", "@type", "@008Pos24", join_char: "#")
+paste("@type__008Pos25", "@type", "@008Pos25", join_char: "#")
+paste("@type__008Pos26", "@type", "@008Pos26", join_char: "#")
+paste("@type__008Pos27", "@type", "@008Pos27", join_char: "#")
+paste("@type__008Pos28", "@type", "@008Pos28", join_char: "#")
+paste("@type__008Pos29", "@type", "@008Pos29", join_char: "#")
+paste("@type__008Pos30", "@type", "@008Pos30", join_char: "#")
+paste("@type__008Pos31", "@type", "@008Pos31", join_char: "#")
+paste("@type__008Pos33", "@type", "@008Pos33", join_char: "#")
+paste("@type__008Pos34", "@type", "@008Pos34", join_char: "#")
+
+# MARC/337, MARC/338
+add_array("@facet_format")
+if any_match("@LeaderPos06", "[ij]")
+  add_field("@facet_format.$append", "Audio")
+else
+  if any_match("@006Pos00", "[ij]")
+    add_field("@facet_format.$append", "Audio")
+  else
+    if any_equal("@007Pos00", "s")
+      add_field("@facet_format.$append", "Audio")
+    else
+      if any_equal("337  .a", "audio")
+        add_field("@facet_format.$append", "Audio")
+      else
+        if any_equal("337  .b", "s")
+          add_field("@facet_format.$append", "Audio")
+        else
+          if any_equal("338  .a", "Audiodisk")
+            add_field("@facet_format.$append", "Audio")
+          else
+            if any_equal("@type__008Pos26", "CF#h")
+              add_field("@facet_format.$append", "Audio")
+            else
+              if any_equal("@006Pos00__006Pos09", "m#h")
+                add_field("@facet_format.$append", "Audio")
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+end
+if any_equal("@007Pos00", "r")
+  add_field("@facet_format.$append", "Bild")
+else
+  if any_match("@007Pos00__007Pos01", "k#[cdefhijklnpqrsuvz]")
+    add_field("@facet_format.$append", "Bild")
+  else
+    if any_match("@type__008Pos33|@type__008Pos34", "M#[jo]")
+      add_field("@facet_format.$append", "Bild")
+    else
+      if any_match("@006Pos00__006Pos16|@006Pos00__006Pos17", "[ef]#[jo]")
+        add_field("@facet_format.$append", "Bild")
+      else
+        if any_match("@type__008Pos33", "VM#[dikln]")
+          add_field("@facet_format.$append", "Bild")
+        else
+          if any_match("@006Pos00__006Pos16", "[gkor]#[dikln]")
+            add_field("@facet_format.$append", "Bild")
+          end
+        end
+      end
+    end
+  end
+end
+# MARC/337, MARC/338
+if any_equal("@LeaderPos06|@006Pos00", "m")
+  add_field("@facet_format.$append", "Elektronische Ressource")
+else
+  if any_match("337  .a", "Computermedien|computer|computermedien|informatique")
+    add_field("@facet_format.$append", "Elektronische Ressource")
+  else
+    if any_equal("337  .b", "c")
+      add_field("@facet_format.$append", "Elektronische Ressource")
+    else
+      if any_match("338  .a", "Computerdisk|computer disc")
+        add_field("@facet_format.$append", "Elektronische Ressource")
+      else
+        if any_equal("338  .b", "cd")
+          add_field("@facet_format.$append", "Elektronische Ressource")
+        else
+          if any_equal("@007Pos00", "c")
+            add_field("@facet_format.$append", "Elektronische Ressource")
+          else
+            if any_match("@type__008Pos23", "(?:B|Mu|CR|MX)#[sq]")
+              add_field("@facet_format.$append", "Elektronische Ressource")
+            else
+              if any_match("@006Pos00__006Pos06", "[acdijpst]#[qs]")
+                add_field("@facet_format.$append", "Bild")
+              else
+                if any_match("@006Pos00__006Pos12", "[efgkor]#[qs]")
+                  add_field("@facet_format.$append", "Bild")
+                else
+                  if any_match("@type__008Pos29", "(?:M|VM)#[sq]")
+                    add_field("@facet_format.$append", "Elektronische Ressource")
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+end
+# MARC/337, MARC/338
+if any_match("@007Pos00", "[gmv]")
+  add_field("@facet_format.$append", "Film, Dia, Video")
+else
+  if any_equal("337  .a", "video")
+    add_field("@facet_format.$append", "Film, Dia, Video")
+  else
+    if any_equal("337  .b", "v")
+      add_field("@facet_format.$append", "Film, Dia, Video")
+    else
+      if any_match("338  .a", "Videodisk|videodisc")
+        add_field("@facet_format.$append", "Film, Dia, Video")
+      else
+        if any_equal("338  .b", "vd")
+          add_field("@facet_format.$append", "Film, Dia, Video")
+        else
+          if any_match("@type__008Pos33", "VM#[fmstv]")
+            add_field("@facet_format.$append", "Film, Dia, Video")
+          else
+            if any_match("@006Pos00__006Pos16", "[gkor]#[fmstv]")
+              add_field("@facet_format.$append", "Film, Dia, Video")
+            end
+          end
+        end
+      end
+    end
+  end
+end
+if any_match("@LeaderPos06|@006Pos00", "[op]")
+  add_field("@facet_format.$append", "Gedruckte Ressource")
+else
+  if any_equal("@007Pos00", "o")
+    add_field("@facet_format.$append", "Gedruckte Ressource")
+  else
+    if any_match("@007Pos00__007Pos01", "k#[fjs]|t#[ab]")
+      add_field("@facet_format.$append", "Gedruckte Ressource")
+    else
+      if any_match("@type__008Pos23", "(?:B|Mu|CR|MX)#[dr]")
+        add_field("@facet_format.$append", "Gedruckte Ressource")
+      else
+        if any_match("@006Pos00__006Pos06", "[acdijpst]#[dr]")
+          add_field("@facet_format.$append", "Gedruckte Ressource")
+        else
+          if any_match("@type__008Pos29", "(?:M|VM)#[dr]")
+            add_field("@facet_format.$append", "Gedruckte Ressource")
+          else
+            if any_match("@006Pos00__006Pos12", "[efgkor]#[dr]")
+              add_field("@facet_format.$append", "Gedruckte Ressource")
+            else
+              if any_equal("@type__008Pos33", "VM#b")
+                add_field("@facet_format.$append", "Gedruckte Ressource")
+              else
+                if any_match("@006Pos00__006Pos16", "[gkor]#b")
+                  add_field("@facet_format.$append", "Gedruckte Ressource")
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+end
+if any_match("@LeaderPos06|@006Pos00", "[ef]")
+  add_field("@facet_format.$append", "Landkarte")
+elsif any_match("@007Pos00", "[ad]")
+  add_field("@facet_format.$append", "Landkarte")
+end
+# MARC/337, MARC/338
+if any_equal("@007Pos00", "h")
+  add_field("@facet_format.$append", "Mikroform")
+else
+  if any_match("337  .a", "Mikroform|microform")
+    add_field("@facet_format.$append", "Mikroform")
+  else
+    if any_equal("337  .b", "h")
+      add_field("@facet_format.$append", "Mikroform")
+    else
+      if any_match("338  .a", "microfiche|microfilm roll")
+        add_field("@facet_format.$append", "Mikroform")
+      else
+        if any_match("338  .b", "h[ej]")
+          add_field("@facet_format.$append", "Mikroform")
+        else
+          if any_match("@type__008Pos29", "(?:M|VM)#[abc]")
+            add_field("@facet_format.$append", "Mikroform")
+          else
+            if any_match("@006Pos00__006Pos12", "[efgkor]#[abc]")
+              add_field("@facet_format.$append", "Mikroform")
+            else
+              if any_match("@006Pos00__006Pos06", "[acdijpst]#[abc]")
+                add_field("@facet_format.$append", "Mikroform")
+              else
+                if any_match("@type__008Pos23", "(?:B|Mu|CR|MX)#[abc]")
+                  add_field("@facet_format.$append", "Mikroform")
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+end
+# MARC/338
+if any_match("338  .a", "online bron|online resource|online-ressource|Online-Ressource|ressource en ligne")
+  add_field("@facet_format.$append", "Online-Ressource")
+else
+  if any_equal("338  .b", "cr")
+    add_field("@facet_format.$append", "Online-Ressource")
+  else
+    if any_match("@type__008Pos23", "(?:B|Mu|CF|CR|MX)#o")
+      add_field("@facet_format.$append", "Online-Ressource")
+    else
+      if any_match("@type__008Pos29", "(?:M|VM)#o")
+        add_field("@facet_format.$append", "Online-Ressource")
+      else
+        if any_match("@006Pos00__006Pos06", "[acdijpstm]#o")
+          add_field("@facet_format.$append", "Online-Ressource")
+        else
+          if any_match("@006Pos00__006Pos12", "[efgkor]#o")
+            add_field("@facet_format.$append", "Online-Ressource")
+          end
+        end
+      end
+    end
+  end
+end
+# MARC/338
+if any_match("338  .a", "Gegenstand|Karte")
+  add_field("@facet_format.$append", "Sonstiges")
+else
+  if any_match("338  .b", "n[or]")
+    add_field("@facet_format.$append", "Sonstiges")
+  else
+    if any_equal("@007Pos00__007Pos01", "t#c")
+      add_field("@facet_format.$append", "Sonstiges")
+    else
+      if any_match("@006Pos00__006Pos06", "[acdijpst]#f")
+        add_field("@facet_format.$append", "Sonstiges")
+      else
+        if any_match("@type__008Pos23", "(?:B|CR|Mu|MX)#f")
+          add_field("@facet_format.$append", "Sonstiges")
+        else
+          if any_match("@type__008Pos29", "(?:M|VM)#f")
+            add_field("@facet_format.$append", "Sonstiges")
+          else
+            if any_match("@006Pos00__006Pos12", "[efgkor]#f")
+              add_field("@facet_format.$append", "Sonstiges")
+            else
+              if any_equal("@type__008Pos33", "VM#p")
+                add_field("@facet_format.$append", "Sonstiges")
+              else
+                if any_equal("@006Pos00__006Pos16", "[gkor]#p")
+                  add_field("@facet_format.$append", "Sonstiges")
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+end
+if any_equal("@006Pos00__006Pos09", "m#g")
+  add_field("@facet_format.$append", "Spiel")
+else
+  if any_equal("@type__008Pos26", "CF#g")
+    add_field("@facet_format.$append", "Spiel")
+  else
+    if any_match("@type__008Pos33|@type__008Pos34", "M#[pn]")
+      add_field("@facet_format.$append", "Spiel")
+    else
+      if any_match("@006Pos00__006Pos16|@006Pos00__006Pos17", "[ef]#[pn]")
+        add_field("@facet_format.$append", "Spiel")
+      else
+        if any_equal("@type__008Pos33", "VM#g")
+          add_field("@facet_format.$append", "Spiel")
+        else
+          if any_match("@006Pos00__006Pos16", "[gkor]#g")
+            add_field("@facet_format.$append", "Spiel")
+          end
+        end
+      end
+    end
+  end
+end
+
+# MARC/336
+add_array("ContentType[]")
+do list(path: "336??.b", "var": "$i")
+  copy_field("$i", "@contenttype_code")
+  lookup("@contenttype_code", "content-type-code", delete: "true")
+  move_field("@contenttype_code", "ContentType[].$append")
+end
+uniq("ContentType[]")
+
+# MARC/338
+add_array("CarrierType[]")
+do list(path: "338??.b", "var": "$i")
+  copy_field("$i", "@carriertype_code")
+  lookup("@carriertype_code", "carrier-type-code", delete: "true")
+  move_field("@carriertype_code", "CarrierType[].$append")
+  copy_field("$i", "@carriertype_facetcode")
+  lookup("@carriertype_facetcode", "carrier-type-facet-code", delete: "true")
+  move_field("@carriertype_facetcode", "@facet_format.$append")
+end
+uniq("CarrierType[]")
+
+# MARC/964
+add_array("@facet_type")
+add_array("ExtendedFormat[]")
+add_array("ExtendedType[]")
+add_array("FormatCarrier[]")
+add_array("RecordCodes[]")
+add_array("TypeMonograph[]")
+add_array("TypePeriodical[]")
+do list(path: "9640s", "var": "$i")
+  if any_equal("$i.F", "030")
+    put_vars(record_codes_start: "0")
+    include("./alma/recordCodes.fix")
+    put_vars(record_codes_start: "1")
+    include("./alma/recordCodes.fix")
+    put_vars(record_codes_start: "2")
+    include("./alma/recordCodes.fix")
+    put_vars(record_codes_start: "3")
+    include("./alma/recordCodes.fix")
+    put_vars(record_codes_start: "4")
+    include("./alma/recordCodes.fix")
+    put_vars(record_codes_start: "5")
+    include("./alma/recordCodes.fix")
+    put_vars(record_codes_start: "6")
+    include("./alma/recordCodes.fix")
+    put_vars(record_codes_start: "7")
+    include("./alma/recordCodes.fix")
+    put_vars(record_codes_start: "8")
+    include("./alma/recordCodes.fix")
+    put_vars(record_codes_start: "11")
+    include("./alma/recordCodes.fix")
+    put_vars(record_codes_start: "12")
+    include("./alma/recordCodes.fix")
+  else
+    if any_equal("$i.F", "050")
+      put_vars(format_carrier_start: "0", format_carrier_length: "1")
+      include("./alma/formatCarrier.fix")
+      put_vars(format_carrier_start: "1", format_carrier_length: "1")
+      include("./alma/formatCarrier.fix")
+      put_vars(format_carrier_start: "2", format_carrier_length: "1")
+      include("./alma/formatCarrier.fix")
+      put_vars(format_carrier_start: "3", format_carrier_length: "1")
+      include("./alma/formatCarrier.fix")
+      put_vars(format_carrier_start: "4", format_carrier_length: "1")
+      include("./alma/formatCarrier.fix")
+      put_vars(format_carrier_start: "5", format_carrier_length: "2")
+      include("./alma/formatCarrier.fix")
+      put_vars(format_carrier_start: "7", format_carrier_length: "1")
+      include("./alma/formatCarrier.fix")
+      put_vars(format_carrier_start: "8", format_carrier_length: "1")
+      include("./alma/formatCarrier.fix")
+      put_vars(format_carrier_start: "9", format_carrier_length: "1")
+      include("./alma/formatCarrier.fix")
+      put_vars(format_carrier_start: "10", format_carrier_length: "1")
+      include("./alma/formatCarrier.fix")
+    else
+      if any_equal("$i.F", "051")
+        put_vars(type_monograph_start: "0")
+        include("./alma/typeMonograph.fix")
+        put_vars(type_monograph_start: "1")
+        include("./alma/typeMonograph.fix")
+        put_vars(type_monograph_start: "2")
+        include("./alma/typeMonograph.fix")
+        put_vars(type_monograph_start: "3")
+        include("./alma/typeMonograph.fix")
+        put_vars(type_monograph_start: "4")
+        include("./alma/typeMonograph.fix")
+        put_vars(type_monograph_start: "5")
+        include("./alma/typeMonograph.fix")
+        put_vars(type_monograph_start: "6")
+        include("./alma/typeMonograph.fix")
+      elsif any_equal("$i.F", "052")
+        put_vars(type_periodical_start: "0", type_periodical_length: "1")
+        include("./alma/typePeriodical.fix")
+        put_vars(type_periodical_start: "1", type_periodical_length: "2")
+        include("./alma/typePeriodical.fix")
+        put_vars(type_periodical_start: "3", type_periodical_length: "2")
+        include("./alma/typePeriodical.fix")
+        put_vars(type_periodical_start: "5", type_periodical_length: "2")
+        include("./alma/typePeriodical.fix")
+        put_vars(type_periodical_start: "7", type_periodical_length: "1")
+        include("./alma/typePeriodical.fix")
+        put_vars(type_periodical_start: "8", type_periodical_length: "1")
+        include("./alma/typePeriodical.fix")
+        put_vars(type_periodical_start: "9", type_periodical_length: "1")
+        include("./alma/typePeriodical.fix")
+        put_vars(type_periodical_start: "10", type_periodical_length: "1")
+        include("./alma/typePeriodical.fix")
+        put_vars(type_periodical_start: "11", type_periodical_length: "1")
+        include("./alma/typePeriodical.fix")
+        put_vars(type_periodical_start: "12", type_periodical_length: "1")
+        include("./alma/typePeriodical.fix")
+        put_vars(type_periodical_start: "13", type_periodical_length: "1")
+        include("./alma/typePeriodical.fix")
+        put_vars(type_periodical_start: "14", type_periodical_length: "1")
+        include("./alma/typePeriodical.fix")
+      end
+    end
+  end
+end
+
+# MARC/348
+add_array("introx.music[]")
+do list(path: "348??", "var": "$i")
+  if any_equal("$i.2", "gnd-music")
+    copy_field("$i.a", "ExtendedType[].$append")
+    copy_field("$i.a", "@extendedTypeFacet")
+    lookup("@extendedTypeFacet", "extended-type-music", delete: "true")
+    move_field("@extendedTypeFacet", "introx.music[].$append")
+  end
+end
+# MARC/655
+do list(path: "655?7", "var": "$i")
+  if any_equal("$i.2", "gnd-content")
+    copy_field("$i.a", "ExtendedType[].$append")
+    copy_field("$i.a", "@extendedTypeFacet")
+    lookup("@extendedTypeFacet", "extended-type-content", delete: "true")
+    move_field("@extendedTypeFacet", "@facet_type.$append")
+  elsif any_equal("$i.2", "gnd-carrier")
+    copy_field("$i.a", "ExtendedFormat[].$append")
+    copy_field("$i.a", "@extendedTypeFacet")
+    lookup("@extendedTypeFacet", "extended-type-carrier", delete: "true")
+    move_field("@extendedTypeFacet", "@facet_format.$append")
+  end
+end
+
+# MARC/533
+add_array("PublicationPlaceOfSecondaryEdition[]")
+add_array("PublisherNameOfSecondaryEdition[]")
+add_array("SecondaryEditionPublicationDate[]")
+add_array("SecondaryEditionTitleSuper[]")
+do list(path: "533??", "var": "$i")
+  add_field("PublicationPlaceOfSecondaryEdition[].$append.__dummy__", "")
+  copy_field("$i.b", "PublicationPlaceOfSecondaryEdition[].$last.name")
+  add_field("PublisherNameOfSecondaryEdition[].$append.__dummy__", "")
+  copy_field("$i.c", "PublisherNameOfSecondaryEdition[].$last.name")
+  add_field("SecondaryEditionPublicationDate[].$append.__dummy__", "")
+  copy_field("$i.d", "SecondaryEditionPublicationDate[].$last.secondaryEdition")
+  add_field("SecondaryEditionTitleSuper[].$append.__dummy__", "")
+  copy_field("$i.f", "SecondaryEditionTitleSuper[].$last.secondaryEdition")
+end
+
+# MARC/340
+add_array("TypeMediaSpecial[]")
+add_array("TypeMediaSpecialPreservation[]")
+do list(path: "340??", "var": "$i")
+  copy_field("$i.a", "@typeMediaSpecial")
+  lookup("@typeMediaSpecial", "type-media-special", delete: "true")
+  copy_field("@typeMediaSpecial", "TypeMediaSpecial[].$append")
+  copy_field("@typeMediaSpecial", "@facet_format.$append")
+  if any_match("$i.a", ".*(?:Audio|CD|Compact-Disc|Compact-Disk|Kompaktkassette|Magnetbandkassette|Schallpl\\.|Schallplatte|Tonkassette).*")
+    add_field("TypeMediaSpecial[].$append", "Audio")
+    add_field("@facet_format.$append", "Audio")
+  end
+  if any_match("$i.a", ".*(?:Computerdatei|Diskette|E-Books|Einsteckmodul|Elektron\\. Ressource|Funknetz-Karte|Optische Speicherplatte|Optischer Datentraeger|Optischer Datenträger|USB-Stick).*")
+    add_field("TypeMediaSpecial[].$append", "Elektronische Ressource")
+    add_field("@facet_format.$append", "Elektronische Ressource")
+  end
+  if any_match("$i.a", ".*(?:Blu-ray Disc|Blu-ray-Disc|Blue-Ray|BlueRay|Tonbildreihe|VHS|Video).*")
+    add_field("TypeMediaSpecial[].$append", "Film, Dia, Video")
+    add_field("@facet_format.$append", "Film, Dia, Video")
+  end
+  if any_match("$i.a", ".*Musikdruck.*")
+    add_field("TypeMediaSpecial[].$append", "Gedruckte Ressource")
+    add_field("@facet_format.$append", "Gedruckte Ressource")
+  end
+  if any_match("$i.a", ".*(?:Microfiche|Mikrofiche|Mikrofilm).*")
+    add_field("TypeMediaSpecial[].$append", "Mikroform")
+    add_field("@facet_format.$append", "Mikroform")
+  end
+  if any_match("$i.a", ".*(?:Computerdatei im Fernzugriff|Internet|Online Ressource|Online-Ausg\\.|Online-Resource|Online-Ressource).*")
+    add_field("TypeMediaSpecial[].$append", "Online-Ressource")
+    add_field("@facet_format.$append", "Online-Ressource")
+  end
+  if any_match("$i.a", ".*Arbeitstransparent.*")
+    add_field("TypeMediaSpecial[].$append", "Sonstiges")
+    add_field("@facet_format.$append", "Sonstiges")
+  end
+end
+# MARC/538, MARC/583
+do list(path: "538??|5831?", "var": "$i")
+  copy_field("$i.a", "TypeMediaSpecialPreservation[].$append")
+end
+uniq("ExtendedFormat[]")
+uniq("ExtendedType[]")
+uniq("FormatCarrier[]")
+uniq("RecordCodes[]")
+uniq("TypeMediaSpecial[]")
+uniq("TypeMonograph[]")
+uniq("introx.music[]")
+
+if any_match("@type__008Pos28", "(?:B|CF|CR|M|VM)#[acfilmosz]")
+  add_field("@facet_type.$append", "Amtliche Druckschrift")
+else
+  if any_match("@006Pos00__006Pos11", "[aefgkmorst]#[acfilmosz]")
+    add_field("@facet_type.$append", "Amtliche Druckschrift")
+  end
+end
+if any_equal("@type__008Pos33", "B#e")
+  add_field("@facet_type.$append", "Aufsatz")
+else
+  if any_match("@006Pos00__006Pos16", "[at]#e")
+    add_field("@facet_type.$append", "Aufsatz")
+  else
+    if any_match("@type__008Pos24|@type__008Pos25|@type__008Pos26|@type__008Pos27", "(?:B|CR)#g")
+      add_field("@facet_type.$append", "Aufsatz")
+    else
+      if any_match("@006Pos00__006Pos07|@006Pos00__006Pos08|@006Pos00__006Pos09|@006Pos00__006Pos10", "[ast]#g")
+        add_field("@facet_type.$append", "Aufsatz")
+      end
+    end
+  end
+end
+if any_match("@type__008Pos24|@type__008Pos25|@type__008Pos26|@type__008Pos27", "(?:B|CR)#[bknq]")
+  add_field("@facet_type.$append", "Bibliografie")
+else
+  if any_match("@006Pos00__006Pos07|@006Pos00__006Pos08|@006Pos00__006Pos09|@006Pos00__006Pos10", "[ast]#[bknq]")
+    add_field("@facet_type.$append", "Bibliografie")
+  else
+    if any_equal("@type__008Pos26", "CF#e")
+      add_field("@facet_type.$append", "Bibliografie")
+    else
+      if any_equal("@006Pos00__006Pos09", "m#e")
+        add_field("@facet_type.$append", "Bibliografie")
+      end
+    end
+  end
+end
+if any_match("@type__008Pos34", "B#[abc]")
+  add_field("@facet_type.$append", "Biografie")
+else
+  if any_match("@006Pos00__006Pos17", "[at]#[abc]")
+    add_field("@facet_type.$append", "Biografie")
+  else
+    if any_match("@type__008Pos30|@type__008Pos31", "Mu#[ab]")
+      add_field("@facet_type.$append", "Biografie")
+    else
+      if any_match("@006Pos00__006Pos13|@006Pos00__006Pos14", "[cdij]#[ab]")
+        add_field("@facet_type.$append", "Biografie")
+      else
+        if any_equal("@type__008Pos24|@type__008Pos25|@type__008Pos26|@type__008Pos27", "CR#h")
+          add_field("@facet_type.$append", "Biografie")
+        else
+          if any_equal("@006Pos00__006Pos07|@006Pos00__006Pos08|@006Pos00__006Pos09|@006Pos00__006Pos10", "s#h")
+            add_field("@facet_type.$append", "Biografie")
+          end
+        end
+      end
+    end
+  end
+end
+if any_equal("@type__008Pos30", "B#1")
+  add_field("@facet_type.$append", "Festschrift")
+else
+  if any_match("@006Pos00__006Pos13", "[at]#1")
+    add_field("@facet_type.$append", "Festschrift")
+  end
+end
+if any_match("@type__008Pos24|@type__008Pos25|@type__008Pos26|@type__008Pos27", "(?:B|CR)#l")
+  add_field("@facet_type.$append", "Gesetz")
+else
+  if any_match("@006Pos00__006Pos07|@006Pos00__006Pos08|@006Pos00__006Pos09|@006Pos00__006Pos10", "[ast]#l")
+    add_field("@facet_type.$append", "Gesetz")
+  end
+end
+if any_match("@type__008Pos24|@type__008Pos25|@type__008Pos26|@type__008Pos27", "(?:B|CR)#m")
+  add_field("@facet_type.$append", "Hochschulschrift")
+else
+  if any_match("@006Pos00__006Pos07|@006Pos00__006Pos08|@006Pos00__006Pos09|@006Pos00__006Pos10", "[ast]#m")
+    add_field("@facet_type.$append", "Hochschulschrift")
+  end
+end
+if any_match("@type__008Pos29", "(?:B|CR)#1")
+  add_field("@facet_type.$append", "Konferenzschrift")
+else
+  if any_match("@006Pos00__006Pos12", "[ast]#1")
+    add_field("@facet_type.$append", "Konferenzschrift")
+  else
+    if any_equal("@type__008Pos30|@type__008Pos31", "Mu#c")
+      add_field("@facet_type.$append", "Konferenzschrift")
+    else
+      if any_match("@006Pos00__006Pos13|@006Pos00__006Pos14", "[cdij]#c")
+        add_field("@facet_type.$append", "Konferenzschrift")
+      end
+    end
+  end
+end
+if any_match("@LeaderPos07", "[adm]")
+  if none_equal("@LeaderPos19", "a")
+    add_field("@facet_type.$append", "Monographie")
+  end
+end
+if any_match("@LeaderPos06|@006Pos00", "[cdj]")
+  add_field("@facet_type.$append", "Musikalia")
+elsif any_equal("@007Pos00", "q")
+  add_field("@facet_type.$append", "Musikalia")
+end
+if any_match("@type__008Pos24|@type__008Pos25|@type__008Pos26|@type__008Pos27", "(?:B|CR)#[der]")
+  add_field("@facet_type.$append", "Nachschlagewerk")
+else
+  if any_match("", "[ast]#[der]")
+    add_field("@facet_type.$append", "Nachschlagewerk")
+  end
+end
+if any_match("@type__008Pos24|@type__008Pos25|@type__008Pos26|@type__008Pos27", "(?:B|CR)#u")
+  add_field("@facet_type.$append", "Norm")
+else
+  if any_match("@006Pos00__006Pos07|@006Pos00__006Pos08|@006Pos00__006Pos09|@006Pos00__006Pos10", "[ast]#u")
+    add_field("@facet_type.$append", "Norm")
+  end
+end
+if any_equal("@LeaderPos07", "c")
+  add_field("@facet_type.$append", "Schriftenreihe")
+else
+  if any_equal("@LeaderPos19", "a")
+    add_field("@facet_type.$append", "Schriftenreihe")
+  else
+    if any_equal("@type__008Pos21", "CR#m")
+      add_field("@facet_type.$append", "Schriftenreihe")
+    else
+      if any_equal("@006Pos00__006Pos04", "s#m")
+        add_field("@facet_type.$append", "Schriftenreihe")
+      end
+    end
+  end
+end
+if any_equal("@007Pos00__007Pos01", "t#d")
+  add_field("@facet_type.$append", "Sonstiges")
+else
+  if any_equal("@type__008Pos33|@type__008Pos34", "M#r")
+    add_field("@facet_type.$append", "Sonstiges")
+  else
+    if any_match("@006Pos00__006Pos16|@006Pos00__006Pos17", "[ef]#r")
+      add_field("@facet_type.$append", "Sonstiges")
+    else
+      if any_match("@type__008Pos24|@type__008Pos25|@type__008Pos26|@type__008Pos27", "(?:B|CR)#[acis]")
+        add_field("@facet_type.$append", "Sonstiges")
+      else
+        if any_match("@006Pos00__006Pos07|@006Pos00__006Pos08|@006Pos00__006Pos09|@006Pos00__006Pos10", "[ast]#[acis]")
+          add_field("@facet_type.$append", "Sonstiges")
+        else
+          if any_match("@type__008Pos24|@type__008Pos25|@type__008Pos26|@type__008Pos27", "B#[j2]")
+            add_field("@facet_type.$append", "Sonstiges")
+          else
+            if any_match("@006Pos00__006Pos07|@006Pos00__006Pos08|@006Pos00__006Pos09|@006Pos00__006Pos10", "[at]#[j2]")
+              add_field("@facet_type.$append", "Sonstiges")
+            else
+              if any_equal("@type__008Pos33", "B#m")
+                add_field("@facet_type.$append", "Sonstiges")
+              else
+                if any_match("@006Pos00__006Pos16", "[at]#m")
+                  add_field("@facet_type.$append", "Sonstiges")
+                else
+                  if any_equal("@type__008Pos21", "CR#l")
+                    add_field("@facet_type.$append", "Sonstiges")
+                  else
+                    if any_equal("@006Pos00__006Pos04", "s#l")
+                      add_field("@facet_type.$append", "Sonstiges")
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+end
+if any_match("@type__008Pos21", "CR#[np]")
+  add_field("@facet_type.$append", "Zeitschrift")
+else
+  if any_equal("@type__008Pos24|@type__008Pos25|@type__008Pos26|@type__008Pos27", "CR#y")
+    add_field("@facet_type.$append", "Zeitschrift")
+  else
+    if any_match("@006Pos00__006Pos04", "s#[np]")
+      add_field("@facet_type.$append", "Zeitschrift")
+    else
+      if any_equal("@006Pos00__006Pos07|@006Pos00__006Pos08|@006Pos00__006Pos09|@006Pos00__006Pos10", "s#y")
+        add_field("@facet_type.$append", "Zeitschrift")
+      end
+    end
+  end
+end
+
+# MARC/008, MARC/041
+copy_field("008", "@language_source")
+substring("@language_source", "35", "3")
+do list(path: "041[ 01] .[adj]", "var": "$i")
+  copy_field("$i", "@language_source")
+end
+uniq("@language_source")
+add_array("@language_long")
+copy_field("@language_source", "@language_long.$append")
+lookup("@language_long.*", "ISO639-2-to-GND", delete: "true")
+
+# MARC/044
+add_array("Country[]")
+do list(path: "044??.c", "var": "$i")
+  add_field("Country[].$append.__dummy__", "")
+  do list(path: "$i", "var": "$j")
+    replace_all("$j", "^X[A-Z]-", "")
+    copy_field("$j", "Country[].$last.countryISO")
+  end
+end
+
+if any_equal("@type", "CR")
+  if none_equal("@008Pos06", "n")
+    copy_field("@008Pos07", "@date1")
+  end
+  if any_match("@008Pos06", "[^cn]")
+    copy_field("@008Pos11", "@date2")
+  end
+end
+
+vacuum()
+
+# MARC/MBD
+do list(path: "MBD  ", "var": "$i")
+  if any_equal("$i.M", "$[member]")
+    copy_field("$i.i", "@mmsiz")
+  end
+end
+
+# MARC/001
+copy_field("001", "@institution_code")
+parse_text("@institution_code", ".*(.{4})$")
+copy_field("@institution_code", "@isil")
+lookup("@isil", "institution-code-to-isil", delete: "true")
+
+copy_field("@mmsiz", "@institution_code_iz")
+parse_text("@institution_code_iz", ".*(.{4})$")
+copy_field("@institution_code_iz", "@isiliz")
+lookup("@isiliz", "institution-code-to-isil", delete: "true")
+
+# MARC/981
+do list(path: "981  .a", "var": "$i") # SISIS CATKey
+  if any_match("$i", "\\($[isil]\\).*")
+    copy_field("$i", "@sysid")
+  elsif any_match("$i", "\\($[sigel]\\).*")
+    replace_all("$i", "^\\($[sigel]\\)", "($[isil])")
+    copy_field("$i", "@sysid")
+  end
+end
+
+# MARC/035
+add_array("IdentifierDNB[]")
+add_array("IdentifierGBV[]")
+add_array("IdentifierHBZ[]")
+add_array("IdentifierOCLC[]")
+do list(path: "035  .a", "var": "$i")
+  if any_match("$i", "\\($[catalogid]\\).*")
+    if exists("@hbzid")
+      remove_field("@hbzid")
+    end
+    copy_field("$i", "@hbzid")
+    copy_field("$i", "@hbzids")
+  elsif any_match("$i", "\\($[isil]\\).*")
+    unless exists("@sysid")
+      copy_field("$i", "@sysid")
+    end
+  end
+  if any_match("$i", "\\(DE-600\\).*")
+    add_field("IdentifierDNB[].$append.__dummy__", "")
+    replace_all("$i", "^\\(DE-600\\)", "")
+    copy_field("$i", "IdentifierDNB[].$last.identifierDNB")
+  else
+    if any_match("$i", "\\(DE-601\\).*")
+      add_field("IdentifierGBV[].$append.__dummy__", "")
+      replace_all("$i", "^\\(DE-601\\)", "")
+      copy_field("$i", "IdentifierGBV[].$last.identifierGBV")
+    else
+      if any_match("$i", "\\(DE-605\\).*")
+        add_field("IdentifierHBZ[].$append.__dummy__", "")
+        replace_all("$i", "^\\(DE-605\\)", "")
+        copy_field("$i", "IdentifierHBZ[].$last.identifierHBZ")
+      else
+        if any_match("$i", "\\(OCoLC\\).*")
+          add_field("IdentifierOCLC[].$append.__dummy__", "")
+          do list(path: "$i", "var": "$j")
+            replace_all("$j", "^\\(OCoLC\\)", "")
+            copy_field("$j", "IdentifierOCLC[].$last.identifierOCLC")
+          end
+        end
+      end
+    end
+  end
+end
+
+paste("@mmsid", "~(", "@isil", "~)", "001", join_char: "")
+
+if exists("@hbzid")
+  paste("@id", "@hbzid", "$[id-suffix]", join_char: "")
+elsif exists("@sysid")
+  paste("@id", "@sysid", "$[id-suffix]", join_char: "")
+else
+  copy_field("@mmsid", "@id")
+end
+
+copy_field("@isil", "collection")
+
+# MARC/240
+do list(path: "240??.a", "var": "$i")
+  replace_all("$i", "[.]$", "")
+  copy_field("$i", "TitleUniform.titleUniform")
+end
+
+# MARC/245
+do list(path: "245??.b", "var": "$i")
+  unless exists("TitleAddendum.title")
+    replace_all("$i", "\\s?[./]\\s?$", "")
+    copy_field("$i", "TitleAddendum.title")
+  end
+end
+
+do list(path: "245??.n", "var": "$i")
+  unless exists("VolumeDesignation.volumeDesignation")
+    add_field("@facet_type.$append", "Teil eines Werkes")
+    replace_all("$i", "\\s?[,./:=]?\\s?$", "")
+    copy_field("$i", "VolumeDesignation.volumeDesignation")
+  end
+end
+# MARC/773
+add_array("RecordIdentifierSuper[]")
+add_array("SortableVolumeDesignation[]")
+do list(path: "77308", "var": "$i")
+  if exists("$i.q")
+    add_field("@facet_type.$append", "Teil eines Werkes")
+    add_field("SortableVolumeDesignation[].$append.__dummy__", "")
+    copy_field("$i.q", "SortableVolumeDesignation[].$last.volumeDesignation")
+  end
+  add_field("RecordIdentifierSuper[].$append.__dummy__", "")
+  copy_field("$i.w", "RecordIdentifierSuper[].$last.recordIdentifierSuper")
+end
+
+# MARC/245
+copy_field("245[01]?.c", "CreatorStatement.creatorStatement")
+replace_all("CreatorStatement.creatorStatement", "[.]$", "")
+
+if exists("@facet_format")
+  uniq("@facet_format")
+  copy_field("@facet_format", "dc.format[]")
+  if any_equal("@facet_format", "Online-Ressource")
+    if none_equal("@facet_format", "Elektronische Ressource")
+      add_field("dc.format[]", "Elektronische Ressource")
+    end
+  end
+else
+  add_field("dc.format[]", "keine Angabe")
+end
+if exists("@facet_type")
+  uniq("@facet_type")
+  copy_field("@facet_type", "dc.type[]")
+else
+  add_field("dc.type[]", "keine Angabe")
+end
+if exists("@language_long")
+  copy_field("@language_long", "dc.language[]")
+else
+  add_field("dc.language[]", "keine Angabe")
+end
+# MARC/260, MARC/264
+copy_field("260[ 23] .c", "@date")
+do list(path: "264[ 23]1.c", "var": "$i")
+  copy_field("$i", "@date")
+end
+copy_field("@date[12]", "@date")
+split_field("@date", "[,-]")
+do list(path: "@date", "var": "$i")
+  copy_field("$i", "@date_flat")
+end
+do list(path: "@date_flat", "var": "$i")
+  replace_all("$i", ".*?(\\d{4}).*", "$1")
+  if any_match("$i", "\\d{4}")
+    unless any_equal("$i", "9999")
+      copy_field("$i", "dc.date[]")
+    end
+  end
+end
+uniq("dc.date[]")
+
+if any_equal("@facet_format", "Online-Ressource")
+  add_field("introx.access[]", "online")
+else
+  add_field("introx.access[]", "local")
+end
+# MARC/ITM
+add_array("@current_library")
+do list(path: "ITM  ", "var": "$i")
+  if any_equal("$i.M", "$[member]")
+    copy_field("$i.w", "@current_library.$append")
+  end
+end
+lookup("@current_library.*", "alma-library-to-branch-$[isil]", delete: "true")
+uniq("@current_library")
+move_field("@current_library", "introx.branch[]")
+# MARC/ITM
+add_array("@current_location")
+do list(path: "ITM  ", "var": "$i")
+  if any_equal("$i.M", "$[member]")
+    copy_field("$i.x", "@current_location.$append")
+  end
+end
+lookup("@current_location.*", "alma-location-to-branch-$[isil]", delete: "true")
+uniq("@current_location")
+move_field("@current_location", "introx.branch[]")
+if exists("@facet_format")
+  do list(path: "@facet_format", "var": "$i")
+    unless any_equal("$i", "Online-Ressource")
+      copy_field("$i", "introx.carrier[]")
+    end
+  end
+else
+  add_field("introx.carrier[]", "keine Angabe")
+end
+# MARC/983
+add_array("@SubjectGHBLocal")
+do list(path: "983  ", "var": "$i")
+  if any_equal("$i.M", "$[member]")
+    copy_field("$i.b", "@SubjectGHBLocal.$append")
+  end
+end
+# MARC/084
+add_array("SubjectDNB[]")
+add_array("SubjectNWBIB[]")
+add_array("SubjectRPB[]")
+add_array("SubjectRVK[]")
+add_array("introx.taxonomy[]")
+add_field("@current_isil", "$[isil]")
+do list(path: "084  ", "var": "$i")
+  if any_equal("$i.2", "ghbs")
+    copy_field("$i.a", "@SubjectGHBLocal.$append")
+  else
+    if any_equal("$i.2", "nwbib")
+      add_field("SubjectNWBIB[].$append.__dummy__", "")
+      copy_field("$i.a", "SubjectNWBIB[].$last.subject")
+    else
+      if any_equal("$i.2", "rpb")
+        add_field("SubjectRPB[].$append.__dummy__", "")
+        if any_equal("@current_isil", "DE-107")
+          copy_field("$i.a", "@subjectRPB")
+          lookup("@subjectRPB", "alma-rpb-to-taxonomy", delete: "true")
+          move_field("@subjectRPB", "introx.taxonomy[].$append")
+          lookup("$i.a", "alma-rpb-to-taxonomy")
+          copy_field("$i.a", "SubjectRPB[].$last.subject")
+        else
+          copy_field("$i.a", "SubjectRPB[].$last.subject")
+        end
+      else
+        if any_equal("$i.2", "rvk")
+          add_field("SubjectRVK[].$append.__dummy__", "")
+          copy_field("$i.a", "SubjectRVK[].$last.subject")
+        else
+          if any_equal("$i.2", "sdnb")
+            add_field("SubjectDNB[].$append.__dummy__", "")
+            copy_field("$i.a", "SubjectDNB[].$last.subject")
+          end
+        end
+      end
+    end
+  end
+end
+add_array("@taxonomy")
+copy_field("@SubjectGHBLocal", "@taxonomy.$append")
+lookup("@taxonomy.*", "alma-notation-to-taxonomy", delete: "true")
+move_field("@taxonomy", "introx.taxonomy[].$append")
+uniq("introx.taxonomy[]")
+
+# MARC/001
+add_field("IdentifierAlma.identifierMember", "$[member]")
+copy_field("001", "IdentifierAlma.identifierMMS")
+copy_field("@mmsiz", "IdentifierAlma.identifierMMSIZ")
+
+# MARC/POR
+add_array("@portfolio")
+do list(path: "POR  ", "var": "$i")
+  if any_equal("$i.[MA]", "$[member]")
+    copy_field("$i.a", "@portfolio.$append")
+  end
+end
+copy_field("@portfolio", "IdentifierAlma.identifierPID.$append")
+
+copy_field("@mmsid", "RecordIdentifier.identifierForTheIndex")
+copy_field("@id", "RecordIdentifier.identifierForTheRecord")
+
+# MARC/POC
+do list(path: "POC  ", "var": "$i")
+  if any_match("$i.a", ".*$[institution-code]")
+    copy_field("$i.b", "DateFirst.date")
+  end
+end
+uniq("DateFirst.date")
+if any_match("@date1", "\\d+")
+  if none_equal("@date1", "9999")
+    copy_field("@date1", "DateFirst.date")
+  end
+end
+
+# MARC/POC
+do list(path: "POC  ", "var": "$i")
+  if any_match("$i.a", ".*$[institution-code]")
+    copy_field("$i.c", "DateLast.date")
+  end
+end
+uniq("DateLast.date")
+if any_match("@date2", "\\d+")
+  if none_equal("@date2", "9999")
+    copy_field("@date2", "DateLast.date")
+  end
+end
+
+add_array("Language[]")
+do list(path: "@language_source", "var": "$i")
+  add_field("Language[].$append.__dummy__", "")
+  copy_field("$i", "@language")
+  lookup("@language", "ISO639-2-to-GND", delete: "true")
+  move_field("@language", "Language[].$last.language")
+  copy_field("$i", "Language[].$last.languageSource")
+end
+
+# MARC/016
+add_array("IdentifierZDB[]")
+do list(path: "0167 ", "var": "$i")
+  if any_equal("$i.2", "DE-600")
+    add_field("IdentifierZDB[].$append.__dummy__", "")
+    #hbz.limetrans.function.ZDB("$i.a")
+    copy_field("$i.a", "IdentifierZDB[].$last.identifierZDB")
+  end
+end
+
+# MARC/020
+add_array("IdentifierISBN[]")
+do list(path: "020  ", "var": "$i")
+  if exists("$i.a")
+    add_field("IdentifierISBN[].$append.__dummy__", "")
+    copy_field("$i.a", "IdentifierISBN[].$last.identifierISBN[]")
+    copy_field("$i.c", "IdentifierISBN[].$last.identifierISBN[]")
+    replace_all("$i.q", "^\\(|\\s?[):;,]\\s?$", "")
+    copy_field("$i.q", "IdentifierISBN[].$last.identifierISBN[]")
+  end
+end
+
+# MARC/022
+add_array("IdentifierISSN[]")
+do list(path: "022? ", "var": "$i")
+  add_field("IdentifierISSN[].$append.__dummy__", "")
+  do list(path: "$i.a", "var": "$j")
+    copy_field("$j", "IdentifierISSN[].$last.identifierISSN")
+    #hbz.limetrans.function.ISSN("$j")
+    move_field("$j", "IdentifierISSN[].$last.identifierISSNNormalized")
+  end
+end
+
+# MARC/024
+add_array("IdentifierISMN[]")
+do list(path: "0242?", "var": "$i")
+  add_field("IdentifierISMN[].$append.__dummy__", "")
+  copy_field("$i.a", "IdentifierISMN[].$last.identifierISMN")
+end
+add_array("IdentifierDOI[]")
+do list(path: "0247?", "var": "$i")
+  if any_equal("$i.2", "doi")
+    add_field("IdentifierDOI[].$append.__dummy__", "")
+    copy_field("$i.a", "IdentifierDOI[].$last.standardNumber")
+  end
+end
+
+# MARC/028
+add_array("IdentifierSheetMusic[]")
+do list(path: "028[35]2", "var": "$i")
+  add_field("IdentifierSheetMusic[].$append.__dummy__", "")
+  copy_field("$i.a", "IdentifierSheetMusic[].$last.standardNumber")
+end
+
+# MARC/029
+add_array("IdentifierSerial[]")
+do list(path: "029??", "var": "$i")
+  add_field("IdentifierSerial[].$append.__dummy__", "")
+  do list(path: "$i.a", "var": "$j")
+    copy_field("$j", "IdentifierSerial[].$last.identifierISSN")
+    #hbz.limetrans.function.ISSN("$j")
+    move_field("$j", "IdentifierSerial[].$last.identifierISSNNormalized")
+  end
+end
+
+# MARC/100
+add_array("@person")
+do list(path: "100[013] ", "var": "$i")
+  if exists("$i.[4e]")
+    if any_match("$i.[4e]", "(?:[Aa]ut|[Cc]re).*")
+      include("./alma/personCreator.fix")
+    end
+  else
+    include("./alma/personCreator.fix")
+  end
+end
+move_field("@person", "Person[]")
+
+# MARC/110, MARC/111, MARC/710, MARC/711
+add_array("CorporateBody[]")
+do list(path: "[17]1[01][012] ", "var": "$i")
+  add_field("CorporateBody[].$append.__dummy__", "")
+  do list(path: "$i.a", "var": "$j")
+    replace_all("$j", "[.]$", "")
+    copy_field("$j", "CorporateBody[].$last.corporateBodyName")
+  end
+  do list(path: "$i.b", "var": "$j")
+    replace_all("$j", "[.]$", "")
+    copy_field("$j", "CorporateBody[].$last.corporateBodyNameUnit[]")
+  end
+  copy_field("$i.d", "CorporateBody[].$last.corporateBodyDate[]")
+  copy_field("$i.g", "CorporateBody[].$last.corporateBodyOther[]")
+  copy_field("$i.n", "CorporateBody[].$last.corporateBodyNumber[]")
+  add_array("CorporateBody[].$last.corporateBodyIdentifier[]")
+  add_array("CorporateBody[].$last.identifierGND[]")
+  do list(path: "$i.0", "var": "$j")
+    if any_match("$j", "\\(DE-588\\).*")
+      copy_field("$j", "CorporateBody[].$last.corporateBodyIdentifier[].$append")
+      replace_all("$j", "^\\(DE-588\\)", "")
+      copy_field("$j", "CorporateBody[].$last.identifierGND[].$append")
+    end
+  end
+end
+
+# MARC/111
+do list(path: "111[012] .a", "var": "$i")
+  replace_all("$i", "[.,]$", "")
+  copy_field("$i", "Conference.conferenceName")
+end
+do list(path: "111[012] .n", "var": "$i")
+  unless exists("Conference.corporateBodyNameeNumber")
+    replace_all("$i", "\\(|\\)?[,]?$|\\s?:$", "")
+    copy_field("$i", "Conference.corporateBodyNameeNumber") # sic!
+  end
+end
+do list(path: "111[012] .d", "var": "$i")
+  replace_all("$i", "\\(|\\)?[,]?$|\\s?:$", "")
+  copy_field("$i", "Conference.conferenceDate")
+end
+do list(path: "111[012] .c", "var": "$i")
+  unless exists("Conference.conferencePlace")
+    replace_all("$i", "\\(|\\)?[;.,]?$", "")
+    copy_field("$i", "Conference.conferencePlace")
+  end
+end
+add_array("Conference.conferenceIdentifier[]")
+add_array("Conference.identifierGND[]")
+do list(path: "111[012] .0", "var": "$i")
+  if any_match("$i", "\\(DE-588\\).*")
+    copy_field("$i", "Conference.conferenceIdentifier[].$append")
+    replace_all("$i", "^\\(DE-588\\)", "")
+    copy_field("$i", "Conference.identifierGND[].$append")
+  end
+end
+do list(path: "111[012] .e", "var": "$i")
+  replace_all("$i", "[,.]$", "")
+  copy_field("$i", "Conference.conferenceUnit")
+end
+join_field("Conference.conferenceUnit", ". ")
+
+# MARC/245
+add_array("TitleStatement[]")
+do list(path: "245??.a", "var": "$i")
+  add_field("TitleStatement[].$append.__dummy__", "")
+  replace_all("$i", "^[©]|\\s?[,.:;/=]?$", "")
+  copy_field("$i", "TitleStatement[].$last.titleMain")
+end
+do list(path: "245??.p", "var": "$i")
+  unless exists("@titleMain")
+    replace_all("$i", "\\s?[.]?\\s?$", "")
+    copy_field("$i", "@titleMain")
+  end
+end
+add_field("TitleStatement[].$append.__dummy__", "")
+move_field("@titleMain", "TitleStatement[].$last.titleMain")
+
+# MARC/250
+replace_all("250  .a", "\\s?[=/]$", "")
+copy_field("250  .a", "Edition.edition[]")
+
+# MARC/260
+add_array("PublisherName[]")
+do list(path: "260[ 23] |264[ 23][ 1]", "var": "$i")
+  add_hash("@publisher")
+  do list(path: "$i.a", "var": "$j")
+    replace_all("$j", "^[©]|\\s?[,.:;/=]?$", "")
+    copy_field("$j", "@publisher.place[]")
+  end
+  do list(path: "$i.b", "var": "$j")
+    replace_all("$j", "^[©]|\\s?[,.:;/=]?$", "")
+    copy_field("$j", "@publisher.name[]")
+  end
+  do list(path: "$i.c", "var": "$j")
+    replace_all("$j", "^[©]|\\s?[,.:;/=]?$", "")
+    copy_field("$j", "@publisher.chronology[]")
+  end
+  move_field("@publisher", "PublisherName[].$append")
+end
+
+# MARC/264
+add_array("PublicationPlace[]")
+do list(path: "264?[13]", "var": "$i")
+  add_field("PublicationPlace[].$append.__dummy__", "")
+  do list(path: "$i.a", "var": "$j")
+    replace_all("$j", " :$", "")
+    copy_field("$j", "PublicationPlace[].$last.printingPlace")
+  end
+end
+uniq("PublicationPlace[]")
+
+# MARC/260
+do list(path: "260[ 23] |264[ 23][ 1]", "var": "$i")
+  do list(path: "$i.c", "var": "$j")
+    replace_all("$j", "^[©]|\\s?[,.:;/=]?$", "")
+    copy_field("$j", "DateProper.date[]")
+  end
+end
+
+# MARC/300
+add_array("@300a")
+copy_field("300  .a", "@300a.$append")
+if exists("@300a.1")
+  copy_field("@300a.1", "@300a1")
+  replace_all("@300a1", "\\s?[:;+(]?$", "")
+end
+if exists("@300a.2")
+  copy_field("@300a.2", "@300a2")
+  replace_all("@300a2", "\\s?[:;+)]?$", "")
+end
+do list(path: "300  .b", "var": "$i")
+  replace_all("$i", "\\s?[:;+(]?$", "")
+  copy_field("$i", "@300b")
+end
+add_array("@300c")
+copy_field("300  .c", "@300c.$append")
+if exists("@300c.1")
+  copy_field("@300c.1", "@300c1")
+  replace_all("@300c1", "[.]?\\s?[:;+(]?$", "")
+end
+if exists("@300c.2")
+  copy_field("@300c.2", "@300c2")
+  replace_all("@300c2", "[.]?\\s?[:;+)]?$", "")
+end
+do list(path: "300  .e", "var": "$i")
+  replace_all("$i", "[.]?\\s?\\(?$", "")
+  copy_field("$i", "@300e")
+end
+if exists("@300a2")
+  if exists("@300c2")
+    paste("@300a2_punct", "@300a2", "~ ; ", join_char: "")
+  else
+    paste("@300a2_punct", "@300a2", "~)", join_char: "")
+  end
+end
+if exists("@300b")
+  if exists("@300a1")
+    paste("@300b_punct", "~ : ", "@300b", join_char: "")
+  else
+    copy_field("@300b", "@300b_punct")
+  end
+end
+if exists("@300c1")
+  if exists("@300a1|@300b")
+    paste("@300c1_punct", "~ ; ", "@300c1", join_char: "")
+  else
+    copy_field("@300c1", "@300c1_punct")
+  end
+end
+copy_field("@300c2", "@300c2_punct")
+if exists("300  .e")
+  if exists("@300[ac]1|@300b")
+    if exists("@300[ac]2")
+      paste("@300e_punct", "~ ; ", "@300e", "~ (", join_char: "")
+    else
+      paste("@300e_punct", "~ ; ", "@300e", join_char: "")
+    end
+  else
+    copy_field("@300e", "@300e_punct")
+  end
+end
+paste("Extent.extent", "@300a1", "@300b_punct", "@300c1_punct", "@300e_punct", "@300a2_punct", "@300c2_punct", join_char: "")
+
+# MARC/344
+add_array("FileCharacteristics[]")
+add_array("SoundCharacteristics[]")
+add_array("VideoCharacteristics[]")
+do list(path: "344??", "var": "$i")
+  add_field("SoundCharacteristics[].$append.__dummy__", "")
+  copy_field("$i.a", "SoundCharacteristics[].$last.typeOfRecording")
+end
+# MARC/346
+do list(path: "346??", "var": "$i")
+  add_field("VideoCharacteristics[].$append.__dummy__", "")
+  copy_field("$i.b", "VideoCharacteristics[].$last.broadcastStandard")
+end
+# MARC/347
+do list(path: "347??", "var": "$i")
+  add_field("FileCharacteristics[].$append.__dummy__", "")
+  copy_field("$i.b", "FileCharacteristics[].$last.encodingFormat")
+  copy_field("$i.e", "FileCharacteristics[].$last.regionalEncoding")
+end
+
+# MARC/362
+copy_field("3620 .a", "ChronologyAndEnumeration.value")
+join_field("ChronologyAndEnumeration.value", " ; ")
+
+# MARC/490
+unless exists("830??")
+  add_array("TitleSuper[]")
+  add_array("TitleSuperVolumeDesignation[]")
+  do list(path: "490[01] ", "var": "$i")
+    add_field("TitleSuper[].$append.__dummy__", "")
+    do list(path: "$i.a", "var": "$j")
+      copy_field("$j", "@490_a")
+      replace_all("@490_a", "^[©]|\\s?[,.:;/=]?$", "")
+      move_field("@490_a", "TitleSuper[].$last.titleSuper[]")
+    end
+    add_field("TitleSuperVolumeDesignation[].$append.__dummy__", "")
+    do list(path: "$i.v", "var": "$j")
+      replace_all("$j", "^[©]|\\s?[,.:;/=]?$", "")
+      copy_field("$j", "TitleSuperVolumeDesignation[].$last.volumeDesignation[]")
+    end
+  end
+end
+
+# MARC/989
+add_array("@description")
+do list(path: "989  ", "var": "$i")
+  if any_equal("$i.M", "$[member]")
+    copy_field("$i.a", "@description.$append")
+  end
+end
+filter("@description", "^$[regexp.description]$")
+uniq("@description")
+# MARC/500
+copy_field("500  .a", "Description.description[]")
+move_field("@description", "Description.description[]")
+# MARC/H52
+do list(path: "H52??", "var": "$i")
+  if any_match("$i.8", ".*$[institution-code]")
+    copy_field("$i.z", "Description.description[]")
+  end
+end
+
+# MARC/501, MARC/505
+add_array("DescriptionOfContent[]")
+do list(path: "50[15]??", "var": "$i")
+  add_field("DescriptionOfContent[].$append.__dummy__", "")
+  copy_field("$i.a", "DescriptionOfContent[].$last.description")
+  copy_field("$i.r", "DescriptionOfContent[].$last.creator")
+  copy_field("$i.t", "DescriptionOfContent[].$last.note")
+end
+
+# MARC/502
+add_array("DescriptionOfThesis[]")
+do list(path: "502??", "var": "$i")
+  add_field("DescriptionOfThesis[].$append.__dummy__", "")
+  copy_field("$i.a", "DescriptionOfThesis[].$last.description")
+  copy_field("$i.b", "DescriptionOfThesis[].$last.type")
+  copy_field("$i.c", "DescriptionOfThesis[].$last.place")
+  copy_field("$i.d", "DescriptionOfThesis[].$last.year")
+end
+
+# MARC/515
+add_array("DescriptionOfIssuance[]")
+do list(path: "515??", "var": "$i")
+  add_field("DescriptionOfIssuance[].$append.__dummy__", "")
+  copy_field("$i.a", "DescriptionOfIssuance[].$last.description")
+  copy_field("$i.r", "DescriptionOfIssuance[].$last.creator")
+  copy_field("$i.t", "DescriptionOfIssuance[].$last.note")
+end
+
+# MARC/546
+add_array("DescriptionOfExpression[]")
+do list(path: "546??", "var": "$i")
+  add_field("DescriptionOfExpression[].$append.__dummy__", "")
+  copy_field("$i.a", "DescriptionOfExpression[].$last.description")
+end
+
+# MARC/520
+copy_field("5203 .[ab]", "Abstract.abstract[]")
+copy_field("5201 .[ab]", "Recension.abstract[]")
+copy_field("520  .[ab]", "Summary.abstract[]")
+
+# MARC/H66
+add_array("HoldingsStatement[]")
+do list(path: "H66??", "var": "$i")
+  if any_match("$i.8", ".*$[institution-code]")
+    add_field("HoldingsStatement[].$append.__dummy__", "")
+    copy_field("$i.z", "HoldingsStatement[].$last.note")
+  end
+end
+
+# MARC/100, MARC/700
+add_array("@person")
+do list(path: "[17]00[013] ", "var": "$i")
+  if exists("$i.[4e]")
+    if none_match("$i.[4e]", "(?:[Aa]ut|[Cc]re).*")
+      include("./alma/personCreator.fix")
+    end
+  end
+end
+move_field("@person", "PersonContributor[]")
+
+/*
+# MARC/580
+add_array("DescriptionOfRelatedEditions[]")
+add_field("DescriptionOfRelatedEditions[].$append.__dummy__", "")
+copy_field("580  .a", "DescriptionOfRelatedEditions[].$last.description")
+# MARC/773, MARC/775, MARC/776
+do list(path: "77[356]??", "var": "$i")
+  add_field("DescriptionOfRelatedEditions[].$append.__dummy__", "")
+  do list(path: "$i.i", "var": "$j")
+    copy_field("$j", "@77x_i")
+    replace_all("@77x_i", ":$", "")
+    move_field("@77x_i", "DescriptionOfRelatedEditions[].$last.prefix")
+  end
+  add_array("@description")
+  replace_all("$i.a", "[.:]$", "")
+  copy_field("$i.a", "@description")
+  do list(path: "$i.t", "var": "$j")
+    copy_field("$j", "@77x_t")
+    replace_all("@77x_t", "[.]$", "")
+    move_field("@77x_t", "@description")
+  end
+  join_field("@description", ": ")
+  move_field("@description", "DescriptionOfRelatedEditions[].$last.description")
+  copy_field("$i.n", "DescriptionOfRelatedEditions[].$last.note[]")
+end
+*/
+
+add_array("IdentifierISBNParallel[]")
+/*
+# MARC/773, MARC/775, MARC/776
+do list(path: "77[356]??", "var": "$i")
+  add_field("IdentifierISBNParallel[].$append.__dummy__", "")
+  copy_field("$i.z", "IdentifierISBNParallel[].$last.identifierISBN[]")
+end
+*/
+# MARC/964
+do list(path: "9640s", "var": "$i")
+  if any_equal("$i.V", "086a")
+    add_field("IdentifierISBNParallel[].$append.__dummy__", "")
+    copy_field("$i.[abcdehnpqs]", "IdentifierISBNParallel[].$last.identifierISBN[]")
+  end
+end
+
+/*
+# MARC/780
+add_array("@descriptionOfEditionsOrVolumes")
+do list(path: "78000", "var": "$i")
+  add_field("@prefix", "Fortsetzung von")
+  include("./alma/descriptionOfEditionsOrVolumes.fix")
+end
+do list(path: "78001", "var": "$i")
+  add_field("@prefix", "Teilweise Fortsetzung von")
+  include("./alma/descriptionOfEditionsOrVolumes.fix")
+end
+do list(path: "78002", "var": "$i")
+  add_field("@prefix", "Ersatz von")
+  include("./alma/descriptionOfEditionsOrVolumes.fix")
+end
+do list(path: "78003", "var": "$i")
+  add_field("@prefix", "Teilweise Ersatz von")
+  include("./alma/descriptionOfEditionsOrVolumes.fix")
+end
+do list(path: "78004", "var": "$i")
+  add_field("@prefix", "Vereinigung von")
+  include("./alma/descriptionOfEditionsOrVolumes.fix")
+end
+do list(path: "78005", "var": "$i")
+  add_field("@prefix", "Darin aufgegangen")
+  include("./alma/descriptionOfEditionsOrVolumes.fix")
+end
+do list(path: "78006", "var": "$i")
+  add_field("@prefix", "Teilweise darin aufgegangen")
+  include("./alma/descriptionOfEditionsOrVolumes.fix")
+end
+do list(path: "78007", "var": "$i")
+  add_field("@prefix", "Abgespalten von")
+  include("./alma/descriptionOfEditionsOrVolumes.fix")
+end
+move_field("@descriptionOfEditionsOrVolumes", "DescriptionOfFormerEditionsOrVolumes[]")
+*/
+
+/*
+# MARC/785
+add_array("@descriptionOfEditionsOrVolumes")
+do list(path: "7850[078]", "var": "$i")
+  add_field("@prefix", "Fortgesetzt von")
+  include("./alma/descriptionOfEditionsOrVolumes.fix")
+end
+do list(path: "78501", "var": "$i")
+  add_field("@prefix", "Teilweise fortgesetzt von")
+  include("./alma/descriptionOfEditionsOrVolumes.fix")
+end
+do list(path: "78502", "var": "$i")
+  add_field("@prefix", "Ersetzt durch")
+  include("./alma/descriptionOfEditionsOrVolumes.fix")
+end
+do list(path: "78503", "var": "$i")
+  add_field("@prefix", "Teilweise ersetzt durch")
+  include("./alma/descriptionOfEditionsOrVolumes.fix")
+end
+do list(path: "78504", "var": "$i")
+  add_field("@prefix", "Aufgegangen in")
+  include("./alma/descriptionOfEditionsOrVolumes.fix")
+end
+do list(path: "78505", "var": "$i")
+  add_field("@prefix", "Teilweise aufgegangen in")
+  include("./alma/descriptionOfEditionsOrVolumes.fix")
+end
+do list(path: "78506", "var": "$i")
+  add_field("@prefix", "Gesplittet in")
+  include("./alma/descriptionOfEditionsOrVolumes.fix")
+end
+move_field("@descriptionOfEditionsOrVolumes", "DescriptionOfContinuingEditionsOrVolumes[]")
+*/
+
+# MARC/760
+put_vars(linking_entry_source: "760", linking_entry_target: "MainSeriesEntry")
+include("./alma/linkingEntry.fix")
+# MARC/762
+put_vars(linking_entry_source: "762", linking_entry_target: "SubSeriesEntry")
+include("./alma/linkingEntry.fix")
+# MARC/765
+put_vars(linking_entry_source: "765", linking_entry_target: "OriginalLanguageEntry")
+include("./alma/linkingEntry.fix")
+# MARC/767
+put_vars(linking_entry_source: "767", linking_entry_target: "TranslationEntry")
+include("./alma/linkingEntry.fix")
+# MARC/770
+put_vars(linking_entry_source: "770", linking_entry_target: "SupplementSpecialIssueEntry")
+include("./alma/linkingEntry.fix")
+# MARC/772
+put_vars(linking_entry_source: "772", linking_entry_target: "SupplementParentEntry")
+include("./alma/linkingEntry.fix")
+# MARC/773
+put_vars(linking_entry_source: "773", linking_entry_target: "HostItemEntry")
+include("./alma/linkingEntry.fix")
+# MARC/774
+put_vars(linking_entry_source: "774", linking_entry_target: "ConstituentUnitEntry")
+include("./alma/linkingEntry.fix")
+# MARC/775
+put_vars(linking_entry_source: "775", linking_entry_target: "OtherEditionEntry")
+include("./alma/linkingEntry.fix")
+# MARC/776
+put_vars(linking_entry_source: "776", linking_entry_target: "AdditionalPhysicalFormEntry")
+include("./alma/linkingEntry.fix")
+# MARC/777
+put_vars(linking_entry_source: "777", linking_entry_target: "IssuedWithEntry")
+include("./alma/linkingEntry.fix")
+# MARC/780
+put_vars(linking_entry_source: "780", linking_entry_target: "PrecedingEntry")
+include("./alma/linkingEntry.fix")
+# MARC/785
+put_vars(linking_entry_source: "785", linking_entry_target: "SucceedingEntry")
+include("./alma/linkingEntry.fix")
+# MARC/786
+put_vars(linking_entry_source: "786", linking_entry_target: "DataSourceEntry")
+include("./alma/linkingEntry.fix")
+# MARC/787
+put_vars(linking_entry_source: "787", linking_entry_target: "NonspecificRelationshipEntry")
+include("./alma/linkingEntry.fix")
+
+/*
+# MARC/830
+if exists("830??")
+  add_array("TitleSuper[]")
+  do list(path: "830 ?", "var": "$i")
+    add_field("TitleSuper[].$append.__dummy__", "")
+    replace_all("$i.a", "^[©]|\\s?[,.:;/=]?$", "")
+    copy_field("$i.a", "TitleSuper[].$last.titleSuper[]")
+  end
+end
+uniq("TitleSuper[]")
+*/
+
+/*
+# MARC/830
+if exists("830??")
+  add_array("TitleSuperVolumeDesignation[]")
+  do list(path: "830 ?", "var": "$i")
+    add_field("TitleSuperVolumeDesignation[].$append.__dummy__", "")
+    replace_all("$i.v", "^[©]|\\s?[,.:;/=]?$", "")
+    copy_field("$i.v", "TitleSuperVolumeDesignation[].$last.volumeDesignation[]")
+  end
+end
+*/
+# MARC/830
+add_array("SeriesAddedEntryUniformTitle[]")
+do list(path: "830 ?", "var": "$i")
+  add_field("SeriesAddedEntryUniformTitle[].$append.__dummy__", "")
+  copy_field("$i.a", "SeriesAddedEntryUniformTitle[].$last.title")
+  copy_field("$i.n", "SeriesAddedEntryUniformTitle[].$last.number")
+  copy_field("$i.p", "SeriesAddedEntryUniformTitle[].$last.part")
+  copy_field("$i.v", "SeriesAddedEntryUniformTitle[].$last.volume")
+  replace_all("$i.w", "^\\($[catalogid]\\)", "")
+  copy_field("$i.w", "SeriesAddedEntryUniformTitle[].$last.designation")
+end
+uniq("SeriesAddedEntryUniformTitle[]")
+
+# MARC/856
+add_array("OnlineAccess[]")
+do list(path: "856??", "var": "$i")
+  if exists("$i.M")
+    if any_equal("$i.M", "$[member]")
+      include("./alma/onlineAccess.fix")
+    end
+  else
+    include("./alma/onlineAccess.fix")
+  end
+end
+# MARC/POR
+do list(path: "POR  ", "var": "$i")
+  if any_equal("$i.[MA]", "$[member]")
+    add_field("OnlineAccess[].$append.__dummy__", "")
+    copy_field("$i.q", "OnlineAccess[].$last.publicnote")
+    replace_all("$i.D", "$[network]", "$[member]")
+    copy_field("$i.D", "OnlineAccess[].$last.uri")
+    add_field("OnlineAccess[].$last.isInternalLinkFor", "$[isil]")
+  end
+end
+#hbz.limetrans.function.Dedup("OnlineAccess[].*.uri")
+
+# MARC/962
+add_array("ClassifierDigitization[]")
+do list(path: "962??.e", "var": "$i")
+  copy_field("$i", "ClassifierDigitization[].$append")
+end
+
+# MARC/982
+add_array("SubjectHeadings[]")
+add_array("introx.subject[]")
+do list(path: "982  ", "var": "$i")
+  if any_equal("$i.M", "$[member]")
+    add_field("SubjectHeadings[].$append.__dummy__", "")
+    copy_field("$i.b", "SubjectHeadings[].$last.subject")
+    copy_field("$i.b", "introx.subject[].$append")
+  end
+end
+# MARC/689
+do list(path: "689??", "var": "$i")
+  add_field("SubjectHeadings[].$append.__dummy__", "")
+  copy_field("$i.a", "SubjectHeadings[].$last.subject")
+  copy_field("$i.a", "introx.subject[].$append")
+end
+
+add_array("SubjectGHBLocal[]")
+do list(path: "@SubjectGHBLocal", "var": "$i")
+  add_field("SubjectGHBLocal[].$append.__dummy__", "")
+  add_field("SubjectGHBLocal[].$last.source", "$[isil]")
+  copy_field("$i", "SubjectGHBLocal[].$last.subject")
+end
+
+add_array("xbib[]")
+copy_field("@mmsid", "xbib[].$append.uid")
+copy_field("@hbzids", "xbib[].$append.uid")
+if exists("@mmsiz")
+  paste("xbib[].$append.uid", "~(", "@isiliz", "~)", "@mmsiz", join_char: "")
+end
+copy_field("@sysid", "xbib[].$append.uid")
+copy_field("@id", "xbib[].$append.uid")
+uniq("xbib[]")
+
+do list(path: "@facet_format", "var": "$i")
+  unless exists("TypeMedia")
+    if any_match("$i", "[BAFE].*")
+      copy_field("$i", "TypeMedia")
+    end
+  end
+end
+unless exists("TypeMedia")
+  if any_equal("@facet_format", "Online-Ressource")
+    add_field("TypeMedia", "Elektronische Ressource")
+  end
+end
+
+do list(path: "@facet_type", "var": "$i")
+  replace_all("$i", ".*?(Schriftenreihe|(?i)zeitschrift).*", "$1")
+  if any_match("$i", "Schriftenreihe|(?i)zeitschrift")
+    copy_field("$i", "TypePeriodical[].$append")
+  end
+end
+uniq("TypePeriodical[]")
+
+# MARC/H52
+add_array("Item[]")
+do list(path: "H52??", "var": "$i")
+  if any_match("$i.8", ".*$[institution-code]")
+    add_field("Item[].$append.__dummy__", "")
+    copy_field("$i.h", "Item[].$last.callnumber")
+  end
+end
+# MARC/ITM
+do list(path: "ITM  ", "var": "$i")
+  if any_equal("$i.M", "$[member]")
+    add_field("Item[].$append.__dummy__", "")
+    add_field("Item[].$last.identifier", "$[isil]")
+    copy_field("$i.[cnz]", "@callnumber")
+    uniq("@callnumber")
+    move_field("@callnumber", "Item[].$last.callnumber")
+    copy_field("$i.x", "Item[].$last.shelfmark")
+  end
+end
+uniq("Item[]")
+
+# MARC/DEL
+if any_equal("$[deletion-source]", "$[deletion-value]")
+  add_field("$[deletion-literal]", "$[deletion-value]")
+elsif any_equal("@LeaderPos05", "d")
+  add_field("$[deletion-literal]", "$[deletion-value]")
+end
+
+# MARC/700
+add_array("@person")
+do list(path: "700[013] ", "var": "$i")
+  if exists("$i.[4e]")
+    if any_match("$i.[4e]", "(?:[Aa]ut|[Cc]re).*")
+      include("./alma/personCreator.fix")
+    end
+  else
+    include("./alma/personCreator.fix")
+  end
+end
+move_field("@person", "PersonCreator[]")
+
+# MARC/246
+add_array("TitleOther.title[]")
+do list(path: "246?[ 345678]", "var": "$i")
+  replace_all("$i.a", "[.]$", "")
+  copy_field("$i.a", "TitleOther.title[].$append")
+end
+
+# MARC/600
+add_array("RSWK[]")
+do list(path: "600??", "var": "$i")
+  add_field("RSWK[].$append.__dummy__", "")
+  if exists("$i.z.1")
+    copy_field("$i.z.1", "RSWK[].$last.subjectGeoName")
+  else
+    copy_field("$i.z", "RSWK[].$last.subjectGeoName")
+  end
+  if exists("$i.y.1")
+    copy_field("$i.y.1", "RSWK[].$last.subjectChronological")
+  else
+    copy_field("$i.y", "RSWK[].$last.subjectChronological")
+  end
+  if exists("$i.d.1")
+    copy_field("$i.d.1", "RSWK[].$last.subjectDate")
+  else
+    copy_field("$i.d", "RSWK[].$last.subjectDate")
+  end
+  if exists("$i.v.1")
+    copy_field("$i.v.1", "RSWK[].$last.subjectGenre")
+  else
+    copy_field("$i.v", "RSWK[].$last.subjectGenre")
+  end
+  if exists("$i.a.1")
+    copy_field("$i.a.1", "RSWK[].$last.subjectPersonName")
+  else
+    copy_field("$i.a", "RSWK[].$last.subjectPersonName")
+  end
+  if exists("$i.t.1")
+    copy_field("$i.t.1", "RSWK[].$last.subjectTitleName")
+  else
+    copy_field("$i.t", "RSWK[].$last.subjectTitleName")
+  end
+  if exists("$i.c.1")
+    copy_field("$i.c.1", "RSWK[].$last.subjectNameAddendum")
+  else
+    copy_field("$i.c", "RSWK[].$last.subjectNameAddendum")
+  end
+  do list(path: "$i.0", "var": "$j")
+    copy_field("$j", "RSWK[].$last.subjectIdentifier[]")
+    if any_match("$j", "\\(DE-588\\).*")
+      copy_field("$j", "RSWK[].$last.identifierGND[]")
+    end
+  end
+end
+# MARC/610
+do list(path: "610??", "var": "$i")
+  add_field("RSWK[].$append.__dummy__", "")
+  if exists("$i.z.1")
+    copy_field("$i.z.1", "RSWK[].$last.subjectGeoName")
+  else
+    copy_field("$i.z", "RSWK[].$last.subjectGeoName")
+  end
+  if exists("$i.y.1")
+    copy_field("$i.y.1", "RSWK[].$last.subjectChronological")
+  else
+    copy_field("$i.y", "RSWK[].$last.subjectChronological")
+  end
+  if exists("$i.a.1")
+    copy_field("$i.a.1", "RSWK[].$last.subjectCorporateBodyName")
+  else
+    copy_field("$i.a", "RSWK[].$last.subjectCorporateBodyName")
+  end
+  if exists("$i.b.1")
+    copy_field("$i.b.1", "RSWK[].$last.subjectCorporateBodySubUnit")
+  else
+    copy_field("$i.b", "RSWK[].$last.subjectCorporateBodySubUnit")
+  end
+  if exists("$i.v.1")
+    copy_field("$i.v.1", "RSWK[].$last.subjectGenre")
+  else
+    copy_field("$i.v", "RSWK[].$last.subjectGenre")
+  end
+  if exists("$i.n.1")
+    copy_field("$i.n.1", "RSWK[].$last.subjectNumbering")
+  else
+    copy_field("$i.n", "RSWK[].$last.subjectNumbering")
+  end
+  if exists("$i.t.1")
+    copy_field("$i.t.1", "RSWK[].$last.subjectTitleName")
+  else
+    copy_field("$i.t", "RSWK[].$last.subjectTitleName")
+  end
+  if exists("$i.p.1")
+    copy_field("$i.p.1", "RSWK[].$last.subjectUnit")
+  else
+    copy_field("$i.p", "RSWK[].$last.subjectUnit")
+  end
+  if exists("$i.c.1")
+    copy_field("$i.c.1", "RSWK[].$last.subjectGeoAddendum")
+  else
+    copy_field("$i.c", "RSWK[].$last.subjectGeoAddendum")
+  end
+  do list(path: "$i.0", "var": "$j")
+    copy_field("$j", "RSWK[].$last.subjectIdentifier[]")
+    if any_match("$j", "\\(DE-588\\).*")
+      copy_field("$j", "RSWK[].$last.identifierGND[]")
+    end
+  end
+end
+# MARC/611
+do list(path: "611??", "var": "$i")
+  add_field("RSWK[].$append.__dummy__", "")
+  if exists("$i.z.1")
+    copy_field("$i.z.1", "RSWK[].$last.subjectGeoName")
+  else
+    copy_field("$i.z", "RSWK[].$last.subjectGeoName")
+  end
+  if exists("$i.y.1")
+    copy_field("$i.y.1", "RSWK[].$last.subjectChronological")
+  else
+    copy_field("$i.y", "RSWK[].$last.subjectChronological")
+  end
+  if exists("$i.a.1")
+    copy_field("$i.a.1", "RSWK[].$last.subjectConference")
+  else
+    copy_field("$i.a", "RSWK[].$last.subjectConference")
+  end
+  if exists("$i.d.1")
+    copy_field("$i.d.1", "RSWK[].$last.subjectDate")
+  else
+    copy_field("$i.d", "RSWK[].$last.subjectDate")
+  end
+  if exists("$i.v.1")
+    copy_field("$i.v.1", "RSWK[].$last.subjectGenre")
+  else
+    copy_field("$i.v", "RSWK[].$last.subjectGenre")
+  end
+  if exists("$i.n.1")
+    copy_field("$i.n.1", "RSWK[].$last.subjectNumbering")
+  else
+    copy_field("$i.n", "RSWK[].$last.subjectNumbering")
+  end
+  if exists("$i.t.1")
+    copy_field("$i.t.1", "RSWK[].$last.subjectTitleName")
+  else
+    copy_field("$i.t", "RSWK[].$last.subjectTitleName")
+  end
+  if exists("$i.p.1")
+    copy_field("$i.p.1", "RSWK[].$last.subjectUnit")
+  else
+    copy_field("$i.p", "RSWK[].$last.subjectUnit")
+  end
+  if exists("$i.c.1")
+    copy_field("$i.c.1", "RSWK[].$last.subjectGeoAddendum")
+  else
+    copy_field("$i.c", "RSWK[].$last.subjectGeoAddendum")
+  end
+  do list(path: "$i.0", "var": "$j")
+    copy_field("$j", "RSWK[].$last.subjectIdentifier[]")
+    if any_match("$j", "\\(DE-588\\).*")
+      copy_field("$j", "RSWK[].$last.identifierGND[]")
+    end
+  end
+end
+# MARC/648
+do list(path: "648??", "var": "$i")
+  add_field("RSWK[].$append.__dummy__", "")
+  if exists("$i.a.1")
+    copy_field("$i.a.1", "RSWK[].$last.subjectChronological")
+  else
+    copy_field("$i.a", "RSWK[].$last.subjectChronological")
+  end
+  do list(path: "$i.0", "var": "$j")
+    copy_field("$j", "RSWK[].$last.subjectIdentifier[]")
+    if any_match("$j", "\\(DE-588\\).*")
+      copy_field("$j", "RSWK[].$last.identifierGND[]")
+    end
+  end
+end
+# MARC/650
+do list(path: "650??", "var": "$i")
+  add_field("RSWK[].$append.__dummy__", "")
+  if exists("$i.a.1")
+    copy_field("$i.a.1", "@subjectTopicName")
+  else
+    copy_field("$i.a", "@subjectTopicName")
+  end
+  split_field("@subjectTopicName", ";|--")
+  do list(path: "@subjectTopicName", "var": "$j")
+    replace_all("$j", "[.]$", "")
+    copy_field("$j", "RSWK[].$last.subjectTopicName")
+  end
+  remove_field("@subjectTopicName")
+  if exists("$i.z.1")
+    copy_field("$i.z.1", "RSWK[].$last.subjectGeoName")
+  else
+    copy_field("$i.z", "RSWK[].$last.subjectGeoName")
+  end
+  if exists("$i.y.1")
+    copy_field("$i.y.1", "RSWK[].$last.subjectChronological")
+  else
+    copy_field("$i.y", "RSWK[].$last.subjectChronological")
+  end
+  if exists("$i.x.1")
+    copy_field("$i.x.1", "RSWK[].$last.subjectAddendum")
+  else
+    copy_field("$i.x", "RSWK[].$last.subjectAddendum")
+  end
+  if exists("$i.v.1")
+    copy_field("$i.v.1", "RSWK[].$last.subjectGenre")
+  else
+    copy_field("$i.v", "RSWK[].$last.subjectGenre")
+  end
+  do list(path: "$i.0", "var": "$j")
+    copy_field("$j", "RSWK[].$last.subjectIdentifier[]")
+    if any_match("$j", "\\(DE-588\\).*")
+      copy_field("$j", "RSWK[].$last.identifierGND[]")
+    end
+  end
+end
+# MARC/651
+do list(path: "651??", "var": "$i")
+  add_field("RSWK[].$append.__dummy__", "")
+  if exists("$i.a.1")
+    copy_field("$i.a.1", "RSWK[].$last.subjectGeoName")
+  else
+    copy_field("$i.a", "RSWK[].$last.subjectGeoName")
+  end
+  if exists("$i.y.1")
+    copy_field("$i.y.1", "RSWK[].$last.subjectChronological")
+  else
+    copy_field("$i.y", "RSWK[].$last.subjectChronological")
+  end
+  if exists("$i.v.1")
+    copy_field("$i.v.1", "RSWK[].$last.subjectGenre")
+  else
+    copy_field("$i.v", "RSWK[].$last.subjectGenre")
+  end
+  do list(path: "$i.0", "var": "$j")
+    copy_field("$j", "RSWK[].$last.subjectIdentifier[]")
+    if any_match("$j", "\\(DE-588\\).*")
+      copy_field("$j", "RSWK[].$last.identifierGND[]")
+    end
+  end
+end
+replace_all("RSWK[].*.identifierGND[]", "^\\(DE-588\\)", "")
+replace_all("RSWK[].*.subjectAddendum", "[.]$", "")
+replace_all("RSWK[].*.subjectChronological", "[.]$", "")
+replace_all("RSWK[].*.subjectConference", "[.]$", "")
+replace_all("RSWK[].*.subjectCorporateBodyName", "[.]$", "")
+replace_all("RSWK[].*.subjectCorporateBodySubUnit", "[.]$", "")
+replace_all("RSWK[].*.subjectDate", "\\s?[:.]?$", "")
+replace_all("RSWK[].*.subjectGenre", "[.]$", "")
+replace_all("RSWK[].*.subjectGeoAddendum", "^[(]|[.)]$", "")
+replace_all("RSWK[].*.subjectGeoName", "[.]$", "")
+replace_all("RSWK[].*.subjectNameAddendum", "^[(]|[.)]$", "")
+replace_all("RSWK[].*.subjectNumbering", "^[(]|\\s?[);:]?$", "")
+replace_all("RSWK[].*.subjectPersonName", "[,.]$", "")
+replace_all("RSWK[].*.subjectTitleName", "[.]$", "")
+replace_all("RSWK[].*.subjectUnit", "[.]$", "")
+#hbz.limetrans.function.Dedup("RSWK[].*.subjectGeoName")
+# TODO: hbz.limetrans.function.Dedup("RSWK[].*.subjectTopicName")
+uniq("RSWK[]")
+do list(path: "RSWK[]", "var": "$i")
+  copy_field("$i.subjectConference", "introx.subject[].$append")
+  copy_field("$i.subjectCorporateBodyName", "introx.subject[].$append")
+  copy_field("$i.subjectGenre", "introx.subject[].$append")
+  copy_field("$i.subjectGeoName", "introx.subject[].$append")
+  copy_field("$i.subjectPersonName", "introx.subject[].$append")
+  copy_field("$i.subjectTitleName", "introx.subject[].$append")
+  copy_field("$i.subjectTopicName", "introx.subject[].$append")
+  copy_field("$i.subjectUnit", "introx.subject[].$append")
+end
+uniq("introx.subject[]")
+
+retain(
+  "$[deletion-literal]",
+  "Abstract",
+  "AdditionalPhysicalFormEntry[]",
+  "CarrierType[]",
+  "ChronologyAndEnumeration",
+  "ClassifierDigitization[]",
+  "Conference",
+  "ConstituentUnitEntry[]",
+  "ContentType[]",
+  "CorporateBody[]",
+  "Country[]",
+  "CreatorStatement",
+  "DataSourceEntry[]",
+  "DateFirst",
+  "DateLast",
+  "DateProper",
+  "Description",
+  "DescriptionOfContent[]",
+# "DescriptionOfContinuingEditionsOrVolumes[]",
+  "DescriptionOfExpression[]",
+# "DescriptionOfFormerEditionsOrVolumes[]",
+  "DescriptionOfIssuance[]",
+# "DescriptionOfRelatedEditions[]",
+  "DescriptionOfThesis[]",
+  "Edition",
+  "ExtendedFormat[]",
+  "ExtendedType[]",
+  "Extent",
+  "FileCharacteristics[]",
+  "FormatCarrier[]",
+  "HoldingsStatement[]",
+  "HostItemEntry[]",
+  "IdentifierAlma",
+  "IdentifierDNB[]",
+  "IdentifierDOI[]",
+  "IdentifierGBV[]",
+  "IdentifierHBZ[]",
+  "IdentifierISBNParallel[]",
+  "IdentifierISBN[]",
+  "IdentifierISMN[]",
+  "IdentifierISSN[]",
+  "IdentifierOCLC[]",
+  "IdentifierSerial[]",
+  "IdentifierSheetMusic[]",
+  "IdentifierZDB[]",
+  "IssuedWithEntry[]",
+  "Item[]",
+  "Language[]",
+  "MainSeriesEntry[]",
+  "NonspecificRelationshipEntry[]",
+  "OnlineAccess[]",
+  "OriginalLanguageEntry[]",
+  "OtherEditionEntry[]",
+  "PersonContributor[]",
+  "PersonCreator[]",
+  "Person[]",
+  "PrecedingEntry[]",
+  "PublicationPlaceOfSecondaryEdition[]",
+  "PublicationPlace[]",
+  "PublisherNameOfSecondaryEdition[]",
+  "PublisherName[]",
+  "RSWK[]",
+  "Recension",
+  "RecordCodes[]",
+  "RecordIdentifier",
+  "RecordIdentifierSuper[]",
+  "SecondaryEditionPublicationDate[]",
+  "SecondaryEditionTitleSuper[]",
+  "SeriesAddedEntryUniformTitle[]",
+  "SortableVolumeDesignation[]",
+  "SoundCharacteristics[]",
+  "SubSeriesEntry[]",
+  "SubjectDNB[]",
+  "SubjectGHBLocal[]",
+  "SubjectHeadings[]",
+  "SubjectNWBIB[]",
+  "SubjectRPB[]",
+  "SubjectRVK[]",
+  "SucceedingEntry[]",
+  "Summary",
+  "SupplementParentEntry[]",
+  "SupplementSpecialIssueEntry[]",
+  "TitleAddendum",
+  "TitleOther",
+  "TitleStatement[]",
+  "TitleSuperVolumeDesignation[]",
+  "TitleSuper[]",
+  "TitleUniform",
+  "TranslationEntry[]",
+  "TypeMedia",
+  "TypeMediaSpecialPreservation[]",
+  "TypeMediaSpecial[]",
+  "TypeMonograph[]",
+  "TypePeriodical[]",
+  "VideoCharacteristics[]",
+  "VolumeDesignation",
+  "collection",
+  "dc",
+  "introx",
+  "xbib[]"
+)
+
+vacuum()

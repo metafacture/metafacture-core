@@ -1,0 +1,4 @@
+copy_field("$i.A", "@recordCodes")
+substring("@recordCodes", "$[record_codes_start]", "1")
+lookup("@recordCodes", "alma-record-codes-$[record_codes_start]", delete: "true")
+move_field("@recordCodes", "RecordCodes[]")

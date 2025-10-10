@@ -1,0 +1,7 @@
+copy_field("$i.A", "@formatCarrier")
+substring("@formatCarrier", "$[format_carrier_start]", "$[format_carrier_length]")
+copy_field("@formatCarrier", "@formatCarrierFacet")
+lookup("@formatCarrier", "alma-format-carrier-$[format_carrier_start]", delete: "true")
+move_field("@formatCarrier", "FormatCarrier[]")
+lookup("@formatCarrierFacet", "alma-format-carrier-facet-$[format_carrier_start]", delete: "true")
+move_field("@formatCarrierFacet", "@facet_format")

@@ -25,10 +25,11 @@ public class FixParseBenchmark extends AbstractBenchmark {
 
     private static final String FIXES = BASE + "/fixes/%s" + Metafix.FIX_EXTENSION;
 
-    protected String fixFile; // checkstyle-disable-line VisibilityModifier
+    private String fixFile;
 
     @Param({ // checkstyle-disable-line AnnotationUseStyle
-        "nothing"
+        "nothing",
+        "alma"
     })
     private String fixDef;
 
@@ -48,7 +49,11 @@ public class FixParseBenchmark extends AbstractBenchmark {
 
     @Override
     protected void workload() {
-        FixStandaloneSetup.parseFix(fixFile);
+        FixStandaloneSetup.parseFix(getFixFile());
+    }
+
+    protected String getFixFile() {
+        return fixFile;
     }
 
 }

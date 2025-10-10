@@ -73,6 +73,20 @@ jmhJar {
   exclude '/org/slf4j/impl/StaticLoggerBinder.class'
 }
 
+jmh {
+  if (project.hasProperty('include')) {
+    includes = project.getProperty('include').split() as List
+  }
+
+  if (project.hasProperty('exclude')) {
+    excludes = project.getProperty('exclude').split() as List
+  }
+
+  def systemProperties = [:]
+  passSystemProperties(systemProperties)
+  jvmArgsAppend = systemProperties.collect { k, v -> "-D${k}=${v}" }
+}
+
 test {
   useJUnitPlatform()
 

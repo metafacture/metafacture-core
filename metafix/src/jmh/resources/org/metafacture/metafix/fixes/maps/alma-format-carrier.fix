@@ -1,0 +1,156 @@
+put_map("alma-format-carrier-0",
+  "a": "Druckschrift"
+)
+put_map("alma-format-carrier-facet-0",
+  "a": "Gedruckte Ressource"
+)
+
+put_map("alma-format-carrier-1",
+  "a": "Handschrift"
+)
+
+put_map("alma-format-carrier-2",
+  "a": "Papier",
+  "b": "säurefreies, alterungsbeständiges Papier",
+  "c": "kein säurefreies, kein alterungsbeständiges Papier",
+  "d": "entsäuertes Papier",
+  "e": "Pergament",
+  "z": "sonstiges Material"
+)
+
+put_map("alma-format-carrier-3",
+  "a": "Mikroform",
+  "b": "Mikroform-Master",
+  "c": "Sekundärform"
+)
+put_map("alma-format-carrier-facet-3",
+  "a": "Mikroform",
+  "b": "Mikroform",
+  "c": "Mikroform"
+)
+
+put_map("alma-format-carrier-4",
+  "a": "Blindenschrifträger"
+)
+put_map("alma-format-carrier-facet-4",
+  "a": "Sonstiges"
+)
+
+put_map("alma-format-carrier-5",
+  "aa": "CD-DA",
+  "ab": "CD-Bildplatte",
+  "ac": "Tonband",
+  "ad": "Compact-Cassette",
+  "ae": "Micro-Cassette",
+  "af": "Digital Audio Tape",
+  "ag": "Digital Compact Cassette (DCC-Cassette)",
+  "ah": "Cartridge (8-Track Cartridge)",
+  "ai": "Drahtton (Stahlband)",
+  "aj": "Schallplatte",
+  "ak": "Walze (Zylinder)",
+  "al": "Klavierrolle (Mechanisches Klavier)",
+  "am": "Filmtonspur",
+  "an": "Tonbildreihe",
+  "ba": "Filmspulen",
+  "bb": "Film-Cartridge",
+  "bc": "Film-Cassette",
+  "bd": "Anderes Filmmedium",
+  "be": "Filmstreifen",
+  "bf": "Filmstreifen-Cartridge",
+  "bg": "Filmstreifen-Rolle",
+  "bh": "Anderer Filmstreifentyp",
+  "bi": "Diapositiv, Diaset, Stereograph",
+  "bj": "Arbeitstransparent",
+  "bk": "Arbeitstransparentstreifen",
+  "ca": "Videobandcassette",
+  "cb": "Videobandcartridge",
+  "cc": "Videobandspulen",
+  "cd": "Bildplatte (Videodisc)",
+  "ce": "Anderer Videotyp",
+  "da": "Foto",
+  "db": "Kunstblatt",
+  "dc": "Plakat",
+  "uu": "unbekannt",
+  "yy": "nicht spezifiziert",
+  "zz": "sonstige audiovisuelle Medien"
+)
+put_map("alma-format-carrier-facet-5",
+  "aa": "Audio",
+  "ab": "Audio",
+  "ac": "Audio",
+  "ad": "Audio",
+  "ae": "Audio",
+  "af": "Audio",
+  "ag": "Audio",
+  "ah": "Audio",
+  "ai": "Audio",
+  "aj": "Audio",
+  "ak": "Audio",
+  "al": "Audio",
+  "am": "Audio",
+  "an": "Audio",
+  "ba": "Film, Dia, Video",
+  "bb": "Film, Dia, Video",
+  "bc": "Film, Dia, Video",
+  "bd": "Film, Dia, Video",
+  "be": "Film, Dia, Video",
+  "bf": "Film, Dia, Video",
+  "bg": "Film, Dia, Video",
+  "bh": "Film, Dia, Video",
+  "bi": "Film, Dia, Video",
+  "bj": "Film, Dia, Video",
+  "bk": "Film, Dia, Video",
+  "ca": "Film, Dia, Video",
+  "cb": "Film, Dia, Video",
+  "cc": "Film, Dia, Video",
+  "cd": "Film, Dia, Video",
+  "ce": "Film, Dia, Video",
+  "da": "Bild",
+  "db": "Bild",
+  "dc": "Bild",
+  "uu": "Sonstiges",
+  "yy": "Sonstiges",
+  "zz": "Film, Dia, Video"
+)
+
+put_map("alma-format-carrier-7",
+  "a": "Medienkombination"
+)
+put_map("alma-format-carrier-facet-7",
+  "a": "Gedruckte Ressource"
+)
+
+put_map("alma-format-carrier-8",
+  "a": "nicht spezifiziert",
+  "b": "Diskette(n)",
+  "c": "Magnetbandkassette(n)",
+  "d": "Optische Speicherplatte(n)",
+  "e": "Einsteckmodul(e)",
+  "f": "Magnetband, Magnetbänder",
+  "g": "Computerdatei(en) im Fernzugriff",
+  "z": "sonstige Computerdatei(en)"
+)
+put_map("alma-format-carrier-facet-8",
+  "a": "Elektronische Ressource",
+  "b": "Elektronische Ressource",
+  "c": "Elektronische Ressource",
+  "d": "Elektronische Ressource",
+  "e": "Elektronische Ressource",
+  "f": "Elektronische Ressource",
+  "g": "Online-Ressource",
+  "z": "Elektronische Ressource"
+)
+
+put_map("alma-format-carrier-9",
+  "a": "Spiele"
+)
+put_map("alma-format-carrier-facet-9",
+  "a": "Spiel"
+)
+
+put_map("alma-format-carrier-10",
+  "a": "Landkarten"
+)
+put_map("alma-format-carrier-facet-10",
+  "a": "Landkarte"
+)

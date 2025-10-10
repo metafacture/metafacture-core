@@ -96,6 +96,7 @@ project(':metafacture-runner') {
 //    '**/bin',
 //    '**/generated',
 //    '**/includeBenchmark*100000/expected.json',
+//    '**/jmh/resources/**/input',
 //    '**/node_modules',
 //    '**/out',
 //    '**/output-*',

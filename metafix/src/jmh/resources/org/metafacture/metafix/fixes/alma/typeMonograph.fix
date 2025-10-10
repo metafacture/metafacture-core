@@ -1,0 +1,7 @@
+copy_field("$i.A", "@typeMonograph")
+substring("@typeMonograph", "$[type_monograph_start]", "1")
+copy_field("@typeMonograph", "@typeMonographFacet")
+lookup("@typeMonograph", "alma-type-monograph-$[type_monograph_start]", delete: "true")
+move_field("@typeMonograph", "TypeMonograph[]")
+lookup("@typeMonographFacet", "alma-type-monograph-facet-$[type_monograph_start]", delete: "true")
+move_field("@typeMonographFacet", "@facet_type")

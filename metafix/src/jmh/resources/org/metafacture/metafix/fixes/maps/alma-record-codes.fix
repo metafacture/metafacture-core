@@ -1,0 +1,98 @@
+put_map("alma-record-codes-0",
+  "a": "Autopsie",
+  "b": "teilweise Autopsie",
+  "c": "Übernahme aus Nationalbibliographie",
+  "d": "Übernahme aus anderen Quellen",
+  "e": "konvertierte Altdaten",
+  "f": "CIP-Aufnahme",
+  "g": "vervollständigte CIP-Aufnahme",
+  "h": "ohne Autopsie",
+  "u": "maschinelle Umsetzung einer Titelaufnahme",
+  "z": "keine Angabe"
+)
+
+put_map("alma-record-codes-1",
+  "a": "überregional autorisierte Ansetzungsform",
+  "b": "regional autorisierte Ansetzungsform",
+  "c": "lokal autorisierte Ansetzungsform",
+  "d": "nicht autorisierte Ansetzungsform",
+  "e": "maschinell ermittelte Ansetzungsform",
+  "f": "vorläufige Ansetzung",
+  "z": "keine Angabe"
+)
+
+put_map("alma-record-codes-2",
+  "1": "MAB-Zeichenvorrat",
+  "3": "DIN 31628, Stufe 1",
+  "5": "DIN 31628, Stufe 2",
+  "7": "DIN 31628, Stufe 3",
+  "z": "Sonstiger Zeichenvorrat"
+)
+
+put_map("alma-record-codes-3",
+  "a": "DIN 66003-DRV",
+  "b": "DIN 66003-IRV",
+  "c": "DIN 66003 + DIN 31624",
+  "d": "ISO 646 (IRV) + ISO 5426",
+  "i": "IBM-PC",
+  "u": "Unicode / ISO 10646 (UTF 8)",
+  "z": "sonstiger Zeichencode"
+)
+
+put_map("alma-record-codes-4",
+  "a": "RAK-DNB",
+  "b": "RAK-OEB",
+  "c": "RAK-WB",
+  "d": "sonstige RAK-Anwendung",
+  "e": "DIN 1505",
+  "f": "PI",
+  "g": "RNA",
+  "h": "VD 16",
+  "i": "VD 17",
+  "k": "maschinelle Umsetzung aus AACR",
+  "r": "RDA",
+  "z": "sonstiges Regelwerk"
+)
+
+put_map("alma-record-codes-5",
+  "r": "RSWK",
+  "s": "RSWK-Alternativregeln",
+  "z": "Sonstiges Regelwerk"
+)
+
+put_map("alma-record-codes-6",
+  "g": "RNA-Ansetzung",
+  "h": "VD 16-Ansetzung",
+  "i": "VD 17-Ansetzung",
+  "k": "LOC Name Authority-Ansetzung",
+  "l": "PND-Ansetzungsform",
+  "m": "GKD-Ansetzungsform",
+  "n": "SWD-Ansetzungsform",
+  "r": "RSWK",
+  "s": "RSWK-Alternativregeln",
+  "z": "sonstiges Regelwerk"
+)
+
+put_map("alma-record-codes-7",
+  "a": "Transliteration",
+  "b": "Transkription",
+  "z": "keine Angabe"
+)
+
+put_map("alma-record-codes-8",
+  "a": "Stichwortanfang- und Stichwortendezeichen",
+  "b": "Stichwortanfangszeichen",
+  "c": "eigene Stichwortfelder"
+)
+
+put_map("alma-record-codes-11",
+  "1": "Verfasserwerk",
+  "2": "Urheberwerk",
+  "3": "Sachtitelwerk"
+)
+
+put_map("alma-record-codes-12",
+  "4": "Ordnungssachtitel ist der Inhalt des Feldes 304",
+  "5": "Ordnungssachtitel ist der Inhalt des Feldes 310",
+  "7": "Ordnungssachtitel ist der Inhalt des Feldes 331"
+)

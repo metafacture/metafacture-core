@@ -1,0 +1,7 @@
+copy_field("$i.A", "@typePeriodical")
+substring("@typePeriodical", "$[type_periodical_start]", "$[type_periodical_length]")
+copy_field("@typePeriodical", "@typePeriodicalFacet")
+lookup("@typePeriodical", "alma-type-periodical-$[type_periodical_start]", delete: "true")
+move_field("@typePeriodical", "TypePeriodical[]")
+lookup("@typePeriodicalFacet", "alma-type-periodical-facet-$[type_periodical_start]", delete: "true")
+move_field("@typePeriodicalFacet", "@facet_type")

@@ -16,31 +16,13 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-import org.metafacture.io.FileOpener;
-import org.metafacture.io.ObjectStdoutWriter;
-import org.metafacture.io.RecordReader;
-import org.metafacture.json.JsonDecoder;
-import org.metafacture.json.JsonEncoder;
-
 import org.openjdk.jmh.annotations.Param;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-
-public class MetafixBenchmark extends FixParseBenchmark { // checkstyle-disable-line ClassDataAbstractionCoupling
-
-    // TODO: Need to inject system properties into JMHTask's JavaExec process.
-    //private static final boolean DEBUG_OUTPUT = Boolean.parseBoolean(System.getProperty("org.metafacture.metafix.debugBenchmarkOutput"));
-    private static final boolean DEBUG_OUTPUT = false;
-
-    private static final String INPUT = BASE + "/input/%s.json";
-
-    private FileOpener fileOpener;
-    private String inputFile;
+public class MetafixBenchmark extends AbstractMetafixBenchmark {
 
     @Param({ // checkstyle-disable-line AnnotationUseStyle
-        "empty"
+        "empty",
+        "alma-small"
     })
     private String input;
 
@@ -51,39 +33,8 @@ public class MetafixBenchmark extends FixParseBenchmark { // checkstyle-disable-
     }
 
     @Override
-    public void setup() {
-        super.setup();
-
-        inputFile = String.format(INPUT, input);
-
-        final Metafix metafix;
-        try {
-            metafix = new Metafix(fixFile);
-        }
-        catch (final IOException e) {
-            throw new UncheckedIOException(e);
-        }
-
-        if (DEBUG_OUTPUT) {
-            metafix
-                .setReceiver(new JsonEncoder())
-                .setReceiver(new ObjectStdoutWriter<String>());
-        }
-        else {
-            metafix
-                .setReceiver(new DefaultStreamReceiver());
-        }
-
-        fileOpener = new FileOpener();
-        fileOpener
-            .setReceiver(new RecordReader())
-            .setReceiver(new JsonDecoder())
-            .setReceiver(metafix);
-    }
-
-    @Override
-    protected void workload() {
-        fileOpener.process(inputFile);
+    protected String getInput() {
+        return input;
     }
 
 }
