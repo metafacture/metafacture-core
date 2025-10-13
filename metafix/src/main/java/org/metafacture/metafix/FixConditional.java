@@ -17,183 +17,168 @@
 package org.metafacture.metafix;
 
 import org.metafacture.metafix.api.FixPredicate;
+import org.metafacture.metafix.conditional.*; // checkstyle-disable-line AvoidStarImport
 
 import java.util.List;
 import java.util.Map;
 
+@Deprecated(since = "7.1.0", forRemoval = true) // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
 public enum FixConditional implements FixPredicate {
 
     all_contain {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testConditional(record, params, ALL, CONTAINS);
+            return new AllContain().test(metafix, record, params, options);
         }
     },
     any_contain {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testConditional(record, params, ANY, CONTAINS);
+            return new AnyContain().test(metafix, record, params, options);
         }
     },
     none_contain {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return !any_contain.test(metafix, record, params, options);
+            return new NoneContain().test(metafix, record, params, options);
         }
     },
     str_contain {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testConditional(params, CONTAINS);
+            return new StrContain().test(metafix, record, params, options);
         }
     },
 
     all_equal {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testConditional(record, params, ALL, EQUALS);
+            return new AllEqual().test(metafix, record, params, options);
         }
     },
     any_equal {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testConditional(record, params, ANY, EQUALS);
+            return new AnyEqual().test(metafix, record, params, options);
         }
     },
     none_equal {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return !any_equal.test(metafix, record, params, options);
+            return new NoneEqual().test(metafix, record, params, options);
         }
     },
     str_equal {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testConditional(params, EQUALS);
+            return new StrEqual().test(metafix, record, params, options);
         }
     },
 
     exists {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return record.containsPath(params.get(0));
+            return new Exists().test(metafix, record, params, options);
         }
     },
 
     in {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final Value value1 = record.get(params.get(0));
-            final Value value2 = record.get(params.get(1));
-
-            return value1 != null && value2 != null && value1.<Boolean>extractType((m, c) -> m
-                .ifArray(a1 -> value2.matchType()
-                    .ifArray(a2 -> c.accept(a1.equals(a2)))
-                    .orElse(v -> c.accept(false))
-                )
-                .ifHash(h1 -> value2.matchType()
-                    .ifHash(h2 -> c.accept(h1.equals(h2)))
-                    .orElse(v -> c.accept(false))
-                )
-                .ifString(s1 -> value2.matchType()
-                    .ifArray(a2 -> c.accept(a2.stream().anyMatch(value1::equals)))
-                    .ifHash(h2 -> c.accept(h2.containsField(s1)))
-                    .ifString(s2 -> c.accept(s1.equals(s2)))
-                )
-            );
+            return new In().test(metafix, record, params, options);
         }
     },
     is_contained_in {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return in.test(metafix, record, params, options);
+            return new IsContainedIn().test(metafix, record, params, options);
         }
     },
 
     is_array {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testConditional(record, params, Value::isArray);
+            return new IsArray().test(metafix, record, params, options);
         }
     },
     is_empty {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testConditional(record, params, IS_EMPTY);
+            return new IsEmpty().test(metafix, record, params, options);
         }
     },
     is_false {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testStringConditional(record, params, IS_FALSE); // TODO: strict=false
+            return new IsFalse().test(metafix, record, params, options);
         }
     },
     is_hash {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return is_object.test(metafix, record, params, options);
+            return new IsHash().test(metafix, record, params, options);
         }
     },
     is_number {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testStringConditional(record, params, IS_NUMBER);
+            return new IsNumber().test(metafix, record, params, options);
         }
     },
     is_object {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testConditional(record, params, Value::isHash);
+            return new IsObject().test(metafix, record, params, options);
         }
     },
     is_string {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testConditional(record, params, Value::isString) && !is_number.test(metafix, record, params, options);
+            return new IsString().test(metafix, record, params, options);
         }
     },
     is_true {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testStringConditional(record, params, IS_TRUE); // TODO: strict=false
+            return new IsTrue().test(metafix, record, params, options);
         }
     },
 
     all_match {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testConditional(record, params, ALL, MATCHES);
+            return new AllMatch().test(metafix, record, params, options);
         }
     },
     any_match {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testConditional(record, params, ANY, MATCHES);
+            return new AnyMatch().test(metafix, record, params, options);
         }
     },
     none_match {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return !any_match.test(metafix, record, params, options);
+            return new NoneMatch().test(metafix, record, params, options);
         }
     },
     str_match {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testConditional(params, MATCHES);
+            return new StrMatch().test(metafix, record, params, options);
         }
     },
 
     greater_than {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testConditional(record, params, ALL, GREATER_THAN);
+            return new GreaterThan().test(metafix, record, params, options);
         }
     },
     less_than {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testConditional(record, params, ALL, LESS_THAN);
+            return new LessThan().test(metafix, record, params, options);
         }
     }
 

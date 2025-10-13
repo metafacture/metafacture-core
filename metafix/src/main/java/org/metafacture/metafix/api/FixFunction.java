@@ -36,6 +36,9 @@ import java.util.stream.Stream;
 @FunctionalInterface
 public interface FixFunction {
 
+    String DEFAULT_OPTION = "default";
+    String ERROR_STRING_OPTION = "error_string";
+
     /**
      * Applies the Fix function.
      *

@@ -16,6 +16,10 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.metafix.api.FixFunction;
+import org.metafacture.metafix.api.FixRegistry;
+import org.metafacture.metafix.bind.ListAs;
+import org.metafacture.metafix.bind.Once;
 import org.metafacture.metamorph.api.Maps;
 
 import org.junit.jupiter.api.Assertions;
@@ -25,6 +29,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -175,6 +180,177 @@ public class MetafixTest {
         // `value` has a `concretePath` matching the `wildcardPath`, so
         // `result` should be that path, not a path using the passed index:
         Assertions.assertEquals(concretePath, result.toString());
+    }
+
+    @Test
+    public void shouldRegisterNamedCommand() {
+        final FixRegistry registry = new Metafix().getRegistry();
+        final String name = "bla";
+        final Class<?> clazz = Once.class;
+
+        Assertions.assertFalse(registry.isRegisteredCommand(name));
+        Assertions.assertTrue(registry.registerCommand(name, clazz));
+        Assertions.assertTrue(registry.isRegisteredCommand(name));
+    }
+
+    @Test
+    public void shouldRegisterAnnotatedCommand() {
+        final FixRegistry registry = new Metafix().getRegistry();
+        final String name = "test_command";
+        final Class<?> clazz = TestCommand1.class;
+
+        Assertions.assertFalse(registry.isRegisteredCommand(name));
+        Assertions.assertEquals(name, registry.registerCommand(clazz));
+        Assertions.assertTrue(registry.isRegisteredCommand(name));
+    }
+
+    @Test
+    public void shouldNotRegisterSameAnnotatedCommandRepeatedly() {
+        final FixRegistry registry = new Metafix().getRegistry();
+        final String name = "test_command";
+        final Class<?> clazz = TestCommand1.class;
+
+        Assertions.assertEquals(name, registry.registerCommand(clazz));
+        Assertions.assertNull(registry.registerCommand(clazz));
+    }
+
+    @Test
+    public void shouldNotRegisterUnannotatedCommand() {
+        final FixRegistry registry = new Metafix().getRegistry();
+        final Class<?> clazz = TestCommand2.class;
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> registry.registerCommand(clazz));
+    }
+
+    @Test
+    public void shouldNotRegisterCommandThatIsNoCommand() {
+        final FixRegistry registry = new Metafix().getRegistry();
+        final String name = "bla";
+        final Class<?> clazz = MetafixTest.class;
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> registry.registerCommand(name, clazz));
+    }
+
+    @Test
+    public void shouldNotRegisterSameCommandRepeatedly() {
+        final FixRegistry registry = new Metafix().getRegistry();
+        final String name = "bla";
+        final Class<?> clazz = Once.class;
+
+        Assertions.assertTrue(registry.registerCommand(name, clazz));
+        Assertions.assertFalse(registry.registerCommand(name, clazz));
+    }
+
+    @Test
+    public void shouldRegisterSameCommandInDifferentRegistry() {
+        final FixRegistry registry1 = new Metafix().getRegistry();
+        final FixRegistry registry2 = new Metafix().getRegistry();
+        final String name = "bla";
+        final Class<?> clazz = Once.class;
+
+        Assertions.assertTrue(registry1.registerCommand(name, clazz));
+        Assertions.assertTrue(registry2.registerCommand(name, clazz));
+    }
+
+    @Test
+    public void shouldRegisterSameCommandRepeatedlyAfterUnregistering() {
+        final FixRegistry registry = new Metafix().getRegistry();
+        final String name = "bla";
+        final Class<?> clazz = Once.class;
+
+        Assertions.assertTrue(registry.registerCommand(name, clazz));
+        Assertions.assertEquals(clazz, registry.unregisterBind(name));
+        Assertions.assertTrue(registry.registerCommand(name, clazz));
+    }
+
+    @Test
+    public void shouldRegisterSameCommandUnderDifferentName() {
+        final FixRegistry registry = new Metafix().getRegistry();
+        final String name1 = "bla";
+        final String name2 = "blub";
+        final Class<?> clazz = Once.class;
+
+        Assertions.assertTrue(registry.registerCommand(name1, clazz));
+        Assertions.assertTrue(registry.registerCommand(name2, clazz));
+    }
+
+    @Test
+    public void shouldNotRegisterDifferentCommandUnderSameName() {
+        final FixRegistry registry = new Metafix().getRegistry();
+        final String name = "bla";
+        final Class<?> clazz1 = Once.class;
+        final Class<?> clazz2 = ListAs.class;
+
+        Assertions.assertTrue(registry.registerCommand(name, clazz1));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> registry.registerCommand(name, clazz2));
+    }
+
+    @Test
+    public void shouldRegisterDifferentCommandUnderSameNameInDifferentRegistry() {
+        final FixRegistry registry1 = new Metafix().getRegistry();
+        final FixRegistry registry2 = new Metafix().getRegistry();
+        final String name = "bla";
+        final Class<?> clazz1 = Once.class;
+        final Class<?> clazz2 = ListAs.class;
+
+        Assertions.assertTrue(registry1.registerCommand(name, clazz1));
+        Assertions.assertTrue(registry2.registerCommand(name, clazz2));
+    }
+
+    @Test
+    public void shouldNotRegisterCommandWithoutName() {
+        final FixRegistry registry = new Metafix().getRegistry();
+        final String name = null;
+        final Class<?> clazz = Once.class;
+
+        Assertions.assertThrows(NullPointerException.class, () -> registry.registerCommand(name, clazz));
+    }
+
+    @Test
+    public void shouldNotRegisterCommandWithoutClass() {
+        final FixRegistry registry = new Metafix().getRegistry();
+        final String name = "bla";
+        final Class<?> clazz = null;
+
+        Assertions.assertThrows(NullPointerException.class, () -> registry.registerCommand(name, clazz));
+    }
+
+    @Test
+    public void shouldRegisterCommandInConstructor() {
+        final String name = "bla";
+        final Class<?> clazz = Once.class;
+
+        final Metafix metafix = new Metafix(m -> {
+            final FixRegistry registry = m.getRegistry();
+
+            Assertions.assertFalse(registry.isRegisteredCommand(name));
+            Assertions.assertTrue(registry.registerCommand(name, clazz));
+
+            return null;
+        });
+
+        final FixRegistry registry = metafix.getRegistry();
+        Assertions.assertTrue(registry.isRegisteredCommand(name));
+    }
+
+    @FixCommand("test_command")
+    private static class TestCommand1 implements FixFunction {
+
+        private TestCommand1() {
+        }
+
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            // nothing to do
+        }
+
+    }
+
+    private static class TestCommand2 extends TestCommand1 {
+
+        private TestCommand2() {
+        }
+
     }
 
 }

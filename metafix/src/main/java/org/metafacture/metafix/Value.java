@@ -422,7 +422,14 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         return path;
     }
 
-    /*package-private*/ Value withPathSet(final String p) {
+    /**
+     * Sets the value's path.
+     *
+     * @param p the path
+     *
+     * @return the Value
+     */
+    public Value withPathSet(final String p) {
         this.path = p;
         return this;
     }
@@ -782,7 +789,14 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
             list.remove(index);
         }
 
-        /*package-private*/ void set(final int index, final Value value) {
+        /**
+         * Sets the Array element at the given index to the given Value and
+         * appends the index number to its path.
+         *
+         * @param index the index
+         * @param value the Value
+         */
+        public void set(final int index, final Value value) {
             list.set(index, value.withPathAppend(index + 1));
         }
 
@@ -893,7 +907,14 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
             put(field, value, true);
         }
 
-        /*package-private*/ void put(final String field, final Value value, final boolean appendToPath) {
+        /**
+         * Adds a field/value pair to this hash, provided it's not {@link #isNull(Value) null}.
+         *
+         * @param field        the field name
+         * @param value        the metadata value
+         * @param appendToPath whether to append the field name to the Value's path
+         */
+        public void put(final String field, final Value value, final boolean appendToPath) {
             if (!isNull(value)) {
                 map.put(field, appendToPath ? value.withPathAppend(field) : value);
             }

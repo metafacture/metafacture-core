@@ -28,6 +28,7 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamReceiver;
 import org.metafacture.mangling.StreamFlattener;
+import org.metafacture.metafix.api.FixRegistry;
 import org.metafacture.metafix.fix.Expression;
 import org.metafacture.metamorph.api.Maps;
 
@@ -52,6 +53,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * Transforms a data stream sent via the {@link StreamReceiver} interface. Uses
@@ -83,6 +85,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
     private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
 
     private final Deque<Integer> entityCountStack = new LinkedList<>();
+    private final FixRegistry registry = new FixRegistry();
     private final List<Closeable> resources = new ArrayList<>();
     private final List<Expression> expressions = new ArrayList<>();
     private final Map<String, Map<String, String>> maps = new HashMap<>();
@@ -117,7 +120,17 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
      * @param vars the Fix variables as a Map
      */
     public Metafix(final Map<String, String> vars) {
-        init(vars);
+        this(m -> vars);
+    }
+
+    /**
+     * Creates an instance of {@link Metafix}.
+     *
+     * @param function an optional function that accepts the Metafix instance
+     *                 and returns the Fix variables as a Map, or {@code null}
+     */
+    public Metafix(final Function<Metafix, Map<String, String>> function) {
+        init(function);
         recordTransformer = null;
     }
 
@@ -141,7 +154,20 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
      * @throws IOException if an I/O error occurs
      */
     public Metafix(final String fixDef, final Map<String, String> vars) throws IOException {
-        init(vars);
+        this(fixDef, m -> vars);
+    }
+
+    /**
+     * Creates an instance of {@link Metafix}.
+     *
+     * @param fixDef   the Fix definition
+     * @param function an optional function that accepts the Metafix instance
+     *                 and returns the Fix variables as a Map, or {@code null}
+     *
+     * @throws IOException if an I/O error occurs
+     */
+    public Metafix(final String fixDef, final Function<Metafix, Map<String, String>> function) throws IOException {
+        init(function);
 
         if (isFixFile(fixDef)) {
             fixFile = fixDef;
@@ -170,11 +196,22 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
      * @param vars   the Fix variables as a Map
      */
     public Metafix(final Reader fixDef, final Map<String, String> vars) {
-        init(vars);
+        this(fixDef, m -> vars);
+    }
+
+    /**
+     * Creates an instance of {@link Metafix}.
+     *
+     * @param fixDef   the Fix definition
+     * @param function an optional function that accepts the Metafix instance
+     *                 and returns the Fix variables as a Map, or {@code null}
+     */
+    public Metafix(final Reader fixDef, final Function<Metafix, Map<String, String>> function) {
+        init(function);
         recordTransformer = getRecordTransformer(fixDef);
     }
 
-    private void init(final Map<String, String> newVars) {
+    private void init(final Function<Metafix, Map<String, String>> function) {
         flattener.setReceiver(new DefaultStreamReceiver() {
 
             @Override
@@ -187,10 +224,22 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
 
         });
 
-        vars.putAll(newVars);
+        if (function != null) {
+            final Map<String, String> newVars = function.apply(this);
+            if (newVars != null) {
+                vars.putAll(newVars);
+            }
+        }
     }
 
-    /*package-private*/ static boolean isFixFile(final String fixDef) {
+    /**
+     * Checks whether the given Fix definition indicates a Fix file.
+     *
+     * @param fixDef the Fix definition
+     *
+     * @return true if the given Fix definition indicates a Fix file
+     */
+    public static boolean isFixFile(final String fixDef) {
         return fixDef.endsWith(FIX_EXTENSION);
     }
 
@@ -299,6 +348,15 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
      */
     public List<Expression> getExpressions() {
         return expressions;
+    }
+
+    /**
+     * Returns the Fix registry.
+     *
+     * @return the Fix registry
+     */
+    public FixRegistry getRegistry() {
+        return registry;
     }
 
     @Override

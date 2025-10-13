@@ -1,0 +1,45 @@
+/*
+ * Copyright 2025 hbz NRW
+ *
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.metafacture.metafix.method.record;
+
+import org.metafacture.metafix.FixCommand;
+import org.metafacture.metafix.Metafix;
+import org.metafacture.metafix.Record;
+import org.metafacture.metafix.Value;
+import org.metafacture.metafix.api.FixFunction;
+
+import java.util.List;
+import java.util.Map;
+
+@FixCommand("add_array")
+public class AddArray implements FixFunction {
+
+    /**
+     * Creates an instance of {@link AddArray}.
+     */
+    public AddArray() {
+    }
+
+    @Override
+    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+        final String field = params.get(0);
+        final Value newValue = newArray(params.subList(1, params.size()).stream().map(Value::new));
+        record.set(field, newValue);
+        newValue.asArray().forEach(value -> value.withPathSet(newValue.getPath() + Value.FIELD_PATH_SEPARATOR + value.getPath()));
+    }
+
+}

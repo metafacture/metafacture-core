@@ -17,93 +17,39 @@
 package org.metafacture.metafix;
 
 import org.metafacture.metafix.api.FixContext;
+import org.metafacture.metafix.bind.*; // checkstyle-disable-line AvoidStarImport
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+@Deprecated(since = "7.1.0", forRemoval = true)
 public enum FixBind implements FixContext {
 
     list {
         @Override
         public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final RecordTransformer recordTransformer) {
-            final String scopeVariable = options.get("var");
-            Value.asList(record.get(options.get("path")), a -> {
-                for (int i = 0; i < a.size(); ++i) {
-                    final Value value = a.get(i);
-
-                    // with var -> keep full record in scope, add the var:
-                    if (scopeVariable != null) {
-                        record.put(scopeVariable, value, false);
-                        recordTransformer.transform(record);
-                        record.remove(scopeVariable);
-                    }
-                    // w/o var -> use the currently bound value as the record:
-                    else {
-                        final int index = i;
-
-                        value.matchType()
-                            .ifHash(h -> {
-                                final Record scopeRecord = new Record();
-                                scopeRecord.addAll(h);
-
-                                recordTransformer.transform(scopeRecord);
-                                a.set(index, new Value(scopeRecord));
-                            })
-                            // TODO: bind to arrays (if that makes sense) and strings (access with '.')
-                            .orElseThrow();
-                    }
-                }
-            });
+            new org.metafacture.metafix.bind.List().execute(metafix, record, params, options, recordTransformer);
         }
     },
 
     list_as {
         @Override
         public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final RecordTransformer recordTransformer) {
-            final Map<String, Value.Array> lists = new HashMap<>();
-            options.forEach((k, v) -> Value.asList(record.get(v), a -> lists.put(k, a)));
-
-            final int size = lists.values().stream().mapToInt(a -> a.size()).max().orElse(0);
-            for (int i = 0; i < size; ++i) {
-                final int index = i;
-
-                lists.forEach((k, v) -> {
-                    final Value value = index < v.size() ? v.get(index) : null;
-
-                    if (value != null) {
-                        record.put(k, value);
-                    }
-                    else {
-                        record.remove(k);
-                    }
-                });
-
-                recordTransformer.transform(record);
-            }
-
-            lists.keySet().forEach(record::remove);
+            new ListAs().execute(metafix, record, params, options, recordTransformer);
         }
     },
 
     once {
-        private final Map<Metafix, Set<String>> executed = new HashMap<>();
-
         @Override
         public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final RecordTransformer recordTransformer) {
-            if (executed.computeIfAbsent(metafix, k -> new HashSet<>()).add(params.isEmpty() ? null : params.get(0))) {
-                recordTransformer.transform(record);
-            }
+            new Once().execute(metafix, record, params, options, recordTransformer);
         }
     },
 
     put_macro {
         @Override
         public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final RecordTransformer recordTransformer) {
-            recordTransformer.setVars(options);
-            metafix.putMacro(params.get(0), recordTransformer);
+            new PutMacro().execute(metafix, record, params, options, recordTransformer);
         }
     }
 

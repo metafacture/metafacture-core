@@ -16,10 +16,11 @@
 
 package org.metafacture.metafix.util;
 
-import org.metafacture.metafix.FixConditional;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixPredicate;
+import org.metafacture.metafix.conditional.AnyEqual;
+import org.metafacture.metafix.conditional.Exists;
 
 import java.util.List;
 import java.util.Map;
@@ -31,8 +32,8 @@ public class TestPredicate implements FixPredicate {
 
     @Override
     public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-        return !FixConditional.exists.test(metafix, record, params, options) ||
-            FixConditional.any_equal.test(metafix, record, params, options);
+        return !new Exists().test(metafix, record, params, options) ||
+            new AnyEqual().test(metafix, record, params, options);
     }
 
 }

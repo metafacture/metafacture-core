@@ -16,11 +16,11 @@
 
 package org.metafacture.metafix.util;
 
-import org.metafacture.metafix.FixMethod;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixFunction;
+import org.metafacture.metafix.method.record.AddField;
 
 import java.util.List;
 import java.util.Map;
@@ -34,7 +34,7 @@ public class TestFunction implements FixFunction {
     public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         params.add(params.get(0).toUpperCase());
         params.set(0, "test");
-        FixMethod.add_field.apply(metafix, record, params, options);
+        new AddField().apply(metafix, record, params, options);
 
         options.forEach((k, v) -> record.set(k, new Value(v)));
     }
