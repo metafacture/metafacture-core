@@ -1749,6 +1749,38 @@ public class MetafixRecordTest {
     }
 
     @Test
+    @MetafixToDo("See issue #711")
+    public void shouldNotOverwriteHashValueWithMissingArrayValue() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('array[].*.dummy', 'hash.field1')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("hash");
+                i.literal("field1", "value1");
+                i.literal("field2", "value2");
+                i.endEntity();
+                i.startEntity("array[]");
+                i.startEntity("1");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("hash");
+                o.get().literal("field1", "value1");
+                o.get().literal("field2", "value2");
+                o.get().endEntity();
+                o.get().startEntity("array[]");
+                o.get().startEntity("1");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void removeLiteral() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "remove_field('your.name')"),
