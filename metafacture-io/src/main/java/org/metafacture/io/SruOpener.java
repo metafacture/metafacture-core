@@ -189,8 +189,11 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
         }
 
         while (!stopRetrieving && recordsRetrieved < totalRecords && startRecord < numberOfRecords) {
-            final InputStream inputStream = getXmlDocsViaSru(srUrl);
-            getReceiver().process(new InputStreamReader(inputStream));
+            try (final InputStream inputStream = getXmlDocsViaSru(srUrl)) {
+                getReceiver().process(new InputStreamReader(inputStream));
+            } catch (Exception e) {
+                throw new MetafactureException(e);
+            }
         }
 
     }
