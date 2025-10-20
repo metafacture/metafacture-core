@@ -124,7 +124,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
 
     /**
      * Sets the maximum of records returned in one lookup. <strong>Default value: {@value MAXIMUM_RECORDS}</strong>.
-     * The lookup is repeated as long as {@link #maximumRecords} is lesser than {@link #totalRecords}.
+     * The lookup is repeated as long as {@link #maximumRecords} is less than {@link #totalRecords}.
      *
      * @param maximumRecords maximum of records returned in one lookup
      */
