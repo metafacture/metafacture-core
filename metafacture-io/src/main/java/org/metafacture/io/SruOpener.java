@@ -171,7 +171,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
         final StringBuilder srUrl = new StringBuilder(baseUrl);
         if (query != null) {
             srUrl.append("?query=").append(query).append("&operation=").append(operation).append("&recordSchema=")
-                .append(recordSchema).append("&version=").append(version);
+                .append(recordSchema).append("&version=").append(version).append("&maximumRecords=" + maximumRecords);
         }
         else {
             throw new IllegalArgumentException("Missing mandatory parameter 'query'");
@@ -218,7 +218,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
 
     private InputStream retrieveUrl(final StringBuilder srUrl) throws IOException {
         final URL urlToOpen =
-                new URL(srUrl.toString() + "&maximumRecords=" + maximumRecords + "&startRecord=" + startRecord);
+                new URL(srUrl.toString() + "&startRecord=" + startRecord);
         final HttpURLConnection connection = (HttpURLConnection) urlToOpen.openConnection();
 
         connection.setConnectTimeout(CONNECTION_TIMEOUT);
