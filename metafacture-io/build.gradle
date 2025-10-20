@@ -19,8 +19,6 @@ description = 'Modules for reading and writing data streams'
 
 dependencies {
   api project(':metafacture-framework')
-  api project(':metafacture-formatting')
-  api project(':metafacture-xml')
   implementation project(':metafacture-commons')
   implementation "commons-io:commons-io:${versions.commons_io}"
   implementation "org.apache.commons:commons-compress:${versions.commons_compress}"
