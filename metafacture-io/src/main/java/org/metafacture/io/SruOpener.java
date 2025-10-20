@@ -118,8 +118,8 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
      *
      * @param totalrecords total number of records to be retrieved
      */
-    public void setTotal(final String totalrecords) {
-        this.totalRecords = Integer.parseInt(totalrecords);
+    public void setTotal(final int totalrecords) {
+        this.totalRecords = totalrecords;
     }
 
     /**
@@ -128,8 +128,8 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
      *
      * @param maximumRecords maximum of records returned in one lookup
      */
-    public void setMaximumRecords(final String maximumRecords) {
-        this.maximumRecords = Integer.parseInt(maximumRecords);
+    public void setMaximumRecords(final int maximumRecords) {
+        this.maximumRecords = maximumRecords;
     }
 
     /**
@@ -137,8 +137,8 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
      *
      * @param startRecord where to start when retrieving records
      */
-    public void setStartRecord(final String startRecord) {
-        this.startRecord = Integer.parseInt(startRecord);
+    public void setStartRecord(final int startRecord) {
+        this.startRecord = startRecord;
     }
 
     /**
