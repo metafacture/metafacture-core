@@ -33,8 +33,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -109,7 +112,12 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
      */
 
     public void setQuery(final String query) {
-        this.query = query;
+        try {
+            this.query = URLEncoder.encode(query, StandardCharsets.UTF_8.toString());
+        }
+        catch (final UnsupportedEncodingException e) {
+            throw new MetafactureException(e);
+        }
     }
 
     /**
