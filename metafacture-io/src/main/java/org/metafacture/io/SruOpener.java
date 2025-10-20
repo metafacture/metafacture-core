@@ -33,7 +33,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -77,17 +76,12 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     private int maximumRecords = MAXIMUM_RECORDS;
     private int startRecord = START_RECORD;
     private int totalRecords = Integer.MAX_VALUE;
-    private int numberOfRecords = Integer.MAX_VALUE;
-    private int recordsRetrieved;
 
     private String operation = OPERATION;
     private String query;
     private String recordSchema = RECORD_SCHEMA;
     private String userAgent = USER_AGENT;
     private String version = VERSION;
-
-    private String xmlDeclarationTemplate = "<?xml version=\"%s\" encoding=\"%s\"?>";
-    private String xmlDeclaration;
 
     /**
      * Default constructor
@@ -98,10 +92,10 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     /**
      * Sets the User Agent to use. <strong>Default value: {@value USER_AGENT}</strong>.
      *
-     * @param userAgent a user agent to be used when opening a URL
+     * @param useragent a user agent to be used when opening a URL
      */
-    public void setUserAgent(final String userAgent) {
-        this.userAgent = userAgent;
+    public void setUserAgent(final String useragent) {
+        userAgent = useragent;
     }
 
     /**
@@ -112,12 +106,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
      */
 
     public void setQuery(final String query) {
-        try {
-            this.query = URLEncoder.encode(query, StandardCharsets.UTF_8.toString());
-        }
-        catch (final UnsupportedEncodingException e) {
-            throw new MetafactureException(e);
-        }
+        this.query = URLEncoder.encode(query, StandardCharsets.UTF_8);
     }
 
     /**
@@ -127,26 +116,26 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
      * @param totalrecords total number of records to be retrieved
      */
     public void setTotal(final int totalrecords) {
-        this.totalRecords = totalrecords;
+        totalRecords = totalrecords;
     }
 
     /**
      * Sets the maximum of records returned in one lookup. <strong>Default value: {@value MAXIMUM_RECORDS}</strong>.
      * The lookup is repeated as long as {@link #maximumRecords} is less than {@link #totalRecords}.
      *
-     * @param maximumRecords maximum of records returned in one lookup
+     * @param maximumrecords maximum of records returned in one lookup
      */
-    public void setMaximumRecords(final int maximumRecords) {
-        this.maximumRecords = maximumRecords;
+    public void setMaximumRecords(final int maximumrecords) {
+        maximumRecords = maximumrecords;
     }
 
     /**
      * Sets where to start when retrieving records. <strong>Default value: {@value START_RECORD}</strong>.
      *
-     * @param startRecord where to start when retrieving records
+     * @param startrecord where to start when retrieving records
      */
-    public void setStartRecord(final int startRecord) {
-        this.startRecord = startRecord;
+    public void setStartRecord(final int startrecord) {
+        startRecord = startrecord;
     }
 
     /**
@@ -187,41 +176,36 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
         else {
             throw new IllegalArgumentException("Missing mandatory parameter 'query'");
         }
-
+        int recordsRetrieved = 0;
+        int numberOfRecords = Integer.MAX_VALUE;
         while (!stopRetrieving && recordsRetrieved < totalRecords && startRecord < numberOfRecords) {
-            try (final InputStream inputStream = getXmlDocsViaSru(srUrl)) {
-                getReceiver().process(new InputStreamReader(inputStream));
-            } catch (Exception e) {
+
+            try {
+                final InputStream inputStreamOfURl = retrieveUrl(srUrl);
+                final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                final DocumentBuilder docBuilder = factory.newDocumentBuilder();
+                final Document xmldoc = docBuilder.parse(inputStreamOfURl);
+
+                final Transformer t = TransformerFactory.newInstance().newTransformer();
+                final StringWriter stringWriter = new StringWriter();
+                t.transform(new DOMSource(xmldoc), new StreamResult(stringWriter));
+
+                numberOfRecords = getIntegerValueFromElement(xmldoc, "numberOfRecords", 0);
+                final int recordPosition = getIntegerValueFromElement(xmldoc, "recordPosition", 0);
+                final int nextRecordPosition = getIntegerValueFromElement(xmldoc, "nextRecordPosition", totalRecords);
+
+                recordsRetrieved = recordsRetrieved + nextRecordPosition - recordPosition;
+                startRecord = nextRecordPosition;
+
+                try (InputStream inputStream = new ByteArrayInputStream(stringWriter.toString().getBytes())) {
+                    getReceiver().process(new InputStreamReader(inputStream));
+                }
+            }
+            catch (final IOException | TransformerException | SAXException | ParserConfigurationException e) {
                 throw new MetafactureException(e);
             }
         }
 
-    }
-
-    private InputStream getXmlDocsViaSru(final StringBuilder srUrl) {
-        try {
-            final InputStream inputStreamOfURl = retrieveUrl(srUrl, startRecord, maximumRecords);
-            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            final DocumentBuilder docBuilder = factory.newDocumentBuilder();
-            final Document xmldoc = docBuilder.parse(inputStreamOfURl);
-
-            final Transformer t = TransformerFactory.newInstance().newTransformer();
-            final StringWriter stringWriter = new StringWriter();
-            t.transform(new DOMSource(xmldoc), new StreamResult(stringWriter));
-
-            numberOfRecords = getIntegerValueFromElement(xmldoc, "numberOfRecords", 0);
-            final int recordPosition = getIntegerValueFromElement(xmldoc, "recordPosition", 0);
-            final int nextRecordPosition  = getIntegerValueFromElement(xmldoc, "nextRecordPosition", totalRecords);
-
-            recordsRetrieved = recordsRetrieved + nextRecordPosition - recordPosition;
-            startRecord = nextRecordPosition; // grenzwert : wenn maximumRcords > als in echt
-
-            return new ByteArrayInputStream(stringWriter.toString().getBytes());
-
-        }
-        catch (final IOException | TransformerException | SAXException | ParserConfigurationException e) {
-            throw new MetafactureException(e);
-        }
     }
 
     private int getIntegerValueFromElement(final Document xmlDoc, final String tagName, final int fallback) {
@@ -232,18 +216,16 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
         return fallback;
     }
 
-    private InputStream retrieveUrl(final StringBuilder srUrl, final int startrecord, final int maximumrecords) throws IOException {
+    private InputStream retrieveUrl(final StringBuilder srUrl) throws IOException {
         final URL urlToOpen =
-                new URL(srUrl.toString() + "&maximumRecords=" + maximumrecords + "&startRecord=" + startrecord);
+                new URL(srUrl.toString() + "&maximumRecords=" + maximumRecords + "&startRecord=" + startRecord);
         final HttpURLConnection connection = (HttpURLConnection) urlToOpen.openConnection();
 
         connection.setConnectTimeout(CONNECTION_TIMEOUT);
         if (!userAgent.isEmpty()) {
             connection.setRequestProperty("User-Agent", userAgent);
         }
-        final InputStream inputStream = getInputStream(connection);
-
-        return inputStream;
+        return getInputStream(connection);
     }
 
     private InputStream getInputStream(final HttpURLConnection connection) {
