@@ -58,21 +58,18 @@ public final class SruOpenerTest {
 
     @Before
     public void setUp() {
-        sruOpener = new  SruOpener();
-        final char[] buffer = new char[ 1024 * 1024 * 16];
+        sruOpener = new SruOpener();
+        final char[] buffer = new char[1024 * 1024 * 16];
         sruOpener.setReceiver(new DefaultObjectPipe<Reader, ObjectReceiver<String>>() {
             @Override
             public void process(final Reader reader) {
                 int size;
                 try {
-                        BufferedReader bufferedReader = new BufferedReader(reader);
-                        String line;
-                        while ((line = bufferedReader.readLine()) != null) {
-                            resultCollector.append(line+"\n");
-                        }
-                }
-                catch (final IOException e) {
-                    throw new MetafactureException(e);
+                    while ((size = reader.read(buffer)) != -1) {
+                        resultCollector.append(buffer, 0, size);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
         });
@@ -83,7 +80,7 @@ public final class SruOpenerTest {
     public void test_(){
 
         // sruOpener.setQuery("dnb.isil%3DDE-Sol1");
-        sruOpener.setQuery("WVN%3D24A05");
+        sruOpener.setQuery("WVN=24A05");
         sruOpener.setRecordSchema("MARC21plus-xml");
         sruOpener.setVersion("1.1");
         sruOpener.setStartRecord(1890);
@@ -183,7 +180,7 @@ public final class SruOpenerTest {
             //    resultCollector.append(obj);
             //}
 
-        sruOpener.setQuery("dnb.isil%3DDE-Sol1");
+        sruOpener.setQuery("dnb.isil=DE-Sol1");
       //  sruOpener.setQuery("WVN%3D24A05");
         sruOpener.setRecordSchema("MARC21plus-xml");
         sruOpener.setVersion("1.1");
