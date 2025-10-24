@@ -115,7 +115,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
      *
      * @param totalrecords total number of records to be retrieved
      */
-    public void setTotal(final int totalrecords) {
+    public void setTotalRecords(final int totalRecords) {
         totalRecords = totalrecords;
     }
 
