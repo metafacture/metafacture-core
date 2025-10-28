@@ -44,9 +44,9 @@ public final class SruOpenerTest {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig().
-                                                                             jettyAcceptors(Runtime.getRuntime()
-                                                                                                   .availableProcessors())
-                                                                             .dynamicPort());
+        jettyAcceptors(Runtime.getRuntime()
+            .availableProcessors())
+        .dynamicPort());
 
     @Mock
     private ObjectReceiver<Reader> receiver;
@@ -99,96 +99,22 @@ public final class SruOpenerTest {
         shouldPerformRequest(TEST_URL,sruOpener);
     }*/
 
-
-    //mach lieber wie in metafix/src/test/java/org/metafacture/metafix/MetafixLookupTest.java wiremock
-   /* private void shouldPerformRequest(String input, SruOpener sruOpener)  throws IOException { // checkstyle-disable-line ParameterNumber
-
-        final BiConsumer<SruOpener, String> consumer = null;
-        final Consumer<MappingBuilder> stubConsumer;
-        final Consumer<RequestPatternBuilder> requestConsumer;
-        final Consumer<ResponseDefinitionBuilder> responseConsumer = null;
-        final String responseBody;
-        final ResponseDefinitionBuilder response = WireMock.ok().withBody(RESPONSE_BODY);
-        if (responseConsumer != null) {
-            responseConsumer.accept(response);
-        }
-
-        final String baseUrl = wireMockRule.baseUrl();
-        final String url = String.format(TEST_URL, baseUrl);
-
-        final UrlPattern urlPattern = WireMock.urlPathEqualTo(TEST_URL);
-
-        final SruOpener opener = new SruOpener();
-        opener.setReceiver(receiver);
-        final MappingBuilder stub = WireMock.request("GET", urlPattern).willReturn(response);
-        if (stubConsumer != null) {
-            stubConsumer.accept(stub);
-        }
-
-        final RequestPatternBuilder request = new RequestPatternBuilder(RequestMethod.fromString("GET"), urlPattern)
-                .withRequestBody(method.getRequestHasBody() ? WireMock.equalTo(REQUEST_BODY) : WireMock.absent());
-        if (requestConsumer != null) {
-            requestConsumer.accept(request);
-        }
-
-        WireMock.stubFor(stub);
-
-        opener.process(String.format(input, baseUrl));
-
-        // use the opener a second time in a workflow:
-        opener.process(String.format(input, baseUrl));
-
-        opener.closeStream();
-
-
-        WireMock.verify(request);
-    }
-*/
-
     @Test
-    public void test(){
-        SruOpener    sruOpener = new SruOpener();
+    public void test() {
+        SruOpener sruOpener = new SruOpener();
         RecordReader recordReader = new RecordReader();
         recordReader.setReceiver(new ObjectStdoutWriter<String>());
         sruOpener.setReceiver(recordReader);// {
-
-
-           /* @Override
-            public void process(final XmlReceiver obj) {
-              BufferedReader in = new BufferedReader(obj);
-                String line = null;
-                StringBuilder rslt = new StringBuilder();
-                while (true) {
-                    try {
-                        if (!((line = in.readLine()) != null)) break;
-                    }
-                    catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }final InOrder ordered = Mockito.inOrder(receiver);
-
-                    rslt.append(line);
-                }*/
-      /*          StreamLiteralFormatter streamLiteralFormatter = new StreamLiteralFormatter();
-                ObjectStdoutWriter<String> objectStdoutWriter = new ObjectStdoutWriter<String>();
-                XmlElementSplitter xmlElementSplitter = new XmlElementSplitter();
-                streamLiteralFormatter.setReceiver(objectStdoutWriter);
-                xmlElementSplitter.setReceiver(streamLiteralFormatter);
-                xmlDecoder.setReceiver(xmlElementSplitter);*/
-             //   System.out.println(rslt.toString());
-            //    resultCollector.append(obj);
-            //}
-
         sruOpener.setQuery("dnb.isil=DE-Sol1");
-      //  sruOpener.setQuery("WVN%3D24A05");
+        //  sruOpener.setQuery("WVN%3D24A05");
         sruOpener.setRecordSchema("MARC21plus-xml");
         sruOpener.setVersion("1.1");
         sruOpener.setStartRecord(3029);
         sruOpener.setMaximumRecords(1);
         sruOpener.setTotalRecords(1);
-      //  sruOpener.process("https://services.dnb.de/sru/dnb");
+        //  sruOpener.process("https://services.dnb.de/sru/dnb");
         sruOpener.process("https://services.dnb.de/sru/zdb");
-       // sruOpener.process("https://amsquery.stadt-zuerich.ch/sru/");
-
-  //      System.out.println(resultCollector.toString());
+        // sruOpener.process("https://amsquery.stadt-zuerich.ch/sru/");
+        // System.out.println(resultCollector.toString());
     }
 }
