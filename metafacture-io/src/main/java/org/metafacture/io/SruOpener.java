@@ -181,9 +181,9 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
         int recordsRetrieved = 0;
         int numberOfRecords = Integer.MAX_VALUE;
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        final Transformer t;
+        final Transformer transformer;
         try {
-            t = TransformerFactory.newInstance().newTransformer();
+            transformer = TransformerFactory.newInstance().newTransformer();
         }
         catch (final TransformerConfigurationException e) {
             throw new MetafactureException(e);
@@ -196,7 +196,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
                 final Document xmldoc = docBuilder.parse(inputStreamOfURl);
 
                 final StringWriter stringWriter = new StringWriter();
-                t.transform(new DOMSource(xmldoc), new StreamResult(stringWriter));
+                transformer.transform(new DOMSource(xmldoc), new StreamResult(stringWriter));
 
                 numberOfRecords = getIntegerValueFromElement(xmldoc, "numberOfRecords", 0);
                 final int recordPosition = getIntegerValueFromElement(xmldoc, "recordPosition", 0);
