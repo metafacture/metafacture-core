@@ -92,10 +92,10 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     /**
      * Sets the User Agent to use. <strong>Default value: {@value USER_AGENT}</strong>.
      *
-     * @param useragent a user agent to be used when opening a URL
+     * @param userAgent a user agent to be used when opening a URL
      */
-    public void setUserAgent(final String useragent) {
-        userAgent = useragent;
+    public void setUserAgent(final String userAgent) {
+        this.userAgent = userAgent;
     }
 
     /**
@@ -113,29 +113,29 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
      * Sets total number of records to be retrieved. <strong>Default value: indefinite (as in "all")
      * </strong>.
      *
-     * @param totalrecords total number of records to be retrieved
+     * @param totalRecords total number of records to be retrieved
      */
     public void setTotalRecords(final int totalRecords) {
-        totalRecords = totalrecords;
+        this.totalRecords = totalRecords;
     }
 
     /**
      * Sets the maximum of records returned in one lookup. <strong>Default value: {@value MAXIMUM_RECORDS}</strong>.
      * The lookup is repeated as long as {@link #maximumRecords} is less than {@link #totalRecords}.
      *
-     * @param maximumrecords maximum of records returned in one lookup
+     * @param maximumRecords maximum of records returned in one lookup
      */
-    public void setMaximumRecords(final int maximumrecords) {
-        maximumRecords = maximumrecords;
+    public void setMaximumRecords(final int maximumRecords) {
+        this.maximumRecords = maximumRecords;
     }
 
     /**
      * Sets where to start when retrieving records. <strong>Default value: {@value START_RECORD}</strong>.
      *
-     * @param startrecord where to start when retrieving records
+     * @param startRecord where to start when retrieving records
      */
-    public void setStartRecord(final int startrecord) {
-        startRecord = startrecord;
+    public void setStartRecord(final int startRecord) {
+        this.startRecord = startRecord;
     }
 
     /**

@@ -21,14 +21,12 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -85,7 +83,7 @@ public final class SruOpenerTest {
         sruOpener.setVersion("1.1");
         sruOpener.setStartRecord(1890);
         sruOpener.setMaximumRecords(1);
-        sruOpener.setTotal(3);
+        sruOpener.setTotalRecords(3);
         sruOpener.process("https://services.dnb.de/sru/dnb");
         System.out.println(resultCollector.toString());
     }
@@ -186,7 +184,7 @@ public final class SruOpenerTest {
         sruOpener.setVersion("1.1");
         sruOpener.setStartRecord(3029);
         sruOpener.setMaximumRecords(1);
-        sruOpener.setTotal(1);
+        sruOpener.setTotalRecords(1);
       //  sruOpener.process("https://services.dnb.de/sru/dnb");
         sruOpener.process("https://services.dnb.de/sru/zdb");
        // sruOpener.process("https://amsquery.stadt-zuerich.ch/sru/");
