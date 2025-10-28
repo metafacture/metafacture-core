@@ -60,6 +60,7 @@ import javax.xml.transform.stream.StreamResult;
 @In(String.class)
 @Out(java.io.Reader.class)
 @FluxCommand("open-sru")
+@SuppressWarnings("checkstyle:ClassFanOutComplexity")
 public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
     private static final String OPERATION = "searchRetrieve";
