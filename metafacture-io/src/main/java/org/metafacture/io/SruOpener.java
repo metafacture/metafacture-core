@@ -41,6 +41,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -179,15 +180,21 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
         }
         int recordsRetrieved = 0;
         int numberOfRecords = Integer.MAX_VALUE;
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        final Transformer t;
+        try {
+            t = TransformerFactory.newInstance().newTransformer();
+        }
+        catch (final TransformerConfigurationException e) {
+            throw new MetafactureException(e);
+        }
         while (!stopRetrieving && recordsRetrieved < totalRecords && startRecord < numberOfRecords) {
 
             try {
                 final InputStream inputStreamOfURl = retrieveUrl(srUrl);
-                final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 final DocumentBuilder docBuilder = factory.newDocumentBuilder();
                 final Document xmldoc = docBuilder.parse(inputStreamOfURl);
 
-                final Transformer t = TransformerFactory.newInstance().newTransformer();
                 final StringWriter stringWriter = new StringWriter();
                 t.transform(new DOMSource(xmldoc), new StreamResult(stringWriter));
 
