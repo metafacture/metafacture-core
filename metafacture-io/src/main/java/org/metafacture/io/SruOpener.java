@@ -63,15 +63,26 @@ import javax.xml.transform.stream.StreamResult;
 @FluxCommand("open-sru")
 public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
+    private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
     private static final String OPERATION = "searchRetrieve";
     private static final String RECORD_SCHEMA = "MARC21-xml";
     private static final String USER_AGENT = "metafacture-core";
     private static final String VERSION = "2.0";
-
     private static final int CONNECTION_TIMEOUT = 11000;
     private static final int MAXIMUM_RECORDS = 10;
     private static final int START_RECORD = 1;
+    private static final Transformer TRANSFORMER;
 
+    static {
+        try {
+            TRANSFORMER = TransformerFactory.newInstance().newTransformer();
+        }
+        catch (final TransformerConfigurationException e) {
+            throw new MetafactureException(e);
+        }
+    }
+
+    private DocumentBuilder docBuilder;
     private boolean stopRetrieving;
 
     private int maximumRecords = MAXIMUM_RECORDS;
@@ -179,23 +190,21 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
 
         int recordsRetrieved = 0;
         int numberOfRecords = Integer.MAX_VALUE;
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        final Transformer transformer;
         try {
-            transformer = TransformerFactory.newInstance().newTransformer();
+            docBuilder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
         }
-        catch (final TransformerConfigurationException e) {
+        catch (final ParserConfigurationException e) {
             throw new MetafactureException(e);
         }
         while (!stopRetrieving && recordsRetrieved < totalRecords && startRecord < numberOfRecords) {
 
             try {
                 final InputStream inputStreamOfURl = retrieveUrl(srUrl);
-                final DocumentBuilder docBuilder = factory.newDocumentBuilder();
+
                 final Document xmldoc = docBuilder.parse(inputStreamOfURl);
 
                 final StringWriter stringWriter = new StringWriter();
-                transformer.transform(new DOMSource(xmldoc), new StreamResult(stringWriter));
+                TRANSFORMER.transform(new DOMSource(xmldoc), new StreamResult(stringWriter));
 
                 numberOfRecords = getIntegerValueFromElement(xmldoc, "numberOfRecords", 0);
                 final int recordPosition = getIntegerValueFromElement(xmldoc, "recordPosition", 0);
@@ -208,7 +217,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
                     getReceiver().process(new InputStreamReader(inputStream));
                 }
             }
-            catch (final IOException | TransformerException | SAXException | ParserConfigurationException e) {
+            catch (final IOException | TransformerException | SAXException e) {
                 throw new MetafactureException(e);
             }
         }
