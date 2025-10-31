@@ -52,7 +52,7 @@ import javax.xml.transform.stream.StreamResult;
  *
  * @author Pascal Christoph (dr0i)
  */
-@Description(
+@Description(// checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
         "Opens a SRU stream and passes a reader to the receiver. The input is the base URL of the SRU service " +
                 "to be retrieved from. Mandatory argument is: QUERY.\n" +
                 "The output is an XML document holding the user defined \"maximumRecords\" as documents. If there are" +
@@ -61,7 +61,6 @@ import javax.xml.transform.stream.StreamResult;
 @In(String.class)
 @Out(java.io.Reader.class)
 @FluxCommand("open-sru")
-@SuppressWarnings("checkstyle:ClassFanOutComplexity")
 public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
     private static final String OPERATION = "searchRetrieve";

@@ -16,13 +16,14 @@
 
 package org.metafacture.io;
 
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.helpers.DefaultObjectPipe;
+
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.helpers.DefaultObjectPipe;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -30,23 +31,19 @@ import org.mockito.junit.MockitoRule;
 import java.io.IOException;
 import java.io.Reader;
 
-
 public final class SruOpenerTest {
 
-    private static StringBuilder resultCollector = new StringBuilder();
+    private static final StringBuilder RESULT_COLLECTOR = new StringBuilder();
     private static final String RESPONSE_BODY = "response bödy"; // UTF-8
     private static final String TEST_URL = "/test/path";
-    private static SruOpener sruOpener = new SruOpener();
-
+    private static final SruOpener SRU_OPENER = new SruOpener();
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig().
-        jettyAcceptors(Runtime.getRuntime()
-            .availableProcessors())
-        .dynamicPort());
+    public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig()
+            .jettyAcceptors(Runtime.getRuntime().availableProcessors()).dynamicPort());
 
     @Mock
     private ObjectReceiver<Reader> receiver;
@@ -56,36 +53,34 @@ public final class SruOpenerTest {
 
     @Before
     public void setUp() {
-        sruOpener = new SruOpener();
         final char[] buffer = new char[1024 * 1024 * 16];
-        sruOpener.setReceiver(new DefaultObjectPipe<Reader, ObjectReceiver<String>>() {
+        SRU_OPENER.setReceiver(new DefaultObjectPipe<Reader, ObjectReceiver<String>>() {
             @Override
             public void process(final Reader reader) {
                 int size;
                 try {
                     while ((size = reader.read(buffer)) != -1) {
-                        resultCollector.append(buffer, 0, size);
+                        RESULT_COLLECTOR.append(buffer, 0, size);
                     }
-                } catch (IOException e) {
+                }
+                catch (final IOException e) {
                     throw new RuntimeException(e);
                 }
             }
         });
     }
 
-
     @Test
-    public void test_(){
-
+    public void test1() {
         // sruOpener.setQuery("dnb.isil%3DDE-Sol1");
-        sruOpener.setQuery("WVN=24A05");
-        sruOpener.setRecordSchema("MARC21plus-xml");
-        sruOpener.setVersion("1.1");
-        sruOpener.setStartRecord(1890);
-        sruOpener.setMaximumRecords(1);
-        sruOpener.setTotalRecords(3);
-        sruOpener.process("https://services.dnb.de/sru/dnb");
-        System.out.println(resultCollector.toString());
+        SRU_OPENER.setQuery("WVN=24A05");
+        SRU_OPENER.setRecordSchema("MARC21plus-xml");
+        SRU_OPENER.setVersion("1.1");
+        SRU_OPENER.setStartRecord(1890);
+        SRU_OPENER.setMaximumRecords(1);
+        SRU_OPENER.setTotalRecords(3);
+        SRU_OPENER.process("https://services.dnb.de/sru/dnb");
+        System.out.println(RESULT_COLLECTOR.toString());
     }
 
 /*    @Test
@@ -101,19 +96,18 @@ public final class SruOpenerTest {
 
     @Test
     public void test() {
-        SruOpener sruOpener = new SruOpener();
-        RecordReader recordReader = new RecordReader();
+        final RecordReader recordReader = new RecordReader();
         recordReader.setReceiver(new ObjectStdoutWriter<String>());
-        sruOpener.setReceiver(recordReader);// {
-        sruOpener.setQuery("dnb.isil=DE-Sol1");
+        SRU_OPENER.setReceiver(recordReader);
+        SRU_OPENER.setQuery("dnb.isil=DE-Sol1");
         //  sruOpener.setQuery("WVN%3D24A05");
-        sruOpener.setRecordSchema("MARC21plus-xml");
-        sruOpener.setVersion("1.1");
-        sruOpener.setStartRecord(3029);
-        sruOpener.setMaximumRecords(1);
-        sruOpener.setTotalRecords(1);
+        SRU_OPENER.setRecordSchema("MARC21plus-xml");
+        SRU_OPENER.setVersion("1.1");
+        SRU_OPENER.setStartRecord(3029);
+        SRU_OPENER.setMaximumRecords(1);
+        SRU_OPENER.setTotalRecords(1);
         //  sruOpener.process("https://services.dnb.de/sru/dnb");
-        sruOpener.process("https://services.dnb.de/sru/zdb");
+        SRU_OPENER.process("https://services.dnb.de/sru/zdb");
         // sruOpener.process("https://amsquery.stadt-zuerich.ch/sru/");
         // System.out.println(resultCollector.toString());
     }
