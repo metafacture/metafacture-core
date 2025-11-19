@@ -25,6 +25,7 @@ dependencies {
   runtimeOnly "org.tukaani:xz:${versions.tukaani}"
   testImplementation "com.github.tomakehurst:wiremock-jre8:${versions.wiremock}"
   testImplementation "junit:junit:${versions.junit}"
+  testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit_jupiter}"
   testImplementation "org.mockito:mockito-core:${versions.mockito}"
   testImplementation "org.assertj:assertj-core:${versions.assertj}"
   testRuntimeOnly "org.slf4j:slf4j-simple:${versions.slf4j}"
