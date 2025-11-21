@@ -141,8 +141,8 @@ public final class RecordReader extends DefaultObjectPipe<Reader, ObjectReceiver
     private void emitRecord() {
         final String record = builder.toString();
         if (!skipEmptyRecords || !record.isEmpty()) {
-            getReceiver().process(record);
             builder.delete(0, builder.length());
+            getReceiver().process(record);
         }
     }
 

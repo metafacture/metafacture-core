@@ -17,16 +17,20 @@
 package org.metafacture.io;
 
 import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.helpers.DefaultObjectReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Tests for {@link RecordReader}.
@@ -223,7 +227,38 @@ public final class RecordReaderTest {
         ordered.verify(receiver, Mockito.times(2)).process(RECORD2);
         ordered.verify(receiver).process(RECORD1);
         Mockito.verifyNoMoreInteractions(receiver);
+    }
 
+    @Test
+    public void issue584_shouldResetBufferOnException() {
+        final String error = "ERROR:";
+        final String success = "SUCCESS:";
+
+        final List<String> actual = new ArrayList<>();
+        final String[] expected = new String[]{error + RECORD1, success + RECORD2};
+
+        recordReader.setReceiver(new DefaultObjectReceiver<String>() {
+            @Override
+            public void process(final String obj) {
+                if (RECORD1.equals(obj)) {
+                    throw new IllegalArgumentException(obj);
+                }
+                else {
+                    actual.add(success + obj);
+                }
+            }
+        });
+
+        try {
+            recordReader.process(new StringReader(RECORD1));
+        }
+        catch (final IllegalArgumentException e) {
+            actual.add(error + e.getMessage());
+        }
+
+        recordReader.process(new StringReader(RECORD2));
+
+        Assertions.assertArrayEquals(expected, actual.toArray());
     }
 
 }
