@@ -2,7 +2,7 @@
   "id" : "7ba7099f-ecd2-43f2-ada5-c053f2532da3",
   "name" : "sru_dnb",
   "request" : {
-    "url" : "/sru/dnb?query=WVN%3D24A05&operation=searchRetrieve&recordSchema=MARC21plus-xml&version=1.1&maximumRecords=1&startRecord=1890",
+    "url" : "/sru/dnb?maximumRecords=1&operation=searchRetrieve&query=WVN%3D24A05&recordSchema=MARC21plus-xml&version=1.1&startRecord=1890",
     "method" : "GET"
   },
   "response" : {

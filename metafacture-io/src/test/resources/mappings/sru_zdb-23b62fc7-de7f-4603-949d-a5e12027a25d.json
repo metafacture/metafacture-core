@@ -2,7 +2,7 @@
   "id" : "23b62fc7-de7f-4603-949d-a5e12027a25d",
   "name" : "sru_zdb",
   "request" : {
-    "url" : "/sru/zdb?query=dnb.isil%3DDE-Sol1&operation=searchRetrieve&recordSchema=MARC21plus-xml&version=1.1&maximumRecords=1&startRecord=3029",
+    "url" : "/sru/zdb?maximumRecords=1&operation=searchRetrieve&query=dnb.isil%3DDE-Sol1&recordSchema=MARC21plus-xml&version=1.1&startRecord=3029",
     "method" : "GET"
   },
   "response" : {

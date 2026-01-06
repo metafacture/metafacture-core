@@ -34,6 +34,8 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -64,23 +66,22 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     private static final int START_RECORD = 1;
 
     private final HttpOpener httpOpener = new HttpOpener();
+    private final Map<String, String> queryParameters = new TreeMap<>();
 
     private DocumentBuilder docBuilder;
 
-    private int maximumRecords = MAXIMUM_RECORDS;
     private int startRecord = START_RECORD;
     private int totalRecords = Integer.MAX_VALUE;
-
-    private String operation = OPERATION;
-    private String query;
-    private String recordSchema = RECORD_SCHEMA;
-    private String version = VERSION;
 
     /**
      * Default constructor
      */
     public SruOpener() {
+        setMaximumRecords(MAXIMUM_RECORDS);
+        setOperation(OPERATION);
+        setRecordSchema(RECORD_SCHEMA);
         setUserAgent(USER_AGENT);
+        setVersion(VERSION);
     }
 
     /**
@@ -100,7 +101,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
      */
 
     public void setQuery(final String query) {
-        this.query = URLEncoder.encode(query, StandardCharsets.UTF_8);
+        queryParameters.put("query", query);
     }
 
     /**
@@ -120,7 +121,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
      * @param maximumRecords maximum of records returned in one lookup
      */
     public void setMaximumRecords(final int maximumRecords) {
-        this.maximumRecords = maximumRecords;
+        queryParameters.put("maximumRecords", String.valueOf(maximumRecords));
     }
 
     /**
@@ -138,7 +139,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
      * @param recordSchema the format of the data of the records
      */
     public void setRecordSchema(final String recordSchema) {
-        this.recordSchema = recordSchema;
+        queryParameters.put("recordSchema", recordSchema);
     }
 
     /**
@@ -147,7 +148,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
      * @param operation the kind of operation of the lookup
      */
     public void setOperation(final String operation) {
-        this.operation = operation;
+        queryParameters.put("operation", operation);
     }
 
     /**
@@ -156,21 +157,15 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
      * @param version the version of the lookup
      */
     public void setVersion(final String version) {
-        this.version = version;
+        queryParameters.put("version", version);
     }
 
     @Override
     public void process(final String baseUrl) {
-        final String srUrl;
-        if (query == null) {
+        if (queryParameters.get("query") == null) {
             throw new IllegalArgumentException("Missing mandatory parameter 'query'");
         }
-        else {
-            srUrl = baseUrl + "?query=" + query + "&operation=" + operation + "&recordSchema=" + recordSchema + "&version=" + version + "&maximumRecords=" + maximumRecords;
-        }
 
-        int recordsRetrieved = 0;
-        int numberOfRecords = Integer.MAX_VALUE;
         try {
             docBuilder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
         }
@@ -178,10 +173,20 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
             throw new MetafactureException(e);
         }
 
+        final StringBuilder urlBuilder = new StringBuilder(baseUrl).append("?");
+        queryParameters.forEach((k, v) -> urlBuilder
+                .append(URLEncoder.encode(k, StandardCharsets.UTF_8)).append("=")
+                .append(URLEncoder.encode(v, StandardCharsets.UTF_8)).append("&"));
+        urlBuilder.append("startRecord=");
+
+        final String url = urlBuilder.toString();
+        int recordsRetrieved = 0;
+        int numberOfRecords = Integer.MAX_VALUE;
+
         while (recordsRetrieved < totalRecords && startRecord < numberOfRecords) {
             final AtomicReference<String> responseBody = new AtomicReference<>();
 
-            final boolean successful = httpOpener.open(srUrl + "&startRecord=" + startRecord, r -> {
+            final boolean successful = httpOpener.open(url + startRecord, r -> {
                 try {
                     responseBody.set(ResourceUtil.readAll(r));
                 }
