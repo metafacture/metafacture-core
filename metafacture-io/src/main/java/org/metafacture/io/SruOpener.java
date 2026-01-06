@@ -30,13 +30,11 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -62,12 +60,12 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     private static final String RECORD_SCHEMA = "MARC21-xml";
     private static final String USER_AGENT = "metafacture-core";
     private static final String VERSION = "2.0";
-    private static final int CONNECTION_TIMEOUT = 11000;
     private static final int MAXIMUM_RECORDS = 10;
     private static final int START_RECORD = 1;
 
+    private final HttpOpener httpOpener = new HttpOpener();
+
     private DocumentBuilder docBuilder;
-    private boolean stopRetrieving;
 
     private int maximumRecords = MAXIMUM_RECORDS;
     private int startRecord = START_RECORD;
@@ -76,13 +74,13 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     private String operation = OPERATION;
     private String query;
     private String recordSchema = RECORD_SCHEMA;
-    private String userAgent = USER_AGENT;
     private String version = VERSION;
 
     /**
      * Default constructor
      */
     public SruOpener() {
+        setUserAgent(USER_AGENT);
     }
 
     /**
@@ -91,7 +89,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
      * @param userAgent a user agent to be used when opening a URL
      */
     public void setUserAgent(final String userAgent) {
-        this.userAgent = userAgent;
+        httpOpener.setHeader("User-Agent", userAgent);
     }
 
     /**
@@ -180,11 +178,20 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
             throw new MetafactureException(e);
         }
 
-        while (!stopRetrieving && recordsRetrieved < totalRecords && startRecord < numberOfRecords) {
-            try (InputStream inputStream = retrieveUrl(srUrl)) {
-                final String responseBody = ResourceUtil.readAll(inputStream, StandardCharsets.UTF_8);
+        while (recordsRetrieved < totalRecords && startRecord < numberOfRecords) {
+            final AtomicReference<String> responseBody = new AtomicReference<>();
 
-                try (Reader reader = new StringReader(responseBody)) {
+            final boolean successful = httpOpener.open(srUrl + "&startRecord=" + startRecord, r -> {
+                try {
+                    responseBody.set(ResourceUtil.readAll(r));
+                }
+                catch (final IOException e) {
+                    throw new MetafactureException(e);
+                }
+            });
+
+            try {
+                try (Reader reader = new StringReader(responseBody.get())) {
                     final Document xmldoc = docBuilder.parse(new InputSource(reader));
 
                     numberOfRecords = getIntegerValueFromElement(xmldoc, "numberOfRecords", 0);
@@ -195,44 +202,23 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
                     startRecord = nextRecordPosition;
                 }
 
-                try (Reader reader = new StringReader(responseBody)) {
+                try (Reader reader = new StringReader(responseBody.get())) {
                     getReceiver().process(reader);
                 }
             }
             catch (final IOException | SAXException e) {
                 throw new MetafactureException(e);
             }
+
+            if (!successful) {
+                break;
+            }
         }
     }
 
     private int getIntegerValueFromElement(final Document xmlDoc, final String tagName, final int fallback) {
         final Node node = xmlDoc.getElementsByTagName(tagName).item(0);
-        if (node != null) {
-            return Integer.parseInt(node.getTextContent());
-        }
-        return fallback;
-    }
-
-    private InputStream retrieveUrl(final String srUrl) throws IOException {
-        final URL urlToOpen =
-                new URL(srUrl + "&startRecord=" + startRecord);
-        final HttpURLConnection connection = (HttpURLConnection) urlToOpen.openConnection();
-
-        connection.setConnectTimeout(CONNECTION_TIMEOUT);
-        if (!userAgent.isEmpty()) {
-            connection.setRequestProperty("User-Agent", userAgent);
-        }
-        return getInputStream(connection);
-    }
-
-    private InputStream getInputStream(final HttpURLConnection connection) {
-        try {
-            return connection.getInputStream();
-        }
-        catch (final IOException e) {
-            stopRetrieving = true;
-            return connection.getErrorStream();
-        }
+        return node != null ? Integer.parseInt(node.getTextContent()) : fallback;
     }
 
 }
