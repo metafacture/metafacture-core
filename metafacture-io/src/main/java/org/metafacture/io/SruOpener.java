@@ -60,7 +60,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
     private static final String DEFAULT_QUERY = "cql.allRecords = 1";
     private static final String OPERATION = "searchRetrieve";
-    private static final String RECORD_SCHEMA = "MARC21-xml";
+    private static final String RECORD_SCHEMA = "marcxml";
     private static final String USER_AGENT = "metafacture-core";
     private static final String VERSION = "2.0";
     private static final int MAXIMUM_RECORDS = 10;
