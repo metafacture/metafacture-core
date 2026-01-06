@@ -58,6 +58,7 @@ import javax.xml.parsers.ParserConfigurationException;
 public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
     private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+    private static final String DEFAULT_QUERY = "cql.allRecords = 1";
     private static final String OPERATION = "searchRetrieve";
     private static final String RECORD_SCHEMA = "MARC21-xml";
     private static final String USER_AGENT = "metafacture-core";
@@ -79,6 +80,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     public SruOpener() {
         setMaximumRecords(MAXIMUM_RECORDS);
         setOperation(OPERATION);
+        setQuery(DEFAULT_QUERY);
         setRecordSchema(RECORD_SCHEMA);
         setUserAgent(USER_AGENT);
         setVersion(VERSION);
@@ -95,7 +97,6 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
 
     /**
      * Sets the query of the search.
-     * <strong>Setting a query is mandatory.</strong>
      *
      * @param query the query
      */
@@ -162,10 +163,6 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
 
     @Override
     public void process(final String baseUrl) {
-        if (queryParameters.get("query") == null) {
-            throw new IllegalArgumentException("Missing mandatory parameter 'query'");
-        }
-
         try {
             docBuilder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
         }
