@@ -66,10 +66,9 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     private static final int MAXIMUM_RECORDS = 10;
     private static final int START_RECORD = 1;
 
+    private final DocumentBuilder docBuilder;
     private final HttpOpener httpOpener = new HttpOpener();
     private final Map<String, String> queryParameters = new TreeMap<>();
-
-    private DocumentBuilder docBuilder;
 
     private int startRecord = START_RECORD;
     private int totalRecords = Integer.MAX_VALUE;
@@ -78,6 +77,13 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
      * Default constructor
      */
     public SruOpener() {
+        try {
+            docBuilder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
+        }
+        catch (final ParserConfigurationException e) {
+            throw new MetafactureException(e);
+        }
+
         setMaximumRecords(MAXIMUM_RECORDS);
         setOperation(OPERATION);
         setQuery(DEFAULT_QUERY);
@@ -163,13 +169,6 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
 
     @Override
     public void process(final String baseUrl) {
-        try {
-            docBuilder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
-        }
-        catch (final ParserConfigurationException e) {
-            throw new MetafactureException(e);
-        }
-
         final StringBuilder urlBuilder = new StringBuilder(baseUrl).append("?");
         queryParameters.forEach((k, v) -> urlBuilder
                 .append(URLEncoder.encode(k, StandardCharsets.UTF_8)).append("=")
