@@ -16,12 +16,14 @@
 
 package org.metafacture.io;
 
+import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.helpers.DefaultObjectPipe;
 
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.core.WireMockApp;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import org.junit.Before;
+import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -29,14 +31,20 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 public final class SruOpenerTest {
 
-    private static final StringBuilder RESULT_COLLECTOR = new StringBuilder();
-    private static final String RESPONSE_BODY = "response bödy"; // UTF-8
-    private static final String TEST_URL = "/test/path";
-    private static final SruOpener SRU_OPENER = new SruOpener();
+    private static final String FILE_PATH = String.format("/%s/%%s", WireMockApp.FILES_ROOT);
+
+    private static final String DNB_URL = "https://services.dnb.de";
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -51,64 +59,79 @@ public final class SruOpenerTest {
     public SruOpenerTest() {
     }
 
-    @Before
-    public void setUp() {
-        final char[] buffer = new char[1024 * 1024 * 16];
-        SRU_OPENER.setReceiver(new DefaultObjectPipe<Reader, ObjectReceiver<String>>() {
-            @Override
-            public void process(final Reader reader) {
-                int size;
-                try {
-                    while ((size = reader.read(buffer)) != -1) {
-                        RESULT_COLLECTOR.append(buffer, 0, size);
+    @Test
+    public void testDnb() {
+        assertSru(DNB_URL, "/sru/dnb", o -> {
+                o.setQuery("WVN=24A05");
+                o.setRecordSchema("MARC21plus-xml");
+                o.setVersion("1.1");
+                o.setStartRecord(1890);
+                o.setMaximumRecords(1);
+                o.setTotalRecords(3);
+            },
+            "7ba7099f-ecd2-43f2-ada5-c053f2532da3",
+            "e9396103-55d6-41c6-984a-bb656304764a",
+            "8ce72c3c-e18f-488a-855d-6dcbf320cb4f"
+        );
+    }
+
+    @Test
+    public void testZdb() {
+        assertSru(DNB_URL, "/sru/zdb", o -> {
+                o.setQuery("dnb.isil=DE-Sol1");
+                o.setRecordSchema("MARC21plus-xml");
+                o.setVersion("1.1");
+                o.setStartRecord(3029);
+                o.setMaximumRecords(1);
+                o.setTotalRecords(1);
+            },
+            "23b62fc7-de7f-4603-949d-a5e12027a25d"
+        );
+    }
+
+    private void assertSru(final String url, final String path, final Consumer<SruOpener> consumer, final String... ids) {
+        final boolean recording = Boolean.getBoolean("org.metafacture.wiremock.record");
+        if (recording) {
+            System.out.println("Recording live requests to proxy: " + url);
+            WireMock.startRecording(WireMock.recordSpec().forTarget(url).extractTextBodiesOver(0));
+        }
+
+        final SruOpener opener = new SruOpener();
+        opener.setReceiver(receiver);
+        consumer.accept(opener);
+
+        final List<String> responseBodies = new ArrayList<>();
+        Arrays.stream(ids).forEach(i -> {
+            final StubMapping mapping = wireMockRule.getStubMapping(UUID.fromString(i)).getItem();
+
+            if (mapping == null) {
+                System.err.println("WireMock mapping not found: " + i);
+            }
+            else {
+                final String fileName = String.format(FILE_PATH, mapping.getResponse().getBodyFileName());
+
+                try (InputStream inputStream = getClass().getResourceAsStream(fileName)) {
+                    if (inputStream == null) {
+                        System.err.println("Response body not found for " + i + ": " + fileName);
+                    }
+                    else {
+                        responseBodies.add(ResourceUtil.readAll(inputStream, Charset.defaultCharset()));
                     }
                 }
                 catch (final IOException e) {
-                    throw new RuntimeException(e);
+                    System.err.println("Failed to load response body for " + i + ": " + e);
                 }
             }
         });
+
+        TestHelpers.assertReader(receiver, () -> {
+            opener.process(wireMockRule.url(path));
+            opener.closeStream();
+
+            if (recording) {
+                WireMock.stopRecording();
+            }
+        }, responseBodies.toArray(new String[responseBodies.size()]));
     }
 
-    @Test
-    public void test1() {
-        // sruOpener.setQuery("dnb.isil%3DDE-Sol1");
-        SRU_OPENER.setQuery("WVN=24A05");
-        SRU_OPENER.setRecordSchema("MARC21plus-xml");
-        SRU_OPENER.setVersion("1.1");
-        SRU_OPENER.setStartRecord(1890);
-        SRU_OPENER.setMaximumRecords(1);
-        SRU_OPENER.setTotalRecords(3);
-        SRU_OPENER.process("https://services.dnb.de/sru/dnb");
-        System.out.println(RESULT_COLLECTOR.toString());
-    }
-
-/*    @Test
-    public void shouldPerformGetRequestWithInputAsUrlByDefault() throws IOException {
-        SruOpener sruOpener = new SruOpener();
-        sruOpener.setQuery("WVN%3D24A05");
-        sruOpener.setRecordSchema("MARC21plus-xml");
-        sruOpener.setVersion("1.1");
-        sruOpener.setStartRecord("1890");
-        sruOpener.setTotal("32");
-        shouldPerformRequest(TEST_URL,sruOpener);
-    }*/
-
-    @Test
-    public void test() {
-        final RecordReader recordReader = new RecordReader();
-        recordReader.setReceiver(new ObjectStdoutWriter<String>());
-        SRU_OPENER.setReceiver(recordReader);
-        SRU_OPENER.setQuery("dnb.isil=DE-Sol1");
-        //  sruOpener.setQuery("WVN%3D24A05");
-        SRU_OPENER.setRecordSchema("MARC21plus-xml");
-        SRU_OPENER.setVersion("1.1");
-        SRU_OPENER.setStartRecord(3029);
-        SRU_OPENER.setMaximumRecords(1);
-        SRU_OPENER.setTotalRecords(1);
-        //  sruOpener.process("https://services.dnb.de/sru/dnb");
-        SRU_OPENER.process("https://services.dnb.de/sru/zdb");
-        // sruOpener.process("https://amsquery.stadt-zuerich.ch/sru/");
-        // System.out.println(resultCollector.toString());
-    }
 }

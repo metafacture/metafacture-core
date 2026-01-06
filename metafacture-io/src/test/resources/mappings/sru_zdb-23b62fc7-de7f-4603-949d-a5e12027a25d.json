@@ -1,0 +1,25 @@
+{
+  "id" : "23b62fc7-de7f-4603-949d-a5e12027a25d",
+  "name" : "sru_zdb",
+  "request" : {
+    "url" : "/sru/zdb?query=dnb.isil%3DDE-Sol1&operation=searchRetrieve&recordSchema=MARC21plus-xml&version=1.1&maximumRecords=1&startRecord=3029",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "sru_zdb-23b62fc7-de7f-4603-949d-a5e12027a25d.xml",
+    "headers" : {
+      "Date" : "Wed, 07 Jan 2026 16:14:11 GMT",
+      "Server" : "Apache",
+      "Strict-Transport-Security" : "max-age=15552000",
+      "Upgrade" : "h2,h2c",
+      "Access-Control-Allow-Origin" : "*",
+      "Vary" : "Accept-Encoding",
+      "Keep-Alive" : "timeout=15, max=100",
+      "Content-Type" : "text/xml;charset=UTF-8"
+    }
+  },
+  "uuid" : "23b62fc7-de7f-4603-949d-a5e12027a25d",
+  "persistent" : true,
+  "insertionIndex" : 4
+}

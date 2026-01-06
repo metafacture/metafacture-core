@@ -15,6 +15,7 @@
 
 package org.metafacture.io;
 
+import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -25,14 +26,13 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringWriter;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -40,12 +40,6 @@ import java.nio.charset.StandardCharsets;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 /**
  * Opens an SRU (Search Retrieval by URL) stream and passes a reader to the receiver. Pages through the SRU.
@@ -71,16 +65,6 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     private static final int CONNECTION_TIMEOUT = 11000;
     private static final int MAXIMUM_RECORDS = 10;
     private static final int START_RECORD = 1;
-    private static final Transformer TRANSFORMER;
-
-    static {
-        try {
-            TRANSFORMER = TransformerFactory.newInstance().newTransformer();
-        }
-        catch (final TransformerConfigurationException e) {
-            throw new MetafactureException(e);
-        }
-    }
 
     private DocumentBuilder docBuilder;
     private boolean stopRetrieving;
@@ -179,7 +163,6 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
 
     @Override
     public void process(final String baseUrl) {
-
         final String srUrl;
         if (query == null) {
             throw new IllegalArgumentException("Missing mandatory parameter 'query'");
@@ -196,32 +179,30 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
         catch (final ParserConfigurationException e) {
             throw new MetafactureException(e);
         }
+
         while (!stopRetrieving && recordsRetrieved < totalRecords && startRecord < numberOfRecords) {
+            try (InputStream inputStream = retrieveUrl(srUrl)) {
+                final String responseBody = ResourceUtil.readAll(inputStream, StandardCharsets.UTF_8);
 
-            try {
-                final InputStream inputStreamOfURl = retrieveUrl(srUrl);
+                try (Reader reader = new StringReader(responseBody)) {
+                    final Document xmldoc = docBuilder.parse(new InputSource(reader));
 
-                final Document xmldoc = docBuilder.parse(inputStreamOfURl);
+                    numberOfRecords = getIntegerValueFromElement(xmldoc, "numberOfRecords", 0);
+                    final int recordPosition = getIntegerValueFromElement(xmldoc, "recordPosition", 0);
+                    final int nextRecordPosition = getIntegerValueFromElement(xmldoc, "nextRecordPosition", totalRecords);
 
-                final StringWriter stringWriter = new StringWriter();
-                TRANSFORMER.transform(new DOMSource(xmldoc), new StreamResult(stringWriter));
+                    recordsRetrieved = recordsRetrieved + nextRecordPosition - recordPosition;
+                    startRecord = nextRecordPosition;
+                }
 
-                numberOfRecords = getIntegerValueFromElement(xmldoc, "numberOfRecords", 0);
-                final int recordPosition = getIntegerValueFromElement(xmldoc, "recordPosition", 0);
-                final int nextRecordPosition = getIntegerValueFromElement(xmldoc, "nextRecordPosition", totalRecords);
-
-                recordsRetrieved = recordsRetrieved + nextRecordPosition - recordPosition;
-                startRecord = nextRecordPosition;
-
-                try (InputStream inputStream = new ByteArrayInputStream(stringWriter.toString().getBytes())) {
-                    getReceiver().process(new InputStreamReader(inputStream));
+                try (Reader reader = new StringReader(responseBody)) {
+                    getReceiver().process(reader);
                 }
             }
-            catch (final IOException | TransformerException | SAXException e) {
+            catch (final IOException | SAXException e) {
                 throw new MetafactureException(e);
             }
         }
-
     }
 
     private int getIntegerValueFromElement(final Document xmlDoc, final String tagName, final int fallback) {
