@@ -1,0 +1,2857 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<searchRetrieveResponse xmlns="http://www.loc.gov/zing/srw/"><version>1.1</version><numberOfRecords>3052</numberOfRecords><records><record><recordSchema>MARC21plus-xml</recordSchema><recordPacking>xml</recordPacking><recordData><collection xmlns="http://www.loc.gov/MARC21/slim">
+  <record type="Bibliographic">
+    <leader>00000nas a2200000 c 4500</leader>
+    <controlfield tag="001">011446145</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20250311212448.0</controlfield>
+    <controlfield tag="007">tu</controlfield>
+    <controlfield tag="008">991119d19291979gw a||p|  ||| 0||||1ger c</controlfield>
+    <datafield tag="015" ind1=" " ind2=" ">
+      <subfield code="a">87,A34,0306</subfield>
+      <subfield code="2">dnb</subfield>
+    </datafield>
+    <datafield tag="016" ind1="7" ind2=" ">
+      <subfield code="2">DE-600</subfield>
+      <subfield code="a">240100-9</subfield>
+    </datafield>
+    <datafield tag="016" ind1="7" ind2=" ">
+      <subfield code="2">DE-101</subfield>
+      <subfield code="a">011446145</subfield>
+    </datafield>
+    <datafield tag="022" ind1=" " ind2=" ">
+      <subfield code="a">0067-4664</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-599)ZDB240100-9</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(OCoLC)85130183</subfield>
+    </datafield>
+    <datafield tag="040" ind1=" " ind2=" ">
+      <subfield code="a">9001</subfield>
+      <subfield code="b">ger</subfield>
+      <subfield code="c">DE-101</subfield>
+      <subfield code="d">9999</subfield>
+    </datafield>
+    <datafield tag="041" ind1=" " ind2=" ">
+      <subfield code="a">ger</subfield>
+    </datafield>
+    <datafield tag="042" ind1=" " ind2=" ">
+      <subfield code="a">zdb</subfield>
+    </datafield>
+    <datafield tag="044" ind1=" " ind2=" ">
+      <subfield code="c">XA-DE</subfield>
+    </datafield>
+    <datafield tag="082" ind1="7" ind2="4">
+      <subfield code="a">690</subfield>
+      <subfield code="q">DE-101</subfield>
+      <subfield code="2">22sdnb</subfield>
+    </datafield>
+    <datafield tag="083" ind1="7" ind2=" ">
+      <subfield code="a">690</subfield>
+      <subfield code="q">DE-600</subfield>
+      <subfield code="2">22sdnb</subfield>
+    </datafield>
+    <datafield tag="084" ind1=" " ind2=" ">
+      <subfield code="a">LH 67330</subfield>
+      <subfield code="2">rvk</subfield>
+    </datafield>
+    <datafield tag="245" ind1="0" ind2="0">
+      <subfield code="a">Bauwelt-Katalog</subfield>
+      <subfield code="b">Produktlexikon</subfield>
+    </datafield>
+    <datafield tag="246" ind1="3" ind2=" ">
+      <subfield code="a">Produktlexikon</subfield>
+    </datafield>
+    <datafield tag="247" ind1="0" ind2="0">
+      <subfield code="a">Handbuch des gesamten Baubedarfs</subfield>
+      <subfield code="f">Zusatz anfangs</subfield>
+    </datafield>
+    <datafield tag="264" ind1="3" ind2="1">
+      <subfield code="a">Berlin</subfield>
+      <subfield code="b">Bertelsmann-Fachzeitschriften-GmbH</subfield>
+      <subfield code="c">1929-1979</subfield>
+    </datafield>
+    <datafield tag="264" ind1="2" ind2="1">
+      <subfield code="3">anfangs</subfield>
+      <subfield code="a">Berlin</subfield>
+      <subfield code="b">Bauwelt-Verl.</subfield>
+    </datafield>
+    <datafield tag="336" ind1=" " ind2=" ">
+      <subfield code="a">Text</subfield>
+      <subfield code="b">txt</subfield>
+      <subfield code="2">rdacontent</subfield>
+    </datafield>
+    <datafield tag="337" ind1=" " ind2=" ">
+      <subfield code="a">ohne Hilfsmittel zu benutzen</subfield>
+      <subfield code="b">n</subfield>
+      <subfield code="2">rdamedia</subfield>
+    </datafield>
+    <datafield tag="338" ind1=" " ind2=" ">
+      <subfield code="a">Band</subfield>
+      <subfield code="b">nc</subfield>
+      <subfield code="2">rdacarrier</subfield>
+    </datafield>
+    <datafield tag="362" ind1="0" ind2=" ">
+      <subfield code="a">1.1929/30 - 29.1969; 1970 - 1979</subfield>
+    </datafield>
+    <datafield tag="363" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">1</subfield>
+      <subfield code="i">1929/30</subfield>
+    </datafield>
+    <datafield tag="363" ind1="1" ind2="0">
+      <subfield code="8">1.2\x</subfield>
+      <subfield code="a">29</subfield>
+      <subfield code="i">1969</subfield>
+    </datafield>
+    <datafield tag="363" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="i">1970</subfield>
+    </datafield>
+    <datafield tag="363" ind1="1" ind2="0">
+      <subfield code="8">2.2\x</subfield>
+      <subfield code="i">1979</subfield>
+    </datafield>
+    <datafield tag="515" ind1=" " ind2=" ">
+      <subfield code="a">Ersch. jährl.</subfield>
+    </datafield>
+    <datafield tag="591" ind1=" " ind2=" ">
+      <subfield code="a">93!</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="7">
+      <subfield code="0">(DE-588)4004945-0</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4004945-0</subfield>
+      <subfield code="0">(DE-101)040049450</subfield>
+      <subfield code="a">Baustoff</subfield>
+      <subfield code="9">rswk-swf</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="7">
+      <subfield code="0">(DE-588)4246610-6</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4246610-6</subfield>
+      <subfield code="0">(DE-101)042466105</subfield>
+      <subfield code="a">Baustoffindustrie</subfield>
+      <subfield code="9">rswk-swf</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="651" ind1=" " ind2="7">
+      <subfield code="0">(DE-588)4011889-7</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4011889-7</subfield>
+      <subfield code="0">(DE-101)040118894</subfield>
+      <subfield code="a">Deutschland</subfield>
+      <subfield code="g">Bundesrepublik</subfield>
+      <subfield code="9">rswk-swf</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="651" ind1=" " ind2="7">
+      <subfield code="0">(DE-588)4011889-7</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4011889-7</subfield>
+      <subfield code="0">(DE-101)040118894</subfield>
+      <subfield code="a">Deutschland</subfield>
+      <subfield code="g">Bundesrepublik</subfield>
+      <subfield code="9">rswk-swf</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="655" ind1=" " ind2="7">
+      <subfield code="0">(DE-588)4067488-5</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4067488-5</subfield>
+      <subfield code="0">(DE-101)040674886</subfield>
+      <subfield code="a">Zeitschrift</subfield>
+      <subfield code="2">gnd-content</subfield>
+    </datafield>
+    <datafield tag="655" ind1=" " ind2="7">
+      <subfield code="0">(DE-588)4163417-2</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4163417-2</subfield>
+      <subfield code="0">(DE-101)041634179</subfield>
+      <subfield code="a">Katalog</subfield>
+      <subfield code="2">gnd-content</subfield>
+    </datafield>
+    <datafield tag="655" ind1=" " ind2="7">
+      <subfield code="0">(DE-588)4141451-2</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4141451-2</subfield>
+      <subfield code="0">(DE-101)041414519</subfield>
+      <subfield code="a">Adressbuch</subfield>
+      <subfield code="2">gnd-content</subfield>
+    </datafield>
+    <datafield tag="689" ind1="0" ind2="0">
+      <subfield code="0">(DE-588)4011889-7</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4011889-7</subfield>
+      <subfield code="0">(DE-101)040118894</subfield>
+      <subfield code="D">g</subfield>
+      <subfield code="a">Deutschland</subfield>
+      <subfield code="g">Bundesrepublik</subfield>
+    </datafield>
+    <datafield tag="689" ind1="0" ind2="1">
+      <subfield code="0">(DE-588)4004945-0</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4004945-0</subfield>
+      <subfield code="0">(DE-101)040049450</subfield>
+      <subfield code="D">s</subfield>
+      <subfield code="a">Baustoff</subfield>
+    </datafield>
+    <datafield tag="689" ind1="0" ind2=" ">
+      <subfield code="5">DE-600</subfield>
+      <subfield code="5">DE-600</subfield>
+    </datafield>
+    <datafield tag="689" ind1="1" ind2="0">
+      <subfield code="0">(DE-588)4011889-7</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4011889-7</subfield>
+      <subfield code="0">(DE-101)040118894</subfield>
+      <subfield code="D">g</subfield>
+      <subfield code="a">Deutschland</subfield>
+      <subfield code="g">Bundesrepublik</subfield>
+    </datafield>
+    <datafield tag="689" ind1="1" ind2="1">
+      <subfield code="0">(DE-588)4246610-6</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4246610-6</subfield>
+      <subfield code="0">(DE-101)042466105</subfield>
+      <subfield code="D">s</subfield>
+      <subfield code="a">Baustoffindustrie</subfield>
+    </datafield>
+    <datafield tag="689" ind1="1" ind2=" ">
+      <subfield code="5">DE-600</subfield>
+      <subfield code="5">DE-600</subfield>
+    </datafield>
+    <datafield tag="785" ind1="0" ind2="0">
+      <subfield code="i">Forts.:</subfield>
+      <subfield code="t">Bertelsmann-Baukatalog</subfield>
+      <subfield code="d">Gütersloh : Bertelsmann-Fachzeitschriften-GmbH, 1980-2001</subfield>
+      <subfield code="x">0723-5895</subfield>
+      <subfield code="w">(DE-600)164510-9</subfield>
+      <subfield code="w">(DE-101)010979999</subfield>
+    </datafield>
+    <datafield tag="850" ind1=" " ind2=" ">
+      <subfield code="a">DE-101a</subfield>
+      <subfield code="a">DE-101b</subfield>
+    </datafield>
+    <datafield tag="889" ind1=" " ind2=" ">
+      <subfield code="w">(DE-101)551308230</subfield>
+    </datafield>
+    <datafield tag="889" ind1=" " ind2=" ">
+      <subfield code="w">(DE-600)1482960-5</subfield>
+    </datafield>
+    <datafield tag="925" ind1="r" ind2=" ">
+      <subfield code="a">ra</subfield>
+    </datafield>
+  </record>
+
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">608973505</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20181010023010.0</controlfield>
+    <controlfield tag="008">030827||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(XX-XxUND)0274/0541</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">950200-2</subfield>
+      <subfield code="d">101a</subfield>
+      <subfield code="k">SAX</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="541" ind1=" " ind2=" ">
+      <subfield code="e">L-1929-089442032</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">ZB 76819</subfield>
+      <subfield code="z">1979</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">ZB 21506</subfield>
+      <subfield code="z">1929/30-1942</subfield>
+      <subfield code="9">01</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-101a</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">1</subfield>
+      <subfield code="i">1929/30</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">1.2\x</subfield>
+      <subfield code="a">11</subfield>
+      <subfield code="i">1942</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="i">1979</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">[1.]1929/30 - 11.1942; 1979</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">613216660</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20181010023011.0</controlfield>
+    <controlfield tag="008">040621||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(XX-XxUND)0002/1857</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">600100-2</subfield>
+      <subfield code="d">101b</subfield>
+      <subfield code="k">HES</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="541" ind1=" " ind2=" ">
+      <subfield code="e">F-1929-095331263</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">DZb 10875</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-101b</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">25.1965 -</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">839719027</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20221012182551.0</controlfield>
+    <controlfield tag="008">030428||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-601)599535660</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-1)129591211</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">910107-X</subfield>
+      <subfield code="d">1</subfield>
+      <subfield code="k">BER</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">c</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">&#152;4"&#156;Ooa 4/26</subfield>
+      <subfield code="m">d</subfield>
+      <subfield code="=">l</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-1</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">1</subfield>
+      <subfield code="i">1929/30</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">1.2\x</subfield>
+      <subfield code="a">11</subfield>
+      <subfield code="i">1942</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">[1.]1929/30 - 11.1942</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">839719035</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20221012182551.0</controlfield>
+    <controlfield tag="008">080111||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-601)85509981X</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-1)129591211</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">910107-X</subfield>
+      <subfield code="d">1</subfield>
+      <subfield code="k">BER</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">c</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">2</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">&#152;4"&#156;Ooa 4/26&lt;a></subfield>
+      <subfield code="m">d</subfield>
+      <subfield code="=">l</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-1</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">3</subfield>
+      <subfield code="i">1931</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">1.2\x</subfield>
+      <subfield code="a">7</subfield>
+      <subfield code="i">1939</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">11</subfield>
+      <subfield code="i">1942</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">2.2\x</subfield>
+      <subfield code="a">12</subfield>
+      <subfield code="i">1943</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">3.1931 - 7.1939; 11.1942 - 12.1943</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">814317030</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20241112205710.0</controlfield>
+    <controlfield tag="008">221209||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-601)3969928508</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-B1549)129591211</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">181549-0</subfield>
+      <subfield code="d">B 1549</subfield>
+      <subfield code="k">BER</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">d</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">Z 0204</subfield>
+      <subfield code="m">i</subfield>
+      <subfield code="=">n</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">Schöneweide-Magazin</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-B1549</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">10</subfield>
+      <subfield code="i">1941</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">10.1941</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">85634320X</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20241112205710.0</controlfield>
+    <controlfield tag="008">221215||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-601)4232754210</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-B1549)129591211</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">181549-0</subfield>
+      <subfield code="d">B 1549</subfield>
+      <subfield code="k">BER</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">d</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">2</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">Az Bau</subfield>
+      <subfield code="m">i</subfield>
+      <subfield code="=">n</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">Schöneweide</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-B1549</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">12</subfield>
+      <subfield code="i">1943</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">12.1943 (Reprint 2022)</subfield>
+    </datafield>
+    <datafield tag="866" ind1=" " ind2="0">
+      <subfield code="z">Original im Archiv; Scan auf Anfrage verfügbar</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">019809018</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20240303080141.0</controlfield>
+    <controlfield tag="008">991207||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-605)22594958080006449</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">441000-2</subfield>
+      <subfield code="d">6</subfield>
+      <subfield code="k">NRW</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">c</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">ZC 662</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-6</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="i">1971</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">1.2\x</subfield>
+      <subfield code="i">1979</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">1971 - 1979</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="z">[N=1973-1974]</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">019809026</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20170530145845.0</controlfield>
+    <controlfield tag="008">991207||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-600)4343705-9</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-602)22575077410002882</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">130000-3</subfield>
+      <subfield code="d">11</subfield>
+      <subfield code="k">BER</subfield>
+      <subfield code="l">c</subfield>
+      <subfield code="o">e</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">Fi 85506:F4</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">Zeitschriften</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-11</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">8</subfield>
+      <subfield code="i">1939</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">1.2\x</subfield>
+      <subfield code="a">11</subfield>
+      <subfield code="i">1942</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">8.1939 - 11.1942</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">019809050</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20200911083842.0</controlfield>
+    <controlfield tag="008">991207||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-600)3745925-9</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">950100-9</subfield>
+      <subfield code="d">14</subfield>
+      <subfield code="k">SAX</subfield>
+      <subfield code="l">c</subfield>
+      <subfield code="o">e</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">Z. 4. 3380</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-14</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">4</subfield>
+      <subfield code="i">1933</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">6</subfield>
+      <subfield code="i">1936</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">3.1\x</subfield>
+      <subfield code="a">8</subfield>
+      <subfield code="i">1938</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">3.2\x</subfield>
+      <subfield code="a">11</subfield>
+      <subfield code="i">1942</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">4.1933; 6.1936; 8.1938 - 11.1942</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">019809069</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20051027081551.0</controlfield>
+    <controlfield tag="008">991207||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-600)4826778-8</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">951002-3</subfield>
+      <subfield code="d">14/02</subfield>
+      <subfield code="k">SAX</subfield>
+      <subfield code="l">c</subfield>
+      <subfield code="o">e</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">0252 34461 001</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-14-02</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">8</subfield>
+      <subfield code="i">1939</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">8.1939</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">057320020</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20180320165502.0</controlfield>
+    <controlfield tag="008">981021||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-603)060512458</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">611000-9</subfield>
+      <subfield code="d">17</subfield>
+      <subfield code="k">HES</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">c</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">Zb 1563</subfield>
+      <subfield code="=">l</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-17</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">6</subfield>
+      <subfield code="i">1936</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">1.2\x</subfield>
+      <subfield code="a">7</subfield>
+      <subfield code="i">1939</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">9</subfield>
+      <subfield code="i">1940</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">3.1\x</subfield>
+      <subfield code="a">13</subfield>
+      <subfield code="i">1951</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">4.1\x</subfield>
+      <subfield code="a">16</subfield>
+      <subfield code="i">1955</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">5.1\x</subfield>
+      <subfield code="a">19</subfield>
+      <subfield code="i">1959</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">6.1\x</subfield>
+      <subfield code="a">21</subfield>
+      <subfield code="i">1961</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">7.1\x</subfield>
+      <subfield code="a">24</subfield>
+      <subfield code="i">1964</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">7.2\x</subfield>
+      <subfield code="a">25</subfield>
+      <subfield code="i">1965</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">8.1\x</subfield>
+      <subfield code="a">27</subfield>
+      <subfield code="i">1967</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">9.1\x</subfield>
+      <subfield code="i">1971</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">10.1\x</subfield>
+      <subfield code="i">1974</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">6.1936 - 7.1939; 9.1940; 13.1951; 16.1955; 19.1959; 21.1961; 24.1964 - 25.1965; 27.1967/68; 1971; 1974</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">814317006</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20220913041633.0</controlfield>
+    <controlfield tag="008">040517||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-601)647009110</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-H189)129591211</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">208189-1</subfield>
+      <subfield code="d">H 189</subfield>
+      <subfield code="k">HAM</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">d</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">J350 : 3</subfield>
+      <subfield code="m">i</subfield>
+      <subfield code="=">n</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">H189</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-H189</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">6</subfield>
+      <subfield code="i">1934</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="i">1972</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">2.2\x</subfield>
+      <subfield code="i">1979</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">6.1934; 1972 - 1979</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">814317014</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20220913041633.0</controlfield>
+    <controlfield tag="008">131128||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-601)144757513X</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-H353)129591211</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">208353-X</subfield>
+      <subfield code="d">H 353</subfield>
+      <subfield code="k">HAM</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">d</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">2</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">Bra1.2-358</subfield>
+      <subfield code="m">i</subfield>
+      <subfield code="=">n</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">H353</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-H353</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="i">1973</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="i">1978</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">1973; 1978</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">232318786</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20120306163604.0</controlfield>
+    <controlfield tag="008">120306||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">808908-5</subfield>
+      <subfield code="d">210</subfield>
+      <subfield code="k">BAY</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">41000 A</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">ZB 838</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">1000</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-210</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">1</subfield>
+      <subfield code="i">1929/30</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">1.2\x</subfield>
+      <subfield code="a">12</subfield>
+      <subfield code="i">1943</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">18</subfield>
+      <subfield code="i">1958</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">2.2\x</subfield>
+      <subfield code="a">20</subfield>
+      <subfield code="i">1960</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">3.1\x</subfield>
+      <subfield code="a">24</subfield>
+      <subfield code="i">1964</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">4.1\x</subfield>
+      <subfield code="a">26</subfield>
+      <subfield code="i">1966</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">4.2\x</subfield>
+      <subfield code="a">28</subfield>
+      <subfield code="i">1968</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">5.1\x</subfield>
+      <subfield code="i">1970</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">5.2\x</subfield>
+      <subfield code="i">1971</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">1.1929/30 - 12.1943; 18.1958 - 20.1960; 24.1964; 26.1966 - 28.1968; 1970 - 1971</subfield>
+    </datafield>
+    <datafield tag="866" ind1=" " ind2="0">
+      <subfield code="z">5.1935 in 2 Ex.</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">814316964</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20220913041633.0</controlfield>
+    <controlfield tag="008">990724||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-601)349366586</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-28)129591211</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">921000-3</subfield>
+      <subfield code="d">28</subfield>
+      <subfield code="k">HAM</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">c</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">Vc-1130</subfield>
+      <subfield code="m">d</subfield>
+      <subfield code="=">l</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">28-MAG</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-28</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">12</subfield>
+      <subfield code="i">1943</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">12.1943</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">080773001</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20220912170142.0</controlfield>
+    <controlfield tag="008">030124||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-603)179798006</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">601050-7</subfield>
+      <subfield code="d">30/50</subfield>
+      <subfield code="k">HES</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">d</subfield>
+    </datafield>
+    <datafield tag="094" ind1=" " ind2=" ">
+      <subfield code="a">LH 67330</subfield>
+    </datafield>
+    <datafield tag="541" ind1=" " ind2=" ">
+      <subfield code="e">9637</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">03/LH 67330 R372</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-30-50</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="i">1973</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">1973</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">814317022</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20240717212928.0</controlfield>
+    <controlfield tag="008">180517||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-601)1770266690</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-Wim7)129591211</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">948056-0</subfield>
+      <subfield code="d">Wim 7</subfield>
+      <subfield code="k">THU</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">d</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">PERIODIKUM/SONSTIGE/B</subfield>
+      <subfield code="m">i</subfield>
+      <subfield code="=">n</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">TLDA-EF</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-Wim7</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">12</subfield>
+      <subfield code="i">1943</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">12.1943</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">814316972</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20240717213511.0</controlfield>
+    <controlfield tag="008">960101||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-601)145919129</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-Wim2)129591211</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">947200-9</subfield>
+      <subfield code="d">Wim 2</subfield>
+      <subfield code="k">THU</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">Z 52</subfield>
+      <subfield code="m">f</subfield>
+      <subfield code="=">k</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">Mag</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-Wim2</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">2</subfield>
+      <subfield code="i">1930/31</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">4</subfield>
+      <subfield code="i">1933</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">2.2\x</subfield>
+      <subfield code="a">5</subfield>
+      <subfield code="i">1935</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">3.1\x</subfield>
+      <subfield code="a">10</subfield>
+      <subfield code="i">1941</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">4.1\x</subfield>
+      <subfield code="a">18</subfield>
+      <subfield code="i">1958</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">4.2\x</subfield>
+      <subfield code="a">19</subfield>
+      <subfield code="i">1959</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">5.1\x</subfield>
+      <subfield code="a">23</subfield>
+      <subfield code="i">1963</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">6.1\x</subfield>
+      <subfield code="i">1977</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">6.2\x</subfield>
+      <subfield code="i">1979</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">057320039</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20170501174824.0</controlfield>
+    <controlfield tag="008">981007||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-603)050133535</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">352021-3</subfield>
+      <subfield code="d">34/21</subfield>
+      <subfield code="k">HES</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">28 Asl ZB 624</subfield>
+      <subfield code="=">k</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">Magazin</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-34-21</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="i">1971</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">1.2\x</subfield>
+      <subfield code="i">1976</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">1971 - 1976</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">814316999</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20220913041633.0</controlfield>
+    <controlfield tag="008">941003||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-601)134856716</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-45)129591211</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">295000-5</subfield>
+      <subfield code="d">45</subfield>
+      <subfield code="k">NIE</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">c</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">ZS 9061</subfield>
+      <subfield code="m">u</subfield>
+      <subfield code="=">l</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-45</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">3</subfield>
+      <subfield code="i">1931/32</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">1.2\x</subfield>
+      <subfield code="a">4</subfield>
+      <subfield code="i">1933/35</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">019809093</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20211209164843.0</controlfield>
+    <controlfield tag="008">991207||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-600)860286-4</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-605)22243817700006443</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">401000-0</subfield>
+      <subfield code="d">61</subfield>
+      <subfield code="k">NRW</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">KW 10601 (4)</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">00</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-61</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">8</subfield>
+      <subfield code="i">1939</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">8.1939</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">094549656</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20191023200339.0</controlfield>
+    <controlfield tag="008">040315||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-603)210824824</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">655100-2</subfield>
+      <subfield code="d">123</subfield>
+      <subfield code="k">HES</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">c</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">-Mag- Z VHI 14 C</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-123</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">3</subfield>
+      <subfield code="i">1931</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">17</subfield>
+      <subfield code="i">1956</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">3.1931/32(1931); 17.1956</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">129534676</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20220528041613.0</controlfield>
+    <controlfield tag="008">070823||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-602)22561949460002884</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">110000-2</subfield>
+      <subfield code="d">83</subfield>
+      <subfield code="k">BER</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+      <subfield code="y">2</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">4Zg4</subfield>
+      <subfield code="=">k</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">Zeitschriften-Freihandmagazin</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-83</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">4</subfield>
+      <subfield code="i">1933</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">1.2\x</subfield>
+      <subfield code="a">5</subfield>
+      <subfield code="i">1935</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">13</subfield>
+      <subfield code="i">1951</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">2.2\x</subfield>
+      <subfield code="a">14</subfield>
+      <subfield code="i">1952</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">3.1\x</subfield>
+      <subfield code="a">16</subfield>
+      <subfield code="i">1955</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">3.2\x</subfield>
+      <subfield code="a">26</subfield>
+      <subfield code="i">1966</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">4.1\x</subfield>
+      <subfield code="a">28</subfield>
+      <subfield code="i">1968</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">5.1\x</subfield>
+      <subfield code="i">1970</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">5.2\x</subfield>
+      <subfield code="i">1976</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">4.1933 - 5.1935; 13.1951 - 14.1952; 16.1955 - 26.1966; 28.1968; 1970 - 1976</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">019809115</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20220527230316.0</controlfield>
+    <controlfield tag="008">111207||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-602)22561949450002884</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">111038-X</subfield>
+      <subfield code="d">83/1038</subfield>
+      <subfield code="k">BER</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">d</subfield>
+      <subfield code="y">2</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">Weiterer Bestand</subfield>
+      <subfield code="=">n</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-83-1038</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">13</subfield>
+      <subfield code="i">1951</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">1.2\x</subfield>
+      <subfield code="a">14</subfield>
+      <subfield code="i">1952</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">18</subfield>
+      <subfield code="i">1958</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">13.1951 - 14.1952; 18.1958</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">81431693X</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20230520021330.0</controlfield>
+    <controlfield tag="008">070425||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-601)817445021</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-84)129591211</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">331000-0</subfield>
+      <subfield code="d">84</subfield>
+      <subfield code="k">NIE</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">c</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">UB</subfield>
+      <subfield code="m">u</subfield>
+      <subfield code="=">l</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-84</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">1</subfield>
+      <subfield code="i">1929/30</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">3</subfield>
+      <subfield code="i">1931</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">3.1\x</subfield>
+      <subfield code="a">17</subfield>
+      <subfield code="i">1956</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">4.1\x</subfield>
+      <subfield code="a">19</subfield>
+      <subfield code="i">1959</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">4.2\x</subfield>
+      <subfield code="a">21</subfield>
+      <subfield code="i">1961</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">5.1\x</subfield>
+      <subfield code="a">28</subfield>
+      <subfield code="i">1968</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">1.1929/30; 3.1931; 17.1956; 19.1959 - 21.1961; 28.1968</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">814316980</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20240604193055.0</controlfield>
+    <controlfield tag="008">940915||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-601)139750614</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-89)129591211</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">301000-4</subfield>
+      <subfield code="d">89</subfield>
+      <subfield code="k">NIE</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">ZS 3686 k</subfield>
+      <subfield code="m">f</subfield>
+      <subfield code="=">k</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">Haus2</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-89</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">1</subfield>
+      <subfield code="i">1929/30</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">4</subfield>
+      <subfield code="i">1933</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">2.2\x</subfield>
+      <subfield code="a">6</subfield>
+      <subfield code="i">1936</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">3.1\x</subfield>
+      <subfield code="a">9</subfield>
+      <subfield code="i">1940</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">4.1\x</subfield>
+      <subfield code="a">13</subfield>
+      <subfield code="i">1951</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">4.2\x</subfield>
+      <subfield code="a">14</subfield>
+      <subfield code="i">1952</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">5.1\x</subfield>
+      <subfield code="a">17</subfield>
+      <subfield code="i">1956</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">5.2\x</subfield>
+      <subfield code="a">18</subfield>
+      <subfield code="i">1958</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">6.1\x</subfield>
+      <subfield code="a">21</subfield>
+      <subfield code="i">1961</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">6.2\x</subfield>
+      <subfield code="a">28</subfield>
+      <subfield code="i">1968</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">7.1\x</subfield>
+      <subfield code="i">1970</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">7.2\x</subfield>
+      <subfield code="i">1979</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">1.1929/30; 4.1933 - 6.1936; 9.1940; 13.1951 - 14.1952; 17.1956 - 18.1958; 21.1961 - 28.1968; 1970 - 1979</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">019809166</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20061024221127.0</controlfield>
+    <controlfield tag="008">991207||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-600)860295-5</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">751198-X</subfield>
+      <subfield code="d">90/198</subfield>
+      <subfield code="k">BAW</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">d</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-90-198</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">20</subfield>
+      <subfield code="i">1960</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">20.1960</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">091465893</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20240913083332.0</controlfield>
+    <controlfield tag="008">900326||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">820300-3</subfield>
+      <subfield code="d">91 G</subfield>
+      <subfield code="k">BAY</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">c</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">40022 A</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="0">
+      <subfield code="=">l</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">0022</subfield>
+      <subfield code="c">0022/VI 609</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-91G</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">2</subfield>
+      <subfield code="i">1930</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">1.2\x</subfield>
+      <subfield code="a">3</subfield>
+      <subfield code="i">1931/32</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">7</subfield>
+      <subfield code="i">1937</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">2.2\x</subfield>
+      <subfield code="a">11</subfield>
+      <subfield code="i">1942</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">3.1\x</subfield>
+      <subfield code="a">15</subfield>
+      <subfield code="i">1954</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">3.2\x</subfield>
+      <subfield code="a">16</subfield>
+      <subfield code="i">1955</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">2.1930(1931) - 3.1931/32(1931); 7.1937 - 11.1942(1941); 15.1954 - 16.1955</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">246619538</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20121030233911.0</controlfield>
+    <controlfield tag="008">040202||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">170100-9</subfield>
+      <subfield code="d">109</subfield>
+      <subfield code="k">BER</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+      <subfield code="y">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">Ro A 11</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">Außenmagazin</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-109</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">8</subfield>
+      <subfield code="i">1939</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">8.1939</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">246926988</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20210122174401.0</controlfield>
+    <controlfield tag="008">991207||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-600)860281-5</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">170100-9</subfield>
+      <subfield code="d">109</subfield>
+      <subfield code="k">BER</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+      <subfield code="y">RWE</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">T 823/10</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">Außenmagazin</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-109</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="i">1971</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="i">1973</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">3.1\x</subfield>
+      <subfield code="i">1975</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">3.2\x</subfield>
+      <subfield code="i">1979</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">1971; 1973; 1975 - 1979</subfield>
+    </datafield>
+    <datafield tag="866" ind1=" " ind2="0">
+      <subfield code="x">k</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">019809212</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20030718110836.0</controlfield>
+    <controlfield tag="008">991207||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-600)2732583-0</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">688034-4</subfield>
+      <subfield code="d">Mh 34</subfield>
+      <subfield code="k">BAW</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">c</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-Mh34</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">1</subfield>
+      <subfield code="i">1929/30</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">3</subfield>
+      <subfield code="i">1931/32</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">3.1\x</subfield>
+      <subfield code="a">27</subfield>
+      <subfield code="i">1967/68</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">1.1929/30; 3.1931/32; 27.1967/68</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">1015351220</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20240406191832.0</controlfield>
+    <controlfield tag="008">221228||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-601)1512582336</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-206)129591211</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">231206-2</subfield>
+      <subfield code="d">206</subfield>
+      <subfield code="k">HAM</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">c</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">2</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">S 11264</subfield>
+      <subfield code="m">b</subfield>
+      <subfield code="=">l</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">A:</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-206</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">5</subfield>
+      <subfield code="i">1935</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">10</subfield>
+      <subfield code="i">1941</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">2.2\x</subfield>
+      <subfield code="a">12</subfield>
+      <subfield code="i">1943</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">5.1935; 10.1941 - 12.1943</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">019809220</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20030718110836.0</controlfield>
+    <controlfield tag="008">991207||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-600)860291-8</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">661317-2</subfield>
+      <subfield code="d">291/317</subfield>
+      <subfield code="k">BAW</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">d</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-291-317</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">3</subfield>
+      <subfield code="i">1931</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">3.1931</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">065768175</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20070711121457.0</controlfield>
+    <controlfield tag="008">951118||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-604)806904248720x</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">841000-8</subfield>
+      <subfield code="d">355</subfield>
+      <subfield code="k">BAY</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">c</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">200      A</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="0">
+      <subfield code="=">l</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">00</subfield>
+      <subfield code="c">00/LD 8272</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-355</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">2</subfield>
+      <subfield code="i">1930/31</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">6</subfield>
+      <subfield code="i">1936</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">3.1\x</subfield>
+      <subfield code="a">9</subfield>
+      <subfield code="i">1940</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">4.1\x</subfield>
+      <subfield code="a">20</subfield>
+      <subfield code="i">1960</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">5.1\x</subfield>
+      <subfield code="a">22</subfield>
+      <subfield code="i">1962</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">6.1\x</subfield>
+      <subfield code="i">1973</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">2.1930/31; 6.1936; 9.1940; 20.1960; 22.1962; 1973</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">119716070</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20220915161119.0</controlfield>
+    <controlfield tag="008">060918||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-605)2274673620007476</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">671000-1</subfield>
+      <subfield code="d">386</subfield>
+      <subfield code="k">NRW</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">MAG 800/332</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">BEMAG</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-386</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="i">1973</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">1997</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">141967897</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20251119170050.0</controlfield>
+    <controlfield tag="008">080721||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">863000-8</subfield>
+      <subfield code="d">858</subfield>
+      <subfield code="k">BAY</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">a</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="0">
+      <subfield code="=">k</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">5039</subfield>
+      <subfield code="c">5039/.</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-858</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">17</subfield>
+      <subfield code="i">1956</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">1.2\x</subfield>
+      <subfield code="a">18</subfield>
+      <subfield code="i">1958</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="i">1978</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">17.1956 - 18.1958; 1978</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">019809328</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20091020215717.0</controlfield>
+    <controlfield tag="008">991207||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-600)2603538-8</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">180724-9</subfield>
+      <subfield code="d">B 724</subfield>
+      <subfield code="k">BER</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">d</subfield>
+      <subfield code="y">5</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-B724</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">15</subfield>
+      <subfield code="i">1954</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">1.2\x</subfield>
+      <subfield code="a">18</subfield>
+      <subfield code="i">1958</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">15.1954 - 18.1958</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">019809336</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20091020215717.0</controlfield>
+    <controlfield tag="008">991207||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-600)2603537-6</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">180774-2</subfield>
+      <subfield code="d">B 774</subfield>
+      <subfield code="k">BER</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">d</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-B774</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">5</subfield>
+      <subfield code="i">1935</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">12</subfield>
+      <subfield code="i">1943</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">3.1\x</subfield>
+      <subfield code="a">14</subfield>
+      <subfield code="i">1952</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">5.1935; 12.1943; 14.1952</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">098736655</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20041116150440.0</controlfield>
+    <controlfield tag="008">041116||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">858001-7</subfield>
+      <subfield code="d">N 1</subfield>
+      <subfield code="k">BAY</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">&#152;4&#156; Zq 77</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-N1</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">6.1936 - 10.1941; 12.1943; 14.1952; 16.1955</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">142916560</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20140904125731.0</controlfield>
+    <controlfield tag="008">080901||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">981000-6</subfield>
+      <subfield code="d">634</subfield>
+      <subfield code="k">BER</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-634</subfield>
+    </datafield>
+    <datafield tag="866" ind1=" " ind2="0">
+      <subfield code="z">Monogr.-Bestand; s. OPAC</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">814317049</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20250212201035.0</controlfield>
+    <controlfield tag="008">100501||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-601)1229666729</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-B1532)129591211</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">181532-5</subfield>
+      <subfield code="d">B 1532</subfield>
+      <subfield code="k">BER</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">d</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">B 95/22</subfield>
+      <subfield code="m">u</subfield>
+      <subfield code="=">n</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-B1532</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">+ 26.1966</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">626388279</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20190611123956.0</controlfield>
+    <controlfield tag="008">190611||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">568101-7</subfield>
+      <subfield code="d">Sol 1</subfield>
+      <subfield code="k">NRW</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">d</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">II Q 53</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-Sol1</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">17</subfield>
+      <subfield code="i">1956</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">17.1956</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">1184183589</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20250705173311.0</controlfield>
+    <controlfield tag="008">170731||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(AT-9:OBV)2250742770003336</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">101394-4</subfield>
+      <subfield code="d">AT-UBTUW</subfield>
+      <subfield code="k">WEU</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">95017 II</subfield>
+      <subfield code="=">k</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">TU Wien Main Library, 9330 - Magazin (3A)</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">AT-UBTUW</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">4</subfield>
+      <subfield code="i">1933</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">8</subfield>
+      <subfield code="i">1939</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">3.1\x</subfield>
+      <subfield code="a">10</subfield>
+      <subfield code="i">1941</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">4.1933; 8.1939; 10.1941</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">247914118</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20121105112142.0</controlfield>
+    <controlfield tag="008">121105||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">467040-1</subfield>
+      <subfield code="d">60</subfield>
+      <subfield code="k">NRW</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">T 3115</subfield>
+      <subfield code="=">k</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-60</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">3</subfield>
+      <subfield code="i">1931</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">3.1931</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">1185008802</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20250706002530.0</controlfield>
+    <controlfield tag="008">170801||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(AT-9:OBV)22197500780003333</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">101400-6</subfield>
+      <subfield code="d">AT-UBI</subfield>
+      <subfield code="k">WEU</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">7116</subfield>
+      <subfield code="=">k</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">Zentraldepot, Externmagazin I</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">AT-UBI</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">28</subfield>
+      <subfield code="i">1968</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="i">1974</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">2.2\x</subfield>
+      <subfield code="i">1979</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">28.1968; 1974 - 1979</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">1184056498</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20250705160609.0</controlfield>
+    <controlfield tag="008">191224||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(AT-9:OBV)2241078510004517</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">101392-0</subfield>
+      <subfield code="d">AT-UBTUG</subfield>
+      <subfield code="k">WEU</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">c</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">ZII 85743</subfield>
+      <subfield code="=">l</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">Technische Universität Graz, Universitätsbibliothek, Hauptbibliothek - Magazin Zeitschriften</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">AT-UBTUG</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">9</subfield>
+      <subfield code="i">1940</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">9.1940</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">019809298</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20230221180111.0</controlfield>
+    <controlfield tag="008">991207||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-602)22561949520002884</subfield>
+    </datafield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">150000-4</subfield>
+      <subfield code="d">B 170</subfield>
+      <subfield code="k">BER</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">d</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="8">1</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">4 B 585</subfield>
+      <subfield code="=">n</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="b">Magazin</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-B170</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">2</subfield>
+      <subfield code="i">1930/31</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">6</subfield>
+      <subfield code="i">1936</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">3.1\x</subfield>
+      <subfield code="a">8</subfield>
+      <subfield code="i">1939</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">4.1\x</subfield>
+      <subfield code="a">9</subfield>
+      <subfield code="i">1940</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">5.1\x</subfield>
+      <subfield code="a">11</subfield>
+      <subfield code="i">1942</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">6.1\x</subfield>
+      <subfield code="a">12</subfield>
+      <subfield code="i">1943</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">6.2\x</subfield>
+      <subfield code="a">13</subfield>
+      <subfield code="i">1951</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">7.1\x</subfield>
+      <subfield code="a">16</subfield>
+      <subfield code="i">1955</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">8.1\x</subfield>
+      <subfield code="i">1974</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">9.1\x</subfield>
+      <subfield code="i">1975</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">2.1930/31; 6.1936; 8.1939; 9.1940; 11.1942; 12.1943 - 13.1951; 16.1955; 1974; 1975</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">742418715</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20210917110651.0</controlfield>
+    <controlfield tag="008">210917||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">918046-1</subfield>
+      <subfield code="d">B 496</subfield>
+      <subfield code="k">BER</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">d</subfield>
+      <subfield code="y">wk</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">ZA 7810</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-B496</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">8</subfield>
+      <subfield code="i">1939</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">8.1939</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">341288314</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20151113105418.0</controlfield>
+    <controlfield tag="008">151113||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">678001-5</subfield>
+      <subfield code="d">Kai 1</subfield>
+      <subfield code="k">NRW</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">c</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">4°Per.49</subfield>
+      <subfield code="=">l</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-Kai1</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">12</subfield>
+      <subfield code="i">1943</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">27</subfield>
+      <subfield code="i">1967/68</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">12.1943; 27.1967/68</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">370927877</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20160713150626.0</controlfield>
+    <controlfield tag="008">160713||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">608219-1</subfield>
+      <subfield code="d">F 219</subfield>
+      <subfield code="k">HES</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="0">
+      <subfield code="=">k</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="2">
+      <subfield code="c">Z Bauwe</subfield>
+      <subfield code="9">09</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-F219</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">8</subfield>
+      <subfield code="i">1939</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">11</subfield>
+      <subfield code="i">1942</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">3.1\x</subfield>
+      <subfield code="a">14</subfield>
+      <subfield code="i">1952</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">8.1939; 11.1942; 14.1952</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">789985896</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20230131155604.0</controlfield>
+    <controlfield tag="008">220817||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">101310-5</subfield>
+      <subfield code="d">B 1575</subfield>
+      <subfield code="k">BER</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">d</subfield>
+      <subfield code="y">wk</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">Z</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-B1575</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="a">4</subfield>
+      <subfield code="i">1933</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">2.1\x</subfield>
+      <subfield code="a">6</subfield>
+      <subfield code="i">1936</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">2.2\x</subfield>
+      <subfield code="a">7</subfield>
+      <subfield code="i">1937</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">3.1\x</subfield>
+      <subfield code="a">11</subfield>
+      <subfield code="i">1942</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">4.1\x</subfield>
+      <subfield code="a">13</subfield>
+      <subfield code="i">1951</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">5.1\x</subfield>
+      <subfield code="a">17</subfield>
+      <subfield code="i">1956</subfield>
+    </datafield>
+    <datafield tag="859" ind1="1" ind2="0">
+      <subfield code="8">5.2\x</subfield>
+      <subfield code="a">18</subfield>
+      <subfield code="i">1958</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">4.1933; 6.1936 - 7.1937; 11.1942; 13.1951; 17.1956 - 18.1958</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">100605265</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20250212200420.0</controlfield>
+    <controlfield tag="008">050405||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">708256-3</subfield>
+      <subfield code="d">Stg 256</subfield>
+      <subfield code="k">BAW</subfield>
+      <subfield code="l">b</subfield>
+      <subfield code="o">d</subfield>
+    </datafield>
+    <datafield tag="094" ind1=" " ind2=" ">
+      <subfield code="a">0223</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">0223/1</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-Stg256</subfield>
+    </datafield>
+    <datafield tag="859" ind1="0" ind2="0">
+      <subfield code="8">1.1\x</subfield>
+      <subfield code="i">1973</subfield>
+    </datafield>
+    <datafield tag="866" ind1="3" ind2="0">
+      <subfield code="a">1973</subfield>
+    </datafield>
+    <datafield tag="866" ind1=" " ind2="0">
+      <subfield code="z">Präsenzbestand</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+</collection></recordData><recordPosition>3029</recordPosition></record></records><nextRecordPosition>3030</nextRecordPosition><echoedSearchRetrieveRequest><version>1.1</version><query>dnb.isil=DE-Sol1</query><xQuery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><startRecord>3029</startRecord><maximumRecords>1</maximumRecords><recordSchema>MARC21plus-xml</recordSchema></echoedSearchRetrieveRequest></searchRetrieveResponse>

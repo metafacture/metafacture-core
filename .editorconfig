@@ -34,7 +34,7 @@ indent_size = 2
 [*.tmLanguage]
 indent_style = tab
 
-[metafacture-io/src/test/resources/org/metafacture/io/compressed.txt]
+[metafacture-io/src/test/resources/{__files/*.*,mappings/*.json,org/metafacture/io/compressed.txt}]
 insert_final_newline = false
 
 [metamorph/src/test/resources/org/metafacture/metamorph/maps/file-map-test*.txt]

@@ -36,6 +36,7 @@ import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
@@ -86,6 +87,7 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     private String errorPrefix;
     private String url;
     private boolean inputUsed;
+    private boolean successful;
 
     public enum Method {
 
@@ -284,8 +286,16 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         this.body = body;
     }
 
-    @Override
-    public void process(final String input) {
+    /**
+     * Opens the HTTP connection with the given input (URL or body) and makes
+     * the response body available to the consumer.
+     *
+     * @param input the request URL or request body
+     * @param consumer the response body consumer
+     *
+     * @return true if the request succeeded
+     */
+    public boolean open(final String input, final Consumer<Reader> consumer) {
         try {
             final String requestUrl = getInput(input, url);
             final String requestBody = getInput(input,
@@ -303,7 +313,7 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
                         "gzip".equalsIgnoreCase(connection.getContentEncoding()) ?
                         new GZIPInputStream(inputStream) : inputStream, charset)
             ) {
-                getReceiver().process(reader);
+                consumer.accept(reader);
             }
         }
         catch (final IOException e) {
@@ -312,6 +322,13 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         finally {
             inputUsed = false;
         }
+
+        return successful;
+    }
+
+    @Override
+    public void process(final String input) {
+        open(input, r -> getReceiver().process(r));
     }
 
     private String getInput(final String input, final String value) {
@@ -373,9 +390,12 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 
     private InputStream getInputStream(final HttpURLConnection connection) throws IOException {
         try {
+            successful = true;
             return connection.getInputStream();
         }
         catch (final IOException e) {
+            successful = false;
+
             final InputStream errorStream = connection.getErrorStream();
             if (errorStream != null) {
                 return getErrorStream(errorStream);
