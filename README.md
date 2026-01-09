@@ -291,8 +291,6 @@ Defines an external map for [lookup](#lookup) from a file or a URL. Maps with mo
 put_filemap("<sourceFile>", "<mapName>", sep_char: "\t")
 ```
 
-[Example in Playground](https://metafacture.org/playground/?example=put_filemap)
-
 The separator (`sep_char`) will vary depending on the source file, e.g.:
 
 | Type | Separator  |
@@ -309,6 +307,8 @@ Options:
 - `expected_columns`: Sets number of expected columns; lines with different number of columns are ignored. Set to `-1` to disable the check and allow arbitrary number of columns. (Default: `2`)
 - `key_column`: Defines the column to be used for keys. Uses zero index. (Default: `0`)
 - `value_column`: Defines the column to be used for values. Uses zero index. (Default: `1`)
+
+[Example in Playground](https://metafacture.org/playground/?example=put_filemap)
 
 [Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/script/PutFileMap.java)
 
