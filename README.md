@@ -267,6 +267,8 @@ Options:
 log("<logMessage>"[, level: "<logLevel>"])
 ```
 
+[Example for Metafacture Runner](https://github.com/metafacture/metafacture-core/blob/master/metafacture-runner/src/main/dist/examples/transform/miscFix/log/base.fix)
+
 [Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/script/Log.java)
 
 
