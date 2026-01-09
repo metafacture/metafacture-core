@@ -25,13 +25,13 @@ Merge pull-request #PULLREQUEST-ID from cboehme/fix-xy
 # Releasing
 
 We shall make releases quarterly. Approximate timetable is every Januar, April, July, October.
-We may publish `master-SNAPSHOT` builds more frequently.
 
 Releasing involves to first make and test the release candidate before actually making the release. Note that we provide a *GitHub release for manual download* as well as a *release on Maven central* to be consumed as a library.
 
-It's good habit to use semantic versioning in release numbers `A`.`B`.`C`, i.e. increase `A` when it's a major release breaking backward compatibility; increase `B` when it got new features; increase `C` indicating bug-fixes. A suffix like `rcN` (where `N` is a number) indicates a release candidate (`rc`).
+It's good habit to use semantic versioning in release numbers `A`.`B`.`C`, i.e. increase `A` when it's a major release breaking backward compatibility; increase `B` when it got new features; increase `C` indicating bug-fixes.
 
-To upload to Sonatype you need (as well for the release candidate as for the release) a `gradle.properties` in the root directory that looks like this:
+## Signing
+To upload to Sonatype we need to sign the artifacts. Adjust `gradle.properties` in the root directory that like this:
 
 ```
 signing.gnupg.executable=gpg
@@ -39,135 +39,129 @@ signing.gnupg.useLegacyGpg=true
 signing.gnupg.homeDir=$e.g."~/.gnupg"
 signing.gnupg.keyName=$yourKeyName
 signing.password=$keysPassphrase
-# depending on gradle plugin versions etc. you may need to use:
-# signing.keyId=$yourKeyName
-# signing.secretKeyRingFile=$e.g."~/.gnupg/secring.gpg"
-#  Go to https://s01.oss.sonatype.org/
-#  Go to profile
-#  Change the pulldown from “Summary” to “User Token”
-#  Click on “Access User Token”
-sonatypeUsername=$usernameOfAccessUserToken
-sonatypePassword=$token
 ```
 
-## Publish `master-SNAPSHOT` builds
+## Authorize at central sonatype
 
-These are done more often, in irregular intervals. They are not considered stable and may break your application, so be cautious when using them.
+To be able to authorize at central.sonatype you first have to "Generate User
+Token" at https://central.sonatype.com/usertoken (must be logged in). Copy/add the
+snippet you will be provided when creating the token to `~/.m2/settings.xml`.
 
-The process is identical to making a release candidate, but without making any tags:
+!This is also needed when testing the uploaded deployment bundle (see below).!
 
-1. Switch to the `master` branch:
-    ```
-    git switch master
-    ```
-1. Proceed as described in [Release candidate - Upload to Sonatype](#upload-to-sonatype), but omit the `publishVersion` parameter in order to build and upload the `master-SNAPSHOT`.
+## Authorize the nexus publishing plugin
 
-## Release candidate
+According to the [nexus
+  plugin](https://github.com/gradle-nexus/publish-plugin?tab=readme-ov-file#publishing-to-maven-central-via-sonatype-central)
+  you have to add the following to the `gradle.properties`:
 
-*Release candidates should be tested by different people before releasing!*
+```
+sonatypeUsername=$usernameOfToken
+sonatypePassword=$passwordOfToken
+```
 
-### Prepare your release candidate
+## Upload, test, publish a release
 
-1. Make an annotated signed tag for the release candidate (necessary for Gradle to pick up the proper name):
-    ```
-    git tag -s metafacture-core-A.B.C-rcN
-    ```
-1. When prompted, add a sensible commit message. For instance, something like:
-    ```
-    Release candidate 5.7.0
-    ```
-1. Optionally, you can now test the build locally by invoking a Gradle target:
-    ```
-    ./gradlew assemble -PpublishVersion=A.B.C-rcN
-    ```
+There are no more "Release candidates" as such, but the uploaded, validated
+[deployment bundle can be
+  tested](https://central.sonatype.org/publish/publish-portal-api/#manually-testing-a-deployment-bundle).
+  I.e. you first upload a release and before publishing it you test it.
 
-### Upload to Sonatype
+### Upload
 
-1. Make sure to have a *clean* Git directory (otherwise the build will fail with the error message `Working copy has modifications`):
-    ```
-    git status
-    ```
-1. Now you can build and upload the release candidate to Sonatype (note that `./gradlew` should inform you to make a "snapshot build". If the version doesn't end with `-SNAPSHOT` the artifacts will not be uploaded to Sonatype's snapshot repository!):
-    ```
-    ./gradlew publishToSonatype -PpublishVersion=A.B.C-rcN
-    ```
-1. Go to [Sonatype's snapshot repository](https://oss.sonatype.org/index.html#nexus-search;gav~org.metafacture) and type in the correct `Version` to see if it is already available there (can take some minutes). [Example for `5.5.1-rc1-SNAPSHOT`](https://oss.sonatype.org/index.html#nexus-search;gav~org.metafacture~~5.5.1*~~)(if you don't see a `5.5.1-rc1-SNAPSHOT.jar` there check it at https://oss.sonatype.org/content/repositories/snapshots/org/metafacture/metafacture-biblio/5.5.1-rc1-SNAPSHOT/).
+a) It's going from your local Git repository to central.sonatype.com to Maven Central. Each station requires some manual actions so you can double check that everything is ok. b) A release should also be published to GitHub.
 
-### Publish to [GitHub Packages](https://github.com/orgs/metafacture/packages?repo_name=metafacture-core)
-
-1. Push the annotated signed tag to GitHub:
-    ```
-    git push origin tag metafacture-core-A.B.C-rcN
-    ```
-The publishing to GitHub packages is triggered then via the GitHub Actions workflow.
-
-Note that `Packages` is not the same as [`Releases`](https://github.com/metafacture/metafacture-core/releases).
-
-### Consume the SNAPSHOT
-
-1. See e.g. [5.5.1-rc1-SNAPSHOT](https://oss.sonatype.org/index.html#nexus-search;gav~org.metafacture~~5.5.1*~~) for how to configure the dependency.
-1. Configure your build system to use Sonatype's Snapshot Repository to be able to load the dependencies of the release candidate (or `master-SNAPSHOT`).
-    For Maven update your `pom.xml` (after `</dependencies>`):
-    ```xml
-    <repositories>
-        <repository>
-            <id>oss.sonatype.org-snapshot</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-    ```
-    For Gradle, add the snapshots repository:
-    ```gradle
-    repositories {
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-    }
-    ```
-    For Leiningen, add this to your `project.clj` (and be aware of the proper indentation!):
-    ```clojure
-        :repositories [["snapshots" "https://oss.sonatype.org/content/repositories/snapshots"]]
-    ```
-    For sbt, add this to your `build.sbt`:
-    ```
-    resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
-    ```
-
-## Making a release
-
-a) It's going from your local Git repository to Sonatype to Maven Central. Each station requires some manual actions so you can double check that everything is ok. b) A release should also be published to GitHub.
-
-1. Ensure that the approved release candidate tag exactly matches `master` (should output `metafacture-core-A.B.C-rcN`):
-    ```
-    git switch master; git describe --tags --exact-match
-    ```
 1. Make an annotated signed tag for the release:
     ```
     git tag -s metafacture-core-A.B.C
     ```
 1. When prompted, add a sensible commit message. For instance, something like:
     ```
-    Release 5.7.0
-    ```
-1. Push the annotated signed tag to GitHub:
-    ```
-    git push origin metafacture-core-A.B.C
+    Release 7.1.0
     ```
 1. Make sure to have a *clean* Git directory (otherwise the build will fail with the error message `Working copy has modifications`):
     ```
     git status
+    ```
+1. Now you can build and upload the release to Sonatype:
+    ```
+    ./gradlew publishToSonatype  -PpublishVersion=7.1.0  closeSonatypeStagingRepository
+    ```
+### Test
+
+_As a fallback and for build systems where the below does not work:
+git checkout the release tag resp. the branch, build locally and consume locally. You don't need
+to have a login then, no special configs etc._
+
+If you decide to test what is actually in the pipeline you need some
+prerequisites;
+You need to have a login at central.sonatype.com and be added as a
+maintainer of the namespace `org.metafacture`.
+Follow the  section "Authorize at central sonatype" to be able to test the
+deployment bundle.
+
+You have to add this into you `~/.m2/settings.xml`:
+```
+  <servers>
+    <server>
+      <id>central.manual.testing</id>
+      <configuration>
+        <httpHeaders>
+          <property>
+            <name>Authorization</name>
+            <value>Bearer $basencodedUsernameAndPassword</value>
+          </property>
+        </httpHeaders>
+      </configuration>
+    </server>
+  </servers>
+
+  <profiles>
+    <profile>
+      <id>central.manual.testing</id>
+      <repositories>
+        <repository>
+          <id>central.manual.testing</id>
+          <name>Central Testing repository</name>
+          <url>https://central.sonatype.com/api/v1/publisher/deployments/download</url>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+```
+where `basencodedUsernameAndPassword` is created like this:
+```
+printf "$usernameToken:$passwordToken" | base64
+```
+(note the semicolon `:`).
+
+If you have a maven project you can now update the dependencies in the
+`pom.xml` and download the like:
+
+```
+mvn -debug -Pcentral.manual.testing install
+```
+
+###  Publish
+
+If the tests went well we can publish.
+We publish the Metafacture libraries as modules to maven central and a
+Metafactur standalone runner at GitHub releases.
+
+#### Publish Metafacture Runner to Github Releases
+
+This provides the standalone runner.
+
+1. Push the annotated signed tag you have created in the "Upload" section to GitHub:
+    ```
+    git push origin metafacture-core-A.B.C
     ```
 1. Now the tag is available on GitHub. You can manually choose to [draft a new release on GitHub](https://github.com/metafacture/metafacture-core/releases/new). The signed `*-dist.*` files must be uploaded manually. They are produced like this:
     ```
     ./gradlew metafacture-runner:signArchive -PpublishVersion=A.B.C
     ```
     and can be found in `metafacture-runner/build/distributions/` (don't mind the `Source code` for that is created by GitHub automatically).
-1. Now you can build and upload the release to Sonatype:
-    ```
-    ./gradlew publishToSonatype -PpublishVersion=A.B.C
-    ```
-1. Finally, go to [oss.sonatype.org](https://oss.sonatype.org), log in, check the [Staging Repositories](https://oss.sonatype.org/#stagingRepositories) and when it's finished, click on `Close`. If everything is good, publish with clicking on `Release` - attention, because once published it can't be removed. The artifacts are uploaded to Maven Central (which may take some time; have a look at e.g. [metafacture-biblio](https://repo1.maven.org/maven2/org/metafacture/metafacture-biblio/)). You can check that it's actually in the publishing pipeline by clicking on `Views/Repositories->Releases`, then type in the `Path lookup` field `org/metafacture/` and click on version.
+
+#### Publish to Maven Central
+
+1. Finally, go to [central.sonatype.com](https://central.sonatype.com/publishing), log in, check the namespace (if you maintain more than one repo). Attention, because once published it can't be removed. If sure, click on "Publish". The artifacts are uploaded to Maven Central (which may take some time; have a look at e.g. [metafacture-biblio](https://repo1.maven.org/maven2/org/metafacture/metafacture-biblio/)).i
