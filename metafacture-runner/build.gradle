@@ -73,7 +73,7 @@ dependencies {
   // class loader which was used to load the classes of the slf4j-api. Until
   // a solution is found for this problem, the binding need to be placed on the
   // class path:
-  runtimeOnly "org.slf4j:slf4j-log4j12:${versions.slf4j}"
+  runtimeOnly "org.slf4j:${slf4j_provider}:${versions.slf4j}"
 
   // The following dependencies are placed in the "provided" scope to prevent
   // them from being included in the class path but still have them available

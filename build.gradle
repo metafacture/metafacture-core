@@ -59,6 +59,8 @@ subprojects {
       'xalan':            '2.7.0',
       'xtext':            '2.26.0'
     ]
+
+    slf4j_provider = 'slf4j-log4j12'
   }
 }
 
