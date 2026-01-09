@@ -312,6 +312,8 @@ Options:
 
 [Example in Playground](https://metafacture.org/playground/?example=put_filemap)
 
+[Example for Metafacture Runner](https://github.com/metafacture/metafacture-core/blob/master/metafacture-runner/src/main/dist/examples/transform/miscFix/log/base.fix)
+
 [Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/script/PutFileMap.java)
 
 ##### `put_map`
