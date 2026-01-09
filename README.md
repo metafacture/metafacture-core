@@ -249,6 +249,8 @@ include("<path>"[, <dynamicLocalVariables>...])
 
 [Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/script/Include.java)
 
+[Example for Metafacture Runner](https://github.com/metafacture/metafacture-core/blob/master/metafacture-runner/src/main/dist/examples/transform/miscFix/include/base.fix)
+
 ##### `log`
 
 Sends a message to the logs.
@@ -266,6 +268,8 @@ log("<logMessage>"[, level: "<logLevel>"])
 ```
 
 [Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/script/Log.java)
+
+
 
 ##### `nothing`
 
