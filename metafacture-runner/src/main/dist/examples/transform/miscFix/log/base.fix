@@ -1,0 +1,14 @@
+log("Casual")
+
+if exists("hello")
+  log("Incoming","INFO")
+end
+
+if exists("hello")
+  log("Prepare","WARN")
+end
+
+if exists("goodBye")
+  log("Outgoing","DEBUG")
+end
+
