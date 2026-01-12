@@ -802,6 +802,8 @@ Options:
 from_json("<sourceField>"[, error_string: "<errorValue>"])
 ```
 
+[Example in Playground](https://metafacture.org/playground/?example=from_json)
+
 [Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/field/FromJson.java)
 
 ##### `index`
