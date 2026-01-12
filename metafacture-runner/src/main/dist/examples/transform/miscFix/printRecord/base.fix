@@ -1,0 +1,3 @@
+print_record("%d) Before transformation: ",destination: "./test.json",append:"true")
+
+add_field("hello","Void")
