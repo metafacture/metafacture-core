@@ -1,14 +1,17 @@
 log("Casual")
 
 if exists("hello")
-  log("Incoming","INFO")
+  log("Incoming",level:"INFO")
 end
 
 if exists("hello")
-  log("Prepare","WARN")
+  log("Prepare",level:"WARN")
+end
+
+if exists("goodBye") # In order to receive the log level of the runner (config/log4j.xml) to DEBUG instead of INFO.
+  log("Outgoing",level:"DEBUG")
 end
 
 if exists("goodBye")
-  log("Outgoing","DEBUG")
+  log("Desaster",level:"ERROR")
 end
-
