@@ -907,6 +907,9 @@ lookup("path.to.field", "map-name", "default": "NA")
 lookup("path.to.field", "map-name", print_unknown: "true", destination: "unknown.txt")
 ```
 
+
+[Example in Playground](https://metafacture.org/playground/?example=lookup)
+
 [Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/field/Lookup.java)
 
 ##### `prepend`
