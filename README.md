@@ -486,9 +486,7 @@ copy_field("<sourceField>", "<targetField>")
 
 ##### `format`
 
-Replaces the value with a formatted (`sprintf`-like) version.
-
----- TODO: THIS NEEDS MORE CONTENT -----
+Replaces the value with a formatted (`sprintf`-like) version as in [java.util.Formatter](https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html)
 
 ```perl
 format("<sourceField>", "<formatString>")
