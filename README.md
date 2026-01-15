@@ -492,6 +492,8 @@ Replaces the value with a formatted (`sprintf`-like) version as in [java.util.Fo
 format("<sourceField>", "<formatString>")
 ```
 
+[Example in Playground](https://metafacture.org/playground/?example=format)
+
 [Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/record/Format.java)
 
 ##### `hash`
