@@ -617,6 +617,8 @@ print_record(destination: "record-%2$s.json", id: "001", pretty: "true")
 print_record(destination: "record-%03d.json.gz", header: "After transformation: ")
 ```
 
+[Example for Metafacture Runner](https://github.com/metafacture/metafacture-core/blob/master/metafacture-runner/src/main/dist/examples/transform/miscFix/printRecord/base.fix)
+
 [Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/record/PrintRecord.java)
 
 ##### `random`
