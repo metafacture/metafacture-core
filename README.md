@@ -247,9 +247,9 @@ Options:
 include("<path>"[, <dynamicLocalVariables>...])
 ```
 
-[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/script/Include.java)
-
 [Example for Metafacture Runner](https://github.com/metafacture/metafacture-core/blob/master/metafacture-runner/src/main/dist/examples/transform/miscFix/include/base.fix)
+
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/script/Include.java)
 
 ##### `log`
 
@@ -486,7 +486,7 @@ copy_field("<sourceField>", "<targetField>")
 
 ##### `format`
 
-Replaces the value with a formatted (`sprintf`-like) version as in [java.util.Formatter](https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html)
+Replaces the value with a formatted (`sprintf`-like) version as in [java.util.Formatter](https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html).
 
 ```perl
 format("<sourceField>", "<formatString>")
@@ -526,7 +526,7 @@ move_field("<sourceField>", "<targetField>")
 
 ##### `parse_text`
 
-Parses a text into an array or hash of values unsing regex and grouping.
+Parses a text into an array or hash of values using regular expressions and grouping.
 
 ```perl
 parse_text("<sourceField>", "<parsePattern>")
@@ -535,24 +535,24 @@ parse_text("<sourceField>", "<parsePattern>")
 E.g.:
 
 ```perl
-    # date1: "2015-03-07"
-    parse_text("date1", "(\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d)")
-    # "date1": "2015",
-    # "date1": "03".
-    # "date1": "07"
-    # This repeated field is internally an array, if you rename the field by adding a `[]` suffix the json/yaml encoder would also interpret this repeated element as array.
+# date1: "2015-03-07"
+parse_text("date1", "(\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d)")
+# "date1": "2015",
+# "date1": "03".
+# "date1": "07"
+# This repeated field is internally an array, if you rename the field by adding a `[]` suffix the json/yaml encoder would also interpret this repeated element as array.
 
-    # "date2": "2015-03-07"
-    parse_text("date2", "(?<year>\\d\\d\\d\\d)-(?<month>\\d\\d)-(?<day>\\d\\d)")
-    # "date2":
-    #   "year": "2015"
-    #   "month": "03"
-    #   "day": "07"
+# "date2": "2015-03-07"
+parse_text("date2", "(?<year>\\d\\d\\d\\d)-(?<month>\\d\\d)-(?<day>\\d\\d)")
+# "date2":
+#   "year": "2015"
+#   "month": "03"
+#   "day": "07"
 
 
-    # date: "abcd"
-    parse_text(date, '(\d\d\d\d)-(\d\d)-(\d\d)')
-    # date: "abcd"
+# date: "abcd"
+parse_text(date, '(\d\d\d\d)-(\d\d)-(\d\d)')
+# date: "abcd"
 ```
 
 [Example in Playground](https://metafacture.org/playground/?example=parse_text)
@@ -925,7 +925,6 @@ lookup("path.to.field", "map-name", "default": "NA")
 # with printing unknown values to a file
 lookup("path.to.field", "map-name", print_unknown: "true", destination: "unknown.txt")
 ```
-
 
 [Example in Playground](https://metafacture.org/playground/?example=lookup)
 
