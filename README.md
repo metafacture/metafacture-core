@@ -271,8 +271,6 @@ log("<logMessage>"[, level: "<logLevel>"])
 
 [Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/script/Log.java)
 
-
-
 ##### `nothing`
 
 Does nothing. It is used for benchmarking in Catmandu.
@@ -312,7 +310,7 @@ Options:
 
 [Example in Playground](https://metafacture.org/playground/?example=put_filemap)
 
-[Example for Metafacture Runner](https://github.com/metafacture/metafacture-core/blob/master/metafacture-runner/src/main/dist/examples/transform/miscFix/log/base.fix)
+[Example for Metafacture Runner](https://github.com/metafacture/metafacture-core/blob/master/metafacture-runner/src/main/dist/examples/transform/miscFix/putFilemapLocally/base.fix)
 
 [Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/script/PutFileMap.java)
 
@@ -550,7 +548,6 @@ parse_text("date2", "(?<year>\\d\\d\\d\\d)-(?<month>\\d\\d)-(?<day>\\d\\d)")
 #   "year": "2015"
 #   "month": "03"
 #   "day": "07"
-
 
 # date: "abcd"
 parse_text(date, '(\d\d\d\d)-(\d\d)-(\d\d)')
