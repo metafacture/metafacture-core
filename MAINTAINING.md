@@ -39,6 +39,9 @@ signing.gnupg.useLegacyGpg=true
 signing.gnupg.homeDir=$e.g."~/.gnupg"
 signing.gnupg.keyName=$yourKeyName
 signing.password=$keysPassphrase
+# depending on gradle plugin versions etc. you may need to use:
+signing.keyId=$yourKeyName
+signing.secretKeyRingFile=$e.g."~/.gnupg/secring.gpg"
 ```
 
 ## Authorize at central sonatype
@@ -75,9 +78,9 @@ a) It's going from your local Git repository to central.sonatype.com to Maven Ce
     ```
     git tag -s metafacture-core-A.B.C
     ```
-1. When prompted, add a sensible commit message. For instance, something like:
+1. When prompted, add a sensible tag message. For instance, something like:
     ```
-    Release 7.1.0
+    Release A.B.C
     ```
 1. Make sure to have a *clean* Git directory (otherwise the build will fail with the error message `Working copy has modifications`):
     ```
@@ -85,7 +88,7 @@ a) It's going from your local Git repository to central.sonatype.com to Maven Ce
     ```
 1. Now you can build and upload the release to Sonatype:
     ```
-    ./gradlew publishToSonatype  -PpublishVersion=7.1.0  closeSonatypeStagingRepository
+    ./gradlew publishToSonatype  -PpublishVersion=A.B.C  closeSonatypeStagingRepository
     ```
 ### Test
 
