@@ -1250,7 +1250,6 @@ end
 
 [Example in Playground](https://metafacture.org/playground/?example=if-conditional)
 
-
 ```perl
 unless <condition(params, ...)>
   ...
@@ -1258,7 +1257,6 @@ end
 ```
 
 [Example in Playground](https://metafacture.org/playground/?example=unless-conditional)
-
 
 ```perl
 if <condition(params, ...)>
