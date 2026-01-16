@@ -1,0 +1,17 @@
+log("Casual")
+
+if exists("hello")
+  log("Incoming",level:"INFO")
+end
+
+if exists("hello")
+  log("Prepare",level:"WARN")
+end
+
+if exists("goodBye") # In order to receive the log level DEBUG message you need to change the log4j config of the runner (config/log4j.xml) to DEBUG instead of INFO.
+  log("Outgoing",level:"DEBUG")
+end
+
+if exists("goodBye")
+  log("Desaster",level:"ERROR")
+end
