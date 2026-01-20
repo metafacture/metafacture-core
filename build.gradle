@@ -149,6 +149,10 @@ subprojects {
     options.encoding = 'UTF-8'
   }
 
+  jar {
+    exclude 'log4j.xml'
+  }
+
   task sourceJar(type: Jar) {
     dependsOn tasks.classes
     from sourceSets.main.allJava
