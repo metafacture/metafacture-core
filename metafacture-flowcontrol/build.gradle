@@ -23,5 +23,5 @@ dependencies {
   testImplementation "junit:junit:${versions.junit}"
   testImplementation "org.mockito:mockito-core:${versions.mockito}"
   testImplementation "org.assertj:assertj-core:${versions.assertj}"
-  testRuntimeOnly "org.slf4j:slf4j-simple:${versions.slf4j}"
+  testRuntimeOnly "org.slf4j:${slf4j_provider}:${versions.slf4j}"
 }

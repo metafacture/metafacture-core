@@ -28,8 +28,7 @@ dependencies {
   testImplementation "org.simplify4u:slf4j2-mock:${versions.slf4j_mock}"
 
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit_jupiter}"
-
-  runtimeOnly "org.slf4j:slf4j-simple:${versions.slf4j}"
+  testRuntimeOnly "org.slf4j:${slf4j_provider}:${versions.slf4j}"
 
   implementation project(':metafacture-commons')
   implementation project(':metafacture-flowcontrol')
@@ -53,7 +52,7 @@ configurations {
     extendsFrom implementation
 
     dependencies {
-      implementation "org.slf4j:slf4j-simple:${versions.slf4j}"
+      implementation "org.slf4j:${slf4j_provider}:${versions.slf4j}"
     }
   }
 }

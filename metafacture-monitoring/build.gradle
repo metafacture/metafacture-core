@@ -23,5 +23,5 @@ dependencies {
   implementation "org.slf4j:slf4j-api:${versions.slf4j}"
   testImplementation "junit:junit:${versions.junit}"
   testImplementation "org.mockito:mockito-core:${versions.mockito}"
-  testRuntimeOnly "org.slf4j:slf4j-simple:${versions.slf4j}"
+  testRuntimeOnly "org.slf4j:${slf4j_provider}:${versions.slf4j}"
 }

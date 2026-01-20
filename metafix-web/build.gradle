@@ -14,7 +14,7 @@ dependencies {
   implementation "org.webjars:requirejs:${versions.requirejs}"
 
   providedCompile "org.eclipse.jetty:jetty-annotations:${versions.jetty}"
-  providedCompile "org.slf4j:slf4j-simple:${versions.slf4j}"
+  providedCompile "org.slf4j:${slf4j_provider}:${versions.slf4j}"
 
   implementation project(':metafacture-commons')
   implementation project(':metafacture-formeta')
