@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -46,7 +47,10 @@ public class MetafixScriptTest {
     private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
     private static final String TSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.tsv";
 
-    @Mock(name = "org.metafacture.metafix.method.script.Log")
+    @Mock(name = "org.metafacture.metafix.Metafix")
+    private Logger metafixLogger;
+
+    @Mock(name = "external.org.metafacture.metafix.method.script.Log")
     private Logger fixMethodLogger;
 
     @Mock
@@ -199,18 +203,12 @@ public class MetafixScriptTest {
 
     @Test
     public void shouldLog() {
-        assertFix("log('test')", f -> {
-            Mockito.verify(fixMethodLogger).info("test");
-            Mockito.verifyNoMoreInteractions(fixMethodLogger);
-        });
+        assertLog("log('test')", "INFO", "test");
     }
 
     @Test
     public void shouldLogWithLevel() {
-        assertFix("log('test', level: 'DEBUG')", f -> {
-            Mockito.verify(fixMethodLogger).debug("test");
-            Mockito.verifyNoMoreInteractions(fixMethodLogger);
-        });
+        assertLog("log('test', level: 'DEBUG')", "DEBUG", "test");
     }
 
     @Test
@@ -615,6 +613,38 @@ public class MetafixScriptTest {
         catch (final IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void assertLog(final String fixDef, final String level, final String format, final Object... arguments) {
+        assertFix(fixDef, f -> {
+            final InOrder ordered = Mockito.inOrder(metafixLogger);
+            ordered.verify(metafixLogger).debug("Start record: {}", new Object[]{""});
+            ordered.verify(metafixLogger).debug("End record, walking Fix: {}", new Object[]{f.getCurrentRecord()});
+            ordered.verify(metafixLogger).debug("Sending results to {}", new Object[]{f.getStreamReceiver()});
+            ordered.verifyNoMoreInteractions();
+            Mockito.verifyNoMoreInteractions(metafixLogger);
+
+            final Logger logger = Mockito.verify(fixMethodLogger);
+
+            switch (level) {
+                case "DEBUG":
+                    logger.debug(format, arguments);
+                    break;
+                case "ERROR":
+                    logger.error(format, arguments);
+                    break;
+                case "INFO":
+                    logger.info(format, arguments);
+                    break;
+                case "WARN":
+                    logger.warn(format, arguments);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported log level: " + level);
+            }
+
+            Mockito.verifyNoMoreInteractions(fixMethodLogger);
+        });
     }
 
 }
