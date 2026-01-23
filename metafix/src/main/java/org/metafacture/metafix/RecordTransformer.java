@@ -36,8 +36,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,8 +58,6 @@ import java.util.stream.Collectors;
  *
  */
 public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexity
-
-    private static final Logger LOG = LoggerFactory.getLogger(RecordTransformer.class);
 
     private final FixRegistry registry;
     private final List<Consumer<Record>> consumers = new LinkedList<>();

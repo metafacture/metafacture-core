@@ -19,7 +19,6 @@ dependencies {
   implementation "org.eclipse.xtext:org.eclipse.xtext.xbase:${versions.xtext}"
   implementation "org.eclipse.xtext:org.eclipse.xtext:${versions.xtext}"
   implementation "org.jsoup:jsoup:${versions.jsoup}"
-  implementation "org.slf4j:slf4j-api:${versions.slf4j}"
 
   testImplementation "com.github.tomakehurst:wiremock-jre8:${versions.wiremock}"
   testImplementation "org.eclipse.xtext:org.eclipse.xtext.testing:${versions.xtext}"

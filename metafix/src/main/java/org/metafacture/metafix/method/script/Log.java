@@ -16,13 +16,11 @@
 
 package org.metafacture.metafix.method.script;
 
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -31,7 +29,7 @@ import java.util.function.Consumer;
 @FixCommand("log")
 public class Log implements FixFunction {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Log.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(Log.class);
 
     /**
      * Creates an instance of {@link Log}.
@@ -48,16 +46,16 @@ public class Log implements FixFunction {
 
         switch (level) {
             case "DEBUG":
-                consumer = LOG::debug;
+                consumer = LOG::externalDebug;
                 break;
             case "ERROR":
-                consumer = LOG::error;
+                consumer = LOG::externalError;
                 break;
             case "INFO":
-                consumer = LOG::info;
+                consumer = LOG::externalInfo;
                 break;
             case "WARN":
-                consumer = LOG::warn;
+                consumer = LOG::externalWarn;
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported log level: " + level);

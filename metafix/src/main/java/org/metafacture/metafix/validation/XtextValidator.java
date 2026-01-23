@@ -1,5 +1,6 @@
 package org.metafacture.metafix.validation;
 
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.metafix.FixParseException;
 
 import org.eclipse.emf.common.util.URI;
@@ -10,8 +11,6 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.Issue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +18,7 @@ import java.util.List;
 
 public class XtextValidator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XtextValidator.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(XtextValidator.class);
 
     private XtextValidator() {
         throw new IllegalAccessError("Utility class");
