@@ -18,14 +18,12 @@ package org.metafacture.monitoring;
 
 import org.metafacture.commons.StringUtil;
 import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +50,7 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
     public static final String BATCH_SIZE_VAR = "batchSize";
     public static final String DEFAULT_FORMAT = "records processed: ${totalRecords}";
 
-    private static final Logger LOG = LoggerFactory.getLogger(ObjectBatchLogger.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(ObjectBatchLogger.class);
 
     private final Map<String, String> vars = new HashMap<String, String>();
     private final String format;
@@ -103,7 +101,7 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
         vars.put(BATCH_COUNT_VAR, Long.toString(batchCount));
         vars.put(BATCH_SIZE_VAR, Long.toString(batchSize));
         vars.put(TOTAL_RECORD_COUNT_VAR, Long.toString((batchSize * batchCount) + recordCount));
-        LOG.info(StringUtil.format(format, vars));
+        LOG.externalInfo(StringUtil.format(format, vars));
     }
 
     @Override
