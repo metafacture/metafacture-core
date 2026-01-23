@@ -17,17 +17,15 @@
 package org.metafacture.monitoring;
 
 import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * Leaves the event stream untouched but logs it to the info log.
+ * Leaves the event stream untouched but logs it to the debug log.
  * The {@link StreamReceiver} may be {@code null}.
  * In this case {@link StreamLogger} behaves as a sink, just logging.
  *
@@ -41,7 +39,7 @@ import org.slf4j.LoggerFactory;
 public final class StreamLogger
         extends DefaultStreamPipe<StreamReceiver> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StreamLogger.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(StreamLogger.class);
 
     private final String logPrefix;
 
@@ -65,7 +63,7 @@ public final class StreamLogger
     @Override
     public void startRecord(final String identifier) {
         assert !isClosed();
-        LOG.debug("{}start record {}", logPrefix, identifier);
+        LOG.externalDebug("{}start record {}", logPrefix, identifier);
         if (null != getReceiver()) {
             getReceiver().startRecord(identifier);
         }
@@ -74,7 +72,7 @@ public final class StreamLogger
     @Override
     public void endRecord() {
         assert !isClosed();
-        LOG.debug("{}end record", logPrefix);
+        LOG.externalDebug("{}end record", logPrefix);
         if (null != getReceiver()) {
             getReceiver().endRecord();
         }
@@ -83,7 +81,7 @@ public final class StreamLogger
     @Override
     public void startEntity(final String name) {
         assert !isClosed();
-        LOG.debug("{}start entity {}", logPrefix, name);
+        LOG.externalDebug("{}start entity {}", logPrefix, name);
         if (null != getReceiver()) {
             getReceiver().startEntity(name);
         }
@@ -92,7 +90,7 @@ public final class StreamLogger
     @Override
     public void endEntity() {
         assert !isClosed();
-        LOG.debug("{}end entity", logPrefix);
+        LOG.externalDebug("{}end entity", logPrefix);
         if (null != getReceiver()) {
             getReceiver().endEntity();
         }
@@ -102,7 +100,7 @@ public final class StreamLogger
     @Override
     public void literal(final String name, final String value) {
         assert !isClosed();
-        LOG.debug("{}literal {}={}", logPrefix, name, value);
+        LOG.externalDebug("{}literal {}={}", logPrefix, name, value);
         if (null != getReceiver()) {
             getReceiver().literal(name, value);
         }
@@ -110,12 +108,12 @@ public final class StreamLogger
 
     @Override
     protected void onResetStream() {
-        LOG.debug("{}resetStream", logPrefix);
+        LOG.externalDebug("{}resetStream", logPrefix);
     }
 
     @Override
     protected void onCloseStream() {
-        LOG.debug("{}closeStream", logPrefix);
+        LOG.externalDebug("{}closeStream", logPrefix);
     }
 
 }
