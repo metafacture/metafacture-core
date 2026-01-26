@@ -49,8 +49,8 @@ import javax.xml.parsers.ParserConfigurationException;
 @Description(// checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
         "Opens a SRU stream and passes a reader to the receiver. The input is the base URL of the SRU service " +
                 "to be retrieved from. Mandatory argument is: QUERY.\n" +
-                "The output is an XML document holding the user defined \"maximumRecords\" as documents. If there are" +
-                "more documents than defined by MAXIMUM_RECORDS and there are more documents wanted (defined by " +
+                "The output is an XML document holding the user defined \"maximumRecords\" as documents - or all, if not set." +
+                " If there are more documents than defined by \"maximumRecords\" and there are more documents wanted (defined by " +
                 "\"totalRecords\") there will be consecutive XML documents output as it pages through the SRU.")
 @In(String.class)
 @Out(java.io.Reader.class)
@@ -60,10 +60,8 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
     private static final String DEFAULT_QUERY = "cql.allRecords = 1";
     private static final String OPERATION = "searchRetrieve";
-    private static final String RECORD_SCHEMA = "marcxml";
     private static final String USER_AGENT = "metafacture-core";
     private static final String VERSION = "2.0";
-    private static final int MAXIMUM_RECORDS = 10;
     private static final int START_RECORD = 1;
 
     private final DocumentBuilder docBuilder;
@@ -84,10 +82,8 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
             throw new MetafactureException(e);
         }
 
-        setMaximumRecords(MAXIMUM_RECORDS);
         setOperation(OPERATION);
         setQuery(DEFAULT_QUERY);
-        setRecordSchema(RECORD_SCHEMA);
         setUserAgent(USER_AGENT);
         setVersion(VERSION);
     }
@@ -122,7 +118,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     }
 
     /**
-     * Sets the maximum of records returned in one lookup. <strong>Default value: {@value MAXIMUM_RECORDS}</strong>.
+     * Sets the maximum of records returned in one lookup.
      * The lookup is repeated as long as {@code maximumRecords} is less than {@code totalRecords}.
      *
      * @param maximumRecords maximum of records returned in one lookup
@@ -141,7 +137,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     }
 
     /**
-     * Sets the format of the retrieved record data. <strong>Default value: {@value RECORD_SCHEMA}</strong>.
+     * Sets the format of the retrieved record data.
      *
      * @param recordSchema the format of the data of the records
      */

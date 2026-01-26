@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<searchRetrieveResponse xmlns="http://www.loc.gov/zing/srw/"><version>1.1</version><numberOfRecords>1910</numberOfRecords><records><record><recordSchema>MARC21plus-xml</recordSchema><recordPacking>xml</recordPacking><recordData><collection xmlns="http://www.loc.gov/MARC21/slim">
+  <record type="Bibliographic">
+    <leader>00000pam a2200000 c 4500</leader>
+    <controlfield tag="001">1060454718</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20240131220429.0</controlfield>
+    <controlfield tag="007">tu</controlfield>
+    <controlfield tag="008">141105s2021    gw ||||| |||| 00||||ger  </controlfield>
+    <datafield tag="015" ind1=" " ind2=" ">
+      <subfield code="a">24,A05</subfield>
+      <subfield code="z">14,N46</subfield>
+      <subfield code="2">dnb</subfield>
+    </datafield>
+    <datafield tag="016" ind1="7" ind2=" ">
+      <subfield code="2">DE-101</subfield>
+      <subfield code="a">1060454718</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="a">9783110410310</subfield>
+      <subfield code="c">Broschur : EUR 29.95 (DE), EUR 25.70 (AT), CHF 35.50 (freier Pr.)</subfield>
+      <subfield code="9">978-3-11-041031-0</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="a">3110410311</subfield>
+      <subfield code="9">3-11-041031-1</subfield>
+    </datafield>
+    <datafield tag="024" ind1="3" ind2=" ">
+      <subfield code="a">9783110410310</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-599)DNB1060454718</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(OCoLC)1269391426</subfield>
+    </datafield>
+    <datafield tag="040" ind1=" " ind2=" ">
+      <subfield code="a">1145</subfield>
+      <subfield code="b">ger</subfield>
+      <subfield code="c">DE-101</subfield>
+      <subfield code="d">9999</subfield>
+      <subfield code="e">rda</subfield>
+    </datafield>
+    <datafield tag="041" ind1=" " ind2=" ">
+      <subfield code="a">ger</subfield>
+    </datafield>
+    <datafield tag="044" ind1=" " ind2=" ">
+      <subfield code="c">XA-DE-BE</subfield>
+    </datafield>
+    <datafield tag="082" ind1="0" ind2="4">
+      <subfield code="8">2\u</subfield>
+      <subfield code="a">465</subfield>
+      <subfield code="q">DE-101</subfield>
+      <subfield code="2">23/ger</subfield>
+    </datafield>
+    <datafield tag="083" ind1="7" ind2=" ">
+      <subfield code="8">3\p</subfield>
+      <subfield code="a">460</subfield>
+      <subfield code="q">DE-101</subfield>
+      <subfield code="2">23sdnb</subfield>
+    </datafield>
+    <datafield tag="085" ind1=" " ind2=" ">
+      <subfield code="8">2\u</subfield>
+      <subfield code="b">465</subfield>
+    </datafield>
+    <datafield tag="100" ind1="1" ind2=" ">
+      <subfield code="8">1\p</subfield>
+      <subfield code="0">(DE-588)135637643</subfield>
+      <subfield code="0">https://d-nb.info/gnd/135637643</subfield>
+      <subfield code="0">(DE-101)135637643</subfield>
+      <subfield code="a">Radatz, Hans-Ingo</subfield>
+      <subfield code="d">1961-</subfield>
+      <subfield code="e">Verfasser</subfield>
+      <subfield code="4">aut</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="245" ind1="1" ind2="0">
+      <subfield code="a">Spanische Grammatik im Fokus</subfield>
+      <subfield code="b">klassische Beschreibungsprobleme aus neuer Sicht</subfield>
+      <subfield code="c">Hans-Ingo Radatz</subfield>
+    </datafield>
+    <datafield tag="264" ind1=" " ind2="1">
+      <subfield code="a">Berlin</subfield>
+      <subfield code="b">De Gruyter </subfield>
+      <subfield code="c">[2021]</subfield>
+    </datafield>
+    <datafield tag="300" ind1=" " ind2=" ">
+      <subfield code="a">IX, 241 Seiten</subfield>
+      <subfield code="c">24 cm, 441 g</subfield>
+    </datafield>
+    <datafield tag="336" ind1=" " ind2=" ">
+      <subfield code="a">Text</subfield>
+      <subfield code="b">txt</subfield>
+      <subfield code="2">rdacontent</subfield>
+    </datafield>
+    <datafield tag="337" ind1=" " ind2=" ">
+      <subfield code="a">ohne Hilfsmittel zu benutzen</subfield>
+      <subfield code="b">n</subfield>
+      <subfield code="2">rdamedia</subfield>
+    </datafield>
+    <datafield tag="338" ind1=" " ind2=" ">
+      <subfield code="a">Band</subfield>
+      <subfield code="b">nc</subfield>
+      <subfield code="2">rdacarrier</subfield>
+    </datafield>
+    <datafield tag="490" ind1="1" ind2=" ">
+      <subfield code="a">Romanistische Arbeitshefte</subfield>
+      <subfield code="v">Band 65</subfield>
+    </datafield>
+    <datafield tag="490" ind1="0" ind2=" ">
+      <subfield code="a">De Gruyter Studium</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="7">
+      <subfield code="0">(DE-588)4077640-2</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4077640-2</subfield>
+      <subfield code="0">(DE-101)040776409</subfield>
+      <subfield code="a">Spanisch</subfield>
+      <subfield code="9">rswk-swf</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="7">
+      <subfield code="0">(DE-588)4021806-5</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4021806-5</subfield>
+      <subfield code="0">(DE-101)040218066</subfield>
+      <subfield code="a">Grammatik</subfield>
+      <subfield code="9">rswk-swf</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="7">
+      <subfield code="0">(DE-588)4140778-7</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4140778-7</subfield>
+      <subfield code="0">(DE-101)041407784</subfield>
+      <subfield code="a">Grammatiktheorie</subfield>
+      <subfield code="9">rswk-swf</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">(Produktform)Paperback / softback</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">(Zielgruppe)Fachhochschul-/Hochschulausbildung</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">(Zielgruppe)Fachhochschul-/Hochschulausbildung</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">(BISAC Subject Heading)LAN006000</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">(DDC-Sachgruppen der Deutschen Nationalbibliografie)440: Französisch, romanische Sprachen allgemein</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">Language Teaching</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">Spanish Grammar</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">(BISAC Subject Heading)LAN009000: LAN009000 LANGUAGE ARTS &amp; DISCIPLINES / Linguistics / General</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">(BISAC Subject Heading)LAN009020: LAN009020 LANGUAGE ARTS &amp; DISCIPLINES / Linguistics / Morphology</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">(BISAC Subject Heading)LAN009060: LAN009060 LANGUAGE ARTS &amp; DISCIPLINES / Linguistics / Syntax</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">(BIC subject category)CF: linguistics</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">(BIC subject category)CFK: Grammar, syntax &amp; morphology</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">(BIC subject category)CJB: Language teaching &amp; learning material &amp; coursework</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">Spanisch/Morphologie</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">Spanisch/Syntax</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">Sprachdidaktik</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">TB: Textbook</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">(Product Discount Code)TDI: Trade Discount</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">(BISAC Subject Heading)LAN006000</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">(VLB-WN)2566: Taschenbuch / Sprachwissenschaft, Literaturwissenschaft/Romanische Sprachwissenschaft, Literaturwissenschaft</subfield>
+    </datafield>
+    <datafield tag="653" ind1=" " ind2=" ">
+      <subfield code="a">Spanish Grammar; Language Teaching</subfield>
+    </datafield>
+    <datafield tag="655" ind1=" " ind2="7">
+      <subfield code="0">(DE-588)4123623-3</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4123623-3</subfield>
+      <subfield code="0">(DE-101)041236238</subfield>
+      <subfield code="a">Lehrbuch</subfield>
+      <subfield code="2">gnd-content</subfield>
+    </datafield>
+    <datafield tag="689" ind1="0" ind2="0">
+      <subfield code="0">(DE-588)4077640-2</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4077640-2</subfield>
+      <subfield code="0">(DE-101)040776409</subfield>
+      <subfield code="D">s</subfield>
+      <subfield code="a">Spanisch</subfield>
+    </datafield>
+    <datafield tag="689" ind1="0" ind2="1">
+      <subfield code="0">(DE-588)4021806-5</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4021806-5</subfield>
+      <subfield code="0">(DE-101)040218066</subfield>
+      <subfield code="D">s</subfield>
+      <subfield code="a">Grammatik</subfield>
+    </datafield>
+    <datafield tag="689" ind1="0" ind2="2">
+      <subfield code="0">(DE-588)4140778-7</subfield>
+      <subfield code="0">https://d-nb.info/gnd/4140778-7</subfield>
+      <subfield code="0">(DE-101)041407784</subfield>
+      <subfield code="D">s</subfield>
+      <subfield code="a">Grammatiktheorie</subfield>
+    </datafield>
+    <datafield tag="689" ind1="0" ind2=" ">
+      <subfield code="5">DE-101</subfield>
+      <subfield code="5">DE-101</subfield>
+    </datafield>
+    <datafield tag="776" ind1="0" ind2="8">
+      <subfield code="i">Erscheint auch als</subfield>
+      <subfield code="n">Online-Ausgabe</subfield>
+      <subfield code="a">Radatz, Hans-Ingo, 1961-</subfield>
+      <subfield code="t">Spanische Grammatik im Fokus</subfield>
+      <subfield code="d">Berlin/Boston : De Gruyter, 2021</subfield>
+      <subfield code="h">Online-Ressource, 247 Seiten, 5 Illustrationen</subfield>
+      <subfield code="w">(DE-101)1242605436</subfield>
+      <subfield code="b">1. Auflage</subfield>
+    </datafield>
+    <datafield tag="776" ind1="0" ind2="8">
+      <subfield code="i">Erscheint auch als</subfield>
+      <subfield code="n">Online-Ausgabe</subfield>
+      <subfield code="z">9783110423648</subfield>
+    </datafield>
+    <datafield tag="830" ind1=" " ind2="0">
+      <subfield code="a">Romanistische Arbeitshefte</subfield>
+      <subfield code="v">Band 65</subfield>
+      <subfield code="w">(DE-101)012944548</subfield>
+      <subfield code="w">(DE-600)541707-7</subfield>
+      <subfield code="9">265</subfield>
+      <subfield code="7">as</subfield>
+    </datafield>
+    <datafield tag="850" ind1=" " ind2=" ">
+      <subfield code="a">DE-101a</subfield>
+      <subfield code="a">DE-101b</subfield>
+    </datafield>
+    <datafield tag="856" ind1="4" ind2="2">
+      <subfield code="m">X:MVB</subfield>
+      <subfield code="q">text/html</subfield>
+      <subfield code="u">http://deposit.dnb.de/cgi-bin/dokserv?id=4816111&amp;prov=M&amp;dok_var=1&amp;dok_ext=htm</subfield>
+      <subfield code="3">Inhaltstext</subfield>
+    </datafield>
+    <datafield tag="856" ind1="4" ind2="2">
+      <subfield code="m">B:DE-101</subfield>
+      <subfield code="q">application/pdf</subfield>
+      <subfield code="u">https://d-nb.info/1060454718/04</subfield>
+      <subfield code="3">Inhaltsverzeichnis</subfield>
+    </datafield>
+    <datafield tag="883" ind1="2" ind2=" ">
+      <subfield code="8">1\p</subfield>
+      <subfield code="a">dnb</subfield>
+      <subfield code="d">20231207</subfield>
+      <subfield code="q">DE-101</subfield>
+      <subfield code="u">https://d-nb.info/provenance/plan#dnb</subfield>
+    </datafield>
+    <datafield tag="883" ind1="2" ind2=" ">
+      <subfield code="8">3\p</subfield>
+      <subfield code="a">dnb</subfield>
+      <subfield code="d">20240124</subfield>
+      <subfield code="q">DE-101</subfield>
+      <subfield code="u">https://d-nb.info/provenance/plan#dnb</subfield>
+    </datafield>
+    <datafield tag="925" ind1="r" ind2=" ">
+      <subfield code="a">ra</subfield>
+    </datafield>
+    <datafield tag="926" ind1="2" ind2=" ">
+      <subfield code="a">2ACB</subfield>
+      <subfield code="o">95</subfield>
+      <subfield code="q">Publisher</subfield>
+      <subfield code="v">1.5</subfield>
+      <subfield code="x">Englisch</subfield>
+    </datafield>
+  </record>
+
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">303106158</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20240202201624.0</controlfield>
+    <controlfield tag="008">141105||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">950200-2</subfield>
+      <subfield code="d">101a</subfield>
+      <subfield code="k">SAX</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="541" ind1=" " ind2=" ">
+      <subfield code="e">L-5001-054266</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">2024 A 4927</subfield>
+      <subfield code="m">p</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-101a</subfield>
+    </datafield>
+    <datafield tag="866" ind1=" " ind2="0">
+      <subfield code="z">Dieses Werk gibt es inhaltsgleich auch in digitaler Form.</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">303133945</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20231103214008.0</controlfield>
+    <controlfield tag="008">141105||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">600100-2</subfield>
+      <subfield code="d">101b</subfield>
+      <subfield code="k">HES</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="541" ind1=" " ind2=" ">
+      <subfield code="e">F-5001-054266</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">2023 A 30471</subfield>
+      <subfield code="m">p</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-101b</subfield>
+    </datafield>
+    <datafield tag="866" ind1=" " ind2="0">
+      <subfield code="z">Dieses Werk gibt es inhaltsgleich auch in digitaler Form.</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+</collection></recordData><recordPosition>1890</recordPosition></record><record><recordSchema>MARC21plus-xml</recordSchema><recordPacking>xml</recordPacking><recordData><collection xmlns="http://www.loc.gov/MARC21/slim">
+  <record type="Bibliographic">
+    <leader>00000nam a2200000 c 4500</leader>
+    <controlfield tag="001">1284328724</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20240131220326.0</controlfield>
+    <controlfield tag="007">tu</controlfield>
+    <controlfield tag="008">230324s2021    sw ||||| |||| 00||||swe  </controlfield>
+    <datafield tag="015" ind1=" " ind2=" ">
+      <subfield code="a">24,A05</subfield>
+      <subfield code="2">dnb</subfield>
+    </datafield>
+    <datafield tag="016" ind1="7" ind2=" ">
+      <subfield code="2">DE-101</subfield>
+      <subfield code="a">1284328724</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="a">9789164207463</subfield>
+      <subfield code="c">Broschur</subfield>
+      <subfield code="9">978-91-642-0746-3</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="a">9164207463</subfield>
+      <subfield code="9">91-642-0746-3</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-599)DNB1284328724</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(OCoLC)1419449190</subfield>
+    </datafield>
+    <datafield tag="040" ind1=" " ind2=" ">
+      <subfield code="a">1130</subfield>
+      <subfield code="b">ger</subfield>
+      <subfield code="c">DE-101</subfield>
+      <subfield code="d">9999</subfield>
+      <subfield code="e">rda</subfield>
+    </datafield>
+    <datafield tag="041" ind1=" " ind2=" ">
+      <subfield code="a">swe</subfield>
+    </datafield>
+    <datafield tag="044" ind1=" " ind2=" ">
+      <subfield code="c">XA-SE</subfield>
+    </datafield>
+    <datafield tag="082" ind1="7" ind2="4">
+      <subfield code="8">3\p</subfield>
+      <subfield code="a">839</subfield>
+      <subfield code="a">B</subfield>
+      <subfield code="q">DE-101</subfield>
+      <subfield code="2">23sdnb</subfield>
+    </datafield>
+    <datafield tag="100" ind1="1" ind2=" ">
+      <subfield code="8">1\p</subfield>
+      <subfield code="0">(DE-588)1248677021</subfield>
+      <subfield code="0">https://d-nb.info/gnd/1248677021</subfield>
+      <subfield code="0">(DE-101)1248677021</subfield>
+      <subfield code="a">Ebervall, Lena</subfield>
+      <subfield code="d">1957-</subfield>
+      <subfield code="e">Verfasser</subfield>
+      <subfield code="4">aut</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="245" ind1="1" ind2="0">
+      <subfield code="a">Stormfågel</subfield>
+      <subfield code="b">en roman om Jane Horney</subfield>
+      <subfield code="c">Lena Ebervall och Per E Samuelson</subfield>
+    </datafield>
+    <datafield tag="264" ind1=" " ind2="1">
+      <subfield code="a">Stockholm</subfield>
+      <subfield code="b">Piratförlaget</subfield>
+      <subfield code="c">2021</subfield>
+    </datafield>
+    <datafield tag="300" ind1=" " ind2=" ">
+      <subfield code="a">413 Seiten</subfield>
+      <subfield code="c">18 cm</subfield>
+    </datafield>
+    <datafield tag="336" ind1=" " ind2=" ">
+      <subfield code="a">Text</subfield>
+      <subfield code="b">txt</subfield>
+      <subfield code="2">rdacontent</subfield>
+    </datafield>
+    <datafield tag="337" ind1=" " ind2=" ">
+      <subfield code="a">ohne Hilfsmittel zu benutzen</subfield>
+      <subfield code="b">n</subfield>
+      <subfield code="2">rdamedia</subfield>
+    </datafield>
+    <datafield tag="338" ind1=" " ind2=" ">
+      <subfield code="a">Band</subfield>
+      <subfield code="b">nc</subfield>
+      <subfield code="2">rdacarrier</subfield>
+    </datafield>
+    <datafield tag="655" ind1=" " ind2="7">
+      <subfield code="0">(DE-588)1071854844</subfield>
+      <subfield code="0">https://d-nb.info/gnd/1071854844</subfield>
+      <subfield code="0">(DE-101)1071854844</subfield>
+      <subfield code="a">Fiktionale Darstellung</subfield>
+      <subfield code="2">gnd-content</subfield>
+    </datafield>
+    <datafield tag="655" ind1=" " ind2="7">
+      <subfield code="0">(DE-101)1010789759</subfield>
+      <subfield code="a">Erzählende Literatur</subfield>
+      <subfield code="2">gatbeg</subfield>
+    </datafield>
+    <datafield tag="700" ind1="1" ind2=" ">
+      <subfield code="8">2\p</subfield>
+      <subfield code="0">(DE-588)1248677099</subfield>
+      <subfield code="0">https://d-nb.info/gnd/1248677099</subfield>
+      <subfield code="0">(DE-101)1248677099</subfield>
+      <subfield code="a">Samuelson, Per E.</subfield>
+      <subfield code="d">1955-</subfield>
+      <subfield code="e">Sonstige</subfield>
+      <subfield code="4">oth</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="850" ind1=" " ind2=" ">
+      <subfield code="a">DE-101a</subfield>
+    </datafield>
+    <datafield tag="883" ind1="2" ind2=" ">
+      <subfield code="8">1\p</subfield>
+      <subfield code="a">dnb</subfield>
+      <subfield code="d">20240119</subfield>
+      <subfield code="q">DE-101</subfield>
+      <subfield code="u">https://d-nb.info/provenance/plan#dnb</subfield>
+    </datafield>
+    <datafield tag="883" ind1="2" ind2=" ">
+      <subfield code="8">2\p</subfield>
+      <subfield code="a">dnb</subfield>
+      <subfield code="d">20240119</subfield>
+      <subfield code="q">DE-101</subfield>
+      <subfield code="u">https://d-nb.info/provenance/plan#dnb</subfield>
+    </datafield>
+    <datafield tag="883" ind1="2" ind2=" ">
+      <subfield code="8">3\p</subfield>
+      <subfield code="a">dnb</subfield>
+      <subfield code="d">20240122</subfield>
+      <subfield code="q">DE-101</subfield>
+      <subfield code="u">https://d-nb.info/provenance/plan#dnb</subfield>
+    </datafield>
+    <datafield tag="925" ind1="r" ind2=" ">
+      <subfield code="a">rg</subfield>
+    </datafield>
+  </record>
+
+  <record type="Holdings">
+    <leader>00000ny  a22000003n 4500</leader>
+    <controlfield tag="001">872993183</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20240126082138.0</controlfield>
+    <controlfield tag="008">230324||||||||||||||||ger|||||||</controlfield>
+    <datafield tag="092" ind1=" " ind2=" ">
+      <subfield code="a">950200-2</subfield>
+      <subfield code="d">101a</subfield>
+      <subfield code="k">SAX</subfield>
+      <subfield code="l">a</subfield>
+      <subfield code="o">b</subfield>
+    </datafield>
+    <datafield tag="541" ind1=" " ind2=" ">
+      <subfield code="e">L-3000-168341</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2="1">
+      <subfield code="c">2024 AA 5219</subfield>
+      <subfield code="9">00</subfield>
+    </datafield>
+    <datafield tag="852" ind1=" " ind2=" ">
+      <subfield code="a">DE-101a</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">CC0</subfield>
+    </datafield>
+  </record>
+</collection></recordData><recordPosition>1891</recordPosition></record></records><nextRecordPosition>1892</nextRecordPosition><echoedSearchRetrieveRequest><version>1.1</version><query>WVN=24A05</query><xQuery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><startRecord>1890</startRecord><maximumRecords>2</maximumRecords><recordSchema>MARC21plus-xml</recordSchema></echoedSearchRetrieveRequest></searchRetrieveResponse>

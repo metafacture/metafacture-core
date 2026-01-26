@@ -76,6 +76,21 @@ public final class SruOpenerTest {
     }
 
     @Test
+    public void testDnbMaximumRecords2() {
+        assertSru(DNB_URL, "/sru/dnb", o -> {
+                o.setQuery("WVN=24A05");
+                o.setRecordSchema("MARC21plus-xml");
+                o.setVersion("1.1");
+                o.setStartRecord(1890);
+                o.setMaximumRecords(2);
+                o.setTotalRecords(3);
+            },
+            "b0478aa7-2e7c-4301-a463-c189da335428",
+            "241be368-d2a1-427a-a554-667b67f69ef8"
+        );
+    }
+
+    @Test
     public void testZdb() {
         assertSru(DNB_URL, "/sru/zdb", o -> {
                 o.setQuery("dnb.isil=DE-Sol1");

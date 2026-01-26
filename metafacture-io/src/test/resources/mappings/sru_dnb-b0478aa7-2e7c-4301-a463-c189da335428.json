@@ -1,0 +1,25 @@
+{
+  "id" : "b0478aa7-2e7c-4301-a463-c189da335428",
+  "name" : "sru_dnb",
+  "request" : {
+    "url" : "/sru/dnb?maximumRecords=2&operation=searchRetrieve&query=WVN%3D24A05&recordSchema=MARC21plus-xml&version=1.1&startRecord=1890",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "sru_dnb-b0478aa7-2e7c-4301-a463-c189da335428.xml",
+    "headers" : {
+      "Date" : "Fri, 30 Jan 2026 08:44:34 GMT",
+      "Server" : "Apache",
+      "Strict-Transport-Security" : "max-age=15552000",
+      "Upgrade" : "h2,h2c",
+      "Access-Control-Allow-Origin" : "*",
+      "Vary" : "Accept-Encoding",
+      "Keep-Alive" : "timeout=15, max=100",
+      "Content-Type" : "text/xml;charset=UTF-8"
+    }
+  },
+  "uuid" : "b0478aa7-2e7c-4301-a463-c189da335428",
+  "persistent" : true,
+  "insertionIndex" : 5
+}
