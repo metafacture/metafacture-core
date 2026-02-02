@@ -16,10 +16,10 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.json.JsonEncoder;
+
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.SerializableString;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -62,7 +62,7 @@ public interface JsonValue {
     default String toJson(final boolean prettyPrinting) throws IOException {
         final StringWriter writer = new StringWriter();
         final JsonGenerator jsonGenerator = new JsonFactory().createGenerator(writer);
-        jsonGenerator.setPrettyPrinter(prettyPrinting ? new DefaultPrettyPrinter((SerializableString) null) : null);
+        jsonGenerator.setPrettyPrinter(prettyPrinting ? JsonEncoder.DEFAULT_PRETTY_PRINTER : null);
 
         try {
             toJson(jsonGenerator);

@@ -36,6 +36,7 @@ dependencies {
   implementation project(':metafacture-framework')
   implementation project(':metafacture-io')
   implementation project(':metafacture-javaintegration')
+  implementation project(':metafacture-json')
   implementation project(':metafacture-mangling')
   implementation project(':metafacture-triples')
   implementation project(':metamorph')
