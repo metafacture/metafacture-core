@@ -31,6 +31,8 @@ Releasing involves to first make and test the release candidate before actually 
 It's good habit to use semantic versioning in release numbers `A`.`B`.`C`, i.e. increase `A` when it's a major release breaking backward compatibility; increase `B` when it got new features; increase `C` indicating bug-fixes.
 
 ## Signing
+You need gpg key, which is uploaded to a public key server otherwise you are not able to set a tag and upload the release to Sonatype.
+
 To upload to Sonatype we need to sign the artifacts. Adjust `gradle.properties` in the root directory that like this:
 
 ```
