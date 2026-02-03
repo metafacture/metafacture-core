@@ -29,6 +29,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonStreamContext;
+import com.fasterxml.jackson.core.PrettyPrinter;
 import com.fasterxml.jackson.core.SerializableString;
 import com.fasterxml.jackson.core.io.CharacterEscapes;
 import com.fasterxml.jackson.core.io.SerializedString;
@@ -51,6 +52,13 @@ import java.io.StringWriter;
 @Out(String.class)
 @FluxCommand("encode-json")
 public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
+
+    public static final PrettyPrinter DEFAULT_PRETTY_PRINTER = new DefaultPrettyPrinter() {
+        @Override
+        public void writeRootValueSeparator(final JsonGenerator gen) {
+            // do nothing
+        }
+    };
 
     public static final String ARRAY_MARKER = "[]";
     public static final String BOOLEAN_MARKER = null;
@@ -140,7 +148,7 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
      * @param prettyPrinting true if pretty printing should be used
      */
     public void setPrettyPrinting(final boolean prettyPrinting) {
-        jsonGenerator.setPrettyPrinter(prettyPrinting ? new DefaultPrettyPrinter((SerializableString) null) : null);
+        jsonGenerator.setPrettyPrinter(prettyPrinting ? DEFAULT_PRETTY_PRINTER : null);
     }
 
     /**

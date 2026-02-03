@@ -302,14 +302,14 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
                     .append("Unexpected token '")
                     .append(jsonParser.currentToken())
                     .append("' at ")
-                    .append(jsonParser.getCurrentLocation())
+                    .append(jsonParser.currentLocation())
                     .toString());
         }
     }
 
     private void decodeObject() throws IOException {
         while (jsonParser.nextToken() == JsonToken.FIELD_NAME) {
-            decodeValue(jsonParser.getCurrentName(), jsonParser.nextToken());
+            decodeValue(jsonParser.currentName(), jsonParser.nextToken());
         }
     }
 

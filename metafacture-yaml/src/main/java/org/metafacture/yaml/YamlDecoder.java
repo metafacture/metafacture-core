@@ -215,14 +215,14 @@ public final class YamlDecoder extends DefaultObjectPipe<String, StreamReceiver>
                     .append("Unexpected token '")
                     .append(yamlParser.currentToken())
                     .append("' at ")
-                    .append(yamlParser.getCurrentLocation())
+                    .append(yamlParser.currentLocation())
                     .toString());
         }
     }
 
     private void decodeObject() throws IOException {
         while (yamlParser.nextToken() == JsonToken.FIELD_NAME) {
-            decodeValue(yamlParser.getCurrentName(), yamlParser.nextToken());
+            decodeValue(yamlParser.currentName(), yamlParser.nextToken());
         }
     }
 
