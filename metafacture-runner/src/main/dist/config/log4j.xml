@@ -11,7 +11,7 @@
       <param name="ConversionPattern" value="%-5p [%t] [%c{1}] %m%n"/>
     </layout>
   </appender>
-  <logger name="external">
+  <logger name="external" additivity="false">
     <level value="info"/>
     <appender-ref ref="external-stdout"/>
   </logger>
