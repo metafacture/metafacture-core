@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package oersi;
+package org.metafacture.metafix.method.field;
 
 import org.metafacture.metafix.FixMethod;
 import org.metafacture.metafix.Metafix;
