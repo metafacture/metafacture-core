@@ -23,6 +23,8 @@ import org.metafacture.metafix.api.FixFunction;
 
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Performs normalization of diacritics in utf-8 encoded strings.
