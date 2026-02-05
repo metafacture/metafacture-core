@@ -21,10 +21,10 @@ import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
 
+import org.jsoup.Jsoup;
+
 import java.util.List;
 import java.util.Map;
-
-import org.jsoup.Jsoup;
 
 /**
  * Turn html text to plain text.
@@ -36,11 +36,15 @@ import org.jsoup.Jsoup;
 @FixCommand("html_to_text")
 public class HtmlToText implements FixFunction {
 
+    /**
+     * Creates an instance of {@link HtmlToText}.
+     */
     public HtmlToText() {
     }
+
     @Override
     public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transform(params.get(0), s -> Jsoup.parse(s).wholeText());
+        record.transform(params.get(0), s -> Jsoup.parse(s).wholeText());
     }
 
 }
