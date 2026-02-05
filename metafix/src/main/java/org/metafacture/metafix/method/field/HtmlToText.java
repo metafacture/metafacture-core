@@ -16,7 +16,7 @@
 
 package org.metafacture.metafix.method.field;
 
-import org.metafacture.metafix.FixMethod;
+import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
