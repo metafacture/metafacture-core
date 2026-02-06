@@ -1446,6 +1446,28 @@ public class MetafixMethodTest {
         );
     }
 
+        @Test
+    public void shouldTurnHtmlToText() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "html_to_text('data.description')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("data");
+                i.literal("description", "Das Material ist im Zusammenhang mit der frei verfügbaren wortschatzdidaktischen Internetseite <a href=\"https://www.wortschatzwissen.de\">https://www.wortschatzwissen.de</a>");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                o.get().literal("description", "Das Material ist im Zusammenhang mit der frei verfügbaren wortschatzdidaktischen Internetseite <a href=\"https://www.wortschatzwissen.de\">");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
     @Test
     public void shouldGetFirstIndexOfSubstring() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
