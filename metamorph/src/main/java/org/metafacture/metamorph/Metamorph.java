@@ -18,6 +18,7 @@ package org.metafacture.metamorph;
 
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.StandardEventNames;
 import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
@@ -36,8 +37,6 @@ import org.metafacture.metamorph.api.NamedValueReceiver;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.SourceLocation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 import java.io.Closeable;
@@ -77,7 +76,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     public static final String VAR_START = "$[";
     public static final String VAR_END = "]";
 
-    private static final Logger LOG = LoggerFactory.getLogger(Metamorph.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(Metamorph.class);
 
     private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
     private static final String COULD_NOT_LOAD_MORPH_FILE = "Could not load morph file";
@@ -350,7 +349,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
                 elseSources.add(data);
             }
             else {
-                LOG.warn("Only one of '_else', '_elseFlattened' and '_elseNested' is allowed. Ignoring the superflous ones.");
+                LOG.externalWarn("Only one of '_else', '_elseFlattened' and '_elseNested' is allowed. Ignoring the superflous ones.");
             }
         }
         else {
