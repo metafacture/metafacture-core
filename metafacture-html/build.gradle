@@ -20,7 +20,6 @@ description = 'Modules for processing HTML documents'
 dependencies {
   api project(':metafacture-framework')
   implementation project(':metafacture-commons')
-  implementation "org.slf4j:slf4j-api:${versions.slf4j}"
   implementation "org.apache.commons:commons-compress:${versions.commons_compress}"
   implementation "commons-io:commons-io:${versions.commons_io}"
   implementation "org.jsoup:jsoup:${versions.jsoup}"
