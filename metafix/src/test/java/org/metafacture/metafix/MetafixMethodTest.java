@@ -1446,7 +1446,7 @@ public class MetafixMethodTest {
         );
     }
 
-        @Test
+    @Test
     public void shouldTurnHtmlToText() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "html_to_text('data.description')"
