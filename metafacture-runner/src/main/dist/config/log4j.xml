@@ -12,10 +12,12 @@
     </layout>
   </appender>
   <logger name="external" additivity="false">
+    <!-- For user logging with e.g. `log-object` change level to "debug" -->
     <level value="info"/>
     <appender-ref ref="external-stdout"/>
   </logger>
   <root>
+    <!-- For developer logging change level to "debug" -->
     <level value="error"/>
     <appender-ref ref="stdout"/>
   </root>
