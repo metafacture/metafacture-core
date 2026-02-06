@@ -17,14 +17,12 @@
 package org.metafacture.flowcontrol;
 
 import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.ObjectPipe;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -44,7 +42,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceiver<T>> {
 
     public static final int DEFAULT_CAPACITY = 10000;
-    private static final Logger LOG = LoggerFactory.getLogger(ObjectPipeDecoupler.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(ObjectPipeDecoupler.class);
 
     private final BlockingQueue<Object> queue;
     private Thread thread;

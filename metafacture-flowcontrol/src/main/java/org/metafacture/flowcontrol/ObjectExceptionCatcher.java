@@ -17,14 +17,12 @@
 package org.metafacture.flowcontrol;
 
 import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -48,7 +46,7 @@ import java.io.StringWriter;
 public final class ObjectExceptionCatcher<T> extends
         DefaultObjectPipe<T, ObjectReceiver<T>> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ObjectExceptionCatcher.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(ObjectExceptionCatcher.class);
 
     private String logPrefix;
     private boolean logStackTrace;
@@ -120,13 +118,13 @@ public final class ObjectExceptionCatcher<T> extends
         }
         catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             if (logExceptionMessage) {
-                LOG.error("{}'{}' while processing object: {}", logPrefix, e.getMessage(), obj);
+                LOG.externalError("{}'{}' while processing object: {}", logPrefix, e.getMessage(), obj);
             }
 
             if (logStackTrace) {
                 final StringWriter stackTraceWriter = new StringWriter();
                 e.printStackTrace(new PrintWriter(stackTraceWriter));
-                LOG.error("{}Stack Trace:\n{}", logPrefix, stackTraceWriter.toString());
+                LOG.externalError("{}Stack Trace:\n{}", logPrefix, stackTraceWriter.toString());
             }
         }
     }
