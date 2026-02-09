@@ -4,7 +4,7 @@ file|
 open-file|
 as-lines|
 decode-marc21|
-fix(FLUX_DIR + "morph-marc21.fix")|
+fix(FLUX_DIR + "marc21.fix")|
 stream-to-triples|
 template("${o}")|
 write("stdout");

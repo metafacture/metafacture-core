@@ -4,7 +4,7 @@ file|
 open-file|
 as-lines|
 decode-marc21|
-morph(FLUX_DIR + "morph-marc21.xml")|
+morph(FLUX_DIR + "marc21.xml")|
 stream-to-triples|
 template("${o}")|
 write("stdout");

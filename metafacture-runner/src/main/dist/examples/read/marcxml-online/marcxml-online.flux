@@ -1,7 +1,7 @@
 default idn = "1021191485";
 
 idn|
-template("https://portal.dnb.de/opac.htm?method=requestMarcXml&idn=${o}")|
+template("https://d-nb.info/${o}/about/marcxml")|
 open-http|
 decode-xml|
 handle-marcxml|
