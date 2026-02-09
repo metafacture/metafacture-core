@@ -1454,14 +1454,24 @@ public class MetafixMethodTest {
             i -> {
                 i.startRecord("1");
                 i.startEntity("data");
-                i.literal("description", "Das Material ist im Zusammenhang mit der frei verfügbaren wortschatzdidaktischen Internetseite <a href=\"https://www.wortschatzwissen.de\">https://www.wortschatzwissen.de</a>");
+                i.literal("description", "Das Material ist im Zusammenhang mit der frei verfügbaren wortschatzdidaktischen Internetseite <a href=\"https://www.wortschatzwissen.de\">www.wortschatzwissen.de</a>");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("2");
+                i.startEntity("data");
+                i.literal("description", "<b>Hello World.</b><br/><p><i>Is there anyone out there?</i><p>");
                 i.endEntity();
                 i.endRecord();
             },
             o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("data");
-                o.get().literal("description", "Das Material ist im Zusammenhang mit der frei verfügbaren wortschatzdidaktischen Internetseite <a href=\"https://www.wortschatzwissen.de\">");
+                o.get().literal("description", "Das Material ist im Zusammenhang mit der frei verfügbaren wortschatzdidaktischen Internetseite www.wortschatzwissen.de");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().startEntity("data");
+                o.get().literal("description", "Hello World. Is there anyone out there?");
                 o.get().endEntity();
                 o.get().endRecord();
             }
