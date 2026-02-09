@@ -931,6 +931,18 @@ lookup("path.to.field", "map-name", print_unknown: "true", destination: "unknown
 
 [Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/field/Lookup.java)
 
+##### `normalize_utf8`
+
+Performs normalization of diacritics in utf-8 encoded strings.
+
+```perl
+normalize_utf8("<sourceField>")
+```
+
+[Example in Playground](https://metafacture.org/playground/?example=normalize_utf8)
+
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/field/NormalizeUTF8.java)
+
 ##### `prepend`
 
 Adds a string at the beginning of a field value.
