@@ -18,6 +18,7 @@ do put_macro("gndPersonCombinedLabel") # in contrast to morph this is not normal
   if exists("$[field].pre")
     paste("$[field].@combinedLabel", "$[field].@combinedLabel", "$[field].pre", join_char:"")
   end
+  normalize_utf8("$[field].@combinedLabel")
   copy_field("$[field].@combinedLabel", "$[out]")
 end
 
