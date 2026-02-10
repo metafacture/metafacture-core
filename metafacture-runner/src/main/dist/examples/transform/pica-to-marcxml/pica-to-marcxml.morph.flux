@@ -12,4 +12,4 @@ morph(FLUX_DIR + "pica-to-marcxml.xml")|
 encode-marc21|
 decode-marc21(emitLeaderAsWhole="true", ignoreMissingId="true")|
 encode-marcxml|
-write("stdout");
+print;

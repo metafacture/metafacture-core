@@ -8,4 +8,4 @@ fix(FLUX_DIR + "gnd-pref-label.fix")|
 stream-to-triples|
 sort-triples(by="object")|
 template("${s}\t${o}")|
-write("stdout");
+print;

@@ -11,5 +11,5 @@ write(temp_file);
 temp_file|
 open-file|
 as-lines|
-write("stdout");
+print;
 

@@ -7,4 +7,4 @@ decode-marc21|
 fix(FLUX_DIR + "marc21.fix")|
 stream-to-triples|
 template("${o}")|
-write("stdout");
+print;

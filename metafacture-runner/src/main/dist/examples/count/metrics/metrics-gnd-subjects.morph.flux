@@ -10,5 +10,5 @@ stream-to-triples|
 count-triples(countBy="object")|
 calculate-metrics("X2")|
 template("${s} ${o}")|
-//write("stdout");
+//print;
 write(FLUX_DIR+"x2.dat");

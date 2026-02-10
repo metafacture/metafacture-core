@@ -8,4 +8,4 @@ fix(FLUX_DIR + "gnd-type.fix")|
 stream-to-triples|
 count-triples(countBy="object")|
 template("${s}\t${o}")|
-write("stdout");
+print;

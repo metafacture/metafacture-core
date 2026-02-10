@@ -4,7 +4,7 @@ default counts= base + "counts.dat";
 default dump = FLUX_DIR + "10.pica";
 
 //count references
-"counting references in " + dump | write("stdout");
+"counting references in " + dump | print;
 
 dump|
 open-file|

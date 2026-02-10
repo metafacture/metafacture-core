@@ -6,4 +6,4 @@ open-http|
 decode-xml|
 handle-marcxml|
 encode-formeta(style="multiline")|
-write("stdout");
+print;

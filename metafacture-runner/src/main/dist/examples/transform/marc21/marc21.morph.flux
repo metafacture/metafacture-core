@@ -7,4 +7,4 @@ decode-marc21|
 morph(FLUX_DIR + "marc21.xml")|
 stream-to-triples|
 template("${o}")|
-write("stdout");
+print;

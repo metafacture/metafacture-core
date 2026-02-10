@@ -5,7 +5,7 @@ default gndsimple = base + "gnd-simplified.dat";
 default out = base + "gnd-references.csv";
 
 //merge and output
-"megring information" | write("stdout");
+"megring information" | print;
 
 counts + "," + gndsimple|
 decode-string(",")|

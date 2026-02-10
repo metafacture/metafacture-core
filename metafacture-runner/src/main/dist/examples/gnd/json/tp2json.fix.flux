@@ -6,4 +6,4 @@ as-lines|
 decode-pica|
 fix(FLUX_DIR + "tp2json.fix")|
 encode-json|
-write("stdout");
+print;
