@@ -3,7 +3,7 @@ default beaconDir = FLUX_DIR + "beacons";
 default out = "stdout";
 
 
-"reading beacons from " + beaconDir | write("stdout");
+"reading beacons from " + beaconDir | print;
 
 beaconDir|
 read-dir|
@@ -15,7 +15,7 @@ stream-to-triples|
 @X;
 
 
-"reading GND dump from " + gnd | write("stdout");
+"reading GND dump from " + gnd | print;
 
 gnd|
 open-file|

@@ -1,16 +1,16 @@
 //creates a beacon file based on a pica+ dump of the DNB CBS data.
 
 default type = "ALL";
+default dump = FLUX_DIR + "10.pica";
 default out = dump + "-" + type + ".beacon";
 default header = FLUX_DIR + "header.txt";
 
-
 //read header
-"reading header " + header | write("stdout");
+"reading header " + header | print;
 header|open-file|as-lines|@Y;
 
 //count references
-"counting references in " + dump | write("stdout");
+"counting references in " + dump | print;
 
 dump|
 open-file|

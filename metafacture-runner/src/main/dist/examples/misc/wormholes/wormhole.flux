@@ -13,7 +13,7 @@ template("x${o}")|
 
 @X|
 template("${o}")|
-write("stdout");
+print;
 
 
 "C"|

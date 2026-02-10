@@ -8,4 +8,4 @@ as-lines|
 decode-pica|
 filter(FLUX_DIR + "filter.xml")|
 encode-formeta(style="verbose")|
-write("stdout");
+print;

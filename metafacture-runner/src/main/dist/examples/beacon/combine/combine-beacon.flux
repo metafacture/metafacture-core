@@ -9,4 +9,4 @@ stream-to-triples|
 sort-triples(by="subject")|
 collect-triples|
 encode-formeta(style="multiline")|
-write("stdout");
+print;

@@ -6,4 +6,4 @@ as-lines|
 decode-pica|
 morph(FLUX_DIR + "tp2json.xml")|
 encode-json|
-write("stdout");
+print;

@@ -1,4 +1,4 @@
-
+default gnd = FLUX_DIR + "gnd-sample.pica";
 default base = "";
 default gndsimple = base + "gnd-simplified.dat";
 

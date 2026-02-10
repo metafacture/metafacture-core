@@ -8,4 +8,4 @@ morph(FLUX_DIR + "gnd-type.xml")|
 stream-to-triples|
 count-triples(countBy="object")|
 template("${s}\t${o}")|
-write("stdout");
+print;

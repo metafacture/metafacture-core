@@ -12,4 +12,4 @@ fix(FLUX_DIR + "pica-to-marcxml.fix")|
 encode-marc21|
 decode-marc21(emitLeaderAsWhole="true", ignoreMissingId="true")|
 encode-marcxml|
-write("stdout");
+print;

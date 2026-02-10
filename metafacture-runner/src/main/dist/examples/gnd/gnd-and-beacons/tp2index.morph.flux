@@ -3,7 +3,7 @@
 default gnd = FLUX_DIR + "Tp-200.pica.gz";
 default beaconDir = FLUX_DIR + "beacons";
 
-"reading beacons from " + beaconDir | write("stdout");
+"reading beacons from " + beaconDir | print;
 
 beaconDir|
 read-dir|
@@ -14,7 +14,7 @@ read-beacon(metadatafilter="name|description|institution")|
 stream-to-triples|
 @X;
 
-"reading GND dump from " + gnd | write("stdout");
+"reading GND dump from " + gnd | print;
 
 gnd|
 open-file|
@@ -29,6 +29,6 @@ sort-triples(by="subject")|
 collect-triples|
 filter(FLUX_DIR + "filter.xml")|
 encode-formeta|
-write("stdout");
+print;
 //stream-to-index(FLUX_DIR + "id.xml", indexpath="Tp_ix");
 

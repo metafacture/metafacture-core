@@ -4,4 +4,4 @@ dir|
 read-dir(recursive="true")|
 open-file|
 as-lines|
-write("stdout");
+print;

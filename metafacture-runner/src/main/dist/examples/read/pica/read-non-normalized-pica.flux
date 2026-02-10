@@ -9,4 +9,4 @@ as-lines|
 lines-to-records|
 decode-pica(normalizedSerialization="false", ignoreMissingIdn="true")|
 encode-formeta(style="multiline")|
-write("stdout");
+print;

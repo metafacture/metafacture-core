@@ -7,4 +7,4 @@ open-file|
 as-lines|
 decode-marc21|
 encode-formeta(style="multiline")|
-write("stdout");
+print;

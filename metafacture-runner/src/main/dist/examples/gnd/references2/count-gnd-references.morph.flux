@@ -3,7 +3,7 @@ default base = "";
 default dump = FLUX_DIR + "10.pica";
 default out = base + "gnd-references.txt";
 
-"counting references in " + dump | write("stdout");
+"counting references in " + dump | print;
 
 dump|
 open-file|

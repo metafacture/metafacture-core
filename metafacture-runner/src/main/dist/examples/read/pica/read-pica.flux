@@ -7,4 +7,4 @@ open-file|
 as-lines|
 decode-pica|
 encode-formeta(style="multiline")|
-write("stdout");
+print;
