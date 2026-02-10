@@ -933,7 +933,7 @@ lookup("path.to.field", "map-name", print_unknown: "true", destination: "unknown
 
 ##### `normalize_utf8`
 
-Performs normalization of diacritics in utf-8 encoded strings.
+Performs normalization of diacritics in UTF-8 encoded strings.
 
 ```perl
 normalize_utf8("<sourceField>")

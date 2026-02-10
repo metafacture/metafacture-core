@@ -27,11 +27,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Performs normalization of diacritics in utf-8 encoded strings.
+ * Performs normalization of diacritics in UTF-8 encoded strings.
  *
  * @author Tobias Bülte, hbz
  */
-
 @FixCommand("normalize_utf8")
 public class NormalizeUTF8 implements FixFunction {
 
