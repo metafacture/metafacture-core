@@ -1668,6 +1668,30 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void shouldNormalizeUTF8() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "normalize_utf8('data.title')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("data");
+                // The umlauts in this string are composed of two characters (u and ", e.g.):
+                i.literal("title", "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                // The umlauts in this string are individual characters:
+                o.get().literal("title", "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldPrependValue() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "prepend(title, 'I love ')"
