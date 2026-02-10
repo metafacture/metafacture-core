@@ -826,6 +826,18 @@ from_json("<sourceField>"[, error_string: "<errorValue>"])
 
 [Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/field/FromJson.java)
 
+##### `html_to_text`
+
+Turns HTML text to plain text.
+
+```perl
+html_to_text("<sourceField>")
+```
+
+[Example in Playground](https://metafacture.org/playground/?example=html_to_text)
+
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/field/HtmlToText.java)
+
 ##### `index`
 
 Returns the index position of a substring in a field and replaces the field value with this number.
@@ -930,6 +942,18 @@ lookup("path.to.field", "map-name", print_unknown: "true", destination: "unknown
 [Example in Playground](https://metafacture.org/playground/?example=lookup)
 
 [Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/field/Lookup.java)
+
+##### `normalize_utf8`
+
+Performs normalization of diacritics in UTF-8 encoded strings.
+
+```perl
+normalize_utf8("<sourceField>")
+```
+
+[Example in Playground](https://metafacture.org/playground/?example=normalize_utf8)
+
+[Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/field/NormalizeUTF8.java)
 
 ##### `prepend`
 

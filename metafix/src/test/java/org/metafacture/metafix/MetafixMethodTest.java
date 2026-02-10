@@ -1447,6 +1447,38 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void shouldTurnHtmlToText() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "html_to_text('data.description')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("data");
+                i.literal("description", "Das Material ist im Zusammenhang mit der frei verfügbaren wortschatzdidaktischen Internetseite <a href=\"https://www.wortschatzwissen.de\">www.wortschatzwissen.de</a>");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("2");
+                i.startEntity("data");
+                i.literal("description", "<b>Hello World.</b><br/><p><i>Is there anyone out there?</i><p>");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                o.get().literal("description", "Das Material ist im Zusammenhang mit der frei verfügbaren wortschatzdidaktischen Internetseite www.wortschatzwissen.de");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().startEntity("data");
+                o.get().literal("description", "Hello World.\nIs there anyone out there?");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldGetFirstIndexOfSubstring() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "index(animal, 'n')"
@@ -1629,6 +1661,30 @@ public class MetafixMethodTest {
                 o.get().startRecord("1");
                 o.get().startEntity("animals[]");
                 o.get().literal("1", "dog,cat,zebra");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNormalizeUTF8() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "normalize_utf8('data.title')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("data");
+                // The umlauts in this string are composed of two characters (u and ", e.g.):
+                i.literal("title", "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                // The umlauts in this string are individual characters:
+                o.get().literal("title", "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.");
                 o.get().endEntity();
                 o.get().endRecord();
             }
