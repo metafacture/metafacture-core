@@ -27,12 +27,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Turn html text to plain text.
+ * Turn HTML text to plain text.
  *
  * @author Tobias Bülte (tobiasNx)
  *
  */
-
 @FixCommand("html_to_text")
 public class HtmlToText implements FixFunction {
 

@@ -828,7 +828,7 @@ from_json("<sourceField>"[, error_string: "<errorValue>"])
 
 ##### `html_to_text`
 
-Turns html text to plain text.
+Turns HTML text to plain text.
 
 ```perl
 html_to_text("<sourceField>")
@@ -837,7 +837,6 @@ html_to_text("<sourceField>")
 [Example in Playground](https://metafacture.org/playground/?example=html_to_text)
 
 [Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/method/field/HtmlToText.java)
-
 
 ##### `index`
 

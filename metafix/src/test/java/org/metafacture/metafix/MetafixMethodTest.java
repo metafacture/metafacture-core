@@ -1471,7 +1471,7 @@ public class MetafixMethodTest {
                 o.get().endRecord();
                 o.get().startRecord("2");
                 o.get().startEntity("data");
-                o.get().literal("description", "Hello World. Is there anyone out there?");
+                o.get().literal("description", "Hello World.\\nIs there anyone out there?");
                 o.get().endEntity();
                 o.get().endRecord();
             }
