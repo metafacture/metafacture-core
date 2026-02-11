@@ -31,10 +31,10 @@ public class XtextValidator {
         final int count = issues.size();
 
         if (count > 0) {
-            LOG.warn("The {} file '{}' has {} issue{}:",
+            LOG.externalWarn("The {} file '{}' has {} issue{}:",
                     resourceType(setup), resource.getURI().toFileString(), count, count > 1 ? "s" : "");
 
-            issues.forEach(i -> LOG.warn("- {}: {} ({}:{})",
+            issues.forEach(i -> LOG.externalWarn("- {}: {} ({}:{})",
                         i.getSeverity(), i.getMessage(), i.getLineNumber(), i.getColumn()));
 
             return false;
