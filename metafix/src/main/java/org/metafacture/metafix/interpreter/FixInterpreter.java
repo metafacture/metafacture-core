@@ -1,5 +1,6 @@
 package org.metafacture.metafix.interpreter;
 
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.fix.Do;
 import org.metafacture.metafix.fix.ElsIf;
@@ -11,14 +12,12 @@ import org.metafacture.metafix.fix.MethodCall;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class FixInterpreter extends XbaseInterpreter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FixInterpreter.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(FixInterpreter.class);
 
     private Metafix metafix;
 

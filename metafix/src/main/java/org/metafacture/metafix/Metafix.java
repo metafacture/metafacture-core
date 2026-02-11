@@ -20,6 +20,7 @@ package org.metafacture.metafix;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.StandardEventNames;
 import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
@@ -31,9 +32,6 @@ import org.metafacture.mangling.StreamFlattener;
 import org.metafacture.metafix.api.FixRegistry;
 import org.metafacture.metafix.fix.Expression;
 import org.metafacture.metamorph.api.Maps;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -80,7 +78,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
 
     public static final int MAX_ENTITY_COUNT = Integer.getInteger("org.metafacture.metafix.maxEntityCount", -1);
 
-    private static final Logger LOG = LoggerFactory.getLogger(Metafix.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(Metafix.class);
 
     private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
 

@@ -16,15 +16,13 @@
 package org.metafacture.flowcontrol;
 
 import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.ObjectPipe;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.Tee;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +45,7 @@ import java.util.List;
 @FluxCommand("thread-object-tee")
 public class ObjectThreader<T> implements Tee<ObjectReceiver<T>>, ObjectPipe<T, ObjectReceiver<T>> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ObjectThreader.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(ObjectThreader.class);
     private final List<ObjectReceiver<T>> receivers = new ArrayList<ObjectReceiver<T>>();
     private int objectNumber;
 

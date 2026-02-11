@@ -17,14 +17,12 @@
 package org.metafacture.flowcontrol;
 
 import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Passes streams events through and catches exceptions.
@@ -39,7 +37,7 @@ import org.slf4j.LoggerFactory;
 public final class StreamExceptionCatcher extends
         DefaultStreamPipe<StreamReceiver> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StreamExceptionCatcher.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(StreamExceptionCatcher.class);
     private static final String MSG_PATTERN = "{}{}";
 
     private final String logPrefix;
@@ -67,8 +65,8 @@ public final class StreamExceptionCatcher extends
             getReceiver().startRecord(identifier);
         }
         catch (final Exception e) { // checkstyle-disable-line IllegalCatch
-            LOG.error(MSG_PATTERN, logPrefix, "StartRecord" + identifier);
-            LOG.error(MSG_PATTERN, logPrefix, e);
+            LOG.externalError(MSG_PATTERN, logPrefix, "StartRecord" + identifier);
+            LOG.externalError(MSG_PATTERN, logPrefix, e);
         }
     }
 
@@ -78,8 +76,8 @@ public final class StreamExceptionCatcher extends
             getReceiver().endRecord();
         }
         catch (final Exception e) { // checkstyle-disable-line IllegalCatch
-            LOG.error(MSG_PATTERN, logPrefix, "endRecord");
-            LOG.error(MSG_PATTERN, logPrefix, e);
+            LOG.externalError(MSG_PATTERN, logPrefix, "endRecord");
+            LOG.externalError(MSG_PATTERN, logPrefix, e);
         }
     }
 
@@ -89,8 +87,8 @@ public final class StreamExceptionCatcher extends
             getReceiver().startEntity(name);
         }
         catch (final Exception e) { // checkstyle-disable-line IllegalCatch
-            LOG.error(MSG_PATTERN, logPrefix, "startEntity" + name);
-            LOG.error(MSG_PATTERN, logPrefix, e);
+            LOG.externalError(MSG_PATTERN, logPrefix, "startEntity" + name);
+            LOG.externalError(MSG_PATTERN, logPrefix, e);
         }
     }
 
@@ -100,8 +98,8 @@ public final class StreamExceptionCatcher extends
             getReceiver().endEntity();
         }
         catch (final Exception e) { // checkstyle-disable-line IllegalCatch
-            LOG.error(MSG_PATTERN, logPrefix, "endEntity");
-            LOG.error(MSG_PATTERN, logPrefix, e);
+            LOG.externalError(MSG_PATTERN, logPrefix, "endEntity");
+            LOG.externalError(MSG_PATTERN, logPrefix, e);
         }
     }
 
@@ -111,8 +109,8 @@ public final class StreamExceptionCatcher extends
             getReceiver().literal(name, value);
         }
         catch (final Exception e) { // checkstyle-disable-line IllegalCatch
-            LOG.error(MSG_PATTERN, logPrefix, "literal " + name + " " + value);
-            LOG.error(MSG_PATTERN, logPrefix, e);
+            LOG.externalError(MSG_PATTERN, logPrefix, "literal " + name + " " + value);
+            LOG.externalError(MSG_PATTERN, logPrefix, e);
         }
     }
 

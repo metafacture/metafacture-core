@@ -18,6 +18,7 @@ package org.metafacture.xml;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.Description;
@@ -26,8 +27,6 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 import java.io.File;
@@ -61,7 +60,7 @@ import javax.xml.xpath.XPathFactory;
 @FluxCommand("write-xml-files")
 public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<String>> implements FilenameExtractor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XmlFilenameWriter.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(XmlFilenameWriter.class);
 
     private final XPath xPath = XPathFactory.newInstance().newXPath();
     private final FilenameUtil filenameUtil = new FilenameUtil();
@@ -147,8 +146,8 @@ public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<St
             throw new MetafactureException(e);
         }
         if (identifier == null || identifier.length() < filenameUtil.getEndIndex()) {
-            LOG.info("No identifier found, skip writing");
-            LOG.debug("the xml: {}", xml);
+            LOG.externalInfo("No identifier found, skip writing");
+            LOG.externalDebug("the xml: {}", xml);
             return null;
         }
         return identifier;

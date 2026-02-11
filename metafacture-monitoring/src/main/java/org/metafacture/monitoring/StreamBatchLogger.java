@@ -18,14 +18,12 @@ package org.metafacture.monitoring;
 
 import org.metafacture.commons.StringUtil;
 import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.ForwardingStreamPipe;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,8 +48,7 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
 
     public static final long DEFAULT_BATCH_SIZE = 1000;
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(StreamBatchLogger.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(StreamBatchLogger.class);
 
     private final Map<String, String> vars = new HashMap<>();
     private final String format;
@@ -152,7 +149,7 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
         vars.put(BATCH_SIZE_VAR, Long.toString(batchSize));
         vars.put(TOTAL_RECORD_COUNT_VAR,
                 Long.toString(batchSize * batchCount + recordCount));
-        LOG.info(StringUtil.format(format, vars));
+        LOG.externalInfo(StringUtil.format(format, vars));
     }
 
 }

@@ -17,6 +17,7 @@
 package org.metafacture.html;
 
 import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
@@ -29,8 +30,6 @@ import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -61,7 +60,7 @@ import java.util.UUID;
 @FluxCommand("decode-html")
 public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HtmlDecoder.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(HtmlDecoder.class);
 
     private static final String DEFAULT_ATTR_VALS_AS_SUBFIELDS = //
             "meta.name=content&meta.property=content&link.rel=href&a.rel=href";
@@ -85,7 +84,7 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
             receiver.endRecord();
         }
         catch (final IOException e) {
-            LOG.error(e.getMessage(), e);
+            LOG.externalError(e.getMessage(), e);
         }
     }
 
@@ -142,7 +141,7 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
                 attrValsAsSubfields.put(key, val);
             }
             catch (final UnsupportedEncodingException e) {
-                LOG.error(e.getMessage(), e);
+                LOG.externalError(e.getMessage(), e);
             }
         }
     }
