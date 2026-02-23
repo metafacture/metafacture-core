@@ -3,4 +3,5 @@ FLUX_DIR + "records.formeta"
 | as-lines
 | decode-formeta
 | build-solr-doc
-| to-solr("http://localhost:1111/solr/", core="test, commitWithinMs="1000");
+| to-solr("http://localhost:1111/solr/", core="test", commitWithinMs="1000")
+;

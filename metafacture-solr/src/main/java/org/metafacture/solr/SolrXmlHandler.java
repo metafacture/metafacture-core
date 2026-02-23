@@ -75,8 +75,7 @@ public class SolrXmlHandler extends DefaultXmlPipe<ObjectReceiver<SolrInputDocum
         this.isModified = false;
     }
 
-    public void startElement(final String uri, final String localName,
-                             final String qName, final Attributes attributes) {
+    public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) {
         currentElement = localName;
         switch (localName) {
             case DOC:
@@ -112,9 +111,9 @@ public class SolrXmlHandler extends DefaultXmlPipe<ObjectReceiver<SolrInputDocum
                 {
                     for (Map.Entry<String, Map<String,Object>> entry : fieldUpdatesMap.entrySet())
                     {
-                       String fieldName = entry.getKey();
-                       Map<String,Object> fieldUpdates = entry.getValue();
-                       solrDocument.addField(fieldName, fieldUpdates);
+                        String fieldName = entry.getKey();
+                        Map<String,Object> fieldUpdates = entry.getValue();
+                        solrDocument.addField(fieldName, fieldUpdates);
                     }
                 }
                 getReceiver().process(solrDocument);

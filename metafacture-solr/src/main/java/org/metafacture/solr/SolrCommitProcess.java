@@ -38,10 +38,7 @@ public class SolrCommitProcess implements CSProcess {
     private int maxRetries;
     private int waitMs;
 
-    public SolrCommitProcess(ChannelInput<SolrInputDocument> channelInput,
-                             Barrier barrier,
-                             SolrClient client,
-                             String collection)
+    public SolrCommitProcess(ChannelInput<SolrInputDocument> channelInput, Barrier barrier, SolrClient client, String collection)
     {
         this.channelInput = channelInput;
         this.barrier = barrier;
