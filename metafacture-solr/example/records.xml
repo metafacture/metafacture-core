@@ -1,0 +1,24 @@
+<add>
+  <!-- A simple document -->
+  <doc>
+    <field name="id">1</field>
+    <field name="authors_ss">Patrick Eagar</field>
+    <field name="subject_ss">Sports</field>
+    <field name="dd_s">796.35</field>
+    <field name="numpages_i">128</field>
+    <field name="price_f">12.40</field>
+    <field name="title_t">Summer of the all-rounder: Test and championship cricket in England 1982</field>
+    <field name="isbn_s">0002166313</field>
+    <field name="yearpub_i">1982</field>
+    <field name="publisher_s">Collins</field>
+  </doc>
+  <!-- Atomic Updates, see also: https://lucene.apache.org/solr/guide/7_5/updating-parts-of-documents.html -->
+  <doc>
+    <field name="id">1</field>
+    <field name="authors_ss" update="add">Alice</field>
+    <field name="authors_ss" update="add">Bob</field>
+    <field name="authors_ss" update="remove">Patrick Eagar</field>
+    <field name="publisher_s" update="set">Random House</field>
+    <field name="numpages_i" update="inc">871</field>
+  </doc>
+</add>

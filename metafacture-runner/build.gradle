@@ -60,6 +60,7 @@ dependencies {
   plugins project(':metafacture-scripting')
   plugins project(':metafacture-statistics')
   plugins project(':metafacture-strings')
+  plugins project(':metafacture-solr')
   plugins project(':metafacture-triples')
   plugins project(':metafacture-xml')
   plugins project(':metafacture-html')

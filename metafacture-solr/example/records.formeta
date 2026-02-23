@@ -1,0 +1,2 @@
+1{id:1, authors_ss:Patrick Eagar, subject_ss:Sports, dd_s:796.35, numpages_i:128, price_f:12.40, title_t:Summer of the all rounder Test and championship cricket in England 1982, isbn_s:0002166313, yearpub_i:1982, publisher_s:Collins}
+1{id:1, add{authors_ss:Alice, authors_ss:Bob}, remove{authors_ss:Patrick Eagar}, set{publisher_s:Random House}, inc{numpages_i:871}}
