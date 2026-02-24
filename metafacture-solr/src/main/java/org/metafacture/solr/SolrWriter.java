@@ -13,7 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.solr;
+
+import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.annotations.Description;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
+import org.metafacture.solr.helpers.DefaultSolrDocumentReceiver;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.impl.BinaryRequestWriter;
@@ -23,13 +31,6 @@ import org.jcsp.lang.Barrier;
 import org.jcsp.lang.Channel;
 import org.jcsp.lang.One2AnyChannel;
 import org.jcsp.lang.Parallel;
-import org.metafacture.solr.SolrDocumentReceiver;
-import org.metafacture.solr.helpers.DefaultSolrDocumentReceiver;
-import org.metafacture.framework.FluxCommand;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.annotations.Description;
-import org.metafacture.framework.annotations.In;
-import org.metafacture.framework.annotations.Out;
 
 @Description("Adds documents to a Solr core.")
 @In(SolrDocumentReceiver.class)
@@ -60,7 +61,7 @@ public class SolrWriter extends DefaultSolrDocumentReceiver {
     /** Flag for a hook that acts before the first processing occurs. */
     private boolean onStartup;
 
-    public SolrWriter(String url) {
+    public SolrWriter(final String url) {
         this.url = url;
         this.core = "default";
         this.threads = 1;
@@ -71,48 +72,48 @@ public class SolrWriter extends DefaultSolrDocumentReceiver {
         this.waitMs = 10_000;
     }
 
-    public void setCore(String core) {
+    public void setCore(final String core) {
         this.core = core;
     }
 
-    public void setBatchSize(int batchSize) {
+    public void setBatchSize(final int batchSize) {
         this.batchSize = batchSize;
     }
 
-    public void setCommitWithinMs(int commitWithinMs) {
+    public void setCommitWithinMs(final int commitWithinMs) {
         this.commitWithinMs = commitWithinMs;
     }
 
-    public void setThreads(int threads) {
+    public void setThreads(final int threads) {
         this.threads = threads;
     }
 
-    public void setMaxRetries(int maxRetries) {
+    public void setMaxRetries(final int maxRetries) {
         this.maxRetries = maxRetries;
     }
 
-    public void setWaitMs(int waitMs) {
+    public void setWaitMs(final int waitMs) {
         this.waitMs = waitMs;
     }
 
     @Override
-    public void process(SolrInputDocument document) {
+    public void process(final SolrInputDocument document) {
         if (onStartup) {
-            HttpSolrClient httpClient = new HttpSolrClient.Builder()
+            final HttpSolrClient httpClient = new HttpSolrClient.Builder()
                     .withBaseSolrUrl(url)
                     .allowCompression(true)
                     .build();
             httpClient.setRequestWriter(new BinaryRequestWriter());
             client = httpClient;
 
-            int noPoisonImmunity = 0;
+            final int noPoisonImmunity = 0;
             documentChannel = Channel.one2any(noPoisonImmunity);
 
             barrier = new Barrier(threads);
 
-            Parallel parallel = new Parallel();
+            final Parallel parallel = new Parallel();
             for (int i = 0; i < threads; i++) {
-                SolrCommitProcess process = new SolrCommitProcess(documentChannel.in(), barrier, client, core);
+                final SolrCommitProcess process = new SolrCommitProcess(documentChannel.in(), barrier, client, core);
                 process.setBatchSize(batchSize);
                 process.setCommitWithinMs(commitWithinMs);
                 process.setMaxRetries(maxRetries);
@@ -145,7 +146,8 @@ public class SolrWriter extends DefaultSolrDocumentReceiver {
         documentChannel.out().poison(1);
         try {
             runner.join();
-        } catch (InterruptedException e) {
+        }
+        catch (final InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new MetafactureException(e);
         }

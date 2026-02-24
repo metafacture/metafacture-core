@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.solr;
 
 import org.metafacture.framework.ObjectReceiver;
@@ -38,7 +39,7 @@ public class ObjectBuffer<T> implements ObjectReceiver<T> {
     }
 
     @Override
-    public void process(T obj) {
+    public void process(final T obj) {
         this.obj = obj;
     }
 

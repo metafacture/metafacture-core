@@ -1,6 +1,9 @@
 package org.metafacture.solr;
 
 import org.apache.solr.common.SolrInputDocument;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.helpers.AttributesImpl;
@@ -10,9 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 
 public class SolrXmlHandlerTest {
 
@@ -36,11 +36,11 @@ public class SolrXmlHandlerTest {
         endRoot(handler);
 
         buffer.closeStream();
-        SolrInputDocument document = buffer.getObject();
+        final SolrInputDocument document = buffer.getObject();
 
-        assertThat(document.getFieldNames(), hasItems("name", "alias"));
-        assertThat(document.getField("name").getValue(), equalTo("alice"));
-        assertThat(document.getField("alias").getValue(), equalTo("bob"));
+        Assert.assertThat(document.getFieldNames(), CoreMatchers.hasItems("name", "alias"));
+        Assert.assertThat(document.getField("name").getValue(), CoreMatchers.equalTo("alice"));
+        Assert.assertThat(document.getField("alias").getValue(), CoreMatchers.equalTo("bob"));
     }
 
     @Test
@@ -53,11 +53,11 @@ public class SolrXmlHandlerTest {
         endRoot(handler);
 
         buffer.closeStream();
-        SolrInputDocument document = buffer.getObject();
+        final SolrInputDocument document = buffer.getObject();
 
-        assertThat(document.getFieldNames(), hasItems("name"));
-        assertThat(document.getField("name").getValueCount(), equalTo(2));
-        assertThat(document.getField("name").getValues(), hasItems("alice", "bob"));
+        Assert.assertThat(document.getFieldNames(), CoreMatchers.hasItems("name"));
+        Assert.assertThat(document.getField("name").getValueCount(), CoreMatchers.equalTo(2));
+        Assert.assertThat(document.getField("name").getValues(), CoreMatchers.hasItems("alice", "bob"));
     }
 
     @Test
@@ -71,13 +71,13 @@ public class SolrXmlHandlerTest {
         endRoot(handler);
 
         buffer.closeStream();
-        SolrInputDocument document = buffer.getObject();
+        final SolrInputDocument document = buffer.getObject();
 
-        assertThat(document.getFieldNames(), hasItems("id", "name"));
-        assertThat(document.getFieldValue("id"), equalTo("1"));
+        Assert.assertThat(document.getFieldNames(), CoreMatchers.hasItems("id", "name"));
+        Assert.assertThat(document.getFieldValue("id"), CoreMatchers.equalTo("1"));
 
-        Map<String,Object> map = (Map<String,Object>) document.getFieldValue("name");
-        assertThat(map, hasEntry("add", "alice"));
+        final Map<String, Object> map = (Map<String, Object>) document.getFieldValue("name");
+        Assert.assertThat(map, Matchers.hasEntry("add", "alice"));
     }
 
     @Test
@@ -92,18 +92,18 @@ public class SolrXmlHandlerTest {
         endRoot(handler);
 
         buffer.closeStream();
-        SolrInputDocument document = buffer.getObject();
+        final SolrInputDocument document = buffer.getObject();
 
-        assertThat(document.getFieldNames(), hasItems("id", "name"));
-        assertThat(document.getFieldValue("id"), equalTo("1"));
+        Assert.assertThat(document.getFieldNames(), CoreMatchers.hasItems("id", "name"));
+        Assert.assertThat(document.getFieldValue("id"), CoreMatchers.equalTo("1"));
 
-        HashMap<String, List<String>> atomicUpdatesNames = new HashMap<>();
+        final HashMap<String, List<String>> atomicUpdatesNames = new HashMap<>();
         atomicUpdatesNames.put("add", Stream.of("alice", "bob").collect(Collectors.toList()));
-        assertThat(document.getFieldValue("name"), equalTo(atomicUpdatesNames));
+        Assert.assertThat(document.getFieldValue("name"), CoreMatchers.equalTo(atomicUpdatesNames));
 
-        HashMap<String, String> atomicUpdatesAge = new HashMap<>();
+        final HashMap<String, String> atomicUpdatesAge = new HashMap<>();
         atomicUpdatesAge.put("set", "20");
-        assertThat(document.getFieldValue("age"), equalTo(atomicUpdatesAge));
+        Assert.assertThat(document.getFieldValue("age"), CoreMatchers.equalTo(atomicUpdatesAge));
     }
 
     @Test
@@ -118,31 +118,31 @@ public class SolrXmlHandlerTest {
         endRoot(handler);
 
         buffer.closeStream();
-        SolrInputDocument document = buffer.getObject();
+        final SolrInputDocument document = buffer.getObject();
 
-        String documentString = document.toString();
-        String expectedDocumentString = "SolrInputDocument(fields: [id=1, name={add=[alice, bob], remove=claire}])";
-        assertThat(documentString, is(equalTo(expectedDocumentString)));
+        final String documentString = document.toString();
+        final String expectedDocumentString = "SolrInputDocument(fields: [id=1, name={add=[alice, bob], remove=claire}])";
+        Assert.assertThat(documentString, CoreMatchers.is(CoreMatchers.equalTo(expectedDocumentString)));
     }
 
-    private void startRoot(SolrXmlHandler handler) {
+    private void startRoot(final SolrXmlHandler handler) {
         handler.startElement("", "add", "add", new AttributesImpl());
     }
 
-    private void startDocument(SolrXmlHandler handler) {
+    private void startDocument(final SolrXmlHandler handler) {
         handler.startElement("", "doc", "doc", new AttributesImpl());
     }
 
-    private void addField(SolrXmlHandler handler, String name, String value) {
-        AttributesImpl atts = new AttributesImpl();
+    private void addField(final SolrXmlHandler handler, final String name, final String value) {
+        final AttributesImpl atts = new AttributesImpl();
         atts.addAttribute("", "name", "name", "CDATA", name);
         handler.startElement("", "field", "field", atts);
         handler.characters(value.toCharArray(), 0, value.length());
         handler.endElement("", "field", "field");
     }
 
-    private void addField(SolrXmlHandler handler, String name, String value, String updateMethod) {
-        AttributesImpl atts = new AttributesImpl();
+    private void addField(final SolrXmlHandler handler, final String name, final String value, final String updateMethod) {
+        final AttributesImpl atts = new AttributesImpl();
         atts.addAttribute("", "name", "name", "CDATA", name);
         atts.addAttribute("", "update", "update", "CDATA", updateMethod);
         handler.startElement("", "field", "field", atts);
@@ -150,11 +150,11 @@ public class SolrXmlHandlerTest {
         handler.endElement("", "field", "field");
     }
 
-    private void endDocument(SolrXmlHandler handler) {
+    private void endDocument(final SolrXmlHandler handler) {
         handler.endElement("", "doc", "doc");
     }
 
-    private void endRoot(SolrXmlHandler handler) {
+    private void endRoot(final SolrXmlHandler handler) {
         handler.endElement("", "add", "add");
     }
 }

@@ -5,31 +5,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class HashMapList<K,V> {
+class HashMapList<K, V> {
     private Map<K, List<V>> hashList;
 
     public HashMapList() {
         hashList = new HashMap<>();
     }
 
-    public void add(K key, V value) {
+    public void add(final K key, final V value) {
         if (!hashList.containsKey(key)) {
             hashList.put(key, new ArrayList<>());
         }
 
-        List<V> list = hashList.get(key);
+        final List<V> list = hashList.get(key);
         list.add(value);
     }
 
-    public List<V> get(K key) {
+    public List<V> get(final K key) {
         return hashList.get(key);
     }
 
-    public Map<K,List<V>> asMap() {
+    public Map<K, List<V>> asMap() {
         return hashList;
     }
 
-    public boolean containsKey(K key) {
+    public boolean containsKey(final K key) {
         return hashList.containsKey(key);
     }
 

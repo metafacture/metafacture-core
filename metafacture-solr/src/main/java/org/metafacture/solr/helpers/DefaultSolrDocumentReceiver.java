@@ -13,12 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.solr.helpers;
 
-import org.apache.solr.common.SolrInputDocument;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultLifeCycle;
 
+import org.apache.solr.common.SolrInputDocument;
+
+/**
+ * Default implementation for {@link SolrDocumentReceiver} which simply
+ * does nothing.
+ *
+ * @author Tobias Bülte
+ *
+ */
 public class DefaultSolrDocumentReceiver extends DefaultLifeCycle implements ObjectReceiver<SolrInputDocument> {
 
     @Override

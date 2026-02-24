@@ -13,15 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.solr.helpers;
 
-import org.apache.solr.common.SolrInputDocument;
-import org.metafacture.solr.SolrDocumentPipe;
 import org.metafacture.framework.Receiver;
 import org.metafacture.framework.helpers.DefaultSender;
+import org.metafacture.solr.SolrDocumentPipe;
 
+import org.apache.solr.common.SolrInputDocument;
 
-public class DefaultSolrDocumentPipe <R extends Receiver> extends DefaultSender<R> implements SolrDocumentPipe<R> {
+/**
+ * Default implementation for {@link SolrDocumentPipe} which simply
+ * does nothing.
+ *
+ * @author Tobias Bülte
+ *
+ */
+public class DefaultSolrDocumentPipe<R extends Receiver> extends DefaultSender<R> implements SolrDocumentPipe<R> {
 
     public void process(final SolrInputDocument obj) {
         // Default implementation does nothing

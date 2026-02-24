@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.solr;
 
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.SolrInputField;
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Map;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
 
 public class SolrDocumentBuilderTest {
 
@@ -32,9 +32,7 @@ public class SolrDocumentBuilderTest {
     private ObjectBuffer<SolrInputDocument> buffer;
 
     @Before
-    public void setUp()
-    {
-
+    public void setUp() {
         buffer = new ObjectBuffer<SolrInputDocument>();
         builder = new SolrDocumentBuilder();
         builder.setReceiver(buffer);
@@ -47,9 +45,9 @@ public class SolrDocumentBuilderTest {
         builder.endRecord();
         builder.closeStream();
 
-        SolrInputDocument document = buffer.getObject();
-        assertThat(document.getFieldNames().size(), is(equalTo(1)));
-        assertThat(document.getFieldNames(), hasItems("name"));
+        final SolrInputDocument document = buffer.getObject();
+        Assert.assertThat(document.getFieldNames().size(), CoreMatchers.is(CoreMatchers.equalTo(1)));
+        Assert.assertThat(document.getFieldNames(), CoreMatchers.hasItems("name"));
     }
 
     @Test
@@ -59,10 +57,10 @@ public class SolrDocumentBuilderTest {
         builder.endRecord();
         builder.closeStream();
 
-        SolrInputDocument document = buffer.getObject();
-        SolrInputField field = document.getField("name");
-        assertThat(field.getValueCount(), is(equalTo(1)));
-        assertThat(field.getFirstValue(), is(equalTo("alice")));
+        final SolrInputDocument document = buffer.getObject();
+        final SolrInputField field = document.getField("name");
+        Assert.assertThat(field.getValueCount(), CoreMatchers.is(CoreMatchers.equalTo(1)));
+        Assert.assertThat(field.getFirstValue(), CoreMatchers.is(CoreMatchers.equalTo("alice")));
     }
 
     @Test
@@ -73,10 +71,10 @@ public class SolrDocumentBuilderTest {
         builder.endRecord();
         builder.closeStream();
 
-        SolrInputDocument document = buffer.getObject();
-        SolrInputField field = document.getField("name");
-        assertThat(field.getValueCount(), is(equalTo(2)));
-        assertThat(field.getValues(), hasItems("alice", "bob"));
+        final SolrInputDocument document = buffer.getObject();
+        final SolrInputField field = document.getField("name");
+        Assert.assertThat(field.getValueCount(), CoreMatchers.is(CoreMatchers.equalTo(2)));
+        Assert.assertThat(field.getValues(), CoreMatchers.hasItems("alice", "bob"));
     }
 
     @Test
@@ -90,19 +88,19 @@ public class SolrDocumentBuilderTest {
         builder.endRecord();
         builder.closeStream();
 
-        SolrInputDocument document = buffer.getObject();
+        final SolrInputDocument document = buffer.getObject();
 
-        assertThat(document.getFieldNames(), hasItems("name"));
+        Assert.assertThat(document.getFieldNames(), CoreMatchers.hasItems("name"));
 
-        SolrInputField field = document.getField("name");
-        assertThat(field.getValueCount(), is(equalTo(1)));
+        final SolrInputField field = document.getField("name");
+        Assert.assertThat(field.getValueCount(), CoreMatchers.is(CoreMatchers.equalTo(1)));
 
-        Object value = field.getFirstValue();
-        assertThat(value, is(instanceOf(Map.class)));
+        final Object value = field.getFirstValue();
+        Assert.assertThat(value, CoreMatchers.is(CoreMatchers.instanceOf(Map.class)));
 
-        Map<String,List<String>> valueMap = (Map<String,List<String>>)value;
-        assertThat(valueMap.keySet(), hasItems("add"));
-        assertThat(valueMap.get("add"), hasItems("alice", "bob"));
+        final Map<String, List<String>> valueMap = (Map<String, List<String>>) value;
+        Assert.assertThat(valueMap.keySet(), CoreMatchers.hasItems("add"));
+        Assert.assertThat(valueMap.get("add"), CoreMatchers.hasItems("alice", "bob"));
     }
 
     @Test
@@ -119,10 +117,10 @@ public class SolrDocumentBuilderTest {
         builder.endRecord();
         builder.closeStream();
 
-        SolrInputDocument document = buffer.getObject();
+        final SolrInputDocument document = buffer.getObject();
 
-        String expectedDocument = "SolrInputDocument(fields: [title={set=New Title}, name={add=[alice, bob]}])";
-        assertThat(document.toString(), is(equalTo(expectedDocument)));
+        final String expectedDocument = "SolrInputDocument(fields: [title={set=New Title}, name={add=[alice, bob]}])";
+        Assert.assertThat(document.toString(), CoreMatchers.is(CoreMatchers.equalTo(expectedDocument)));
     }
 
     @Test
@@ -139,10 +137,10 @@ public class SolrDocumentBuilderTest {
         builder.endRecord();
         builder.closeStream();
 
-        SolrInputDocument document = buffer.getObject();
-        String expectedDocument = "SolrInputDocument(fields: [name={add=[alice, bob], remove=claire}])";
+        final SolrInputDocument document = buffer.getObject();
+        final String expectedDocument = "SolrInputDocument(fields: [name={add=[alice, bob], remove=claire}])";
 
-        assertThat(document.toString(), is(equalTo(expectedDocument)));
+        Assert.assertThat(document.toString(), CoreMatchers.is(CoreMatchers.equalTo(expectedDocument)));
     }
 
     @Test
@@ -155,9 +153,9 @@ public class SolrDocumentBuilderTest {
         builder.endRecord();
         builder.closeStream();
 
-        SolrInputDocument document = buffer.getObject();
-        String expectedDocument = "SolrInputDocument(fields: [name={add=alice}])";
+        final SolrInputDocument document = buffer.getObject();
+        final String expectedDocument = "SolrInputDocument(fields: [name={add=alice}])";
 
-        assertThat(document.toString(), is(equalTo(expectedDocument)));
+        Assert.assertThat(document.toString(), CoreMatchers.is(CoreMatchers.equalTo(expectedDocument)));
     }
 }

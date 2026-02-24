@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.solr;
 
-import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.common.SolrInputField;
-import org.metafacture.solr.SolrDocumentReceiver;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -26,6 +24,9 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.SolrInputField;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,7 +62,7 @@ public class SolrDocumentBuilder extends DefaultStreamPipe<ObjectReceiver<SolrIn
     }
 
     @Override
-    public void startRecord(String identifier) {
+    public void startRecord(final String identifier) {
         document = new SolrInputDocument();
     }
 
@@ -71,7 +72,7 @@ public class SolrDocumentBuilder extends DefaultStreamPipe<ObjectReceiver<SolrIn
     }
 
     @Override
-    public void startEntity(String name) {
+    public void startEntity(final String name) {
         if (!validUpdateMethods.contains(name)) {
             throw new MetafactureException("Invalid update method " + "'" + name  + "'" + "." +
                     "Use: add, add-distinct, inc, remove, removeregexp or set.");
@@ -84,21 +85,22 @@ public class SolrDocumentBuilder extends DefaultStreamPipe<ObjectReceiver<SolrIn
     public void endEntity() {
         if (!updateMethod.isEmpty()) {
 
-            SolrInputField field = document.getField(updateFieldName);
+            final SolrInputField field = document.getField(updateFieldName);
 
-            boolean isSingleValue = updateFieldValues.size() == 1;
-            Object updateValue = isSingleValue ? updateFieldValues.get(0) : new ArrayList<>(updateFieldValues);
+            final boolean isSingleValue = updateFieldValues.size() == 1;
+            final Object updateValue = isSingleValue ? updateFieldValues.get(0) : new ArrayList<>(updateFieldValues);
 
             // New field
             if (field == null) {
-                Map<String,Object> updates = new HashMap<>();
+                final Map<String, Object> updates = new HashMap<>();
                 updates.put(updateMethod, updateValue);
                 document.addField(updateFieldName, updates);
+            }
             // Modify field
-            } else {
-                Object obj = field.getValue();
+            else {
+                final Object obj = field.getValue();
                 if (obj instanceof Map) {
-                    Map<String,Object> updates = (Map<String,Object>) obj;
+                    final Map<String, Object> updates = (Map<String, Object>) obj;
                     updates.put(updateMethod, updateValue);
                 }
             }
@@ -108,10 +110,11 @@ public class SolrDocumentBuilder extends DefaultStreamPipe<ObjectReceiver<SolrIn
     }
 
     @Override
-    public void literal(String name, String value) {
+    public void literal(final String name, final String value) {
         if (updateMethod.isEmpty()) {
             document.addField(name, value);
-        } else {
+        }
+        else {
             updateFieldName = name;
             updateFieldValues.add(value);
         }

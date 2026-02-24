@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.solr;
 
 import org.apache.solr.client.solrj.SolrClient;
@@ -38,8 +39,7 @@ public class SolrCommitProcess implements CSProcess {
     private int maxRetries;
     private int waitMs;
 
-    public SolrCommitProcess(ChannelInput<SolrInputDocument> channelInput, Barrier barrier, SolrClient client, String collection)
-    {
+    public SolrCommitProcess(final ChannelInput<SolrInputDocument> channelInput, final Barrier barrier, final SolrClient client, final String collection) {
         this.channelInput = channelInput;
         this.barrier = barrier;
         this.client = client;
@@ -50,19 +50,19 @@ public class SolrCommitProcess implements CSProcess {
         this.waitMs = 10_000;
     }
 
-    public void setMaxRetries(int maxRetries) {
+    public void setMaxRetries(final int maxRetries) {
         this.maxRetries = maxRetries;
     }
 
-    public void setWaitMs(int waitMs) {
+    public void setWaitMs(final int waitMs) {
         this.waitMs = waitMs;
     }
 
-    public void setBatchSize(int batchSize) {
+    public void setBatchSize(final int batchSize) {
         this.batchSize = batchSize;
     }
 
-    public void setCommitWithinMs(int commitWithinMs) {
+    public void setCommitWithinMs(final int commitWithinMs) {
         this.commitWithinMs = commitWithinMs;
     }
 
@@ -71,13 +71,14 @@ public class SolrCommitProcess implements CSProcess {
         List<SolrInputDocument> batch = new ArrayList<>(batchSize);
 
         while (true) {
-            SolrInputDocument document;
+            final SolrInputDocument document;
             try {
                 document = receive();
                 batch.add(document);
-            } catch (PoisonException e) {
+            }
+            catch (final PoisonException e) {
                 if (!batch.isEmpty()) {
-                    boolean isSuccessful = commit(batch);
+                    final boolean isSuccessful = commit(batch);
                     if (!isSuccessful) {
                         retryCommit(batch, maxRetries, waitMs);
                     }
@@ -87,7 +88,7 @@ public class SolrCommitProcess implements CSProcess {
             }
 
             if (batch.size() == batchSize) {
-                boolean isSuccessful = commit(batch);
+                final boolean isSuccessful = commit(batch);
 
                 if (!isSuccessful) {
                     retryCommit(batch, maxRetries, waitMs);
@@ -98,7 +99,7 @@ public class SolrCommitProcess implements CSProcess {
         }
     }
 
-    private void retryCommit(List<SolrInputDocument> documents, int retries, int waitMs) {
+    private void retryCommit(final List<SolrInputDocument> documents, final int retries, final int waitMs) {
         int retryLimit = retries;
         while (true) {
             if (retryLimit == 0) {
@@ -107,38 +108,44 @@ public class SolrCommitProcess implements CSProcess {
 
             try {
                 Thread.sleep(waitMs);
-            } catch (InterruptedException e) {
+            }
+            catch (final InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
 
-            boolean retrySuccessful = commit(documents);
+            final boolean retrySuccessful = commit(documents);
 
             if (retrySuccessful) {
                 break;
-            } else {
+            }
+            else {
                 retryLimit -= 1;
             }
         }
     }
 
-    private boolean commit(List<SolrInputDocument> documents) {
+    private boolean commit(final List<SolrInputDocument> documents) {
         try {
-            UpdateResponse response;
-            if (commitWithinMs >= 0)
+            final UpdateResponse response;
+            if (commitWithinMs >= 0) {
                 response = client.add(collection, documents, commitWithinMs);
-            else
+            }
+            else {
                 response = client.add(collection, documents);
-
+            }
             if (response.getStatus() != 0) {
                 return false;
             }
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             System.err.println("Could not commit batch, due to communication error: " + e.getMessage());
             return false;
-        } catch (SolrServerException e) {
+        }
+        catch (final SolrServerException e) {
             System.err.println("Could not commit batch, due to server error: " + e.getMessage());
             return false;
-        } catch (Exception e) {
+        }
+        catch (final Exception e) {
             System.err.println("Could not commit batch, due to unknown error: " + e.getMessage());
             return false;
         }

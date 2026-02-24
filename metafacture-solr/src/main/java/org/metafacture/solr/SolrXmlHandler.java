@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.solr;
 
-import org.apache.solr.common.SolrInputDocument;
-import org.metafacture.solr.SolrDocumentReceiver;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -25,6 +24,8 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
+
+import org.apache.solr.common.SolrInputDocument;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -41,8 +42,7 @@ import java.util.Map;
 @In(XmlReceiver.class)
 @Out(SolrDocumentReceiver.class)
 @FluxCommand("handle-solr-xml")
-public class SolrXmlHandler extends DefaultXmlPipe<ObjectReceiver<SolrInputDocument>>
-{
+public class SolrXmlHandler extends DefaultXmlPipe<ObjectReceiver<SolrInputDocument>> {
     private static final String DOC = "doc";
     private static final String FIELD = "field";
     private static final String NO_MODIFICATION = "";
@@ -69,7 +69,7 @@ public class SolrXmlHandler extends DefaultXmlPipe<ObjectReceiver<SolrInputDocum
      */
     private String fieldModifier;
 
-    private Map<String, Map<String,Object>> fieldUpdatesMap;
+    private Map<String, Map<String, Object>> fieldUpdatesMap;
 
     public SolrXmlHandler() {
         this.isModified = false;
@@ -103,54 +103,42 @@ public class SolrXmlHandler extends DefaultXmlPipe<ObjectReceiver<SolrInputDocum
     public void endElement(final String uri, final String localName, final String qName) {
         currentElement = localName;
 
-        if (currentElement.equals(DOC))
-        {
-            if (documentDepth == 1)
-            {
-                if (!fieldUpdatesMap.isEmpty())
-                {
-                    for (Map.Entry<String, Map<String,Object>> entry : fieldUpdatesMap.entrySet())
-                    {
-                        String fieldName = entry.getKey();
-                        Map<String,Object> fieldUpdates = entry.getValue();
+        if (currentElement.equals(DOC)) {
+            if (documentDepth == 1) {
+                if (!fieldUpdatesMap.isEmpty()) {
+                    for (final Map.Entry<String, Map<String, Object>> entry : fieldUpdatesMap.entrySet()) {
+                        final String fieldName = entry.getKey();
+                        final Map<String, Object> fieldUpdates = entry.getValue();
                         solrDocument.addField(fieldName, fieldUpdates);
                     }
                 }
                 getReceiver().process(solrDocument);
                 reset();
             }
-            else
-            {
+            else {
                 throw new MetafactureException("Nested documents are not supported!");
             }
             documentDepth--;
         }
-        else if (currentElement.equals(FIELD))
-        {
-            String fieldValue = characters.toString().trim();
-            if (!isModified)
-            {
+        else if (currentElement.equals(FIELD)) {
+            final String fieldValue = characters.toString().trim();
+            if (!isModified) {
                 solrDocument.addField(fieldName, fieldValue);
             }
-            else
-            {
-                Map<String,Object> fieldUpdates = fieldUpdatesMap.getOrDefault(fieldName, new HashMap<>());
-                if (fieldUpdates.isEmpty() || !fieldUpdates.containsKey(fieldModifier))
-                {
+            else {
+                final Map<String, Object> fieldUpdates = fieldUpdatesMap.getOrDefault(fieldName, new HashMap<>());
+                if (fieldUpdates.isEmpty() || !fieldUpdates.containsKey(fieldModifier)) {
                     fieldUpdates.put(fieldModifier, fieldValue);
                     fieldUpdatesMap.put(fieldName, fieldUpdates);
                 }
-                else
-                {
-                    Object existingValue = fieldUpdates.get(fieldModifier);
-                    if (existingValue instanceof List)
-                    {
-                        List<String> existingValues = (List<String>) existingValue;
+                else {
+                    final Object existingValue = fieldUpdates.get(fieldModifier);
+                    if (existingValue instanceof List) {
+                        final List<String> existingValues = (List<String>) existingValue;
                         existingValues.add(fieldValue);
                     }
-                    else
-                    {
-                        List list = new ArrayList();
+                    else {
+                        final List list = new ArrayList();
                         list.add(existingValue);
                         list.add(fieldValue);
                         fieldUpdates.put(fieldModifier, list);
