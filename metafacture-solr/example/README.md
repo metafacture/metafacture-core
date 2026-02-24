@@ -23,13 +23,13 @@ This set of examples requires a running solr server.
 ### Configuration
 
 * Download the [latest](http://lucene.apache.org/solr/mirrors-solr-latest-redir.html) version
-* Unzip the archive (e.g. *solr-7.5.0*)
+* Unzip the archive (e.g. *solr-9.10.1*)
 * Start the server
-  * `solr-7.5.0/bin/solr start -m 1g -p 1111 -V`
+  * `solr-9.10.1//bin/solr start -m 1g -p 1111 -V`
 * Create a default core
-  * `solr-7.5.0/bin/solr create_core -c "test" -p 1111 -V`
+  * `solr-9.10.1/bin/solr create_core -c "test" -s http://localhost:1111 --verbose`
 * Stop the server
-  * `solr-7.5.0/bin/solr stop -all -p 1111 -V`
+  * `solr-9.10.1/bin/solr stop -all -p 1111 -V`
 
 Visit the [Admin UI](http://localhost:1111/solr/#/test/query) in your browser
 and run `Execute Query`.
