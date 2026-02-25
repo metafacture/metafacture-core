@@ -20,6 +20,8 @@ import org.metafacture.framework.ObjectReceiver;
 
 /**
  * Stores the last received object. A buffer of size one.
+ *
+ * @param <T> ???
  */
 public class ObjectBuffer<T> implements ObjectReceiver<T> {
 

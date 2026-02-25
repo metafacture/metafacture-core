@@ -39,6 +39,15 @@ public class SolrCommitProcess implements CSProcess {
     private int maxRetries;
     private int waitMs;
 
+    /**
+     * Default settings for SolrCommitProcess ???
+     *
+     * @param channelInput ???
+     * @param barrier ???
+     * @param client    ???
+     * @param collection  ???
+     *
+     */
     public SolrCommitProcess(final ChannelInput<SolrInputDocument> channelInput, final Barrier barrier, final SolrClient client, final String collection) {
         this.channelInput = channelInput;
         this.barrier = barrier;
@@ -50,18 +59,34 @@ public class SolrCommitProcess implements CSProcess {
         this.waitMs = 10_000;
     }
 
+    /**
+     * Sets the the maximal number of retries for each writing process.
+     * @param maxRetries configures the number of retries.
+     */
     public void setMaxRetries(final int maxRetries) {
         this.maxRetries = maxRetries;
     }
 
+    /**
+     * Sets the wait time between each writing.
+     * @param waitMs configures the waittime.
+     */
     public void setWaitMs(final int waitMs) {
         this.waitMs = waitMs;
     }
 
+    /**
+     * Sets the the number of records per batch
+     * @param batchSize configures the batch size.
+     */
     public void setBatchSize(final int batchSize) {
         this.batchSize = batchSize;
     }
 
+    /**
+     * Sets the the commitWithinMs
+     * @param commitWithinMs configures the batch size.
+     */
     public void setCommitWithinMs(final int commitWithinMs) {
         this.commitWithinMs = commitWithinMs;
     }

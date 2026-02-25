@@ -61,6 +61,11 @@ public class SolrWriter extends DefaultSolrDocumentReceiver {
     /** Flag for a hook that acts before the first processing occurs. */
     private boolean onStartup;
 
+    /**
+     * Default settings for SolWriter
+     *
+     * @param url configures URL to Solr Server.
+     */
     public SolrWriter(final String url) {
         this.url = url;
         this.core = "default";
@@ -72,26 +77,56 @@ public class SolrWriter extends DefaultSolrDocumentReceiver {
         this.waitMs = 10_000;
     }
 
+    /**
+     * Sets the the name of solr core
+     *
+     * @param core configures Solr Core (Default: default).
+     */
     public void setCore(final String core) {
         this.core = core;
     }
 
+    /**
+     * Sets the the number of documents per commit.
+     *
+     * @param batchSize configures number of documents per commit (Default: 1)
+     */
     public void setBatchSize(final int batchSize) {
         this.batchSize = batchSize;
     }
 
+    /**
+     * Sets the the max time (in ms) before a commit.
+     *
+     * @param commitWithinMs configures max time (in ms) before a commit will happen (Default: -1 (Disabled), See also: link:https://lucene.apache.org/solr/guide/7_4/updatehandlers-in-solrconfig.html#UpdateHandlersinSolrConfig-commitWithin[Solr Ref Guide - commitWithin]).
+     */
     public void setCommitWithinMs(final int commitWithinMs) {
         this.commitWithinMs = commitWithinMs;
     }
 
+    /**
+     * Sets the the number of threads.
+     *
+     * @param threads configures number of threads for concurrent batch processing (Default: 1).
+     */
     public void setThreads(final int threads) {
         this.threads = threads;
     }
 
+    /**
+     * Sets the the maximal number of retries for each writing process.
+     *
+     * @param maxRetries configures the number of max retries for non-successful commits (Default: 0).
+     */
     public void setMaxRetries(final int maxRetries) {
         this.maxRetries = maxRetries;
     }
 
+    /**
+     * Sets the wait time between each writing.
+     *
+     * @param waitMs configures the delay (in ms) before a retry will be triggered (Default: 10000).
+     */
     public void setWaitMs(final int waitMs) {
         this.waitMs = waitMs;
     }

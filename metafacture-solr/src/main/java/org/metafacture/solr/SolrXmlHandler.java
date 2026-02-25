@@ -71,10 +71,20 @@ public class SolrXmlHandler extends DefaultXmlPipe<ObjectReceiver<SolrInputDocum
 
     private Map<String, Map<String, Object>> fieldUpdatesMap;
 
+    /**
+     * Creates an instance of {@link SolrXmlHandler}.
+     */
     public SolrXmlHandler() {
         this.isModified = false;
     }
 
+    /**
+     * Creates an instance of {@link startElement}.
+     * @param uri ???
+     * @param localName ???
+     * @param qName ???
+     * @param attributes ???
+     */
     public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) {
         currentElement = localName;
         switch (localName) {

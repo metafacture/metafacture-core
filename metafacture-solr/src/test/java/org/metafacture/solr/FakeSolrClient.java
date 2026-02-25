@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class FakeSolrClient extends SolrClient {
 
-    final Map<String, List<SolrInputDocument>> storage;
+    private final Map<String, List<SolrInputDocument>> storage;
 
     public FakeSolrClient() {
         this.storage = new HashMap<>();
@@ -30,8 +30,10 @@ public class FakeSolrClient extends SolrClient {
     }
 
     @Override
-    public UpdateResponse add(final String collection, final Collection<SolrInputDocument> docs, int commitWithinMs) throws SolrServerException, IOException {
-        if (!storage.containsKey(collection)) storage.put(collection, new ArrayList<>());
+    public UpdateResponse add(final String collection, final Collection<SolrInputDocument> docs, final int commitWithinMs) throws SolrServerException, IOException {
+        if (!storage.containsKey(collection)) {
+            storage.put(collection, new ArrayList<>());
+        }
         final List<SolrInputDocument> list = storage.get(collection);
         list.addAll(docs);
 

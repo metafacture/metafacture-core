@@ -16,9 +16,15 @@
 
 package org.metafacture.solr;
 
-import org.apache.solr.common.SolrInputDocument;
 import org.metafacture.framework.ObjectReceiver;
 
+import org.apache.solr.common.SolrInputDocument;
+
+/**
+ * Interface for objects which receive SolrDocuments events.
+ * @author Tobias Bülte
+ *
+ */
 public interface SolrDocumentReceiver extends ObjectReceiver<SolrInputDocument> {
     // Just a combination of LifeCycle and the corresponding ObjectReceiver
 }

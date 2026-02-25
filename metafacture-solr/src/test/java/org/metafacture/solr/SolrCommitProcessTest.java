@@ -37,7 +37,10 @@ public class SolrCommitProcessTest {
 
     private FakeSolrClient client;
     private One2AnyChannel<SolrInputDocument> documentChannel;
-    private int noPoisonImmunity = 0;
+    private int noPoisonImmunity;
+
+    public SolrCommitProcessTest() {
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -88,7 +91,7 @@ public class SolrCommitProcessTest {
         private ChannelOutput<SolrInputDocument> channel;
         private List<SolrInputDocument> documents;
 
-        public SendProcess(final ChannelOutput<SolrInputDocument> channel, final List<SolrInputDocument> documents) {
+        SendProcess(final ChannelOutput<SolrInputDocument> channel, final List<SolrInputDocument> documents) {
             this.channel = channel;
             this.documents = documents;
         }

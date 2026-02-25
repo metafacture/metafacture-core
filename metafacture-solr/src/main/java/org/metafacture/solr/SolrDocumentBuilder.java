@@ -47,6 +47,9 @@ public class SolrDocumentBuilder extends DefaultStreamPipe<ObjectReceiver<SolrIn
     private List<String> updateFieldValues;
     private Set<String> validUpdateMethods;
 
+    /**
+     * Creates an instance of {@link SolrDocumentBuilder}.
+     */
     public SolrDocumentBuilder() {
         updateMethod = "";
         updateFieldValues = new ArrayList<>();

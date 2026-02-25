@@ -31,6 +31,9 @@ public class SolrDocumentBuilderTest {
     private SolrDocumentBuilder builder;
     private ObjectBuffer<SolrInputDocument> buffer;
 
+    public SolrDocumentBuilderTest() {
+    }
+
     @Before
     public void setUp() {
         buffer = new ObjectBuffer<SolrInputDocument>();

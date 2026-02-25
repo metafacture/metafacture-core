@@ -22,13 +22,16 @@ import org.metafacture.framework.helpers.DefaultLifeCycle;
 import org.apache.solr.common.SolrInputDocument;
 
 /**
- * Default implementation for {@link SolrDocumentReceiver} which simply
+ * Default implementation for {@link ObjectReceiver} which simply
  * does nothing.
  *
  * @author Tobias Bülte
  *
  */
 public class DefaultSolrDocumentReceiver extends DefaultLifeCycle implements ObjectReceiver<SolrInputDocument> {
+
+    public DefaultSolrDocumentReceiver() {
+    }
 
     @Override
     public void process(final SolrInputDocument obj) {

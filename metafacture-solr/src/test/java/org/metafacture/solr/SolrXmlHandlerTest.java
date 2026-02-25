@@ -19,6 +19,9 @@ public class SolrXmlHandlerTest {
     private SolrXmlHandler handler;
     private ObjectBuffer<SolrInputDocument> buffer;
 
+    public SolrXmlHandlerTest() {
+    }
+
     @Before
     public void setUp() throws Exception {
         buffer = new ObjectBuffer<>();
