@@ -18,6 +18,7 @@ Following [maintaining guidelines](https://github.com/metafacture/metafacture-co
 - [ ] test with locally build `master-SNAPSHOT`
   - [ ] lobid-organisations (by @tobiasnx)
   - [ ] lobid-resources (by @tobiasnx)
+  - [ ] lobid-extra-holdings  (by @tobiasnx)
   - [ ] oersi (by @tobiasnx)
   - [ ] limetrans (by @blackwinter)
 - [ ] [release on maven central](https://central.sonatype.com/search?q=metafacture)
