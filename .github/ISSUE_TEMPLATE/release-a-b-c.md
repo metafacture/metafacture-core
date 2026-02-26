@@ -18,7 +18,7 @@ Following [maintaining guidelines](https://github.com/metafacture/metafacture-co
   - [ ] lobid-organisations (by @TobiasNx)
   - [ ] lobid-resources (by @TobiasNx)
   - [ ] lobid-extra-holdings  (by @TobiasNx)
-  - [ ] oersi (by @tobiasnx)
+  - [ ] oersi (by @TobiasNx)
   - [ ] limetrans (by @blackwinter)
 - [ ] [release on maven central](https://central.sonatype.com/search?q=metafacture)
 - [ ] [release on github](https://github.com/metafacture/metafacture-core/releases/)
