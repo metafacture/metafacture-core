@@ -3,7 +3,7 @@ name: Release A.B.C
 about: Steps for each release
 title: 'Release A.B.C'
 labels: ''
-assignees: '@tobiasnx'
+assignees: '@TobiasNx'
 
 ---
 
@@ -14,11 +14,10 @@ This release follows  A.B.C + LINK TO RELEASE ISSUE
 Following [maintaining guidelines](https://github.com/metafacture/metafacture-core/blob/master/MAINTAINING.md).
 
 - [ ] update dependencies if these are promising to not break much
-- [ ] follow maintainer guidelines and upload release to maven central for testing
 - [ ] test with locally build `master-SNAPSHOT`
-  - [ ] lobid-organisations (by @tobiasnx)
-  - [ ] lobid-resources (by @tobiasnx)
-  - [ ] lobid-extra-holdings  (by @tobiasnx)
+  - [ ] lobid-organisations (by @TobiasNx)
+  - [ ] lobid-resources (by @TobiasNx)
+  - [ ] lobid-extra-holdings  (by @TobiasNx)
   - [ ] oersi (by @tobiasnx)
   - [ ] limetrans (by @blackwinter)
 - [ ] [release on maven central](https://central.sonatype.com/search?q=metafacture)
