@@ -7,6 +7,8 @@ assignees: '@TobiasNx'
 
 ---
 
+The release is based on commit [specify commit hash that is going to be released so that the exact version will be tested]
+
 The maven central release will be the first semi-automatical, see <https://github.com/metafacture/metafacture-core/issues/709>
 
 This release follows  A.B.C + LINK TO RELEASE ISSUE
@@ -14,7 +16,7 @@ This release follows  A.B.C + LINK TO RELEASE ISSUE
 Following [maintaining guidelines](https://github.com/metafacture/metafacture-core/blob/master/MAINTAINING.md).
 
 - [ ] update dependencies if these are promising to not break much
-- [ ] test with locally build `master-SNAPSHOT`
+- [ ] test with locally built `master-SNAPSHOT`
   - [ ] lobid-organisations (by @TobiasNx)
   - [ ] lobid-resources (by @TobiasNx)
   - [ ] lobid-extra-holdings  (by @TobiasNx)
