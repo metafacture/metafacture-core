@@ -71,7 +71,7 @@ sonatypePassword=$passwordOfToken
 
 In metafacture-core:
 
-1. Change to intended current master or specific commit 
+1. Change to intended current master or specific commit
 2. Build locally `./gradlew publishToMavenLocal`
 
 In your project:
