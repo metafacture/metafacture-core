@@ -17,14 +17,12 @@
 package org.metafacture.monitoring;
 
 import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Logs the string representation of every object.
@@ -41,7 +39,7 @@ import org.slf4j.LoggerFactory;
 public final class ObjectLogger<T>
         extends DefaultObjectPipe<T, ObjectReceiver<T>> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ObjectLogger.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(ObjectLogger.class);
 
     private final String logPrefix;
 
@@ -64,7 +62,7 @@ public final class ObjectLogger<T>
 
     @Override
     public void process(final T obj) {
-        LOG.debug("{}{}", logPrefix, obj);
+        LOG.externalDebug("{}{}", logPrefix, obj);
         if (getReceiver() != null) {
             getReceiver().process(obj);
         }
@@ -72,12 +70,12 @@ public final class ObjectLogger<T>
 
     @Override
     protected void onResetStream() {
-        LOG.debug("{}resetStream", logPrefix);
+        LOG.externalDebug("{}resetStream", logPrefix);
     }
 
     @Override
     protected void onCloseStream() {
-        LOG.debug("{}closeStream", logPrefix);
+        LOG.externalDebug("{}closeStream", logPrefix);
     }
 
 }

@@ -16,12 +16,10 @@
 
 package org.metafacture.metamorph.test.validators;
 
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.javaintegration.EventList;
 import org.metafacture.javaintegration.EventList.Event;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -46,7 +44,7 @@ public final class StreamValidator implements StreamReceiver {
 
     public static final Consumer<String> DEFAULT_ERROR_HANDLER = msg -> { /* do nothing */ };
 
-    private static final Logger LOG = LoggerFactory.getLogger(StreamValidator.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(StreamValidator.class);
 
     private static final String CANNOT_CHANGE_OPTIONS = "Cannot change options during validation";
     private static final String VALIDATION_FAILED = "Validation failed. Please reset the validator";
@@ -425,7 +423,7 @@ public final class StreamValidator implements StreamReceiver {
     }
 
     private void logEventStream() {
-        if (LOG.isInfoEnabled()) {
+        if (LOG.getInternalLogger().isInfoEnabled()) {
             LOG.info("Event Stream: " + eventStream.toString());
         }
     }

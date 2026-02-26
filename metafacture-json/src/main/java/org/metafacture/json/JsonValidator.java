@@ -18,6 +18,7 @@ package org.metafacture.json;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
@@ -32,8 +33,6 @@ import org.everit.json.schema.loader.SchemaLoader.SchemaLoaderBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -53,7 +52,7 @@ import java.net.URL;
 @FluxCommand("validate-json")
 public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JsonValidator.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(JsonValidator.class);
     private static final String DEFAULT_ID_KEY = "id";
     private Schema schema;
     private long fail;
@@ -116,7 +115,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
     protected void onCloseStream() {
         close(writeInvalid);
         close(writeValid);
-        LOG.debug("Success: {}, Fail: {}", success, fail);
+        LOG.externalDebug("Success: {}, Fail: {}", success, fail);
         super.onCloseStream();
     }
 
@@ -163,7 +162,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
 
     private void handleInvalid(final String json, final JSONObject object,
             final String errorMessage) {
-        LOG.info("Invalid JSON: {} in {}", errorMessage, object != null ? object.opt(idKey) : json);
+        LOG.externalInfo("Invalid JSON: {} in {}", errorMessage, object != null ? object.opt(idKey) : json);
         ++fail;
         write(json, writeInvalid);
     }
