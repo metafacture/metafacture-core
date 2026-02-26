@@ -1,9 +1,9 @@
 ---
 name: Release A.B.C
 about: Steps for each release
-title: ''
+title: 'Release A.B.C'
 labels: ''
-assignees: ''
+assignees: '@tobiasnx'
 
 ---
 
@@ -15,7 +15,11 @@ Following [maintaining guidelines](https://github.com/metafacture/metafacture-co
 
 - [ ] update dependencies if these are promising to not break much
 - [ ] follow maintainer guidelines and upload release to maven central for testing
-- [ ] test uploaded release from maven central
+- [ ] test with locally build `master-SNAPSHOT`
+  - [ ] lobid-organisations (by @tobiasnx)
+  - [ ] lobid-resources (by @tobiasnx)
+  - [ ] oersi (by @tobiasnx)
+  - [ ] limetrans (by @blackwinter)
 - [ ] [release on maven central](https://central.sonatype.com/search?q=metafacture)
 - [ ] [release on github](https://github.com/metafacture/metafacture-core/releases/)
 - [ ]  update  [metafacture-playground](https://github.com/metafacture/metafacture-playground/issues/221)
