@@ -65,12 +65,19 @@ sonatypeUsername=$usernameOfToken
 sonatypePassword=$passwordOfToken
 ```
 
-## Upload, test, publish a release
+## Test, upload, publish a release
 
-There are no more "Release candidates" as such, but the uploaded, validated
-[deployment bundle can be
-  tested](https://central.sonatype.org/publish/publish-portal-api/#manually-testing-a-deployment-bundle).
-  I.e. you first upload a release and before publishing it you test it.
+### Test
+
+In metafacture-core:
+
+1. Change to intended current master or specific commit 
+2. Build locally `./gradlew publishToMavenLocal`
+
+In your project:
+
+3. your project dependency to `master-SNAPSHOT`
+4. Run your tests of your project
 
 ### Upload
 
@@ -92,60 +99,6 @@ a) It's going from your local Git repository to central.sonatype.com to Maven Ce
     ```
     ./gradlew publishToSonatype  -PpublishVersion=A.B.C  closeSonatypeStagingRepository
     ```
-### Test
-
-_As a fallback and for build systems where the below does not work:
-git checkout the release tag resp. the branch, build locally and consume locally. You don't need
-to have a login then, no special configs etc._
-
-If you decide to test what is actually in the pipeline you need some
-prerequisites;
-You need to have a login at central.sonatype.com and be added as a
-maintainer of the namespace `org.metafacture`.
-Follow the  section "Authorize at central sonatype" to be able to test the
-deployment bundle.
-
-You have to add this into you `~/.m2/settings.xml`:
-```
-  <servers>
-    <server>
-      <id>central.manual.testing</id>
-      <configuration>
-        <httpHeaders>
-          <property>
-            <name>Authorization</name>
-            <value>Bearer $basencodedUsernameAndPassword</value>
-          </property>
-        </httpHeaders>
-      </configuration>
-    </server>
-  </servers>
-
-  <profiles>
-    <profile>
-      <id>central.manual.testing</id>
-      <repositories>
-        <repository>
-          <id>central.manual.testing</id>
-          <name>Central Testing repository</name>
-          <url>https://central.sonatype.com/api/v1/publisher/deployments/download</url>
-        </repository>
-      </repositories>
-    </profile>
-  </profiles>
-```
-where `basencodedUsernameAndPassword` is created like this:
-```
-printf "$usernameToken:$passwordToken" | base64
-```
-(note the semicolon `:`).
-
-If you have a maven project you can now update the dependencies in the
-`pom.xml` and download the like:
-
-```
-mvn -debug -Pcentral.manual.testing install
-```
 
 ###  Publish
 
