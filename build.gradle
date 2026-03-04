@@ -157,16 +157,16 @@ subprojects {
     dependsOn tasks.classes
     from sourceSets.main.allJava
     archiveClassifier = 'sources'
-    description 'Creates a jar containing the source files of this project.'
-    group 'build'
+    description = 'Creates a jar containing the source files of this project.'
+    group = 'build'
   }
 
   task javadocJar(type: Jar) {
     dependsOn tasks.javadoc
     from tasks.javadoc
     archiveClassifier = 'javadoc'
-    description 'Creates a jar containing the javadoc of this project.'
-    group 'build'
+    description = 'Creates a jar containing the javadoc of this project.'
+    group = 'build'
   }
 
   task allDeps(type: DependencyReportTask) {}
@@ -183,7 +183,7 @@ subprojects {
   }
 
   checkstyle {
-    toolVersion '10.21.2'
+    toolVersion = '10.21.2'
   }
 
   test {
@@ -296,9 +296,7 @@ subprojects {
   }
 
   signing {
-    required {
-      scmInfo.isRelease
-    }
+    required = scmInfo.isRelease
     sign publishing.publications.mavenArtifacts
   }
 
