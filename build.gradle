@@ -60,7 +60,8 @@ subprojects {
       'xtext':            '2.26.0'
     ]
 
-    slf4j_provider = 'slf4j-log4j12'
+    slf4j_api = "org.slf4j:slf4j-api:${versions.slf4j}"
+    slf4j_provider = "org.slf4j:slf4j-log4j12:${versions.slf4j}"
   }
 }
 

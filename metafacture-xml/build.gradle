@@ -23,5 +23,5 @@ dependencies {
   implementation "org.apache.commons:commons-compress:${versions.commons_compress}"
   testImplementation "junit:junit:${versions.junit}"
   testImplementation "org.mockito:mockito-core:${versions.mockito}"
-  testRuntimeOnly "org.slf4j:${slf4j_provider}:${versions.slf4j}"
+  testRuntimeOnly slf4j_provider
 }

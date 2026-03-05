@@ -26,7 +26,7 @@ dependencies {
   implementation project(':metafacture-mangling')
   implementation project(':metafacture-javaintegration')
   implementation "com.google.guava:guava:${versions.guava}"
-  testRuntimeOnly "org.slf4j:${slf4j_provider}:${versions.slf4j}"
+  testRuntimeOnly slf4j_provider
   testImplementation "junit:junit:${versions.junit}"
   testImplementation "org.mockito:mockito-core:${versions.mockito}"
 }
