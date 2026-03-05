@@ -68,11 +68,6 @@ dependencies {
   jmh project(':metafacture-json')
 }
 
-jmhJar {
-  // SLF4J: Class path contains multiple SLF4J bindings.
-  exclude '/org/slf4j/impl/StaticLoggerBinder.class'
-}
-
 jmh {
   if (project.hasProperty('include')) {
     includes = project.getProperty('include').split() as List
