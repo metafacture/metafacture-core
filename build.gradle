@@ -187,8 +187,6 @@ subprojects {
   }
 
   test {
-    systemProperties['org.slf4j.simpleLogger.defaultLogLevel'] = 'warn'
-
     def prefix = project.group + '.'
     System.properties.each { k, v ->
       if (k.startsWith(prefix)) systemProperties[k] = v
