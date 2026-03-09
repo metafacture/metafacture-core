@@ -584,6 +584,29 @@ public class MetafixScriptTest {
         });
     }
 
+    @Test
+    public void shouldExitingOnProcessExceptionWhenErrorLimitIsOne() {
+        assertStrictness(Metafix.Strictness.EXPRESSION, "upcase()", true, i -> {i.setStrictnessHandlesProcessExceptions(true); i.setErrorLimit(1);}, o -> {
+            o.get().startRecord("1");
+            o.get().literal("data", "foo");
+            o.get().literal("before", "");
+            o.get().literal("after", "");
+            o.get().endRecord();
+
+            o.get().startRecord("2");
+            o.get().literal("data", "foo");
+            o.get().literal("data", "bar");
+            o.get().literal("before", "");
+            o.get().literal("after", "");
+            o.get().endRecord();
+
+            o.get().startRecord("3");
+            o.get().literal("data", "bar");
+            o.get().literal("before", "");
+            o.get().literal("after", "");
+            o.get().endRecord();
+        });
+    }
     private void assertVar(final String fixDef, final Map<String, String> vars, final Map<String, String> result) {
         assertFix(fixDef, vars, f -> result.forEach((k, v) -> Assertions.assertEquals(v, f.getVars().get(k))));
     }

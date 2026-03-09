@@ -603,6 +603,25 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
     }
 
     /**
+     * Sets the global error limit.
+     * The default is {@link Strictness#DEFAULT_ERROR_LIMIT}.
+     *
+     * @param errorLimit the limit of allowed errors
+     */
+    public void setErrorLimit(final int errorLimit) {
+        this.strictness.setErrorLimit(errorLimit);
+    }
+
+    /**
+     * Gets the error limit.
+     *
+     * @return the error limit
+     */
+    public int getErrorLimit() {
+        return this.strictness.errorLimit;
+    }
+
+    /**
      * Flags whether repeated fields should always be emitted as array entities.
      *
      * @param repeatedFieldsToEntities true if repeated fields should be emitted
@@ -660,7 +679,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
          */
         RECORD {
             @Override
-            protected void handleInternal(final MetafactureException exception, final Record record) {
+            protected void handleInternal(final MetafactureException exception, final Record record) {;
                 log(exception, LOG::error);
                 record.setReject(true); // TODO: Skip remaining expressions?
             }
@@ -676,6 +695,9 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
             }
         };
 
+        public static final int DEFAULT_ERROR_LIMIT = Integer.MAX_VALUE;
+        private static int errorLimit = DEFAULT_ERROR_LIMIT;
+        private int errorCnt = 0;
         /**
          * Handles the exception based on the selected strictness level.
          *
@@ -683,11 +705,18 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
          * @param record    the current record
          */
         public void handle(final MetafactureException exception, final Record record) {
+            errorCnt++;
+            if ( errorCnt > errorLimit){
+                throw new MetafactureException("Too many errors (as defined in errorLimit) - exiting");
+            }
             LOG.info("Current record: {}", record);
             handleInternal(exception, record);
         }
 
         protected abstract void handleInternal(MetafactureException exception, Record record);
+        public void setErrorLimit(int errorLimit){
+this.errorLimit=errorLimit;
+        }
 
         protected void log(final MetafactureException exception, final BiConsumer<String, Throwable> logger) {
             logger.accept(exception.getMessage(), exception.getCause());

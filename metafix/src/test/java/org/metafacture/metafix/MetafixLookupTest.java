@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  */
 @ExtendWith(MockitoExtension.class)
 public class MetafixLookupTest {
-    private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
+    private static final String CSV_MAP = "FUTSCHsrc/test/resources/org/metafacture/metafix/maps/test.csv";
     private static final String CSV_PATH = "/maps/test.csv";
     private static final String CSV_URL = "%s" + CSV_PATH;
     private static final String RDF_MAP = "src/test/resources/org/metafacture/metafix/maps/test.ttl";
@@ -466,6 +466,14 @@ public class MetafixLookupTest {
         assertMap(
                 "put_filemap('" + CSV_MAP + "')",
                 LOOKUP + " '" + CSV_MAP + "')"
+        );
+    }
+
+    @Test
+    public void shouldLogWhenExternalFileMapMissing() {
+        assertMap(
+            "put_filemap('" + CSV_MAP + "')",
+            LOOKUP + " '" + CSV_MAP + "')"
         );
     }
 
