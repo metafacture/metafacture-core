@@ -854,4 +854,21 @@ public final class TestMetamorphBasics {
         );
     }
 
+    @Test
+    public void shouldUrlencodeWithEscapeSpaceAsPlusAsDefault() {
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <data source='d' >" +
+                "    <urlencode />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.literal("d", "café ");
+                },
+                o -> {
+                    o.get().literal("d", "caf%C3%A9+");
+                }
+        );
+    }
+
 }

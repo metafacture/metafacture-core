@@ -34,7 +34,7 @@ import com.google.common.net.PercentEscaper;
  */
 public final class URLEncode extends AbstractSimpleStatelessFunction {
     private String safeChars = ".-*_";
-    private Boolean plusForSpace = true;
+    private boolean plusForSpace = true;
     private PercentEscaper percentEscaper = new PercentEscaper(safeChars, plusForSpace);
 
     /**
@@ -68,7 +68,7 @@ public final class URLEncode extends AbstractSimpleStatelessFunction {
      *
      * @param plusForSpace true if space character " " should be converted into a plus sign "+"
      */
-    public void setPlusForSpace(final Boolean plusForSpace) {
+    public void setPlusForSpace(final boolean plusForSpace) {
         this.plusForSpace = plusForSpace;
         percentEscaper = new PercentEscaper(safeChars, plusForSpace);
     }
