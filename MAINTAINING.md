@@ -76,7 +76,7 @@ In metafacture-core:
 
 In your project:
 
-3. your project dependency to `master-SNAPSHOT`
+3. set your project dependency to `master-SNAPSHOT`
 4. Run your tests of your project
 
 ### Upload
