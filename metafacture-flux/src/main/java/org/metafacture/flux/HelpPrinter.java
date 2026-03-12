@@ -127,7 +127,12 @@ public final class HelpPrinter {
 
         final String[] examplesEntry = EXAMPLES_MAP.get(name);
         if (examplesEntry != null && examplesEntry.length > 2) {
-            out.println("- [example in Playground]" + "(" + examplesEntry[2] + ")");
+            if (examplesEntry[2].contains("playground")) {
+                out.println("- [example in Playground]" + "(" + examplesEntry[2] + ")");
+            }
+            if (examplesEntry[2].contains("github")) {
+                out.println("- [example for Metafacture Runner]" + "(" + examplesEntry[2] + ")");
+            }
         }
         if (examplesEntry != null && examplesEntry.length > 1) {
             out.println("- java class:\t[" + moduleClass.getCanonicalName() + "](" + examplesEntry[1] + ")");
