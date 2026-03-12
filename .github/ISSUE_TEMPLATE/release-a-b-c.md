@@ -19,6 +19,7 @@ Following [maintaining guidelines](https://github.com/metafacture/metafacture-co
   - [ ] lobid-organisations (by @TobiasNx)
   - [ ] lobid-resources (by @TobiasNx)
   - [ ] lobid-extra-holdings  (by @TobiasNx)
+  - [ ] playground (by @TobiasNx or @dr0i)
   - [ ] oersi (by @TobiasNx)
   - [ ] limetrans (by @blackwinter)
 - [ ] [release on maven central](https://central.sonatype.com/search?q=metafacture)
