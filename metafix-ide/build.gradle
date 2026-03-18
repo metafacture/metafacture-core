@@ -1,7 +1,3 @@
-plugins {
-  id 'com.gradleup.shadow' version '9.3.2'
-}
-
 dependencies {
   implementation project(':metafix')
 
@@ -15,30 +11,4 @@ apply from: "${rootDir}/gradle/metafix.gradle"
 application {
   mainClass = 'org.eclipse.xtext.ide.server.ServerLauncher'
   applicationName = 'xtext-server'
-}
-
-shadowJar {
-  from(sourceSets.main.output)
-  configurations = [project.configurations.runtimeClasspath]
-
-  exclude(
-    '*.html',
-    '*.profile',
-    '.api_description',
-    '.options',
-    'META-INF/*.DSA',
-    'META-INF/*.RSA',
-    'META-INF/*.SF',
-    'META-INF/INDEX.LIST',
-    'about.*',
-    'about_files/*',
-    'modeling32.png',
-    'plugin.xml',
-    'profile.list',
-    'schema/*',
-    'systembundle.properties'
-  )
-
-  archiveClassifier = 'ls'
-  append('plugin.properties')
 }
