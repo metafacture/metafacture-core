@@ -77,7 +77,7 @@ TODO: Link to getting started tutorial
 <a name="build_from_source"></a>
 # Building metafacture-core from source
 
-Building metafacture-core from source is easy. All you need is git and JDK 11:
+Building metafacture-core from source is easy. All you need is git and JDK 17:
 
 1. Clone the metafacture-core repository and change into the directory:
     ```bash

@@ -12,7 +12,7 @@ jobs:
           fetch-tags: true
       - uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: 17
       - name: Publish package
         run: ./gradlew publishAllPublicationsToGitHubPackagesRepository -PpublishVersion="$REFNAME"
         env:
