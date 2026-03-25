@@ -4335,7 +4335,7 @@ public class MetafixMethodTest {
             ),
             i -> {
                 i.startRecord("1");
-                i.startEntity("animals[]");
+                i.startEntity("numbers[]");
                 i.literal("1", "2");
                 i.literal("2", "4");
                 i.literal("3", "6");
@@ -4344,7 +4344,7 @@ public class MetafixMethodTest {
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("animals[]");
+                o.get().startEntity("numbers[]");
                 o.get().literal("1", "7");
                 o.get().literal("2", "4");
                 o.get().literal("3", "6");
@@ -4362,7 +4362,7 @@ public class MetafixMethodTest {
             ),
             i -> {
                 i.startRecord("1");
-                i.startEntity("animals[]");
+                i.startEntity("numbers[]");
                 i.literal("1", "1");
                 i.literal("2", "2");
                 i.literal("3", "3");
@@ -4371,7 +4371,7 @@ public class MetafixMethodTest {
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("animals[]");
+                o.get().startEntity("numbers[]");
                 o.get().literal("1", "7");
                 o.get().literal("2", "8");
                 o.get().literal("3", "9");
@@ -4420,7 +4420,7 @@ public class MetafixMethodTest {
                 o.get().startEntity("numbers[]");
                 o.get().literal("1", "27");
                 o.get().literal("2", "32");
-                o.get().literal("3", "35");
+                o.get().literal("3", "37");
                 f.apply(3).endEntity();
                 o.get().endRecord();
             }
@@ -4501,7 +4501,7 @@ public class MetafixMethodTest {
     public void shouldNotPlusValueToArrayWithWildcard() {
         MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "plus('animal?[]', '4')"
+                    "plus('number?[]', '4')"
                 ),
                 i -> {
                     i.startRecord("1");
@@ -4590,7 +4590,7 @@ public class MetafixMethodTest {
             ),
             i -> {
                 i.startRecord("1");
-                i.startEntity("animals[]");
+                i.startEntity("numbers[]");
                 i.literal("1", "2");
                 i.literal("2", "4");
                 i.literal("3", "6");
@@ -4599,8 +4599,8 @@ public class MetafixMethodTest {
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("animals[]");
-                o.get().literal("1", "-2");
+                o.get().startEntity("numbers[]");
+                o.get().literal("1", "-3");
                 o.get().literal("2", "4");
                 o.get().literal("3", "6");
                 o.get().endEntity();
@@ -4617,7 +4617,7 @@ public class MetafixMethodTest {
             ),
             i -> {
                 i.startRecord("1");
-                i.startEntity("animals[]");
+                i.startEntity("numbers[]");
                 i.literal("1", "1");
                 i.literal("2", "2");
                 i.literal("3", "3");
@@ -4626,7 +4626,7 @@ public class MetafixMethodTest {
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("animals[]");
+                o.get().startEntity("numbers[]");
                 o.get().literal("1", "-5");
                 o.get().literal("2", "-4");
                 o.get().literal("3", "-3");
@@ -4756,7 +4756,7 @@ public class MetafixMethodTest {
     public void shouldNotMinusValueToArrayWithWildcard() {
         MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "minus('animal?[]', '4')"
+                    "minus('number?[]', '4')"
                 ),
                 i -> {
                     i.startRecord("1");
