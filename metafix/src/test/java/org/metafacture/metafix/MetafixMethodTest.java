@@ -4286,4 +4286,259 @@ public class MetafixMethodTest {
         );
     }
 
+
+    @Test
+    public void shouldPlusValue() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "plus(number, '3')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("number", "1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("number", "4");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldPlusValueInHash() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "plus(number.name, '4')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("number");
+                i.literal("name", "3");
+                i.literal("type", "TEST");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("number");
+                o.get().literal("name", "7");
+                o.get().literal("type", "TEST");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldPlusValueInArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "plus('numbers[].1', '5')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "2");
+                i.literal("2", "4");
+                i.literal("3", "6");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "7");
+                o.get().literal("2", "4");
+                o.get().literal("3", "6");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See issue metafacture-fix#100
+    public void shouldPlusValueInEntireArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "plus('numbers[].*', '6')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "1");
+                i.literal("2", "2");
+                i.literal("3", "3");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "7");
+                o.get().literal("2", "8");
+                o.get().literal("3", "9");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See issue #601
+    public void shouldPlusValueInNestedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "plus('nestedTest[].*.numbers[].*', '7')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("nestedTest[]");
+                i.startEntity("1");
+                i.startEntity("numbers[]");
+                i.literal("1", "5");
+                i.literal("2", "10");
+                i.literal("3", "15");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("2");
+                i.startEntity("numbers[]");
+                i.literal("1", "20");
+                i.literal("2", "25");
+                i.literal("3", "30");
+                i.endEntity();
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("nestedTest[]");
+                o.get().startEntity("1");
+                o.get().startEntity("numbers[]");
+                o.get().literal("1", "12");
+                o.get().literal("2", "17");
+                o.get().literal("3", "22");
+                f.apply(2).endEntity();
+                o.get().startEntity("2");
+                o.get().startEntity("numbers[]");
+                o.get().literal("1", "27");
+                o.get().literal("2", "32");
+                o.get().literal("3", "35");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See issue #601
+    public void shouldPlusValueInArraySubField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "plus('coll[].*.number', '9')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("coll[]");
+                i.startEntity("1");
+                i.literal("number", "1");
+                i.literal("b", "Dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("number", "4");
+                i.literal("b", "Ape");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("number", "7");
+                i.endEntity();
+                i.startEntity("4");
+                i.literal("number", "14");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("coll[]");
+                o.get().startEntity("1");
+                o.get().literal("number", "10");
+                o.get().literal("b", "Dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("number", "13");
+                o.get().literal("b", "Ape");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("number", "16");
+                o.get().endEntity();
+                o.get().startEntity("4");
+                o.get().literal("number", "23");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See issue metafacture-fix#100
+    public void shouldNotPlusValueToArray() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "plus('numbers[]', '3')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("numbers[]");
+                    i.literal("1", "1");
+                    i.literal("2", "2");
+                    i.literal("3", "3");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldNotPlusValueToArrayWithWildcard() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "plus('animal?[]', '4')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("numbers[]");
+                    i.literal("1", "1");
+                    i.literal("2", "2");
+                    i.literal("3", "3");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldNotPlusValueToArrayWithWildcardNested() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "plus('some.number?[]', '3')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("some");
+                    i.startEntity("numbers[]");
+                    i.literal("1", "1");
+                    i.literal("2", "2");
+                    i.literal("3", "3");
+                    i.endEntity();
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
 }
