@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration xmlns="https://logging.apache.org/xml/ns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-config-2.xsd">
+  <Appenders>
+    <Console name="CONSOLE">
+      <PatternLayout pattern="%d{yyyy-MM-dd'T'HH:mm:ss.SSS} [%t] %-5p %c - %m%n"/>
+    </Console>
+    <Console name="EXTERNAL_CONSOLE">
+      <PatternLayout pattern="%-5p [%t] [%c{1}] %m%n"/>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <!-- For developer logging change level to "DEBUG" -->
+    <Root level="ERROR">
+      <AppenderRef ref="CONSOLE"/>
+    </Root>
+    <!-- For user logging with e.g. `log-object` change level to "DEBUG" -->
+    <Logger name="external" additivity="false" level="INFO">
+      <AppenderRef ref="EXTERNAL_CONSOLE"/>
+    </Logger>
+  </Loggers>
+</Configuration>

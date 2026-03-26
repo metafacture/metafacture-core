@@ -28,8 +28,8 @@ dependencies {
   implementation project(':metafacture-formeta')
   implementation project(':metafacture-xml')
   implementation project(':metafacture-javaintegration')
-  implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+  implementation slf4j_api
   testImplementation "org.mockito:mockito-core:${versions.mockito}"
   testImplementation project(':metafacture-formeta')
-  testRuntimeOnly "org.slf4j:${slf4j_provider}:${versions.slf4j}"
+  testRuntimeOnly slf4j_provider
 }

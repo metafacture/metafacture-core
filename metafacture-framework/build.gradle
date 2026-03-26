@@ -18,7 +18,7 @@ ext.mavenName = 'Metafacture Framework'
 description = 'The interfaces implemented by Metafacture modules'
 
 dependencies {
-  implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+  implementation slf4j_api
 
   testImplementation "junit:junit:${versions.junit}"
   testImplementation "org.mockito:mockito-core:${versions.mockito}"

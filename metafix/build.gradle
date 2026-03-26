@@ -28,7 +28,6 @@ dependencies {
   testImplementation "org.simplify4u:slf4j2-mock:${versions.slf4j_mock}"
 
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit_jupiter}"
-  testRuntimeOnly "org.slf4j:${slf4j_provider}:${versions.slf4j}"
 
   implementation project(':metafacture-commons')
   implementation project(':metafacture-flowcontrol')
@@ -51,10 +50,6 @@ apply from: "${rootDir}/gradle/metafix.gradle"
 configurations {
   mwe2 {
     extendsFrom implementation
-
-    dependencies {
-      implementation "org.slf4j:${slf4j_provider}:${versions.slf4j}"
-    }
   }
 }
 
@@ -63,14 +58,10 @@ dependencies {
   mwe2 "org.eclipse.xtext:org.eclipse.xtext.common.types:${versions.xtext}"
   mwe2 "org.eclipse.xtext:org.eclipse.xtext.xtext.generator:${versions.xtext}"
   mwe2 'org.eclipse.xtext:xtext-antlr-generator'
+  mwe2 slf4j_provider
 
   jmh project(':metafacture-io')
   jmh project(':metafacture-json')
-}
-
-jmhJar {
-  // SLF4J: Class path contains multiple SLF4J bindings.
-  exclude '/org/slf4j/impl/StaticLoggerBinder.class'
 }
 
 jmh {

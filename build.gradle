@@ -52,15 +52,17 @@ subprojects {
       'mockito':          '2.27.0',
       'opencsv':          '5.9',
       'requirejs':        '2.3.6',
-      'slf4j':            '1.7.36',
-      'slf4j_mock':       '2.3.0',
+      'slf4j':            '2.0.17',
+      'slf4j_log4j':      '2.25.3',
+      'slf4j_mock':       '2.4.0',
       'tukaani':          '1.6',
       'wiremock':         '2.35.0',
       'xalan':            '2.7.0',
       'xtext':            '2.26.0'
     ]
 
-    slf4j_provider = 'slf4j-log4j12'
+    slf4j_api = "org.slf4j:slf4j-api:${versions.slf4j}"
+    slf4j_provider = "org.apache.logging.log4j:log4j-slf4j2-impl:${versions.slf4j_log4j}"
   }
 }
 
@@ -150,7 +152,7 @@ subprojects {
   }
 
   jar {
-    exclude 'log4j.xml'
+    exclude 'log4j2.xml'
   }
 
   task sourceJar(type: Jar) {
@@ -187,8 +189,6 @@ subprojects {
   }
 
   test {
-    systemProperties['org.slf4j.simpleLogger.defaultLogLevel'] = 'warn'
-
     def prefix = project.group + '.'
     System.properties.each { k, v ->
       if (k.startsWith(prefix)) systemProperties[k] = v
