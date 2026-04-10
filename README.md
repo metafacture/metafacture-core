@@ -197,7 +197,7 @@ Run workflows on the web server, passing `data`, `flux`, and `fix`:
 - If using a `list` bind with a variable, the `var` option requires quotation marks (`do list(path: "<sourceField>", "var": "<variableName>")`).
 - Fix turns repeated fields into arrays internally but only marked arrays (with `[]` at the end of the field name) are also emitted as "arrays" (entities with indexed literals), all other arrays are emitted as repeated fields.
 - Every Fix file should end with a final newline.
-- We recommend to wrap functions that create maps (e.g. `put_filemap`, `put_map`, `put_rdfmap`) as well as those that create macros (`do put_macro`) into a `once` bind since maps and macros are saved into memory. You can use one `once` bind for all maps and macros.
+- We recommend to wrap functions that create maps (e.g. [`put_filemap`](#put_filemap), [`put_map`](#put_map), [`put_rdfmap`](#put_rdfmap)) as well as those that create macros ([`do put_macro`](#do-put_macro)) into a [`once` bind](#do-once) since maps and macros are saved into memory. You can use one `once` bind for all maps and macros.
 
 ### Glossary
 
