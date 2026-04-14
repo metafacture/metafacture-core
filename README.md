@@ -44,7 +44,7 @@ Regardless if you've built or downloaded, go on with:
     ```
     This example will print a number of MARC 21 records on standard output.
 
-The `examples` folder contains many more examples which provide a good starting point for learning Metafacture. If you have any questions please join our [mailing list](http://lists.dnb.de/mailman/listinfo/metafacture) or use our issue-based discussion forum over at [metafacture-documentation](https://github.com/metafacture/metafacture-documentation).
+The `examples` folder contains many more examples which provide a good starting point for learning Metafacture. If you have any questions please take a look at the [German Metafacture forum](https://metadaten.community/c/software-und-tools/metafacture/8) and create a topic there or open an issue over at metafacture-documentation [metafacture-documentation](https://github.com/metafacture/metafacture-documentation).
 
 ## Using Metafacture as a Java library
 
