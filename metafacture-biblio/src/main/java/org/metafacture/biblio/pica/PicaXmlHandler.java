@@ -45,7 +45,6 @@ public final class PicaXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
     private static final String SUBFIELD = "subfield";
     private static final String DATAFIELD = "datafield";
-    private static final String CONTROLFIELD = "controlfield";
     private static final String RECORD = "record";
 
     private String attributeMarker = DEFAULT_ATTRIBUTE_MARKER;
@@ -115,11 +114,7 @@ public final class PicaXmlHandler extends DefaultXmlPipe<StreamReceiver> {
             currentTag = attributes.getValue("code");
         }
         else if (DATAFIELD.equals(localName)) {
-            getReceiver().startEntity(attributes.getValue("tag"));
-        }
-        else if (CONTROLFIELD.equals(localName)) {
-            builder = new StringBuilder();
-            currentTag = attributes.getValue("tag");
+            getReceiver().startEntity( attributes.getValue("tag") + attributes.getValue("occurrence"));
         }
         else if (RECORD.equals(localName) && checkNamespace(uri)) {
             getReceiver().startRecord("");
@@ -133,9 +128,6 @@ public final class PicaXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         }
         else if (DATAFIELD.equals(localName)) {
             getReceiver().endEntity();
-        }
-        else if (CONTROLFIELD.equals(localName)) {
-            getReceiver().literal(currentTag, builder.toString());
         }
         else if (RECORD.equals(localName) && checkNamespace(uri)) {
             getReceiver().endRecord();
