@@ -31,11 +31,12 @@ import java.text.Normalizer;
 
 
 /**
- * A Pica xml reader. To read marc data without namespace specification set option `namespace=""` or to null when using JAVA code.
+ * A Pica XML reader. To read marc data without namespace specification set option `namespace=""` or to null when using JAVA code.
  * @author Tobias Bülte
+ * @author Markus Michael Geipel
  *
  */
-@Description("A Pica XML reader. To read pica data without namespace specification set option `namespace=\"\"`. To ignore namespace specification set option `ignorenamespace=\"true\".")
+@Description("A Pica XML reader. To read pica data without namespace specification set option `namespace=\"\"`. To ignore namespace specification set option `ignorenamespace=\"true\". For PPXML see `handle-ppxml`")
 @In(XmlReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("handle-picaxml")
@@ -114,7 +115,14 @@ public final class PicaXmlHandler extends DefaultXmlPipe<StreamReceiver> {
             currentTag = attributes.getValue("code");
         }
         else if (DATAFIELD.equals(localName)) {
-            getReceiver().startEntity( attributes.getValue("tag") + attributes.getValue("occurrence"));
+            final String tag = attributes.getValue("tag");
+            final String occurence = attributes.getValue("occurrence");
+            if (occurence != null) {
+                getReceiver().startEntity(tag + occurence);
+            }
+            else {
+                getReceiver().startEntity(tag);
+            }
         }
         else if (RECORD.equals(localName) && checkNamespace(uri)) {
             getReceiver().startRecord("");
