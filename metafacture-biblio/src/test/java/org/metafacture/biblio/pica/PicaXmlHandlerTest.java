@@ -62,12 +62,11 @@ public final class PicaXmlHandlerTest {
     }
 
     @Test
-    public void shouldLabelDataFieldWithAndWithoutOccuence()
+    public void shouldLabelDataFieldWithoutOccurrenceAttribute()
             throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
-        final String fieldValue1 = "1234";
-        final String fieldValue2 = "utf-8";
+        final String fieldValue = "1234";
 
         picaXmlHandler.startElement(NAMESPACE, RECORD, "", attributes);
         attributes.addAttribute(null, "tag", "tag", "CDATA", "003@");
@@ -75,28 +74,43 @@ public final class PicaXmlHandlerTest {
         attributes.clear();
         attributes.addAttribute(null, "code", "code", "CDATA", "0");
         picaXmlHandler.startElement(null, SUBFIELD, "", attributes);
-        picaXmlHandler.characters(fieldValue1.toCharArray(), 0, fieldValue1.length());
-        picaXmlHandler.endElement(null, SUBFIELD, "");
-        picaXmlHandler.endElement(null, DATAFIELD, "");
-        attributes.addAttribute(null, "tag", "tag", "CDATA", "201U");
-        attributes.addAttribute(null, "occurence", "occurence", "CDATA", "01");
-        picaXmlHandler.startElement(null, DATAFIELD, "", attributes);
-        attributes.clear();
-        attributes.addAttribute(null, "code", "code", "CDATA", "0");
-        picaXmlHandler.startElement(null, SUBFIELD, "", attributes);
-        picaXmlHandler.characters(fieldValue2.toCharArray(), 0, fieldValue2.length());
+        picaXmlHandler.characters(fieldValue.toCharArray(), 0, fieldValue.length());
         picaXmlHandler.endElement(null, SUBFIELD, "");
         picaXmlHandler.endElement(null, DATAFIELD, "");
         picaXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-
         final InOrder ordered    = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("003@");
-        ordered.verify(receiver).literal("0", fieldValue1);
+        ordered.verify(receiver).literal("0", fieldValue);
         ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void shouldLabelDataFieldWithOccurrenceAttribute()
+            throws SAXException {
+        final AttributesImpl attributes = new AttributesImpl();
+
+        final String fieldValue = "utf-8";
+
+        picaXmlHandler.startElement(NAMESPACE, RECORD, "", attributes);
+        attributes.addAttribute(null, "tag", "tag", "CDATA", "201U");
+        attributes.addAttribute(null, "occurrence", "occurrence", "CDATA", "01");
+        picaXmlHandler.startElement(null, DATAFIELD, "", attributes);
+        attributes.clear();
+        attributes.addAttribute(null, "code", "code", "CDATA", "0");
+        picaXmlHandler.startElement(null, SUBFIELD, "", attributes);
+        picaXmlHandler.characters(fieldValue.toCharArray(), 0, fieldValue.length());
+        picaXmlHandler.endElement(null, SUBFIELD, "");
+        picaXmlHandler.endElement(null, DATAFIELD, "");
+        picaXmlHandler.endElement(NAMESPACE, RECORD, "");
+
+        final InOrder ordered    = Mockito.inOrder(receiver);
+        ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("201U01");
-        ordered.verify(receiver).literal("0", fieldValue2);
+        ordered.verify(receiver).literal("0", fieldValue);
         ordered.verify(receiver).endEntity();
         ordered.verify(receiver).endRecord();
         ordered.verifyNoMoreInteractions();
@@ -107,25 +121,13 @@ public final class PicaXmlHandlerTest {
             throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
-        final String fieldValue1 = "1234";
-
         picaXmlHandler.startElement(NAMESPACE, RECORD, "", attributes);
-        attributes.addAttribute(null, "tag", "tag", "CDATA", "003@");
-        picaXmlHandler.startElement(null, DATAFIELD, "", attributes);
-        attributes.clear();
-        attributes.addAttribute(null, "code", "code", "CDATA", "0");
-        picaXmlHandler.startElement(null, SUBFIELD, "", attributes);
-        picaXmlHandler.characters(fieldValue1.toCharArray(), 0, fieldValue1.length());
-        picaXmlHandler.endElement(null, SUBFIELD, "");
-        picaXmlHandler.endElement(null, DATAFIELD, "");
+        picaXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-        final InOrder ordered    = Mockito.inOrder(receiver);
-        ordered.verify(receiver).startRecord("");
-        ordered.verify(receiver).startEntity("003@");
-        ordered.verify(receiver).literal("0", fieldValue1);
-        ordered.verify(receiver).endEntity();
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        Mockito.verify(receiver).startRecord("");
+        Mockito.verify(receiver).endRecord();
+
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -133,17 +135,7 @@ public final class PicaXmlHandlerTest {
             throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
-        final String fieldValue1 = "1234";
-
         picaXmlHandler.startElement(null, RECORD, "", attributes);
-        attributes.addAttribute(null, "tag", "tag", "CDATA", "003@");
-        picaXmlHandler.startElement(null, DATAFIELD, "", attributes);
-        attributes.clear();
-        attributes.addAttribute(null, "code", "code", "CDATA", "0");
-        picaXmlHandler.startElement(null, SUBFIELD, "", attributes);
-        picaXmlHandler.characters(fieldValue1.toCharArray(), 0, fieldValue1.length());
-        picaXmlHandler.endElement(null, SUBFIELD, "");
-        picaXmlHandler.endElement(null, DATAFIELD, "");
         picaXmlHandler.endElement(null, RECORD, "");
 
         Mockito.verifyNoMoreInteractions(receiver);
@@ -154,27 +146,14 @@ public final class PicaXmlHandlerTest {
             throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
-        final String fieldValue1 = "1234";
-
         picaXmlHandler.setNamespace("");
-        picaXmlHandler.startElement(null, RECORD, "", attributes);
-        attributes.addAttribute(null, "tag", "tag", "CDATA", "003@");
-        picaXmlHandler.startElement(null, DATAFIELD, "", attributes);
-        attributes.clear();
-        attributes.addAttribute(null, "code", "code", "CDATA", "0");
-        picaXmlHandler.startElement(null, SUBFIELD, "", attributes);
-        picaXmlHandler.characters(fieldValue1.toCharArray(), 0, fieldValue1.length());
-        picaXmlHandler.endElement(null, SUBFIELD, "");
-        picaXmlHandler.endElement(null, DATAFIELD, "");
-        picaXmlHandler.endElement(null, RECORD, "");
+        picaXmlHandler.startElement("", RECORD, "", attributes);
+        picaXmlHandler.endElement("", RECORD, "");
 
-        final InOrder ordered    = Mockito.inOrder(receiver);
-        ordered.verify(receiver).startRecord("");
-        ordered.verify(receiver).startEntity("003@");
-        ordered.verify(receiver).literal("0", fieldValue1);
-        ordered.verify(receiver).endEntity();
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        Mockito.verify(receiver).startRecord("");
+        Mockito.verify(receiver).endRecord();
+
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -182,27 +161,11 @@ public final class PicaXmlHandlerTest {
             throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
-        final String fieldValue1 = "1234";
-
         picaXmlHandler.setNamespace("");
         picaXmlHandler.startElement(NAMESPACE, RECORD, "", attributes);
-        attributes.addAttribute(null, "tag", "tag", "CDATA", "003@");
-        picaXmlHandler.startElement(null, DATAFIELD, "", attributes);
-        attributes.clear();
-        attributes.addAttribute(null, "code", "code", "CDATA", "0");
-        picaXmlHandler.startElement(null, SUBFIELD, "", attributes);
-        picaXmlHandler.characters(fieldValue1.toCharArray(), 0, fieldValue1.length());
-        picaXmlHandler.endElement(null, SUBFIELD, "");
-        picaXmlHandler.endElement(null, DATAFIELD, "");
-        picaXmlHandler.endElement(null, RECORD, "");
+        picaXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-        final InOrder ordered    = Mockito.inOrder(receiver);
-        ordered.verify(receiver).startRecord("");
-        ordered.verify(receiver).startEntity("003@");
-        ordered.verify(receiver).literal("0", fieldValue1);
-        ordered.verify(receiver).endEntity();
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -210,27 +173,14 @@ public final class PicaXmlHandlerTest {
             throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
-        final String fieldValue1 = "1234";
-
         picaXmlHandler.setIgnoreNamespace(true);
-        picaXmlHandler.startElement(NAMESPACE, RECORD, "", attributes);
-        attributes.addAttribute(null, "tag", "tag", "CDATA", "003@");
-        picaXmlHandler.startElement(null, DATAFIELD, "", attributes);
-        attributes.clear();
-        attributes.addAttribute(null, "code", "code", "CDATA", "0");
-        picaXmlHandler.startElement(null, SUBFIELD, "", attributes);
-        picaXmlHandler.characters(fieldValue1.toCharArray(), 0, fieldValue1.length());
-        picaXmlHandler.endElement(null, SUBFIELD, "");
-        picaXmlHandler.endElement(null, DATAFIELD, "");
-        picaXmlHandler.endElement(null, RECORD, "");
+        picaXmlHandler.startElement(null, RECORD, "", attributes);
+        picaXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-        final InOrder ordered    = Mockito.inOrder(receiver);
-        ordered.verify(receiver).startRecord("");
-        ordered.verify(receiver).startEntity("003@");
-        ordered.verify(receiver).literal("0", fieldValue1);
-        ordered.verify(receiver).endEntity();
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        Mockito.verify(receiver).startRecord("");
+        Mockito.verify(receiver).endRecord();
+
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -243,23 +193,12 @@ public final class PicaXmlHandlerTest {
         picaXmlHandler.setIgnoreNamespace(true);
         picaXmlHandler.setNamespace("");
         picaXmlHandler.startElement(null, RECORD, "", attributes);
-        attributes.addAttribute(null, "tag", "tag", "CDATA", "003@");
-        picaXmlHandler.startElement(null, DATAFIELD, "", attributes);
-        attributes.clear();
-        attributes.addAttribute(null, "code", "code", "CDATA", "0");
-        picaXmlHandler.startElement(null, SUBFIELD, "", attributes);
-        picaXmlHandler.characters(fieldValue1.toCharArray(), 0, fieldValue1.length());
-        picaXmlHandler.endElement(null, SUBFIELD, "");
-        picaXmlHandler.endElement(null, DATAFIELD, "");
         picaXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-        final InOrder ordered    = Mockito.inOrder(receiver);
-        ordered.verify(receiver).startRecord("");
-        ordered.verify(receiver).startEntity("003@");
-        ordered.verify(receiver).literal("0", fieldValue1);
-        ordered.verify(receiver).endEntity();
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        Mockito.verify(receiver).startRecord("");
+        Mockito.verify(receiver).endRecord();
+
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -267,18 +206,8 @@ public final class PicaXmlHandlerTest {
             throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
-        final String fieldValue1 = "1234";
-
         picaXmlHandler.setIgnoreNamespace(false);
         picaXmlHandler.startElement(null, RECORD, "", attributes);
-        attributes.addAttribute(null, "tag", "tag", "CDATA", "003@");
-        picaXmlHandler.startElement(null, DATAFIELD, "", attributes);
-        attributes.clear();
-        attributes.addAttribute(null, "code", "code", "CDATA", "0");
-        picaXmlHandler.startElement(null, SUBFIELD, "", attributes);
-        picaXmlHandler.characters(fieldValue1.toCharArray(), 0, fieldValue1.length());
-        picaXmlHandler.endElement(null, SUBFIELD, "");
-        picaXmlHandler.endElement(null, DATAFIELD, "");
         picaXmlHandler.endElement(NAMESPACE, RECORD, "");
 
         Mockito.verify(receiver).endRecord();
