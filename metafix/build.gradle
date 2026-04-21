@@ -20,12 +20,12 @@ dependencies {
   implementation "org.eclipse.xtext:org.eclipse.xtext:${versions.xtext}"
   implementation "org.jsoup:jsoup:${versions.jsoup}"
 
-  testImplementation "com.github.tomakehurst:wiremock-jre8:${versions.wiremock}"
   testImplementation "org.eclipse.xtext:org.eclipse.xtext.testing:${versions.xtext}"
   testImplementation "org.eclipse.xtext:org.eclipse.xtext.xbase.testing:${versions.xtext}"
   testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit_jupiter}"
   testImplementation "org.junit.platform:junit-platform-launcher:${versions.junit_platform}"
   testImplementation "org.simplify4u:slf4j2-mock:${versions.slf4j_mock}"
+  testImplementation "org.wiremock:wiremock:${versions.wiremock}"
 
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit_jupiter}"
 
