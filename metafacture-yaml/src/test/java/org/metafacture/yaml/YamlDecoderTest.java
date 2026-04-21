@@ -19,9 +19,9 @@ package org.metafacture.yaml;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
 
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -44,9 +44,6 @@ public final class YamlDecoderTest {
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @Mock
     private StreamReceiver receiver;
@@ -300,10 +297,7 @@ public final class YamlDecoderTest {
     }
 
     private void assertException(final String message, final Consumer<YamlDecoder> in) {
-        exception.expect(MetafactureException.class);
-        exception.expectMessage(message);
-
-        assertDecode(in, o -> { });
+        Assert.assertThrows(message, MetafactureException.class, () -> assertDecode(in, o -> { }));
     }
 
     private void assertDecode(final Consumer<YamlDecoder> in, final Consumer<Supplier<StreamReceiver>> out) {

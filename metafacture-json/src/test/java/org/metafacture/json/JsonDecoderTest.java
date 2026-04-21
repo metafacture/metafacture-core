@@ -23,7 +23,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -40,9 +39,6 @@ public final class JsonDecoderTest {
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @Mock
     private StreamReceiver receiver;
@@ -322,44 +318,33 @@ public final class JsonDecoderTest {
 
     @Test
     public void testShouldOnlyParseObjects() {
-        exception.expect(MetafactureException.class);
-        exception.expectMessage("Unexpected token 'VALUE_NULL'");
-
-        jsonDecoder.process("null");
+        Assert.assertThrows("Unexpected token 'VALUE_NULL'", MetafactureException.class, () ->
+                jsonDecoder.process("null"));
     }
 
     @Test
     public void testShouldNotParseIncompleteObjects() {
-        exception.expect(MetafactureException.class);
-        exception.expectMessage("Unexpected end-of-input");
-
-        jsonDecoder.process("{");
+        Assert.assertThrows("Unexpected end-of-input", MetafactureException.class, () ->
+                jsonDecoder.process("{"));
     }
 
     @Test
     public void testShouldNotParseTrailingContent() {
-        exception.expect(MetafactureException.class);
-        exception.expectMessage("Unexpected token 'VALUE_NULL'");
-
-        jsonDecoder.process("{\"lit\":\"value\"}null");
+        Assert.assertThrows("Unexpected token 'VALUE_NULL'", MetafactureException.class, () ->
+                jsonDecoder.process("{\"lit\":\"value\"}null"));
     }
 
     @Test
     public void testShouldNotParseTrailingGarbage() {
-        exception.expect(MetafactureException.class);
-        exception.expectMessage("Unrecognized token 'XXX'");
-
-        jsonDecoder.process("{\"lit\":\"value\"}XXX");
+        Assert.assertThrows("Unrecognized token 'XXX'", MetafactureException.class, () ->
+                jsonDecoder.process("{\"lit\":\"value\"}XXX"));
     }
 
     @Test
     public void testShouldNotParseComments() {
-        exception.expect(MetafactureException.class);
-        exception.expectMessage("Unexpected character ('/' (code 47))");
-
         Assert.assertFalse(jsonDecoder.getAllowComments());
-
-        jsonDecoder.process("//{\"lit\":\"value\"}");
+        Assert.assertThrows("Unexpected character ('/' (code 47))", MetafactureException.class, () ->
+                jsonDecoder.process("//{\"lit\":\"value\"}"));
     }
 
     @Test
@@ -374,12 +359,9 @@ public final class JsonDecoderTest {
 
     @Test
     public void testShouldNotParseInlineComments() {
-        exception.expect(MetafactureException.class);
-        exception.expectMessage("Unexpected character ('/' (code 47))");
-
         Assert.assertFalse(jsonDecoder.getAllowComments());
-
-        jsonDecoder.process("{\"lit\":/*comment*/\"value\"}");
+        Assert.assertThrows("Unexpected character ('/' (code 47))", MetafactureException.class, () ->
+                jsonDecoder.process("{\"lit\":/*comment*/\"value\"}"));
     }
 
     @Test
