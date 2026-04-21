@@ -31,7 +31,7 @@ subprojects {
       'antlr':            '3.5.2',
       'assertj':          '3.11.1',
       'commons_compress': '1.21',
-      'commons_io':       '2.7',
+      'commons_io':       '2.21.0',
       'dbcp':             '1.4',
       'dspace':           '1.0.0',
       'equalsverifier':   '3.8.2',

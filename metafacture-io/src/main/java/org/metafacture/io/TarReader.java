@@ -56,7 +56,7 @@ public class TarReader extends DefaultObjectPipe<Reader, ObjectReceiver<Reader>>
     @Override
     public void process(final Reader reader) {
         try (
-                InputStream stream = new ReaderInputStream(reader, Charset.defaultCharset());
+                InputStream stream = ReaderInputStream.builder().setReader(reader).setCharset(Charset.defaultCharset()).get();
                 ArchiveInputStream tarStream = new TarArchiveInputStream(stream)
         ) {
             ArchiveEntry entry;
