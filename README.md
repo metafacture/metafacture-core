@@ -143,38 +143,6 @@ end
 
 The project `metafix` contains and uses a new `Metafix` stream module for Metafacture which plays the role of the `Metamorph` module in Fix-based Metafacture workflows. For the current implementation of the `Metafix` stream module see the tests in `metafix/src/test/java`. To play around with some examples, check out the [Metafacture Playground](https://metafacture.org/playground). For real-world usage samples see [openRub.fix](https://gitlab.com/oersi/oersi-etl/-/blob/master/data/production/openRub/openRub.fix) and [duepublico.fix](https://gitlab.com/oersi/oersi-etl/-/blob/master/data/production/duepublico/duepublico.fix). For reference documentation, see [Functions and cookbook](#functions-and-cookbook).
 
-### Extension
-
-The project `metafix-vsc` provides an extension for Visual Studio Code / Codium for `fix` via the language server protocol (LSP). In the current state the extension supports auto completion, simple syntax highlighting and auto closing brackets and quotes. This project was created using this [tutorial](https://www.typefox.io/blog/building-a-vs-code-extension-with-xtext-and-the-language-server-protocol) and the corresponding [example](https://github.com/TypeFox/languageserver-example).
-
-Build extension:
-
-> [!IMPORTANT]
-> There is a problem when building the extension on Windows and installing the extension on a Linux system afterwards. In some cases the Xtext Server won't start. So if you want to use the extension not only on Windows, build the extension on a Linux system or on a Linux Subsystem on Windows.
-
-1. Install Visual Studio Code / alternative: VS Codium
-2. Install Node.js (including npm)
-3. In metafacture-core execute:
-Unix: `./gradlew installServer`
-Windows: `.\gradlew.bat installServer`
-4. In `metafix-vsc/` execute (tip: if you use windows, install cygwin to execute npm commands):
-`npm install`
-
-To start the extension in development mode (starting a second code/codium instance), follow A. To create a vsix file to install the extension permanently follow B.
-
-A) Run in dev mode:
-1. Open `metafix-vsc/` in Visual Studio Code / Codium
-2. Launch vscode extension by pressing F5 (opens new window of Visual Studio Code)
-3. Open new file (file-ending `.fix`) or open existing fix-file (see sample below)
-
-B) Install vsix file:
-1. Install vsce: `npm install -g vsce`
-2. In `metafix-vsc/` execute: `vsce package`
-vsce will create a vsix file in the vsc directory which can be used for installation:
-3. Open VS Code / Codium
-4. Click 'Extensions' section
-5. Click menu bar and choose 'Install from VSIX...'
-
 ## Functions and cookbook
 
 ### Best practices and guidelines for working with Metafacture Fix

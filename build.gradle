@@ -110,12 +110,6 @@ task editorconfigChecker(type: Exec, group: 'Verification') {
   args('-exclude', '/\\.|/bin/|\\.beacon$|\\.txt\\.|^LICENSE$|^\\.project$|^gradlew.*')
 }
 
-task installServer(type: Copy) {
-  dependsOn(':metafix-ide:installDist')
-  from "metafix-ide/build/install/xtext-server"
-  into "metafix-vsc/xtext-server"
-}
-
 subprojects {
   apply plugin: 'checkstyle'
   apply plugin: 'jacoco'

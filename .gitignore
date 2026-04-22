@@ -50,11 +50,6 @@ atlassian-ide-plugin.xml
 gradle.properties
 secring.gpg
 
-# Ignore metafix-vsc files:
-node_modules/
-package-lock.json
-xtext-server/
-
 # Ignore metafix integration test files:
 /metafix/src/test/resources/org/metafacture/metafix/integration/**/*.diff
 /metafix/src/test/resources/org/metafacture/metafix/integration/**/*.err
