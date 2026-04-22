@@ -54,7 +54,7 @@ subprojects {
       'tukaani':          '1.6',
       'wiremock':         '3.13.2',
       'xalan':            '2.7.3',
-      'xtext':            '2.26.0'
+      'xtext':            '2.37.0'
     ]
 
     slf4j_api = "org.slf4j:slf4j-api:${versions.slf4j}"
