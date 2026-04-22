@@ -109,7 +109,35 @@ Metafacture Fix (Metafix) is work in progress towards tools and an implementatio
 
 See also [Fix Interest Group](https://github.com/elag/FIG) for an initiative towards an implementation-independent specification for the Fix Language.
 
-The project `metafix` contains the actual implementation of the Fix language as a Metafacture module and related components. It started as an [Xtext](#xtext) web project with a Fix grammar, from which a parser, a web editor, and a language server are generated. This project also contains an extension for VS code/codium based on that language server. (The web editor has effectively been replaced by the [Metafacture Playground](https://metafacture.org/playground), but remains here for its integration into the language server, which [we want to move over](https://github.com/metafacture/metafacture-playground/issues?q=is%3Aissue+language+server+is%3Aopen) to the playground.)
+The project `metafix` contains the actual implementation of the Fix language as a Metafacture module and related components. It started as an [Xtext](#xtext) web project with a Fix grammar, from which a parser, a web editor, and a language server are generated. This project also contains an extension for VS code/codium based on that language server. (The web editor has been replaced by the [Metafacture Playground](https://metafacture.org/playground).)
+
+```
+# Fix is a macro-language for data transformations
+
+# Simple fixes
+
+add_field("hello", "world")
+remove_field("my.deep.nested.junk")
+copy_field("stats", "output.$append")
+
+# Conditionals
+
+if exists("error")
+  set_field("is_valid", "no")
+  log("error")
+elsif exists("warning")
+  set_field("is_valid", "yes")
+  log("warning")
+else
+  set_field("is_valid", "yes")
+end
+
+# Loops
+
+do list(path: "foo", "var": "$i")
+  add_field("$i.bar", "baz")
+end
+```
 
 ## Usage
 
@@ -146,48 +174,6 @@ vsce will create a vsix file in the vsc directory which can be used for installa
 3. Open VS Code / Codium
 4. Click 'Extensions' section
 5. Click menu bar and choose 'Install from VSIX...'
-
-### Web editor
-
-Start the web server:
-
-`./gradlew jettyRun`
-
-Visit [http://localhost:8080/](http://localhost:8080/), and paste this into the editor:
-
-```
-# Fix is a macro-language for data transformations
-
-# Simple fixes
-
-add_field("hello", "world")
-remove_field("my.deep.nested.junk")
-copy_field("stats", "output.$append")
-
-# Conditionals
-
-if exists("error")
-  set_field("is_valid", "no")
-  log("error")
-elsif exists("warning")
-  set_field("is_valid", "yes")
-  log("warning")
-else
-  set_field("is_valid", "yes")
-end
-
-# Loops
-
-do list(path: "foo", "var": "$i")
-  add_field("$i.bar", "baz")
-end
-```
-
-Content assist is triggered with Ctrl-Space. The input above is also used in `FixParsingTest.java`.
-
-Run workflows on the web server, passing `data`, `flux`, and `fix`:
-
-[http://localhost:8080/xtext-service/run?data='1'{'a': '5', 'z': 10}&flux=as-lines|decode-formeta|fix|encode-formeta(style="multiline")&fix=copy_field(a,c)](http://localhost:8080/xtext-service/run?data=%271%27{%27a%27:%20%275%27,%20%27z%27:%2010}&flux=as-lines|decode-formeta|fix|encode-formeta(style=%22multiline%22)&fix=copy_field(a,c))
 
 ## Functions and cookbook
 
