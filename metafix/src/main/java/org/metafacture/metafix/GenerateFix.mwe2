@@ -12,9 +12,6 @@ Workflow {
         runtimeTest = {
           enabled = true
         }
-        genericIde = {
-          name = "metafix-ide"
-        }
         mavenLayout = true
       }
       code = {
