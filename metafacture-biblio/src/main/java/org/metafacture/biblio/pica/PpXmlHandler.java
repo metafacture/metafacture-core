@@ -64,8 +64,17 @@ public final class PpXmlHandler extends DefaultXmlPipe<StreamReceiver> {
             currentTag = attributes.getValue("id");
         }
         else if (DATAFIELD.equals(localName)) {
-            getReceiver().startEntity(
-                    attributes.getValue("id") + attributes.getValue("occ"));
+            final String id = attributes.getValue("id");
+            final String occurence = attributes.getValue("occ");
+            if (occurence.matches("[1-9]")) {
+                getReceiver().startEntity(id + "/0" + occurence);
+            }
+            else if (occurence.isEmpty()) {
+                getReceiver().startEntity(id);
+            }
+            else {
+                getReceiver().startEntity(id + "/" + occurence);
+            }
         }
         else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
             getReceiver().startRecord("");

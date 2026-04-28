@@ -109,7 +109,7 @@ public final class PicaXmlHandlerTest {
 
         final InOrder ordered    = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
-        ordered.verify(receiver).startEntity("201U01");
+        ordered.verify(receiver).startEntity("201U/01");
         ordered.verify(receiver).literal("0", fieldValue);
         ordered.verify(receiver).endEntity();
         ordered.verify(receiver).endRecord();

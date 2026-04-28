@@ -118,7 +118,7 @@ public final class PicaXmlHandler extends DefaultXmlPipe<StreamReceiver> {
             final String tag = attributes.getValue("tag");
             final String occurence = attributes.getValue("occurrence");
             if (occurence != null) {
-                getReceiver().startEntity(tag + occurence);
+                getReceiver().startEntity(tag + "/" + occurence);
             }
             else {
                 getReceiver().startEntity(tag);
