@@ -24,7 +24,7 @@ Merge pull-request #PULLREQUEST-ID from cboehme/fix-xy
 
 # Releasing
 
-We shall make releases quarterly. Approximate timetable is every Januar, April, July, October.
+We shall make releases quarterly. Approximate timetable is every Januar, April, July, October. To plan the quarterly releases we use milestones. First the milestones are named after the quarterly period (e. g. "Q2/2026"). When released we rename the milestone corresponding to the released version number.
 
 Releasing involves to first make and test the release candidate before actually making the release. Note that we provide a *GitHub release for manual download* as well as a *release on Maven central* to be consumed as a library.
 
