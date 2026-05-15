@@ -19,6 +19,10 @@ package org.metafacture.json;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.io.JsonEOFException;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -318,33 +322,28 @@ public final class JsonDecoderTest {
 
     @Test
     public void testShouldOnlyParseObjects() {
-        Assert.assertThrows("Unexpected token 'VALUE_NULL'", MetafactureException.class, () ->
-                jsonDecoder.process("null"));
+        assertException(null, "Unexpected token 'VALUE_NULL'", "null");
     }
 
     @Test
     public void testShouldNotParseIncompleteObjects() {
-        Assert.assertThrows("Unexpected end-of-input", MetafactureException.class, () ->
-                jsonDecoder.process("{"));
+        assertException(JsonEOFException.class, "Unexpected end-of-input", "{");
     }
 
     @Test
     public void testShouldNotParseTrailingContent() {
-        Assert.assertThrows("Unexpected token 'VALUE_NULL'", MetafactureException.class, () ->
-                jsonDecoder.process("{\"lit\":\"value\"}null"));
+        assertException(null, "Unexpected token 'VALUE_NULL'", "{\"lit\":\"value\"}null");
     }
 
     @Test
     public void testShouldNotParseTrailingGarbage() {
-        Assert.assertThrows("Unrecognized token 'XXX'", MetafactureException.class, () ->
-                jsonDecoder.process("{\"lit\":\"value\"}XXX"));
+        assertException(JsonParseException.class, "Unrecognized token 'XXX'", "{\"lit\":\"value\"}XXX");
     }
 
     @Test
     public void testShouldNotParseComments() {
         Assert.assertFalse(jsonDecoder.getAllowComments());
-        Assert.assertThrows("Unexpected character ('/' (code 47))", MetafactureException.class, () ->
-                jsonDecoder.process("//{\"lit\":\"value\"}"));
+        assertException(JsonParseException.class, "Unexpected character ('/' (code 47))", "//{\"lit\":\"value\"}");
     }
 
     @Test
@@ -360,8 +359,7 @@ public final class JsonDecoderTest {
     @Test
     public void testShouldNotParseInlineComments() {
         Assert.assertFalse(jsonDecoder.getAllowComments());
-        Assert.assertThrows("Unexpected character ('/' (code 47))", MetafactureException.class, () ->
-                jsonDecoder.process("{\"lit\":/*comment*/\"value\"}"));
+        assertException(JsonParseException.class, "Unexpected character ('/' (code 47))", "{\"lit\":/*comment*/\"value\"}");
     }
 
     @Test
@@ -375,6 +373,26 @@ public final class JsonDecoderTest {
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("lit", "value");
         ordered.verify(receiver).endRecord();
+    }
+
+    private void assertException(final Class<? extends Throwable> expectedClass, final String expectedMessage, final String input) {
+        final Throwable thrownException = Assert.assertThrows(MetafactureException.class, () -> jsonDecoder.process(input));
+        final Throwable actualException;
+
+        final String expectedSuffix;
+
+        if (expectedClass != null) {
+            actualException = thrownException.getCause();
+            Assert.assertEquals(expectedClass, actualException.getClass());
+
+            expectedSuffix = ": ";
+        }
+        else {
+            actualException = thrownException;
+            expectedSuffix = " at ";
+        }
+
+        MatcherAssert.assertThat(actualException.getMessage(), CoreMatchers.startsWith(expectedMessage + expectedSuffix));
     }
 
 }
