@@ -16,8 +16,10 @@
 
 package org.metafacture.csv;
 
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
 
+import com.opencsv.exceptions.CsvMalformedLineException;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
 import org.junit.After;
@@ -83,8 +85,8 @@ public final class CsvDecoderTest {
 
     @Test
     public void testInvalidSyntax() {
-        assertException(IllegalArgumentException.class, null,
-                "wrong number of columns (expected 3, was 0)", "a,\"b1,b2,b3,c"); // missing closing "
+        assertException(MetafactureException.class, CsvMalformedLineException.class,
+                "Unterminated quoted field at end of CSV line", "a,\"b1,b2,b3,c"); // missing closing "
     }
 
     @Test
@@ -115,13 +117,11 @@ public final class CsvDecoderTest {
         ordered.verify(receiver).literal("h2", "b1,b2,\nb3");
         ordered.verify(receiver).literal("h3", "c");
         ordered.verify(receiver).endRecord();
-        /* skipped:
         ordered.verify(receiver).startRecord("2");
         ordered.verify(receiver).literal("h1", "a2");
         ordered.verify(receiver).literal("h2", "b4");
         ordered.verify(receiver).literal("h3", "c2");
         ordered.verify(receiver).endRecord();
-        */
         ordered.verifyNoMoreInteractions();
         Mockito.verifyNoMoreInteractions(receiver);
     }
