@@ -24,6 +24,10 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Logs the string representation of every object.
  *
@@ -73,7 +77,7 @@ public final class ObjectLogger<T>
 
     @Override
     public void process(final T obj) {
-        LOG.externalDebug("{}{}", logPrefix, obj);
+        writeLog("{}", obj);
         if (getReceiver() != null) {
             getReceiver().process(obj);
         }
@@ -81,12 +85,21 @@ public final class ObjectLogger<T>
 
     @Override
     protected void onResetStream() {
-        LOG.externalDebug("{}resetStream", logPrefix);
+        writeLog("resetStream");
     }
 
     @Override
     protected void onCloseStream() {
-        LOG.externalDebug("{}closeStream", logPrefix);
+        writeLog("closeStream");
+    }
+
+    private void writeLog(final String message, final Object... arguments) {
+        final List<Object> argumentList = new ArrayList<>(arguments.length + 1);
+
+        argumentList.add(logPrefix);
+        Arrays.stream(arguments).forEach(argumentList::add);
+
+        LOG.externalDebug("{}" + message, argumentList.toArray());
     }
 
 }
