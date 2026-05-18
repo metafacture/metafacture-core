@@ -43,8 +43,11 @@ import java.util.List;
 public final class StreamLogger
         extends DefaultStreamPipe<StreamReceiver> {
 
+    public static final String DEFAULT_LEVEL = "DEBUG";
+
     private static final MetafactureLogger LOG = new MetafactureLogger(StreamLogger.class);
 
+    private String level = DEFAULT_LEVEL;
     private String logPrefix = "";
 
     /**
@@ -73,6 +76,15 @@ public final class StreamLogger
      */
     public void setPrefix(final String prefix) {
         this.logPrefix = prefix;
+    }
+
+    /**
+     * Sets the {@link MetafactureLogger.Level log level}.
+     *
+     * @param level the log level
+     */
+    public void setLevel(final String level) {
+        this.level = level;
     }
 
     @Override
@@ -137,7 +149,7 @@ public final class StreamLogger
         argumentList.add(logPrefix);
         Arrays.stream(arguments).forEach(argumentList::add);
 
-        LOG.externalDebug("{}" + message, argumentList.toArray());
+        LOG.externalLog(level, "{}" + message, argumentList.toArray());
     }
 
 }

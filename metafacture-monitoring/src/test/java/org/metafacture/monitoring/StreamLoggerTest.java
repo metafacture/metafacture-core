@@ -135,4 +135,27 @@ public final class StreamLoggerTest extends TestHelpers {
         });
     }
 
+    @Test
+    public void shouldLogAtCustomLevel() {
+        logger.setLevel("WARN");
+
+        logger.startRecord("1");
+        logger.startEntity("entity");
+        logger.literal("literal", "value");
+        logger.endEntity();
+        logger.endRecord();
+        logger.resetStream();
+        logger.closeStream();
+
+        assertLog(logLogger, "WARN", c -> {
+            assertLog(c, "{}start record {}", "", "1");
+            assertLog(c, "{}start entity {}", "", "entity");
+            assertLog(c, "{}literal {}={}", "", "literal", "value");
+            assertLog(c, "{}end entity", "");
+            assertLog(c, "{}end record", "");
+            assertLog(c, "{}resetStream", "");
+            assertLog(c, "{}closeStream", "");
+        });
+    }
+
 }

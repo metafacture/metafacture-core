@@ -24,7 +24,6 @@ import org.metafacture.metafix.api.FixFunction;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 @FixCommand("log")
 public class Log implements FixFunction {
@@ -39,29 +38,8 @@ public class Log implements FixFunction {
 
     @Override
     public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-        // does not support Catmandu log level option FATAL
-
-        final String level = options.getOrDefault("level", "INFO");
-        final Consumer<String> consumer;
-
-        switch (level) {
-            case "DEBUG":
-                consumer = LOG::externalDebug;
-                break;
-            case "ERROR":
-                consumer = LOG::externalError;
-                break;
-            case "INFO":
-                consumer = LOG::externalInfo;
-                break;
-            case "WARN":
-                consumer = LOG::externalWarn;
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported log level: " + level);
-        }
-
-        consumer.accept(params.get(0));
+        // does not support Catmandu log level option FATAL, but does (incidentally) support TRACE
+        LOG.externalLog(options.getOrDefault("level", "INFO"), params.get(0));
     }
 
 }

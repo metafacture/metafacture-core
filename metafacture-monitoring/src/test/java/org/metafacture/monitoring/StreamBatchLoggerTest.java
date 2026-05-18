@@ -129,4 +129,17 @@ public final class StreamBatchLoggerTest extends TestHelpers {
         });
     }
 
+    @Test
+    public void shouldLogAtCustomLevel() {
+        streamBatchLogger.setLevel("WARN");
+
+        streamBatchLogger.startRecord("1");
+        streamBatchLogger.endRecord();
+        streamBatchLogger.closeStream();
+
+        assertLog(logger, "WARN", c -> {
+            assertLog(c, "records processed: 1");
+        });
+    }
+
 }

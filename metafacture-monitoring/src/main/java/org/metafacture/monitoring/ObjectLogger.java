@@ -43,8 +43,11 @@ import java.util.List;
 public final class ObjectLogger<T>
         extends DefaultObjectPipe<T, ObjectReceiver<T>> {
 
+    public static final String DEFAULT_LEVEL = "DEBUG";
+
     private static final MetafactureLogger LOG = new MetafactureLogger(ObjectLogger.class);
 
+    private String level = DEFAULT_LEVEL;
     private String logPrefix = "";
 
     /**
@@ -75,6 +78,15 @@ public final class ObjectLogger<T>
         this.logPrefix = prefix;
     }
 
+    /**
+     * Sets the {@link MetafactureLogger.Level log level}.
+     *
+     * @param level the log level
+     */
+    public void setLevel(final String level) {
+        this.level = level;
+    }
+
     @Override
     public void process(final T obj) {
         writeLog("{}", obj);
@@ -99,7 +111,7 @@ public final class ObjectLogger<T>
         argumentList.add(logPrefix);
         Arrays.stream(arguments).forEach(argumentList::add);
 
-        LOG.externalDebug("{}" + message, argumentList.toArray());
+        LOG.externalLog(level, "{}" + message, argumentList.toArray());
     }
 
 }

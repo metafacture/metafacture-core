@@ -106,4 +106,19 @@ public final class ObjectLoggerTest extends TestHelpers {
         });
     }
 
+    @Test
+    public void shouldLogAtCustomLevel() {
+        logger.setLevel("WARN");
+
+        logger.process("object");
+        logger.resetStream();
+        logger.closeStream();
+
+        assertLog(logLogger, "WARN", c -> {
+            assertLog(c, "{}{}", "", "object");
+            assertLog(c, "{}resetStream", "");
+            assertLog(c, "{}closeStream", "");
+        });
+    }
+
 }

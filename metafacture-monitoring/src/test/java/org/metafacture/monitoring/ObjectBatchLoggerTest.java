@@ -108,4 +108,16 @@ public final class ObjectBatchLoggerTest extends TestHelpers {
         });
     }
 
+    @Test
+    public void shouldLogAtCustomLevel() {
+        objectBatchLogger.setLevel("WARN");
+
+        objectBatchLogger.process("object");
+        objectBatchLogger.closeStream();
+
+        assertLog(logger, "WARN", c -> {
+            assertLog(c, "records processed: 1");
+        });
+    }
+
 }
