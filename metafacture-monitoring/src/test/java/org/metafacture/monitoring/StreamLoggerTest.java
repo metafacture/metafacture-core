@@ -114,7 +114,7 @@ public final class StreamLoggerTest extends TestHelpers {
     @Test
     public void shouldLogWithPrefix() {
         final String prefix = "prefix:";
-        logger = new StreamLogger(prefix);
+        logger.setPrefix(prefix);
 
         logger.startRecord("1");
         logger.startEntity("entity");

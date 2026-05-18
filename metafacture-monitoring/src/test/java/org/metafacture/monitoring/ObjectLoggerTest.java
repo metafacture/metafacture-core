@@ -93,7 +93,7 @@ public final class ObjectLoggerTest extends TestHelpers {
     @Test
     public void shouldLogWithPrefix() {
         final String prefix = "prefix:";
-        logger = new ObjectLogger<>(prefix);
+        logger.setPrefix(prefix);
 
         logger.process("object");
         logger.resetStream();
