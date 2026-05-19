@@ -75,7 +75,7 @@ public final class StreamLoggerTest extends TestHelpers {
         ordered.verifyNoMoreInteractions();
         Mockito.verifyNoMoreInteractions(receiver);
 
-        assertLog(logLogger, "DEBUG", c -> {
+        assertLog(logLogger, "INFO", c -> {
             assertLog(c, "{}start record {}", "", "1");
             assertLog(c, "{}start entity {}", "", "entity");
             assertLog(c, "{}literal {}={}", "", "literal", "value");
@@ -100,7 +100,7 @@ public final class StreamLoggerTest extends TestHelpers {
 
         Mockito.verifyNoMoreInteractions(receiver);
 
-        assertLog(logLogger, "DEBUG", c -> {
+        assertLog(logLogger, "INFO", c -> {
             assertLog(c, "{}start record {}", "", "1");
             assertLog(c, "{}start entity {}", "", "entity");
             assertLog(c, "{}literal {}={}", "", "literal", "value");
@@ -124,7 +124,7 @@ public final class StreamLoggerTest extends TestHelpers {
         logger.resetStream();
         logger.closeStream();
 
-        assertLog(logLogger, "DEBUG", c -> {
+        assertLog(logLogger, "INFO", c -> {
             assertLog(c, "{}start record {}", prefix, "1");
             assertLog(c, "{}start entity {}", prefix, "entity");
             assertLog(c, "{}literal {}={}", prefix, "literal", "value");

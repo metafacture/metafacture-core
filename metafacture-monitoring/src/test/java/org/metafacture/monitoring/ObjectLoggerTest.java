@@ -66,7 +66,7 @@ public final class ObjectLoggerTest extends TestHelpers {
         ordered.verifyNoMoreInteractions();
         Mockito.verifyNoMoreInteractions(receiver);
 
-        assertLog(logLogger, "DEBUG", c -> {
+        assertLog(logLogger, "INFO", c -> {
             assertLog(c, "{}{}", "", "object");
             assertLog(c, "{}resetStream", "");
             assertLog(c, "{}closeStream", "");
@@ -83,7 +83,7 @@ public final class ObjectLoggerTest extends TestHelpers {
 
         Mockito.verifyNoMoreInteractions(receiver);
 
-        assertLog(logLogger, "DEBUG", c -> {
+        assertLog(logLogger, "INFO", c -> {
             assertLog(c, "{}{}", "", "object");
             assertLog(c, "{}resetStream", "");
             assertLog(c, "{}closeStream", "");
@@ -99,7 +99,7 @@ public final class ObjectLoggerTest extends TestHelpers {
         logger.resetStream();
         logger.closeStream();
 
-        assertLog(logLogger, "DEBUG", c -> {
+        assertLog(logLogger, "INFO", c -> {
             assertLog(c, "{}{}", prefix, "object");
             assertLog(c, "{}resetStream", prefix);
             assertLog(c, "{}closeStream", prefix);

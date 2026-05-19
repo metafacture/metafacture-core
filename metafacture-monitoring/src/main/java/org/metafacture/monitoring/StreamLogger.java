@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Leaves the event stream untouched but logs it to the debug log.
+ * Leaves the event stream untouched but logs it to the info log.
  * The {@link StreamReceiver} may be {@code null}.
  * In this case {@link StreamLogger} behaves as a sink, just logging.
  *
@@ -43,7 +43,7 @@ import java.util.List;
 public final class StreamLogger
         extends DefaultStreamPipe<StreamReceiver> {
 
-    public static final String DEFAULT_LEVEL = "DEBUG";
+    public static final String DEFAULT_LEVEL = "INFO";
 
     private static final MetafactureLogger LOG = new MetafactureLogger(StreamLogger.class);
 

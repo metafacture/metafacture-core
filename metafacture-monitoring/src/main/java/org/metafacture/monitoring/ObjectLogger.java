@@ -43,7 +43,7 @@ import java.util.List;
 public final class ObjectLogger<T>
         extends DefaultObjectPipe<T, ObjectReceiver<T>> {
 
-    public static final String DEFAULT_LEVEL = "DEBUG";
+    public static final String DEFAULT_LEVEL = "INFO";
 
     private static final MetafactureLogger LOG = new MetafactureLogger(ObjectLogger.class);
 
