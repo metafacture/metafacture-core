@@ -32,6 +32,26 @@ public class MetafactureLogger {
     private final Logger externalLogger;
     private final Logger internalLogger;
 
+    public enum Level {
+
+        ERROR((l, f, a) -> l.error(f, a)),
+        WARN((l, f, a) -> l.warn(f, a)),
+        INFO((l, f, a) -> l.info(f, a)),
+        DEBUG((l, f, a) -> l.debug(f, a)),
+        TRACE((l, f, a) -> l.trace(f, a));
+
+        private final LoggingConsumer consumer;
+
+        Level(final LoggingConsumer consumer) {
+            this.consumer = consumer;
+        }
+
+        private void log(final Logger logger, final String format, final Object... arguments) {
+            consumer.accept(logger, format, arguments);
+        }
+
+    }
+
     /**
      * Creates an instance of {@link MetafactureLogger} with the given class.
      *
@@ -67,6 +87,97 @@ public class MetafactureLogger {
      */
     public Logger getExternalLogger() {
         return externalLogger;
+    }
+
+    private void log(final Level level, final Logger logger, final String format, final Object... arguments) {
+        level.log(logger, format, arguments);
+    }
+
+    private void log(final String level, final Logger logger, final String format, final Object... arguments) {
+        final Level levelValue;
+
+        try {
+            levelValue = Level.valueOf(level);
+        }
+        catch (final IllegalArgumentException e) {
+            throw new IllegalArgumentException("Unsupported log level: " + level, e);
+        }
+
+        log(levelValue, logger, format, arguments);
+    }
+
+    /**
+     * Logs an <i>internal</i> message at the specified {@link Level level}
+     * according to the specified format and arguments.
+     *
+     * @param level the log level
+     * @param format the format string
+     * @param arguments a list of arguments
+     */
+    public void log(final Level level, final String format, final Object... arguments) {
+        log(level, internalLogger, format, arguments);
+    }
+
+    /**
+     * Logs an <i>internal</i> message at the specified {@link Level level}
+     * according to the specified format and arguments.
+     *
+     * @param level the log level
+     * @param format the format string
+     * @param arguments a list of arguments
+     */
+    public void log(final String level, final String format, final Object... arguments) {
+        log(level, internalLogger, format, arguments);
+    }
+
+    /**
+     * Logs an <i>external</i> message at the specified {@link Level level}
+     * according to the specified format and arguments.
+     *
+     * @param level the log level
+     * @param format the format string
+     * @param arguments a list of arguments
+     */
+    public void externalLog(final Level level, final String format, final Object... arguments) {
+        log(level, externalLogger, format, arguments);
+    }
+
+    /**
+     * Logs an <i>external</i> message at the specified {@link Level level}
+     * according to the specified format and arguments.
+     *
+     * @param level the log level
+     * @param format the format string
+     * @param arguments a list of arguments
+     */
+    public void externalLog(final String level, final String format, final Object... arguments) {
+        log(level, externalLogger, format, arguments);
+    }
+
+    /**
+     * Logs an <i>internal and external</i> message at the specified {@link Level level}
+     * according to the specified format and arguments.
+     *
+     * @param level the log level
+     * @param format the format string
+     * @param arguments a list of arguments
+     */
+    public void combinedLog(final Level level, final String format, final Object... arguments) {
+        log(level, format, arguments);
+        externalLog(level, format, arguments);
+    }
+
+    /**
+     * Logs an <i>internal and external</i> message at the specified {@link Level level}
+     * according to the specified format and arguments.
+     *
+     * @param level the log level
+     * @param format the format string
+     * @param arguments a list of arguments
+     */
+    public void combinedLog(final String level, final String format, final Object... arguments) {
+        log(level, format, arguments);
+        externalLog(level, format, arguments);
     }
 
     /**
@@ -237,6 +348,11 @@ public class MetafactureLogger {
     public void combinedTrace(final String format, final Object... arguments) {
         trace(format, arguments);
         externalTrace(format, arguments);
+    }
+
+    @FunctionalInterface
+    private interface LoggingConsumer {
+        void accept(Logger logger, String format, Object... arguments);
     }
 
 }

@@ -49,12 +49,14 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
     public static final String BATCH_COUNT_VAR = "batches";
     public static final String BATCH_SIZE_VAR = "batchSize";
     public static final String DEFAULT_FORMAT = "records processed: ${totalRecords}";
+    public static final String DEFAULT_LEVEL = "INFO";
 
     private static final MetafactureLogger LOG = new MetafactureLogger(ObjectBatchLogger.class);
 
     private final Map<String, String> vars = new HashMap<String, String>();
     private final String format;
 
+    private String level = DEFAULT_LEVEL;
     private long batchSize = DEFAULT_BATCH_SIZE;
     private long recordCount;
     private long batchCount;
@@ -96,12 +98,21 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
         this.batchSize = batchSize;
     }
 
+    /**
+     * Sets the {@link MetafactureLogger.Level log level}.
+     *
+     * @param level the log level
+     */
+    public void setLevel(final String level) {
+        this.level = level;
+    }
+
     private void writeLog() {
         vars.put(RECORD_COUNT_VAR, Long.toString(recordCount));
         vars.put(BATCH_COUNT_VAR, Long.toString(batchCount));
         vars.put(BATCH_SIZE_VAR, Long.toString(batchSize));
         vars.put(TOTAL_RECORD_COUNT_VAR, Long.toString((batchSize * batchCount) + recordCount));
-        LOG.externalInfo(StringUtil.format(format, vars));
+        LOG.externalLog(level, StringUtil.format(format, vars));
     }
 
     @Override
