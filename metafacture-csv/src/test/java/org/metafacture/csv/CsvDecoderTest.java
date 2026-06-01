@@ -16,9 +16,14 @@
 
 package org.metafacture.csv;
 
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
 
+import com.opencsv.exceptions.CsvMalformedLineException;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -79,6 +84,49 @@ public final class CsvDecoderTest {
     }
 
     @Test
+    public void testInvalidSyntax() {
+        assertException(MetafactureException.class, CsvMalformedLineException.class,
+                "Unterminated quoted field at end of CSV line", "a,\"b1,b2,b3,c"); // missing closing "
+    }
+
+    @Test
+    public void testInvalidColumns() {
+        assertException(IllegalArgumentException.class, null,
+                "wrong number of columns (expected 3, was 2)", "a,b"); // missing third column
+    }
+
+    @Test
+    public void testMultilineSingleRow() {
+        decoder.process("a,\"b1,b2,\nb3\",c");
+        final InOrder ordered = Mockito.inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("h1", "a");
+        ordered.verify(receiver).literal("h2", "b1,b2,\nb3");
+        ordered.verify(receiver).literal("h3", "c");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+        Mockito.verifyNoMoreInteractions(receiver);
+    }
+
+    @Test
+    public void testMultilineMultipleRows() {
+        decoder.process("a,\"b1,b2,\nb3\",c\na2,b4,c2");
+        final InOrder ordered = Mockito.inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("h1", "a");
+        ordered.verify(receiver).literal("h2", "b1,b2,\nb3");
+        ordered.verify(receiver).literal("h3", "c");
+        ordered.verify(receiver).endRecord();
+        ordered.verify(receiver).startRecord("2");
+        ordered.verify(receiver).literal("h1", "a2");
+        ordered.verify(receiver).literal("h2", "b4");
+        ordered.verify(receiver).literal("h3", "c2");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+        Mockito.verifyNoMoreInteractions(receiver);
+    }
+
+    @Test
     public void testTabSeparated() {
 
         decoder.setSeparator("\t");
@@ -108,6 +156,26 @@ public final class CsvDecoderTest {
         ordered.verify(receiver).literal("3", "\\");
         ordered.verify(receiver).literal("4", "\\cd\\");
         ordered.verify(receiver).endRecord();
+    }
+
+    private void assertException(final Class<? extends Throwable> exceptionClass, final Class<?> expectedClass, final String expectedMessage, final String input) {
+        final Throwable thrownException = Assert.assertThrows(exceptionClass, () -> decoder.process(input));
+        final Throwable actualException;
+
+        final String expectedSuffix;
+
+        if (expectedClass != null) {
+            actualException = thrownException.getCause();
+            Assert.assertEquals(expectedClass, actualException.getClass());
+
+            expectedSuffix = ". ";
+        }
+        else {
+            actualException = thrownException;
+            expectedSuffix = " in ";
+        }
+
+        MatcherAssert.assertThat(actualException.getMessage(), CoreMatchers.startsWith(expectedMessage + expectedSuffix));
     }
 
 }
