@@ -19,6 +19,7 @@ description = 'Modules for processing JSON data in Metafacture'
 
 dependencies {
   api project(':metafacture-framework')
+  implementation project(':metafacture-commons')
   implementation "com.fasterxml.jackson.core:jackson-core:${versions.jackson}"
   implementation "com.fasterxml.jackson.core:jackson-databind:${versions.jackson}"
   implementation "com.jayway.jsonpath:json-path:${versions.jsonpath}"

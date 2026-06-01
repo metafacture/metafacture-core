@@ -16,6 +16,7 @@
 
 package org.metafacture.io;
 
+import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -301,7 +302,7 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
             final String requestBody = getInput(input,
                 body == null && method.getRequestHasBody() ? INPUT_DESIGNATOR : body);
 
-            final URL urlToOpen = new URL(requestUrl);
+            final URL urlToOpen = ResourceUtil.toURL(requestUrl);
             final HttpURLConnection connection = requestBody != null ?
                 doOutput(urlToOpen, requestBody) : doRedirects(urlToOpen);
 
@@ -368,7 +369,7 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
                 case HttpURLConnection.HTTP_MOVED_PERM:
                 case HttpURLConnection.HTTP_MOVED_TEMP:
                     final String location = URLDecoder.decode(connection.getHeaderField("Location"), "UTF-8");
-                    urlToFollow = new URL(urlToFollow, location); // Deal with relative URLs
+                    urlToFollow = ResourceUtil.toURL(urlToFollow, location); // Deal with relative URLs
                     break;
                 default:
                     return connection;

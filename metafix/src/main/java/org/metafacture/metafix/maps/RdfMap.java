@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix.maps;
 
+import org.metafacture.commons.ResourceUtil;
 import org.metafacture.metafix.FixExecutionException;
 import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
@@ -34,7 +35,6 @@ import org.apache.jena.shared.PropertyNotFoundException;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -365,7 +365,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
         URLConnection conn;
 
         while (true) {
-            final URLConnection conn2 = new URL(connectionURL).openConnection();
+            final URLConnection conn2 = ResourceUtil.toURL(connectionURL).openConnection();
             if (!(conn2 instanceof HttpURLConnection)) {
                 conn = conn2;
                 break;
