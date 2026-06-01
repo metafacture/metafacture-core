@@ -41,23 +41,34 @@ public final class ObjectLogger<T>
 
     private static final MetafactureLogger LOG = new MetafactureLogger(ObjectLogger.class);
 
-    private final String logPrefix;
+    private String logPrefix = "";
 
     /**
      * Creates an instance of {@link ObjectLogger}.
      */
     public ObjectLogger() {
-        this("");
     }
 
     /**
      * Creates an instance of {@link ObjectLogger} by a given prefix of the log
      * messages.
      *
+     * @deprecated Use {@link #setPrefix} instead.
+     *
      * @param logPrefix the prefix of the log messages
      */
+    @Deprecated/*(since="9.0", forRemoval=true)*/
     public ObjectLogger(final String logPrefix) {
         this.logPrefix = logPrefix;
+    }
+
+    /**
+     * Sets the prefix used when logging messages.
+     *
+     * @param prefix the prefix of the log messages
+     */
+    public void setPrefix(final String prefix) {
+        this.logPrefix = prefix;
     }
 
     @Override

@@ -20,6 +20,10 @@ import org.metafacture.framework.helpers.DefaultObjectReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
 
 /**
  * Tests for class {@link ObjectTimer}.
@@ -27,7 +31,11 @@ import org.junit.Test;
  * @author Christoph Böhme
  *
  */
-public final class ObjectTimerTest {
+@RunWith(MockitoJUnitRunner.class)
+public final class ObjectTimerTest extends TestHelpers {
+
+    @Mock(name = "external.org.metafacture.monitoring.TimerBase")
+    private Logger logger;
 
     private ObjectTimer<String> objectTimer;
     private BenchmarkedModule benchmarkedModule;
@@ -44,18 +52,34 @@ public final class ObjectTimerTest {
 
     @Test
     public void testShouldMeasureExecutionTime() {
-
         objectTimer.process("");
         objectTimer.process("");
         objectTimer.process("");
         objectTimer.process("");
         objectTimer.closeStream();
+
+        assertLog(logger, "", 4);
     }
 
     @Test
     public void testShouldHandleImmediateCloseStreamWithNoProcessing() {
-
         objectTimer.closeStream();
+        assertLog(logger, "", 0);
+    }
+
+    @Test
+    public void shouldLogWithPrefix() {
+        final String prefix = "prefix:";
+        objectTimer = new ObjectTimer<>(prefix);
+        objectTimer.setReceiver(benchmarkedModule);
+
+        objectTimer.process("");
+        objectTimer.process("");
+        objectTimer.process("");
+        objectTimer.process("");
+        objectTimer.closeStream();
+
+        assertLog(logger, prefix, 4);
     }
 
     /**
