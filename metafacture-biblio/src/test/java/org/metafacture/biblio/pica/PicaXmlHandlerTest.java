@@ -188,7 +188,6 @@ public final class PicaXmlHandlerTest {
             throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
-
         picaXmlHandler.setIgnoreNamespace(true);
         picaXmlHandler.setNamespace("");
         picaXmlHandler.startElement(null, RECORD, "", attributes);
