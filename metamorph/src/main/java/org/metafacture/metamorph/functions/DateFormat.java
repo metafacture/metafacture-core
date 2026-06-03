@@ -212,6 +212,6 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
         if (!SUPPORTED_LANGUAGES.contains(language)) {
             throw new MorphBuildException("Language '" + language + "' not supported.");
         }
-        this.outputLocale = new Locale(language);
+        this.outputLocale = Locale.forLanguageTag(language);
     }
 }

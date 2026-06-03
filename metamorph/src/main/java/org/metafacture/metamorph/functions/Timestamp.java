@@ -111,7 +111,7 @@ public final class Timestamp extends AbstractSimpleStatelessFunction {
         if (!SUPPORTED_LANGUAGES.contains(language)) {
             throw new MorphBuildException("Language '" + language + "' not supported.");
         }
-        this.locale = new Locale(language);
+        this.locale = Locale.forLanguageTag(language);
     }
 
 }
