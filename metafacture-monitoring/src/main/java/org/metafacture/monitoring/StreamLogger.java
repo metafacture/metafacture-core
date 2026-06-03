@@ -41,23 +41,34 @@ public final class StreamLogger
 
     private static final MetafactureLogger LOG = new MetafactureLogger(StreamLogger.class);
 
-    private final String logPrefix;
+    private String logPrefix = "";
 
     /**
      * Creates an instance of {@link StreamLogger}.
      */
     public StreamLogger() {
-        this("");
     }
 
     /**
      * Creates an instance of {@link StreamLogger} by a given prefix used when log
      * messages.
      *
+     * @deprecated Use {@link #setPrefix} instead.
+     *
      * @param logPrefix the prefix of the log messages
      */
+    @Deprecated/*(since="9.0", forRemoval=true)*/
     public StreamLogger(final String logPrefix) {
-        this.logPrefix = logPrefix;
+        setPrefix(logPrefix);
+    }
+
+    /**
+     * Sets the prefix used when logging messages.
+     *
+     * @param prefix the prefix of the log messages
+     */
+    public void setPrefix(final String prefix) {
+        this.logPrefix = prefix;
     }
 
     @Override

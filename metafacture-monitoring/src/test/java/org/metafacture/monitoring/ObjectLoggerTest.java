@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Christoph Böhme
+ * Copyright 2026 hbz NRW
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package org.metafacture.monitoring;
 
-import org.metafacture.framework.StreamReceiver;
+import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,59 +28,46 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 
 /**
- * Tests for class {@link StreamLogger}.
+ * Tests for class {@link ObjectLogger}.
  *
- * @author Markus Michael Geipel
- * @author Christoph Böhme (refactored to Mockito)
+ * @author Jens Wille
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public final class StreamLoggerTest extends TestHelpers {
+public final class ObjectLoggerTest extends TestHelpers {
 
-    @Mock(name = "external.org.metafacture.monitoring.StreamLogger")
+    @Mock(name = "external.org.metafacture.monitoring.ObjectLogger")
     private Logger logLogger;
 
     @Mock
-    private StreamReceiver receiver;
+    private ObjectReceiver<String> receiver;
 
-    private StreamLogger logger;
+    private ObjectLogger<String> logger;
 
-    public StreamLoggerTest() {
+    public ObjectLoggerTest() {
     }
 
     @Before
     public void setup() {
-        logger = new StreamLogger();
+        logger = new ObjectLogger<>();
         logger.setReceiver(receiver);
     }
 
     @Test
-    public void shouldForwardAllReceivedEvents() {
-        logger.startRecord("1");
-        logger.startEntity("entity");
-        logger.literal("literal", "value");
-        logger.endEntity();
-        logger.endRecord();
+    public void shouldForwardAllProcessedObjects() {
+        logger.process("object");
         logger.resetStream();
         logger.closeStream();
 
         final InOrder ordered = Mockito.inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).startEntity("entity");
-        ordered.verify(receiver).literal("literal", "value");
-        ordered.verify(receiver).endEntity();
-        ordered.verify(receiver).endRecord();
+        ordered.verify(receiver).process("object");
         ordered.verify(receiver).resetStream();
         ordered.verify(receiver).closeStream();
         ordered.verifyNoMoreInteractions();
         Mockito.verifyNoMoreInteractions(receiver);
 
         assertLog(logLogger, "DEBUG", c -> {
-            assertLog(c, "{}start record {}", "", "1");
-            assertLog(c, "{}start entity {}", "", "entity");
-            assertLog(c, "{}literal {}={}", "", "literal", "value");
-            assertLog(c, "{}end entity", "");
-            assertLog(c, "{}end record", "");
+            assertLog(c, "{}{}", "", "object");
             assertLog(c, "{}resetStream", "");
             assertLog(c, "{}closeStream", "");
         });
@@ -90,22 +77,14 @@ public final class StreamLoggerTest extends TestHelpers {
     public void shouldActAsSinkIfNoReceiverIsSet() {
         logger.setReceiver(null);
 
-        logger.startRecord("1");
-        logger.startEntity("entity");
-        logger.literal("literal", "value");
-        logger.endEntity();
-        logger.endRecord();
+        logger.process("object");
         logger.resetStream();
         logger.closeStream();
 
         Mockito.verifyNoMoreInteractions(receiver);
 
         assertLog(logLogger, "DEBUG", c -> {
-            assertLog(c, "{}start record {}", "", "1");
-            assertLog(c, "{}start entity {}", "", "entity");
-            assertLog(c, "{}literal {}={}", "", "literal", "value");
-            assertLog(c, "{}end entity", "");
-            assertLog(c, "{}end record", "");
+            assertLog(c, "{}{}", "", "object");
             assertLog(c, "{}resetStream", "");
             assertLog(c, "{}closeStream", "");
         });
@@ -116,20 +95,12 @@ public final class StreamLoggerTest extends TestHelpers {
         final String prefix = "prefix:";
         logger.setPrefix(prefix);
 
-        logger.startRecord("1");
-        logger.startEntity("entity");
-        logger.literal("literal", "value");
-        logger.endEntity();
-        logger.endRecord();
+        logger.process("object");
         logger.resetStream();
         logger.closeStream();
 
         assertLog(logLogger, "DEBUG", c -> {
-            assertLog(c, "{}start record {}", prefix, "1");
-            assertLog(c, "{}start entity {}", prefix, "entity");
-            assertLog(c, "{}literal {}={}", prefix, "literal", "value");
-            assertLog(c, "{}end entity", prefix);
-            assertLog(c, "{}end record", prefix);
+            assertLog(c, "{}{}", prefix, "object");
             assertLog(c, "{}resetStream", prefix);
             assertLog(c, "{}closeStream", prefix);
         });
