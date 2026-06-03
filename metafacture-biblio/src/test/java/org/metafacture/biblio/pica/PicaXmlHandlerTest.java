@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Deutsche Nationalbibliothek
+ * Copyright 2026 hbz
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -188,7 +188,6 @@ public final class PicaXmlHandlerTest {
             throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
-        final String fieldValue1 = "1234";
 
         picaXmlHandler.setIgnoreNamespace(true);
         picaXmlHandler.setNamespace("");

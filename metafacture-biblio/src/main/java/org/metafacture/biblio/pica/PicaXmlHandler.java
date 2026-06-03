@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 hbz
+ * Copyright 2026 hbz, Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import java.text.Normalizer;
 
 /**
  * A Pica XML reader. To read marc data without namespace specification set option `namespace=""` or to null when using JAVA code.
+ * The handler reuses some code from M. Geipels MarcXmlHandler
  * @author Tobias Bülte
  * @author Markus Michael Geipel
  *
