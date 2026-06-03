@@ -75,7 +75,7 @@ public final class StreamLoggerTest extends TestHelpers {
         ordered.verifyNoMoreInteractions();
         Mockito.verifyNoMoreInteractions(receiver);
 
-        assertLog(logLogger, "DEBUG", c -> {
+        assertLog(logLogger, "INFO", c -> {
             assertLog(c, "{}start record {}", "", "1");
             assertLog(c, "{}start entity {}", "", "entity");
             assertLog(c, "{}literal {}={}", "", "literal", "value");
@@ -100,7 +100,7 @@ public final class StreamLoggerTest extends TestHelpers {
 
         Mockito.verifyNoMoreInteractions(receiver);
 
-        assertLog(logLogger, "DEBUG", c -> {
+        assertLog(logLogger, "INFO", c -> {
             assertLog(c, "{}start record {}", "", "1");
             assertLog(c, "{}start entity {}", "", "entity");
             assertLog(c, "{}literal {}={}", "", "literal", "value");
@@ -124,7 +124,7 @@ public final class StreamLoggerTest extends TestHelpers {
         logger.resetStream();
         logger.closeStream();
 
-        assertLog(logLogger, "DEBUG", c -> {
+        assertLog(logLogger, "INFO", c -> {
             assertLog(c, "{}start record {}", prefix, "1");
             assertLog(c, "{}start entity {}", prefix, "entity");
             assertLog(c, "{}literal {}={}", prefix, "literal", "value");
@@ -132,6 +132,29 @@ public final class StreamLoggerTest extends TestHelpers {
             assertLog(c, "{}end record", prefix);
             assertLog(c, "{}resetStream", prefix);
             assertLog(c, "{}closeStream", prefix);
+        });
+    }
+
+    @Test
+    public void shouldLogAtCustomLevel() {
+        logger.setLevel("WARN");
+
+        logger.startRecord("1");
+        logger.startEntity("entity");
+        logger.literal("literal", "value");
+        logger.endEntity();
+        logger.endRecord();
+        logger.resetStream();
+        logger.closeStream();
+
+        assertLog(logLogger, "WARN", c -> {
+            assertLog(c, "{}start record {}", "", "1");
+            assertLog(c, "{}start entity {}", "", "entity");
+            assertLog(c, "{}literal {}={}", "", "literal", "value");
+            assertLog(c, "{}end entity", "");
+            assertLog(c, "{}end record", "");
+            assertLog(c, "{}resetStream", "");
+            assertLog(c, "{}closeStream", "");
         });
     }
 
