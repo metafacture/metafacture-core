@@ -66,6 +66,7 @@ import java.util.function.Function;
 @Out(StreamReceiver.class)
 @FluxCommand("fix")
 public class Metafix implements StreamPipe<StreamReceiver>, Maps {
+
     public static final String ARRAY_MARKER = "[]";
     public static final String FIX_EXTENSION = ".fix";
     public static final String VAR_END = "]";
@@ -77,10 +78,13 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
     public static final Map<String, String> NO_VARS = Collections.emptyMap();
 
     public static final int MAX_ENTITY_COUNT = Integer.getInteger("org.metafacture.metafix.maxEntityCount", -1);
+    public static final int MAX_EXCEPTION_COUNT = Integer.getInteger("org.metafacture.metafix.maxExceptionCount", -1);
 
     private static final MetafactureLogger LOG = new MetafactureLogger(Metafix.class);
 
     private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
+
+    private static final String SKIP_EXCEPTION_PREFIX = "org.metafacture.";
 
     private final Deque<Integer> entityCountStack = new LinkedList<>();
     private final FixRegistry registry = new FixRegistry();
@@ -98,12 +102,13 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
     private Record currentRecord = new Record();
     private StreamReceiver outputStreamReceiver;
     private Strictness strictness = DEFAULT_STRICTNESS;
+    private String entityMemberName = DEFAULT_ENTITY_MEMBER_NAME;
     private String fixFile;
     private String recordIdentifier;
-    private String entityMemberName = DEFAULT_ENTITY_MEMBER_NAME;
     private boolean repeatedFieldsToEntities;
     private boolean strictnessHandlesProcessExceptions;
     private int entityCount;
+    private int exceptionCount;
 
     /**
      * Creates an instance of {@link Metafix}.
@@ -641,6 +646,43 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         return MAX_ENTITY_COUNT >= 0 && entityCount > MAX_ENTITY_COUNT;
     }
 
+    /**
+     * Handles the exception based on the {@link #setStrictness selected strictness level},
+     * provided that the {@link MAX_EXCEPTION_COUNT exception limit} has not been exceeded.
+     *
+     * @param exception the exception to be handled
+     * @param record    the current record
+     */
+    public void handleException(final MetafactureException exception, final Record record) {
+        ++exceptionCount;
+
+        if (maxExceptionCountExceeded()) {
+            LOG.info("Maximum number of exceptions exceeded: {}/{} (Current exception: {})",
+                    exceptionCount, MAX_EXCEPTION_COUNT, getExceptionCause(exception).getSimpleName());
+        }
+        else {
+            strictness.handle(exception, record);
+        }
+    }
+
+    private boolean maxExceptionCountExceeded() {
+        return MAX_EXCEPTION_COUNT >= 0 && exceptionCount > MAX_EXCEPTION_COUNT;
+    }
+
+    private Class<?> getExceptionCause(final Throwable exception) {
+        final Class<?> clazz = exception.getClass();
+
+        if (clazz.getPackageName().startsWith(SKIP_EXCEPTION_PREFIX)) {
+            final Throwable cause = exception.getCause();
+
+            if (cause != null) {
+                return getExceptionCause(cause);
+            }
+        }
+
+        return clazz;
+    }
+
     public enum Strictness {
 
         /**
@@ -692,4 +734,5 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         }
 
     }
+
 }
