@@ -12,6 +12,7 @@ todo_file=todo.txt
 
 input_glob=input.*
 expected_glob=expected.*
+expected_output_extension=out
 expected_errors_extension=err
 
 metafix_output_glob=output-metafix.*
@@ -207,6 +208,21 @@ function test_failed() {
   fi
 }
 
+function test_expected_patterns() {
+  local pattern
+
+  get_file "$1" "$4" "$5" || { log; return; }
+
+  while read -r pattern; do
+    if ! grep -qE "$pattern" "$5"; then
+      test_failed "$1" "$3" " (Pattern not found: $pattern)" FAILED "$6" "$7" "$8" "$9"
+      return
+    fi
+  done <"$2"
+
+  test_passed "$1" "$3" "${10}"
+}
+
 function run_tests() {
   local test matched=1\
     test_directory test_fix test_input test_expected test_todo\
@@ -248,7 +264,10 @@ function run_tests() {
       metafix_elapsed_time=$(elapsed_time "$metafix_start_time")
 
       if [ "$metafix_exit_status" -eq 0 ]; then
-        if get_file "$test" output "$test_directory"/$metafix_output_glob; then
+        if [ "${test_expected##*.}" == "$expected_output_extension" ]; then
+          test_expected_patterns "$test" "$test_expected" "$test_todo" output "$metafix_command_output"\
+            metafix "$metafix_exit_status" "$metafix_command_output" "$metafix_command_error" "$metafix_elapsed_time"
+        elif get_file "$test" output "$test_directory"/$metafix_output_glob; then
           metafix_output=$current_file
           metafix_diff="$test_directory/metafix.diff"
 
@@ -265,18 +284,8 @@ function run_tests() {
           command_info metafix "$metafix_exit_status" "$metafix_command_output" "$metafix_command_error"
         fi
       elif [ "${test_expected##*.}" == "$expected_errors_extension" ]; then
-        get_file "$test" error "$metafix_command_error" || { log; continue; }
-
-        while read -r pattern; do
-          if ! grep -qE "$pattern" "$metafix_command_error"; then
-            test_failed "$test" "$test_todo" " (Pattern not found: $pattern)" FAILED\
-              metafix "$metafix_exit_status" "$metafix_command_output" "$metafix_command_error"
-
-            continue 2
-          fi
-        done <"$test_expected"
-
-        test_passed "$test" "$test_todo" "$metafix_elapsed_time"
+        test_expected_patterns "$test" "$test_expected" "$test_todo" error "$metafix_command_error"\
+          metafix "$metafix_exit_status" "$metafix_command_output" "$metafix_command_error" "$metafix_elapsed_time"
       else
         test_failed "$test" "$test_todo" "$metafix_elapsed_time" ERROR\
           metafix "$metafix_exit_status" "$metafix_command_output" "$metafix_command_error"
