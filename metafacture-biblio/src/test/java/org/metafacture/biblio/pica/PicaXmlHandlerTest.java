@@ -66,8 +66,6 @@ public final class PicaXmlHandlerTest {
             throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
-        final String fieldValue = "1234";
-
         picaXmlHandler.startElement(NAMESPACE, RECORD, "", attributes);
         attributes.addAttribute(null, "tag", "tag", "CDATA", "003@");
         picaXmlHandler.startElement(null, DATAFIELD, "", attributes);
