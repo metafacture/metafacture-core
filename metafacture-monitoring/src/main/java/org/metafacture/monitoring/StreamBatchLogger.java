@@ -34,7 +34,7 @@ import java.util.Map;
  * @author Markus Michael Geipel
  * @author Christoph Böhme
  */
-@Description("Writes log info every BATCHSIZE records. ")
+@Description("Writes log info every BATCHSIZE records.")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("batch-log")
@@ -45,6 +45,7 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
     public static final String BATCH_SIZE_VAR = "batchSize";
     public static final String TOTAL_RECORD_COUNT_VAR = "totalRecords";
     public static final String DEFAULT_FORMAT = "records processed: ${totalRecords}";
+    public static final String DEFAULT_LEVEL = "INFO";
 
     public static final long DEFAULT_BATCH_SIZE = 1000;
 
@@ -53,6 +54,7 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
     private final Map<String, String> vars = new HashMap<>();
     private final String format;
 
+    private String level = DEFAULT_LEVEL;
     private long batchSize = DEFAULT_BATCH_SIZE;
     private long recordCount;
     private long batchCount;
@@ -92,6 +94,15 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
      */
     public void setBatchSize(final int batchSize) {
         this.batchSize = batchSize;
+    }
+
+    /**
+     * Sets the {@link MetafactureLogger.Level log level}.
+     *
+     * @param level the log level
+     */
+    public void setLevel(final String level) {
+        this.level = level;
     }
 
     /**
@@ -149,7 +160,7 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
         vars.put(BATCH_SIZE_VAR, Long.toString(batchSize));
         vars.put(TOTAL_RECORD_COUNT_VAR,
                 Long.toString(batchSize * batchCount + recordCount));
-        LOG.externalInfo(StringUtil.format(format, vars));
+        LOG.externalLog(level, StringUtil.format(format, vars));
     }
 
 }

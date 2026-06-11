@@ -23,10 +23,10 @@ dependencies {
   implementation "commons-io:commons-io:${versions.commons_io}"
   implementation "org.apache.commons:commons-compress:${versions.commons_compress}"
   runtimeOnly "org.tukaani:xz:${versions.tukaani}"
-  testImplementation "com.github.tomakehurst:wiremock-jre8:${versions.wiremock}"
   testImplementation "junit:junit:${versions.junit}"
+  testImplementation "org.assertj:assertj-core:${versions.assertj}"
   testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit_jupiter}"
   testImplementation "org.mockito:mockito-core:${versions.mockito}"
-  testImplementation "org.assertj:assertj-core:${versions.assertj}"
+  testImplementation "org.wiremock:wiremock:${versions.wiremock}"
   testRuntimeOnly slf4j_provider
 }

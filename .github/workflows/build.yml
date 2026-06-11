@@ -15,8 +15,3 @@ jobs:
       run: ./gradlew check
       env:
         METAFACTURE_INTEGRATION_TEST_LOG_PASSED: true
-    - name: Install language server
-      run: ./gradlew installServer
-    - name: Install fix extension
-      working-directory: metafix-vsc/
-      run: npm install

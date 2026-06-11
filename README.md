@@ -44,7 +44,7 @@ Regardless if you've built or downloaded, go on with:
     ```
     This example will print a number of MARC 21 records on standard output.
 
-The `examples` folder contains many more examples which provide a good starting point for learning Metafacture. If you have any questions please join our [mailing list](http://lists.dnb.de/mailman/listinfo/metafacture) or use our issue-based discussion forum over at [metafacture-documentation](https://github.com/metafacture/metafacture-documentation).
+The `examples` folder contains many more examples which provide a good starting point for learning Metafacture. If you have any questions please take a look at the [German Metafacture forum](https://metadaten.community/c/software-und-tools/metafacture/8) and create a topic there or open an issue over at metafacture-documentation [metafacture-documentation](https://github.com/metafacture/metafacture-documentation).
 
 ## Using Metafacture as a Java library
 
@@ -109,51 +109,7 @@ Metafacture Fix (Metafix) is work in progress towards tools and an implementatio
 
 See also [Fix Interest Group](https://github.com/elag/FIG) for an initiative towards an implementation-independent specification for the Fix Language.
 
-The project `metafix` contains the actual implementation of the Fix language as a Metafacture module and related components. It started as an [Xtext](#xtext) web project with a Fix grammar, from which a parser, a web editor, and a language server are generated. This project also contains an extension for VS code/codium based on that language server. (The web editor has effectively been replaced by the [Metafacture Playground](https://metafacture.org/playground), but remains here for its integration into the language server, which [we want to move over](https://github.com/metafacture/metafacture-playground/issues?q=is%3Aissue+language+server+is%3Aopen) to the playground.)
-
-## Usage
-
-The project `metafix` contains and uses a new `Metafix` stream module for Metafacture which plays the role of the `Metamorph` module in Fix-based Metafacture workflows. For the current implementation of the `Metafix` stream module see the tests in `metafix/src/test/java`. To play around with some examples, check out the [Metafacture Playground](https://metafacture.org/playground). For real-world usage samples see [openRub.fix](https://gitlab.com/oersi/oersi-etl/-/blob/master/data/production/openRub/openRub.fix) and [duepublico.fix](https://gitlab.com/oersi/oersi-etl/-/blob/master/data/production/duepublico/duepublico.fix). For reference documentation, see [Functions and cookbook](#functions-and-cookbook).
-
-### Extension
-
-The project `metafix-vsc` provides an extension for Visual Studio Code / Codium for `fix` via the language server protocol (LSP). In the current state the extension supports auto completion, simple syntax highlighting and auto closing brackets and quotes. This project was created using this [tutorial](https://www.typefox.io/blog/building-a-vs-code-extension-with-xtext-and-the-language-server-protocol) and the corresponding [example](https://github.com/TypeFox/languageserver-example).
-
-Build extension:
-
-> [!IMPORTANT]
-> There is a problem when building the extension on Windows and installing the extension on a Linux system afterwards. In some cases the Xtext Server won't start. So if you want to use the extension not only on Windows, build the extension on a Linux system or on a Linux Subsystem on Windows.
-
-1. Install Visual Studio Code / alternative: VS Codium
-2. Install Node.js (including npm)
-3. In metafacture-core execute:
-Unix: `./gradlew installServer`
-Windows: `.\gradlew.bat installServer`
-4. In `metafix-vsc/` execute (tip: if you use windows, install cygwin to execute npm commands):
-`npm install`
-
-To start the extension in development mode (starting a second code/codium instance), follow A. To create a vsix file to install the extension permanently follow B.
-
-A) Run in dev mode:
-1. Open `metafix-vsc/` in Visual Studio Code / Codium
-2. Launch vscode extension by pressing F5 (opens new window of Visual Studio Code)
-3. Open new file (file-ending `.fix`) or open existing fix-file (see sample below)
-
-B) Install vsix file:
-1. Install vsce: `npm install -g vsce`
-2. In `metafix-vsc/` execute: `vsce package`
-vsce will create a vsix file in the vsc directory which can be used for installation:
-3. Open VS Code / Codium
-4. Click 'Extensions' section
-5. Click menu bar and choose 'Install from VSIX...'
-
-### Web editor
-
-Start the web server:
-
-`./gradlew jettyRun`
-
-Visit [http://localhost:8080/](http://localhost:8080/), and paste this into the editor:
+The project `metafix` contains the actual implementation of the Fix language as a Metafacture module and related components. It started as an [Xtext](#xtext) web project with a Fix grammar, from which a parser, a web editor, and a language server are generated. This project also contains an extension for VS code/codium based on that language server. (The web editor has been replaced by the [Metafacture Playground](https://metafacture.org/playground).)
 
 ```
 # Fix is a macro-language for data transformations
@@ -183,11 +139,9 @@ do list(path: "foo", "var": "$i")
 end
 ```
 
-Content assist is triggered with Ctrl-Space. The input above is also used in `FixParsingTest.java`.
+## Usage
 
-Run workflows on the web server, passing `data`, `flux`, and `fix`:
-
-[http://localhost:8080/xtext-service/run?data='1'{'a': '5', 'z': 10}&flux=as-lines|decode-formeta|fix|encode-formeta(style="multiline")&fix=copy_field(a,c)](http://localhost:8080/xtext-service/run?data=%271%27{%27a%27:%20%275%27,%20%27z%27:%2010}&flux=as-lines|decode-formeta|fix|encode-formeta(style=%22multiline%22)&fix=copy_field(a,c))
+The project `metafix` contains and uses a new `Metafix` stream module for Metafacture which plays the role of the `Metamorph` module in Fix-based Metafacture workflows. For the current implementation of the `Metafix` stream module see the tests in `metafix/src/test/java`. To play around with some examples, check out the [Metafacture Playground](https://metafacture.org/playground). For real-world usage samples see [openRub.fix](https://gitlab.com/oersi/oersi-etl/-/blob/master/data/production/openRub/openRub.fix) and [duepublico.fix](https://gitlab.com/oersi/oersi-etl/-/blob/master/data/production/duepublico/duepublico.fix). For reference documentation, see [Functions and cookbook](#functions-and-cookbook).
 
 ## Functions and cookbook
 

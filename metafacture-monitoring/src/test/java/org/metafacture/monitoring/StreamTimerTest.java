@@ -20,6 +20,10 @@ import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
 
 /**
  * Tests for class {@link ObjectTimer}.
@@ -27,7 +31,11 @@ import org.junit.Test;
  * @author Christoph Böhme
  *
  */
-public final class StreamTimerTest {
+@RunWith(MockitoJUnitRunner.class)
+public final class StreamTimerTest extends TestHelpers {
+
+    @Mock(name = "external.org.metafacture.monitoring.TimerBase")
+    private Logger logger;
 
     private StreamTimer streamTimer;
     private BenchmarkedModule benchmarkedModule;
@@ -44,7 +52,6 @@ public final class StreamTimerTest {
 
     @Test
     public void testShouldMeasureExecutionTime() {
-
         streamTimer.startRecord("");
         streamTimer.endRecord();
         streamTimer.startRecord("");
@@ -55,12 +62,34 @@ public final class StreamTimerTest {
         streamTimer.endRecord();
 
         streamTimer.closeStream();
+
+        assertLog(logger, "", 4);
     }
 
     @Test
     public void testShouldHandleImmediateCloseStreamWithNoProcessing() {
+        streamTimer.closeStream();
+        assertLog(logger, "", 0);
+    }
+
+    @Test
+    public void shouldLogWithPrefix() {
+        final String prefix = "prefix:";
+        streamTimer = new StreamTimer(prefix);
+        streamTimer.setReceiver(benchmarkedModule);
+
+        streamTimer.startRecord("");
+        streamTimer.endRecord();
+        streamTimer.startRecord("");
+        streamTimer.endRecord();
+        streamTimer.startRecord("");
+        streamTimer.endRecord();
+        streamTimer.startRecord("");
+        streamTimer.endRecord();
 
         streamTimer.closeStream();
+
+        assertLog(logger, prefix, 4);
     }
 
     /**

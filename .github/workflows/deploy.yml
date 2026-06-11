@@ -11,10 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-    - name: Set up vsce
-      run: npm install -g vsce
     - name: Set up JDK 17
       uses: actions/setup-java@v1
       with:
@@ -23,20 +19,3 @@ jobs:
       run: |
         chmod +x gradlew
         ./gradlew build
-        ./gradlew installServer
-    - name: Create fix extension
-      working-directory: metafix-vsc/
-      run: |
-        npm install
-        vsce package -o fix.vsix
-    - name: Pushes vsix to GitHub Pages
-      uses: dmnemec/copy_file_to_another_repo_action@v1.0.4
-      env:
-        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
-      with:
-        source_file: 'metafix-vsc/fix.vsix'
-        destination_repo: 'metafacture/metafacture.github.io'
-        destination_branch: main
-        destination_folder: 'ide-extensions'
-        user_email: '${{ github.actor }}@users.noreply.github.com'
-        user_name: '${{ github.actor }}'

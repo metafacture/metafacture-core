@@ -12,13 +12,6 @@ Workflow {
         runtimeTest = {
           enabled = true
         }
-        genericIde = {
-          name = "metafix-ide"
-        }
-        web = {
-          name = "metafix-web"
-          enabled = true
-        }
         mavenLayout = true
       }
       code = {
@@ -41,11 +34,6 @@ Workflow {
       junitSupport = {
         junitVersion = "5"
         generateStub = false
-      }
-      webSupport = {
-        framework = "ace"
-        generateServlet = false
-        generateJettyLauncher = false
       }
       xbaseSupport = {
         generateXtendInferrer = false

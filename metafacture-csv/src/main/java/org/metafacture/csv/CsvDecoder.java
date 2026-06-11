@@ -17,6 +17,7 @@
 package org.metafacture.csv;
 
 import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
@@ -31,7 +32,6 @@ import com.opencsv.exceptions.CsvException;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.List;
 
 /**
  * Decodes lines of CSV files. First line may be interpreted as header.
@@ -91,50 +91,51 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
     @Override
     public void process(final String string) {
         assert !isClosed();
-        final String[] parts = parseCsv(string);
-        if (hasHeader) {
-            if (header.length == 0) {
-                header = parts;
-            }
-            else if (parts.length == header.length) {
-                getReceiver().startRecord(String.valueOf(++count));
-                for (int i = 0; i < parts.length; ++i) {
-                    getReceiver().literal(header[i], parts[i]);
+        try (
+            StringReader sr = new StringReader(string);
+            CSVReader reader = new CSVReaderBuilder(sr).withCSVParser(parser).build()
+        ) {
+            String[] parts;
+            while ((parts = parseCsv(reader)) != null) {
+                if (hasHeader) {
+                    if (header.length == 0) {
+                        header = parts;
+                    }
+                    else if (parts.length == header.length) {
+                        getReceiver().startRecord(String.valueOf(++count));
+                        for (int i = 0; i < parts.length; ++i) {
+                            getReceiver().literal(header[i], parts[i]);
+                        }
+                        getReceiver().endRecord();
+                    }
+                    else {
+                        throw new IllegalArgumentException(
+                                String.format(
+                                    "wrong number of columns (expected %s, was %s) in input line: %s",
+                                    header.length, parts.length, string));
+                    }
                 }
-                getReceiver().endRecord();
-            }
-            else {
-                throw new IllegalArgumentException(
-                        String.format(
-                                "wrong number of columns (expected %s, was %s) in input line: %s",
-                                header.length, parts.length, string));
+                else {
+                    getReceiver().startRecord(String.valueOf(++count));
+                    for (int i = 0; i < parts.length; ++i) {
+                        getReceiver().literal(String.valueOf(i), parts[i]);
+                    }
+                    getReceiver().endRecord();
+                }
             }
         }
-        else {
-            getReceiver().startRecord(String.valueOf(++count));
-            for (int i = 0; i < parts.length; ++i) {
-                getReceiver().literal(String.valueOf(i), parts[i]);
-            }
-            getReceiver().endRecord();
+        catch (final IOException e) {
+            throw new MetafactureException(e);
         }
     }
 
-    private String[] parseCsv(final String csv) {
-        String[] parts = new String[0];
+    private String[] parseCsv(final CSVReader reader) {
         try {
-            final CSVReader reader = new CSVReaderBuilder(new StringReader(csv))
-                .withCSVParser(parser)
-                .build();
-            final List<String[]> lines = reader.readAll();
-            if (lines.size() > 0) {
-                parts = lines.get(0);
-            }
-            reader.close();
+            return reader.readNext();
         }
         catch (final IOException | CsvException e) {
-            e.printStackTrace();
+            throw new MetafactureException(e);
         }
-        return parts;
     }
 
     /**

@@ -24,8 +24,12 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
- * Leaves the event stream untouched but logs it to the debug log.
+ * Leaves the event stream untouched but logs it to the info log.
  * The {@link StreamReceiver} may be {@code null}.
  * In this case {@link StreamLogger} behaves as a sink, just logging.
  *
@@ -39,31 +43,54 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 public final class StreamLogger
         extends DefaultStreamPipe<StreamReceiver> {
 
+    public static final String DEFAULT_LEVEL = "INFO";
+
     private static final MetafactureLogger LOG = new MetafactureLogger(StreamLogger.class);
 
-    private final String logPrefix;
+    private String level = DEFAULT_LEVEL;
+    private String logPrefix = "";
 
     /**
      * Creates an instance of {@link StreamLogger}.
      */
     public StreamLogger() {
-        this("");
     }
 
     /**
      * Creates an instance of {@link StreamLogger} by a given prefix used when log
      * messages.
      *
+     * @deprecated Use {@link #setPrefix} instead.
+     *
      * @param logPrefix the prefix of the log messages
      */
+    @Deprecated/*(since="9.0", forRemoval=true)*/
     public StreamLogger(final String logPrefix) {
-        this.logPrefix = logPrefix;
+        setPrefix(logPrefix);
+    }
+
+    /**
+     * Sets the prefix used when logging messages.
+     *
+     * @param prefix the prefix of the log messages
+     */
+    public void setPrefix(final String prefix) {
+        this.logPrefix = prefix;
+    }
+
+    /**
+     * Sets the {@link MetafactureLogger.Level log level}.
+     *
+     * @param level the log level
+     */
+    public void setLevel(final String level) {
+        this.level = level;
     }
 
     @Override
     public void startRecord(final String identifier) {
         assert !isClosed();
-        LOG.externalDebug("{}start record {}", logPrefix, identifier);
+        writeLog("start record {}", identifier);
         if (null != getReceiver()) {
             getReceiver().startRecord(identifier);
         }
@@ -72,7 +99,7 @@ public final class StreamLogger
     @Override
     public void endRecord() {
         assert !isClosed();
-        LOG.externalDebug("{}end record", logPrefix);
+        writeLog("end record");
         if (null != getReceiver()) {
             getReceiver().endRecord();
         }
@@ -81,7 +108,7 @@ public final class StreamLogger
     @Override
     public void startEntity(final String name) {
         assert !isClosed();
-        LOG.externalDebug("{}start entity {}", logPrefix, name);
+        writeLog("start entity {}", name);
         if (null != getReceiver()) {
             getReceiver().startEntity(name);
         }
@@ -90,7 +117,7 @@ public final class StreamLogger
     @Override
     public void endEntity() {
         assert !isClosed();
-        LOG.externalDebug("{}end entity", logPrefix);
+        writeLog("end entity");
         if (null != getReceiver()) {
             getReceiver().endEntity();
         }
@@ -100,7 +127,7 @@ public final class StreamLogger
     @Override
     public void literal(final String name, final String value) {
         assert !isClosed();
-        LOG.externalDebug("{}literal {}={}", logPrefix, name, value);
+        writeLog("literal {}={}", name, value);
         if (null != getReceiver()) {
             getReceiver().literal(name, value);
         }
@@ -108,12 +135,21 @@ public final class StreamLogger
 
     @Override
     protected void onResetStream() {
-        LOG.externalDebug("{}resetStream", logPrefix);
+        writeLog("resetStream");
     }
 
     @Override
     protected void onCloseStream() {
-        LOG.externalDebug("{}closeStream", logPrefix);
+        writeLog("closeStream");
+    }
+
+    private void writeLog(final String message, final Object... arguments) {
+        final List<Object> argumentList = new ArrayList<>(arguments.length + 1);
+
+        argumentList.add(logPrefix);
+        Arrays.stream(arguments).forEach(argumentList::add);
+
+        LOG.externalLog(level, "{}" + message, argumentList.toArray());
     }
 
 }

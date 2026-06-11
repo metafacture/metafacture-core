@@ -19,11 +19,14 @@ package org.metafacture.json;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.io.JsonEOFException;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -40,9 +43,6 @@ public final class JsonDecoderTest {
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @Mock
     private StreamReceiver receiver;
@@ -322,44 +322,28 @@ public final class JsonDecoderTest {
 
     @Test
     public void testShouldOnlyParseObjects() {
-        exception.expect(MetafactureException.class);
-        exception.expectMessage("Unexpected token 'VALUE_NULL'");
-
-        jsonDecoder.process("null");
+        assertException(null, "Unexpected token 'VALUE_NULL'", "null");
     }
 
     @Test
     public void testShouldNotParseIncompleteObjects() {
-        exception.expect(MetafactureException.class);
-        exception.expectMessage("Unexpected end-of-input");
-
-        jsonDecoder.process("{");
+        assertException(JsonEOFException.class, "Unexpected end-of-input", "{");
     }
 
     @Test
     public void testShouldNotParseTrailingContent() {
-        exception.expect(MetafactureException.class);
-        exception.expectMessage("Unexpected token 'VALUE_NULL'");
-
-        jsonDecoder.process("{\"lit\":\"value\"}null");
+        assertException(null, "Unexpected token 'VALUE_NULL'", "{\"lit\":\"value\"}null");
     }
 
     @Test
     public void testShouldNotParseTrailingGarbage() {
-        exception.expect(MetafactureException.class);
-        exception.expectMessage("Unrecognized token 'XXX'");
-
-        jsonDecoder.process("{\"lit\":\"value\"}XXX");
+        assertException(JsonParseException.class, "Unrecognized token 'XXX'", "{\"lit\":\"value\"}XXX");
     }
 
     @Test
     public void testShouldNotParseComments() {
-        exception.expect(MetafactureException.class);
-        exception.expectMessage("Unexpected character ('/' (code 47))");
-
         Assert.assertFalse(jsonDecoder.getAllowComments());
-
-        jsonDecoder.process("//{\"lit\":\"value\"}");
+        assertException(JsonParseException.class, "Unexpected character ('/' (code 47))", "//{\"lit\":\"value\"}");
     }
 
     @Test
@@ -374,12 +358,8 @@ public final class JsonDecoderTest {
 
     @Test
     public void testShouldNotParseInlineComments() {
-        exception.expect(MetafactureException.class);
-        exception.expectMessage("Unexpected character ('/' (code 47))");
-
         Assert.assertFalse(jsonDecoder.getAllowComments());
-
-        jsonDecoder.process("{\"lit\":/*comment*/\"value\"}");
+        assertException(JsonParseException.class, "Unexpected character ('/' (code 47))", "{\"lit\":/*comment*/\"value\"}");
     }
 
     @Test
@@ -393,6 +373,26 @@ public final class JsonDecoderTest {
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("lit", "value");
         ordered.verify(receiver).endRecord();
+    }
+
+    private void assertException(final Class<? extends Throwable> expectedClass, final String expectedMessage, final String input) {
+        final Throwable thrownException = Assert.assertThrows(MetafactureException.class, () -> jsonDecoder.process(input));
+        final Throwable actualException;
+
+        final String expectedSuffix;
+
+        if (expectedClass != null) {
+            actualException = thrownException.getCause();
+            Assert.assertEquals(expectedClass, actualException.getClass());
+
+            expectedSuffix = ": ";
+        }
+        else {
+            actualException = thrownException;
+            expectedSuffix = " at ";
+        }
+
+        MatcherAssert.assertThat(actualException.getMessage(), CoreMatchers.startsWith(expectedMessage + expectedSuffix));
     }
 
 }

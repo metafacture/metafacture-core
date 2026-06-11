@@ -139,7 +139,7 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         try {
             final InputStream decompressor = compression.createDecompressor(stream, decompressConcatenated);
             try {
-                return new InputStreamReader(new BOMInputStream(decompressor), encoding);
+                return new InputStreamReader(BOMInputStream.builder().setInputStream(decompressor).get(), encoding);
             }
             catch (final IOException | MetafactureException e) {
                 decompressor.close();

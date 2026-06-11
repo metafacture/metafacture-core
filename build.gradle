@@ -17,8 +17,8 @@
 import java.util.regex.Matcher
 
 plugins {
-  id 'org.ajoberstar.grgit' version '2.3.0'
-  //id 'org.ec4j.editorconfig' version '0.0.3'
+  id 'org.ajoberstar.grgit' version '5.3.3'
+  id 'org.ec4j.editorconfig' version '0.1.0'
   id 'org.sonarqube' version '2.6.2'
   id 'org.xtext.builder' version '4.0.0'
   id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
@@ -27,38 +27,34 @@ plugins {
 subprojects {
   ext {
     versions = [
-      'ace':              '1.3.3',
       'antlr':            '3.5.2',
-      'assertj':          '3.11.1',
-      'commons_compress': '1.21',
-      'commons_io':       '2.7',
+      'assertj':          '3.27.7',
+      'commons_compress': '1.28.0',
+      'commons_io':       '2.21.0',
       'dbcp':             '1.4',
       'dspace':           '1.0.0',
       'equalsverifier':   '3.8.2',
-      'everit':           '1.14.2',
+      'everit':           '1.14.6',
       'guava':            '32.0.1-jre',
-      'jackson':          '2.15.1',
+      'jackson':          '2.21.1',
       'jdk':              '11',
       'jdom':             '2.0.6.1',
-      'jena':             '3.17.0',
-      'jetty':            '9.4.14.v20181114',
+      'jena':             '4.10.0',
       'jndi':             '0.11.4.1',
-      'jquery':           '3.3.1-1',
-      'jsonpath':         '2.7.0',
+      'jsonpath':         '2.10.0',
       'jsoup':            '1.15.4',
-      'junit':            '4.12',
+      'junit':            '4.13.1',
       'junit_jupiter':    '5.8.2',
       'junit_platform':   '1.4.2',
       'mockito':          '2.27.0',
-      'opencsv':          '5.9',
-      'requirejs':        '2.3.6',
+      'opencsv':          '5.12.0',
       'slf4j':            '2.0.17',
-      'slf4j_log4j':      '2.25.3',
+      'slf4j_log4j':      '2.25.4',
       'slf4j_mock':       '2.4.0',
       'tukaani':          '1.6',
-      'wiremock':         '2.35.0',
-      'xalan':            '2.7.0',
-      'xtext':            '2.26.0'
+      'wiremock':         '3.13.2',
+      'xalan':            '2.7.3',
+      'xtext':            '2.37.0'
     ]
 
     slf4j_api = "org.slf4j:slf4j-api:${versions.slf4j}"
@@ -83,41 +79,38 @@ project(':metafacture-runner') {
   apply plugin: 'java'
 }
 
-//editorconfig {
-//  excludes = [
-//    '**/*.beacon',
-//    '**/*.bgzf',
-//    '**/*.bz2',
-//    '**/*.bzip2',
-//    '**/*.diff',
-//    '**/*.err',
-//    '**/*.gzip',
-//    '**/*.jfr',
-//    '**/*.out',
-//    '**/*.vsix',
-//    '**/*.xz',
-//    '**/.*',
-//    '**/bin',
-//    '**/generated',
-//    '**/includeBenchmark*100000/expected.json',
-//    '**/jmh/resources/**/input',
-//    '**/node_modules',
-//    '**/out',
-//    '**/output-*',
-//    '**/xtext-gen',
-//    'gradlew*'
-//  ]
-//}
+editorconfig {
+  excludes = [
+    '**/*.beacon',
+    '**/*.bgzf',
+    '**/*.bz2',
+    '**/*.bzip2',
+    '**/*.diff',
+    '**/*.err',
+    '**/*.gzip',
+    '**/*.jfr',
+    '**/*.out',
+    '**/*.vsix',
+    '**/*.xz',
+    '**/.*',
+    '**/__files',
+    '**/bin',
+    '**/generated',
+    '**/includeBenchmark*100000/expected.json',
+    '**/jmh/resources/**/input',
+    '**/node_modules',
+    '**/out',
+    '**/output-*',
+    '**/src/test/resources/org/metafacture/**/*.xml',
+    '**/xtext-gen',
+    'gradlew*',
+    'metafacture-runner/src/main/dist/examples/**/*.xml'
+  ]
+}
 
 task editorconfigChecker(type: Exec, group: 'Verification') {
   executable 'misc/bin/editorconfig-checker'
   args('-exclude', '/\\.|/bin/|\\.beacon$|\\.txt\\.|^LICENSE$|^\\.project$|^gradlew.*')
-}
-
-task installServer(type: Copy) {
-  dependsOn(':metafix-ide:installDist')
-  from "metafix-ide/build/install/xtext-server"
-  into "metafix-vsc/xtext-server"
 }
 
 subprojects {
@@ -126,8 +119,8 @@ subprojects {
   apply plugin: 'maven-publish'
   apply plugin: 'signing'
 
-  //editorconfigCheck.dependsOn(editorconfigChecker)
-  check.dependsOn(editorconfigChecker)
+  editorconfigCheck.dependsOn(editorconfigChecker)
+  check.dependsOn(editorconfigCheck)
   check.dependsOn(javadoc)
 
   java {
@@ -185,7 +178,7 @@ subprojects {
   }
 
   checkstyle {
-    toolVersion = '10.21.2'
+    toolVersion = '10.26.1'
   }
 
   test {

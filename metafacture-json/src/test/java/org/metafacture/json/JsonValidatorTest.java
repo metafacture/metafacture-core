@@ -23,8 +23,8 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -114,7 +114,7 @@ public final class JsonValidatorTest {
     @Test
     public void callWireMockSchema() throws MalformedURLException, IOException {
         final String schemaContent = readToString(new URL(wireMockRule.baseUrl() + MAIN_SCHEMA));
-        Assert.assertThat(schemaContent, CoreMatchers.both(CoreMatchers.containsString("$schema")).and(CoreMatchers.containsString("$ref")));
+        MatcherAssert.assertThat(schemaContent, CoreMatchers.both(CoreMatchers.containsString("$schema")).and(CoreMatchers.containsString("$ref")));
     }
 
     @Test

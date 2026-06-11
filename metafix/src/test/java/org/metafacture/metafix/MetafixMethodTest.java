@@ -170,6 +170,24 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void shouldSkipEmptyStringWhenCapitalize() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "capitalize('title')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldCapitalizeStringsInArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "capitalize('title.*')"
