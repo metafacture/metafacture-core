@@ -1459,6 +1459,46 @@ Executes the functions if/unless the string matches the regular expression patte
 
 [Java Code](https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/conditional/StrMatch.java)
 
+## Expert settings
+
+Some settings are only applicable in very specific circumstances and may even be performance-sensitive. These settings cannot be configured via the usual Fix command or function options, but instead have to be set as [Java system properties](https://docs.oracle.com/javase/tutorial/essential/environment/sysprop.html).
+
+When using the _Metafacture runner_ via `flux.sh` or `flux.bat`, you can set these system properties on the command line:
+
+```bash
+FLUX_JAVA_OPTIONS=-D<property>=<value> ./flux.sh ...
+```
+
+Or enable them permanently in the `config/java-options.conf` configuration file:
+
+```bash
+-D<property>=<value>
+```
+
+When using _Metafacture as a Java library_, you can set these system properties on the command line:
+
+```bash
+JAVA_OPTIONS=-D<property>=<value> java ...
+```
+
+Or configure them directly in your application code (before instantiating Metafix):
+
+```java
+System.setProperty("<property>", "<value>");
+```
+
+### Maximum entity count
+
+The maximum number of Metafix entities being processed _per record_. Exceeding this limit leads to the remaining entities (as well as literals) being skipped for the current record; a log message is emitted at _DEBUG_ level for each excessive entity.
+
+Accepts a non-negative integer: `org.metafacture.metafix.maxEntityCount=<int>` (Default: `-1`, i.e. no limit)
+
+### Maximum exception count
+
+The maximum number of Metafix exceptions being handled by the strictness level _per transformation_ (i.e. Metafix instance). Exceeding this limit leads to the configured strictness handling being skipped for the rest of the transformation; a log message is emitted at _INFO_ level for each unhandled exception (including the type of the current exception).
+
+Accepts a non-negative integer: `org.metafacture.metafix.maxExceptionCount=<int>` (Default: `-1`, i.e. no limit)
+
 ## Xtext
 
 The Metafix projects have been originally set up with [Xtext](https://www.eclipse.org/Xtext/) 2.17.0 and Eclipse for Java 2019-03, following [https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html](https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html).
