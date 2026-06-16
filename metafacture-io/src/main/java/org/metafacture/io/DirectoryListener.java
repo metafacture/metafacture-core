@@ -17,6 +17,7 @@
 package org.metafacture.io;
 
 import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
@@ -46,7 +47,7 @@ import java.util.Map;
  *
  * @author Pascal Christoph (dr0i)
  */
-@Description("Listens to a directory and passes occurring filenames to the receiver. " +
+@Description("Listens to a directory and passes filenames of occurring or modified files to the receiver." +
         "If a file named 'shutdownEtlNow' appears the process " +
         "is closed." +
         "Keep bug https://bugs.openjdk.org/browse/JDK-8202759 " +
@@ -59,6 +60,7 @@ public final class DirectoryListener extends DefaultObjectPipe<String, ObjectRec
     /* This special filename triggers the end of listing and closes the module */
     public static final String TRIGGER_SHUTDOWN_FILENAME = "shutdownEtlNow";
     private static final WatchService WATCHER;
+    private static final MetafactureLogger LOG = new MetafactureLogger(DirectoryListener.class);
 
     static {
         try {
@@ -104,7 +106,7 @@ public final class DirectoryListener extends DefaultObjectPipe<String, ObjectRec
      */
     private void register(final Path dir) throws IOException {
         final WatchKey key = dir.register(WATCHER, java.nio.file.StandardWatchEventKinds.ENTRY_CREATE, java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY);
-        System.out.println("Add directory to watch: " + dir);
+        LOG.combinedInfo("Add directory to watch: " + dir.toString());
         KEYS.put(key, dir);
     }
 
@@ -148,7 +150,7 @@ public final class DirectoryListener extends DefaultObjectPipe<String, ObjectRec
                 }
                 final Path dir = KEYS.get(key);
                 if (dir == null) {
-                    System.err.println("WatchKey not recognized!");
+                    LOG.warn("WatchKey not recognized!");
                     continue;
                 }
 
@@ -157,20 +159,22 @@ public final class DirectoryListener extends DefaultObjectPipe<String, ObjectRec
                     if (event.kind() == java.nio.file.StandardWatchEventKinds.OVERFLOW) {
                         throw new OpenFailed("Overflow event occurred on directory " + directory);
                     }
-                    System.out.println("Event kind:" + event.kind() + ". File affected: " + event.context() + ".");
+                    LOG.info("Event kind {} on file: '{}'", event.kind(),  event.context());
 
                     @SuppressWarnings("unchecked")
                     final Path fileName = ((WatchEvent<Path>) event).context();
                     final Path absolutePath = dir.resolve(fileName);
-
                     processFile(fileName, absolutePath);
                 }
                 // reset key and remove from set if directory no longer accessible
                 final boolean valid = key.reset();
                 if (!valid) {
                     KEYS.remove(key);
+                    LOG.info("Directory no longer accessible: " + key.toString());
                     // all directories are inaccessible
                     if (KEYS.isEmpty()) {
+                        LOG.combinedWarn("Root directory {} is not accessible anymore. Closing ...", directory);
+                        closeStream();
                         break;
                     }
                 }
@@ -188,10 +192,12 @@ public final class DirectoryListener extends DefaultObjectPipe<String, ObjectRec
             }
             else {
                 if (fileName.toString().equals(TRIGGER_SHUTDOWN_FILENAME)) {
+                    LOG.combinedInfo("Shutdown triggered. Going down ...");
                     closeStream();
                     Thread.currentThread().interrupt();
                 }
                 else {
+                    LOG.combinedDebug("processing '{}'", absolutePath.toString());
                     getReceiver().process(absolutePath.toString());
                 }
             }

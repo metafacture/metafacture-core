@@ -28,6 +28,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import static org.mockito.Mockito.times;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -84,11 +86,23 @@ public final class DirectoryListenerTest {
         Mockito.verify(receiver, org.mockito.Mockito.timeout(MAX_MILLISECONDS_WAITING_OF_THREAD)).process(pathToTestfile);
     }
 
+        @Test
+    public void testFileOccursAndIsIgnoredWhenDeleted() throws InterruptedException {
+        final String pathToTestfile = pathToDirectory + FILE_NAME + "1";
+        createFile(pathToTestfile);
+        Mockito.verify(receiver, org.mockito.Mockito.timeout(MAX_MILLISECONDS_WAITING_OF_THREAD)).process(pathToTestfile);
+        Mockito.verify(receiver,times(1)).process(pathToTestfile);
+        removeFile(pathToTestfile);
+        Thread.sleep(100); // because of https://bugs.openjdk.org/browse/JDK-8202759
+        Mockito.verify(receiver,times(1)).process(pathToTestfile);
+
+    }
+
     @Test
     public void testDontProcessDirectoryWithoutFiles() throws InterruptedException {
-        final String pathToTestfile = pathToDirectory + SUBDIRECTORY_NAME;
-        Thread.sleep(400); // because of https://bugs.openjdk.org/browse/JDK-8202759
+        final String pathToTestfile = pathToSubdirectory;
         createFile(pathToTestfile);
+        Thread.sleep(100); // because of https://bugs.openjdk.org/browse/JDK-8202759
         Mockito.verify(receiver, org.mockito.Mockito.timeout(MAX_MILLISECONDS_WAITING_OF_THREAD).times(0)).process(pathToTestfile);
     }
 
@@ -119,5 +133,10 @@ public final class DirectoryListenerTest {
         catch (final IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void removeFile(final String path) {
+        final File testFile = new File(path);
+        testFile.delete();
     }
 }
