@@ -10,7 +10,7 @@
   </Appenders>
   <Loggers>
     <!-- For developer logging change level to "DEBUG" -->
-    <Root level="ERROR">
+    <Root level="${sys:log4j2.level:-ERROR}">
       <AppenderRef ref="CONSOLE"/>
     </Root>
     <!-- For user logging with e.g. `log-object` change level to "DEBUG" -->

@@ -135,7 +135,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
             final MetafactureException exception = tryRun(() -> consumer.accept(record));
 
             if (exception != null) {
-                metafix.getStrictness().handle(exception, record);
+                metafix.handleException(exception, record);
             }
         });
     }

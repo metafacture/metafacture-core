@@ -1,0 +1,3 @@
+^[0-9T:.-]+ \[main\] WARN  org\.metafacture\.metafix\.Metafix - Error while executing Fix expression \(at file:.*/metafix/src/test/resources/org/metafacture/metafix/integration/script/fromJson/toJson/maxExceptionCount/test\.fix, line 1\): upcase\("data"\)$
+^java\.lang\.IllegalStateException: Expected String, got Array$
+^[0-9T:.-]+ \[main\] INFO  org\.metafacture\.metafix\.Metafix - Maximum number of exceptions exceeded: 2/1 \(Current exception: IllegalStateException\)$

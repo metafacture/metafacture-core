@@ -1,0 +1,2 @@
+-Dlog4j2.level=DEBUG
+-Dorg.metafacture.metafix.maxExceptionCount=1
