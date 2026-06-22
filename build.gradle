@@ -66,9 +66,11 @@ ext.scmInfo = getScmInfo()
 logger.lifecycle("Making ${scmInfo.type()} build: ${scmInfo.version}")
 
 allprojects {
+  ext.mavenName = null
+  ext.scmInfo = rootProject.scmInfo
+
   group = 'org.metafacture'
   version = scmInfo.version
-  ext.mavenName = null
 }
 
 configure(subprojects.findAll { it.name != 'metafacture-runner' }) {
@@ -251,7 +253,7 @@ subprojects {
               connection = 'scm:git:https://github.com/metafacture/metafacture-core.git'
               developerConnection = 'scm:git:https://github.com/metafacture/metafacture-core.git'
               url = 'https://github.com/metafacture/metafacture-core'
-              tag = rootProject.scmInfo.tag ?: 'HEAD'
+              tag = scmInfo.tag ?: 'HEAD'
             }
             issueManagement {
               system = 'Github'
