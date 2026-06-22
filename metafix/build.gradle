@@ -117,7 +117,7 @@ task integrationTest(type: Exec, group: 'Verification') {
 
 task validateFixFile(type: JavaExec, group: 'Verification') {
   mainClass = 'org.metafacture.metafix.FixStandaloneSetup'
-  classpath = sourceSets.main.runtimeClasspath
+  classpath = sourceSets.test.runtimeClasspath
 }
 
 def mwe2File = 'src/main/java/org/metafacture/metafix/GenerateFix.mwe2'
@@ -125,7 +125,7 @@ def xtextFile = 'src/main/java/org/metafacture/metafix/Fix.xtext'
 
 task validateXtextLanguage(type: JavaExec, group: 'Verification') {
   mainClass = 'org.metafacture.metafix.validation.XtextValidator'
-  classpath = sourceSets.main.runtimeClasspath
+  classpath = sourceSets.test.runtimeClasspath
   args += xtextFile
 }
 
