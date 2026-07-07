@@ -33,7 +33,7 @@ subprojects {
       'commons_io':       '2.21.0',
       'dbcp':             '1.4',
       'dspace':           '1.0.0',
-      'equalsverifier':   '3.8.2',
+      'equalsverifier':   '3.19.4',
       'everit':           '1.14.6',
       'guava':            '32.0.1-jre',
       'jackson':          '2.21.4',
