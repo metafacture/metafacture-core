@@ -25,6 +25,10 @@ import org.metafacture.metafix.api.FixContext;
 
 import java.util.Map;
 
+/**
+ * Iterates over each element of an array. In contrast to Catmandu, it can
+ * also iterate over a single object or string.
+ */
 @FixCommand("list")
 public class List implements FixContext {
 

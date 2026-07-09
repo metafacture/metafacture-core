@@ -24,6 +24,9 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Executes the functions if/unless the first string contains the second string.
+ */
 @FixCommand("str_contain")
 public class StrContain implements FixPredicate {
 

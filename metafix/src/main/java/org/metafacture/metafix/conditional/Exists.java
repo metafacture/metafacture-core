@@ -24,6 +24,9 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Executes the functions if/unless the field exists.
+ */
 @FixCommand("exists")
 public class Exists implements FixPredicate {
 

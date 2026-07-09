@@ -24,6 +24,10 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Executes the functions if/unless the field value does not equal the string.
+ * If it is an array or a hash, none of the field values may equal the string.
+ */
 @FixCommand("none_equal")
 public class NoneEqual implements FixPredicate {
 

@@ -25,6 +25,10 @@ import org.metafacture.metafix.api.FixContext;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Defines a named macro, i.e. a list of statements that can be executed later
+ * with the {@link org.metafacture.metafix.method.record.CallMacro} function.
+ */
 @FixCommand("put_macro")
 public class PutMacro implements FixContext {
 

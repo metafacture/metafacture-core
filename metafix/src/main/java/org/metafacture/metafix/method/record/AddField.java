@@ -25,6 +25,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Creates a field with a defined value.
+ */
 @FixCommand("add_field")
 public class AddField implements FixFunction {
 

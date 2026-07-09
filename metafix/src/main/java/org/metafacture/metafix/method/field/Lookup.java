@@ -31,6 +31,12 @@ import java.util.Map;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.function.Consumer;
 
+/**
+ * Looks up matching values in a map and replaces the field value with this match.
+ * {@link org.metafacture.metafix.method.script.PutFileMap External files},
+ * {@link org.metafacture.metafix.method.script.PutMap internal maps} as well as
+ * {@link org.metafacture.metafix.method.script.PutRdfMap RDF resources} can be used.
+ */
 @FixCommand("lookup")
 public class Lookup implements FixFunction {
 

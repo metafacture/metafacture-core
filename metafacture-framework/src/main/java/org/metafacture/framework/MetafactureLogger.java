@@ -32,6 +32,9 @@ public class MetafactureLogger {
     private final Logger externalLogger;
     private final Logger internalLogger;
 
+    /**
+     * Wrapper for the supported log levels and their associated actions.
+     */
     public enum Level {
 
         ERROR((l, f, a) -> l.error(f, a)),

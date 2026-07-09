@@ -176,6 +176,7 @@ subprojects {
 
     options {
       addBooleanOption 'Xwerror', true
+      addBooleanOption 'Xdoclint:all,-missing', true
     }
   }
 

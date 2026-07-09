@@ -24,6 +24,11 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Replaces a regular expression pattern in field values with a replacement
+ * string. Regexp capturing is possible; refer to capturing groups by number
+ * ({@code $<number>}) or name ({@code ${<name>}}).
+ */
 @FixCommand("replace_all")
 public class ReplaceAll implements FixFunction {
 

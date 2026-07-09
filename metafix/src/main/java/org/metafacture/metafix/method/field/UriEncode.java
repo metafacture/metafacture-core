@@ -25,6 +25,9 @@ import org.metafacture.metamorph.functions.URLEncode;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Encodes a field value as URI. Aka percent-encoding.
+ */
 @FixCommand("uri_encode")
 public class UriEncode implements FixFunction {
 

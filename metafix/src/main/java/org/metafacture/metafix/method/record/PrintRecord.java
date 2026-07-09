@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.LongAdder;
 
+/**
+ * Prints the current record as JSON either to standard output or to a file.
+ */
 @FixCommand("print_record")
 public class PrintRecord implements FixFunction {
 

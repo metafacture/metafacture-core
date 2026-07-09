@@ -25,6 +25,11 @@ import org.metafacture.metamorph.maps.FileMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Defines an external map for {@link org.metafacture.metafix.method.field.Lookup}
+ * from a file or a URL. Maps with more than 2 columns are supported but are
+ * reduced to a defined key and a value column.
+ */
 @FixCommand("put_filemap")
 public class PutFileMap implements FixFunction {
 

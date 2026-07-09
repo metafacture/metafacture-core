@@ -25,6 +25,9 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Replaces the value with its Base64 encoding.
+ */
 @FixCommand("to_base64")
 public class ToBase64 implements FixFunction {
 

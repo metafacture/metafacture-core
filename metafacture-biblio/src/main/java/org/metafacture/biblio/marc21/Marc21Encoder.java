@@ -113,7 +113,6 @@ public final class Marc21Encoder extends
      * Controls whether the leader should be validated.
      * <p>
      * The default value of {@code validateLeader} is true.
-     * <p>
      *
      * @param validateLeader if false the leader is not validated
      */

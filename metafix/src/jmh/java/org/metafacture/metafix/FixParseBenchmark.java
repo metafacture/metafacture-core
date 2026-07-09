@@ -19,6 +19,9 @@ package org.metafacture.metafix;
 import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Setup;
 
+/**
+ * Fix parsing benchmark.
+ */
 public class FixParseBenchmark extends AbstractBenchmark {
 
     protected static final String BASE = "src/jmh/resources/org/metafacture/metafix";

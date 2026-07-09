@@ -24,6 +24,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Deletes empty fields, arrays and objects.
+ */
 @FixCommand("vacuum")
 public class Vacuum implements FixFunction {
 

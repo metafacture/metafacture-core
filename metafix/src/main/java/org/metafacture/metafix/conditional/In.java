@@ -25,6 +25,11 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Executes the functions if/unless the field value
+ * <a href="https://perldoc.perl.org/perlop#Smartmatch-Operator">is contained in</a>
+ * the value of the other field.
+ */
 @FixCommand("in")
 public class In implements FixPredicate {
 

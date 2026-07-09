@@ -24,6 +24,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Deletes whitespace at the beginning and the end of a field value.
+ */
 @FixCommand("trim")
 public class Trim implements FixFunction {
 

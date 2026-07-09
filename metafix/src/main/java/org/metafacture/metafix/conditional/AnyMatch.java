@@ -24,6 +24,11 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Executes the functions if/unless the field value matches the regular
+ * expression pattern. If it is an array or a hash, one or more field
+ * values must match the regular expression pattern.
+ */
 @FixCommand("any_match")
 public class AnyMatch implements FixPredicate {
 

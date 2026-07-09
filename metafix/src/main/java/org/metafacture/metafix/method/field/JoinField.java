@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Joins an array of strings into a single string.
+ */
 @FixCommand("join_field")
 public class JoinField implements FixFunction {
 

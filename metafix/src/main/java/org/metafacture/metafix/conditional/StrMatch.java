@@ -24,6 +24,10 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Executes the functions if/unless the string matches the regular
+ * expression pattern.
+ */
 @FixCommand("str_match")
 public class StrMatch implements FixPredicate {
 

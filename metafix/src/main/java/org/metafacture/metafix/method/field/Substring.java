@@ -24,6 +24,10 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Replaces a string with its substring as defined by the start position
+ * (offset) and length.
+ */
 @FixCommand("substring")
 public class Substring implements FixFunction {
 

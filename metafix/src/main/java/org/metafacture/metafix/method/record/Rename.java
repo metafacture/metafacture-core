@@ -26,6 +26,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
+/**
+ * Replaces a regular expression pattern in subfield names of a field. Does
+ * not change the name of the source field itself.
+ */
 @FixCommand("rename")
 public class Rename implements FixFunction {
 

@@ -27,6 +27,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Parses a text into an array or hash of values using regular expressions
+ * and grouping.
+ */
 @FixCommand("parse_text")
 public class ParseText implements FixFunction {
 

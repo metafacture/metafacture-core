@@ -24,6 +24,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Flattens a nested array field.
+ */
 @FixCommand("flatten")
 public class Flatten implements FixFunction {
 

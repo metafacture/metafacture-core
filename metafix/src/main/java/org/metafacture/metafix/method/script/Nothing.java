@@ -24,6 +24,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Does nothing. It is used for benchmarking in Catmandu.
+ */
 @FixCommand("nothing")
 public class Nothing implements FixFunction {
 

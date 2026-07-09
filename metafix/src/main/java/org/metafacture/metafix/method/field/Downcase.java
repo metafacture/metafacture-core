@@ -24,6 +24,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Downcases all characters in a field value.
+ */
 @FixCommand("downcase")
 public class Downcase implements FixFunction {
 

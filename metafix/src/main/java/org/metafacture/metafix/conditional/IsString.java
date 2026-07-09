@@ -25,6 +25,10 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Executes the functions if/unless the field value is a string (and not
+ * a number).
+ */
 @FixCommand("is_string")
 public class IsString implements FixPredicate {
 

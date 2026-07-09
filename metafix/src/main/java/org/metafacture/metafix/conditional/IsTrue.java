@@ -24,6 +24,10 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Executes the functions if/unless the field value equals {@code true}
+ * or {@code 1}.
+ */
 @FixCommand("is_true")
 public class IsTrue implements FixPredicate {
 

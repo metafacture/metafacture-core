@@ -27,6 +27,9 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+/**
+ * Fix predicate to test.
+ */
 @FunctionalInterface
 public interface FixPredicate {
 

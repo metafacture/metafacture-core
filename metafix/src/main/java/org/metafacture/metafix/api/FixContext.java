@@ -23,6 +23,9 @@ import org.metafacture.metafix.RecordTransformer;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Fix context to execute.
+ */
 @FunctionalInterface
 public interface FixContext {
 

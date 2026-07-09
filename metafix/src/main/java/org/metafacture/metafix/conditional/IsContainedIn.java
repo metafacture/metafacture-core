@@ -24,6 +24,9 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <i>Alias for {@link In}.</i>
+ */
 @FixCommand("is_contained_in")
 public class IsContainedIn implements FixPredicate {
 

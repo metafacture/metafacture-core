@@ -15,6 +15,9 @@ import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 
 import java.util.List;
 
+/**
+ * Interpreter for Fix programs.
+ */
 public class FixInterpreter extends XbaseInterpreter {
 
     private static final MetafactureLogger LOG = new MetafactureLogger(FixInterpreter.class);

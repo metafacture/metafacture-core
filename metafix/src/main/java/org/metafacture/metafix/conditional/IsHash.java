@@ -24,6 +24,9 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <i>Alias for {@link IsObject}.</i>
+ */
 @FixCommand("is_hash")
 public class IsHash implements FixPredicate {
 

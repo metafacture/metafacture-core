@@ -28,6 +28,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
+/**
+ * Splits a string into an array and replaces the field value with this array.
+ */
 @FixCommand("split_field")
 public class SplitField implements FixFunction {
 

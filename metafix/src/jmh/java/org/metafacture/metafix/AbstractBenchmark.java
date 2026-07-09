@@ -34,6 +34,9 @@ import org.openjdk.jmh.annotations.Warmup;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Base class for benchmarks.
+ */
 @Fork(2)
 @Warmup(iterations = 2)
 @Measurement(iterations = 4) // checkstyle-disable-line MagicNumber

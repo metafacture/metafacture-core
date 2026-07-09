@@ -25,6 +25,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Creates (or replaces) a field with the current timestamp.
+ */
 @FixCommand("timestamp")
 public class Timestamp implements FixFunction {
 

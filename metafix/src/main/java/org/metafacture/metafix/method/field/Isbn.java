@@ -25,6 +25,10 @@ import org.metafacture.metamorph.functions.ISBN;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Extracts an ISBN and replaces the field value with the normalized ISBN;
+ * optionally converts and/or validates the ISBN.
+ */
 @FixCommand("isbn")
 public class Isbn implements FixFunction {
 

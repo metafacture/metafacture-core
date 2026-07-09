@@ -24,6 +24,10 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Returns the index position of a substring in a field and replaces the
+ * field value with this number.
+ */
 @FixCommand("index")
 public class Index implements FixFunction {
 

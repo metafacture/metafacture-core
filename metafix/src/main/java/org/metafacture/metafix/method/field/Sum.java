@@ -25,6 +25,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Sums numbers in an array and replaces the field value with this number.
+ */
 @FixCommand("sum")
 public class Sum implements FixFunction {
 
