@@ -24,6 +24,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Deletes all fields except the ones listed (incl. subfields).
+ */
 @FixCommand("retain")
 public class Retain implements FixFunction {
 

@@ -1,5 +1,8 @@
 package org.metafacture.io;
 
+/**
+ * Error while writing to output stream.
+ */
 public class WriteFailed extends IoFailed {
 
     /**

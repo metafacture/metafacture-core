@@ -90,6 +90,9 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     private boolean inputUsed;
     private boolean successful;
 
+    /**
+     * HTTP methods.
+     */
     public enum Method {
 
         DELETE(false, true),

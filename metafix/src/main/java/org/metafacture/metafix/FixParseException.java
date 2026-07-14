@@ -18,6 +18,9 @@ package org.metafacture.metafix;
 
 import org.metafacture.framework.MetafactureException;
 
+/**
+ * Error while parsing Fix resource.
+ */
 public class FixParseException extends MetafactureException {
 
     /**

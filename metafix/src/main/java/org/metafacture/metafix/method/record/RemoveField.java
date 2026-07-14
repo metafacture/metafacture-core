@@ -24,6 +24,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Removes a field.
+ */
 @FixCommand("remove_field")
 public class RemoveField implements FixFunction {
 

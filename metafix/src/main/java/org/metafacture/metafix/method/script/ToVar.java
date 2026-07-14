@@ -25,6 +25,11 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Defines a single global variable that can be referenced with
+ * {@code $[<variableName>]} and assigns the value of the
+ * {@code <sourceField>}.
+ */
 @FixCommand("to_var")
 public class ToVar implements FixFunction {
 

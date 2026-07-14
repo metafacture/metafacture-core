@@ -24,6 +24,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Upcases the first character in a field value.
+ */
 @FixCommand("capitalize")
 public class Capitalize implements FixFunction {
 

@@ -24,6 +24,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Adds a string at the beginning of a field value.
+ */
 @FixCommand("prepend")
 public class Prepend implements FixFunction {
 

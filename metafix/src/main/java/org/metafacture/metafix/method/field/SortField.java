@@ -28,6 +28,10 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Sorts strings in an array. Alphabetically and A-Z by default. Optional
+ * numerical and reverse sorting.
+ */
 @FixCommand("sort_field")
 public class SortField implements FixFunction {
 

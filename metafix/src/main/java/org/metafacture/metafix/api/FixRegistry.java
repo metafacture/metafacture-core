@@ -39,6 +39,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
+/**
+ * Registry for Fix commands.
+ */
 public class FixRegistry {
 
     private static final String FILE_SEPARATOR = "/";

@@ -24,6 +24,11 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Creates a new array (with optional values), provided that the intermediate
+ * structures (i.e. parent fields) exist. To create any missing intermediate
+ * structures, use {@link AddArray} instead.
+ */
 @FixCommand("set_array")
 public class SetArray implements FixFunction {
 

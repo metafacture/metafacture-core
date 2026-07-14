@@ -24,6 +24,10 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Defines an internal map for {@link org.metafacture.metafix.method.field.Lookup}
+ * from key/value pairs.
+ */
 @FixCommand("put_map")
 public class PutMap implements FixFunction {
 

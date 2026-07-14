@@ -24,6 +24,10 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Executes the functions if/unless the field value is greater than the given
+ * value.
+ */
 @FixCommand("greater_than")
 public class GreaterThan implements FixPredicate {
 

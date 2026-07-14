@@ -25,6 +25,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Creates a new hash (with optional values).
+ */
 @FixCommand("add_hash")
 public class AddHash implements FixFunction {
 

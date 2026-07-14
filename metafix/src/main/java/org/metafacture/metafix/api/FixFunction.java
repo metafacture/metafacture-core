@@ -33,6 +33,9 @@ import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
+/**
+ * Fix function to apply.
+ */
 @FunctionalInterface
 public interface FixFunction {
 

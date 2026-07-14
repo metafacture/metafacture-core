@@ -24,6 +24,9 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Executes the functions if/unless the field value is empty.
+ */
 @FixCommand("is_empty")
 public class IsEmpty implements FixPredicate {
 

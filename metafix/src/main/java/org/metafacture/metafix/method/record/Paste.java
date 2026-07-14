@@ -26,6 +26,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Joins multiple field values into a new field. Can be combined with
+ * additional literal strings.
+ */
 @FixCommand("paste")
 public class Paste implements FixFunction {
 

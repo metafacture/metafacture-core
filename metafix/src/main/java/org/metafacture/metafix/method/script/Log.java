@@ -25,6 +25,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Sends a message to the logs.
+ */
 @FixCommand("log")
 public class Log implements FixFunction {
 

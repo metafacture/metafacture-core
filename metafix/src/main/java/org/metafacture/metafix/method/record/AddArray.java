@@ -25,6 +25,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Creates a new array (with optional values).
+ */
 @FixCommand("add_array")
 public class AddArray implements FixFunction {
 

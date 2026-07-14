@@ -24,6 +24,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Deletes duplicate values in an array.
+ */
 @FixCommand("uniq")
 public class Uniq implements FixFunction {
 

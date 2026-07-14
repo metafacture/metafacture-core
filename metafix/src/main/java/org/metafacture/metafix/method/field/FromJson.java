@@ -27,6 +27,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Replaces the string with its JSON deserialization.
+ */
 @FixCommand("from_json")
 public class FromJson implements FixFunction {
 

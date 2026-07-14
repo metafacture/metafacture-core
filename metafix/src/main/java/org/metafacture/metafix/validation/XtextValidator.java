@@ -16,6 +16,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Validator for Xtext resources.
+ */
 public class XtextValidator {
 
     private static final MetafactureLogger LOG = new MetafactureLogger(XtextValidator.class);

@@ -1,5 +1,8 @@
 package org.metafacture.io;
 
+/**
+ * Error while closing output stream.
+ */
 public class CloseFailed extends IoFailed {
 
     /**

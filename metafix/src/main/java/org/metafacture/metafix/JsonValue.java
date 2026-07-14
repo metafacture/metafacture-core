@@ -29,6 +29,9 @@ import java.io.UncheckedIOException;
 
 // TODO: Utilize JsonDecoder/JsonEncoder instead?
 
+/**
+ * Serializer for JSON values.
+ */
 @FunctionalInterface
 public interface JsonValue {
 
@@ -76,6 +79,9 @@ public interface JsonValue {
         return writer.toString();
     }
 
+    /**
+     * Parser for JSON values.
+     */
     class Parser {
 
         private static final ObjectMapper MAPPER = new ObjectMapper();

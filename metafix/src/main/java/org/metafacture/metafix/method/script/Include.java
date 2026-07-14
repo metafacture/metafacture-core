@@ -24,6 +24,10 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Includes a Fix file and executes it as if its statements were written in
+ * place of the function call.
+ */
 @FixCommand("include")
 public class Include implements FixFunction {
 

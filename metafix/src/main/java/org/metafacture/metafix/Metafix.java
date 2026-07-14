@@ -683,6 +683,9 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         return clazz;
     }
 
+    /**
+     * Strictness levels.
+     */
     public enum Strictness {
 
         /**

@@ -1,5 +1,8 @@
 package org.metafacture.io;
 
+/**
+ * Error while opening output stream.
+ */
 public class OpenFailed extends IoFailed {
 
     /**

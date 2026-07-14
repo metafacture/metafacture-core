@@ -24,6 +24,10 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Defines multiple global variables that can be referenced with
+ * {@code $[<variableName>]}.
+ */
 @FixCommand("put_vars")
 public class PutVars implements FixFunction {
 

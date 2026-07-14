@@ -24,6 +24,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Ignores records that match a condition.
+ */
 @FixCommand("reject")
 public class Reject implements FixFunction {
 

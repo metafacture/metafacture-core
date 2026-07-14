@@ -26,6 +26,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Replaces the value with a formatted ({@code sprintf}-like) version as in
+ * {@link java.util.Formatter}.
+ */
 @FixCommand("format")
 public class Format implements FixFunction {
 

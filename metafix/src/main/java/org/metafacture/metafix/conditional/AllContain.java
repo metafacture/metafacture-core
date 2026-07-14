@@ -24,6 +24,10 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Executes the functions if/unless the field contains the value. If it is an
+ * array or a hash, all field values must contain the string.
+ */
 @FixCommand("all_contain")
 public class AllContain implements FixPredicate {
 

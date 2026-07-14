@@ -25,6 +25,9 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Converts a hash/object into an array.
+ */
 @FixCommand("array")
 public class Array implements FixFunction {
 

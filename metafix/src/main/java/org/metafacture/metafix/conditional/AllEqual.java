@@ -24,6 +24,10 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Executes the functions if/unless the field value equals the string. If it
+ * is an array or a hash, all field values must equal the string.
+ */
 @FixCommand("all_equal")
 public class AllEqual implements FixPredicate {
 

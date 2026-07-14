@@ -2,6 +2,9 @@ package org.metafacture.io;
 
 import org.metafacture.framework.MetafactureException;
 
+/**
+ * Base class for IO exceptions.
+ */
 public class IoFailed extends MetafactureException {
 
     /**

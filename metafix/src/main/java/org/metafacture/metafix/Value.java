@@ -463,6 +463,9 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         String
     }
 
+    /**
+     * Matcher for value types.
+     */
     public static class TypeMatcher {
 
         private final Set<Type> expected = EnumSet.noneOf(Type.class);

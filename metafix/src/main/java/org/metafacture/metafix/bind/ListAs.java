@@ -27,6 +27,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Iterates over each <i>named</i> element of an array (like
+ * {@link org.metafacture.metafix.bind.List} with a variable name). If
+ * multiple arrays are given, iterates over the <i>corresponding</i>
+ * elements from each array (i.e., all elements with the same array
+ * index, skipping elements whose arrays have already been exhausted).
+ */
 @FixCommand("list_as")
 public class ListAs implements FixContext {
 

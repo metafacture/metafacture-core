@@ -26,6 +26,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Replaces the value with its JSON serialization.
+ */
 @FixCommand("to_json")
 public class ToJson implements FixFunction {
 

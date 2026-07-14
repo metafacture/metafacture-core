@@ -28,6 +28,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Executes the statements only once (when the bind is first encountered),
+ * not repeatedly for each record.
+ */
 @FixCommand("once")
 public class Once implements FixContext {
 

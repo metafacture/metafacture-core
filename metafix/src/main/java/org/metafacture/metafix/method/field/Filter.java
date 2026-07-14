@@ -27,6 +27,10 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+/**
+ * Only keeps field values that match the regular expression pattern. Works
+ * only with array of strings/repeated fields.
+ */
 @FixCommand("filter")
 public class Filter implements FixFunction {
 

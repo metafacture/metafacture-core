@@ -186,6 +186,9 @@ public final class RecordFormat {
                 "implDefinedPartLength=" + implDefinedPartLength + ")";
     }
 
+    /**
+     * Builder for {@link RecordFormat}.
+     */
     public static class Builder {
 
         private static final int RADIX = 10;

@@ -25,6 +25,10 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Creates (or replaces) a field with a random number (less than the
+ * specified maximum).
+ */
 @FixCommand("random")
 public class Random implements FixFunction {
 

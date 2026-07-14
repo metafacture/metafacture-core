@@ -25,6 +25,10 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Calls a named macro, i.e. a list of statements that have been previously
+ * defined with the {@link org.metafacture.metafix.bind.PutMacro} bind.
+ */
 @FixCommand("call_macro")
 public class CallMacro implements FixFunction {
 

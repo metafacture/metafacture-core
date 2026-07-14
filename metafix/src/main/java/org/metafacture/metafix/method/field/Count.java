@@ -25,6 +25,10 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Counts the number of elements in an array or a hash and replaces the
+ * field value with this number.
+ */
 @FixCommand("count")
 public class Count implements FixFunction {
 

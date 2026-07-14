@@ -287,7 +287,7 @@ put_map("<mapName>",
 
 ##### `put_rdfmap`
 
-Defines an external RDF map for lookup from a file or an HTTP(S) resource.
+Defines an external RDF map for [lookup](#lookup) from a file or an HTTP(S) resource.
 As the RDF map is reducing RDF triples to a key/value map it is mandatory to set the target.
 The targeted RDF property can optionally be bound by an RDF language tag.
 
@@ -1253,7 +1253,7 @@ end
 
 ##### `all_contain`
 
-Executes the functions if/unless the field contains the value. If it is an array or a hash all field values must contain the string.
+Executes the functions if/unless the field contains the value. If it is an array or a hash, all field values must contain the string.
 
 [Example in Playground](https://metafacture.org/playground/?example=all_contain)
 
@@ -1261,7 +1261,7 @@ Executes the functions if/unless the field contains the value. If it is an array
 
 ##### `any_contain`
 
-Executes the functions if/unless the field contains the value. If it is an array or a hash one or more field values must contain the string.
+Executes the functions if/unless the field contains the value. If it is an array or a hash, one or more field values must contain the string.
 
 [Example in Playground](https://metafacture.org/playground/?example=any_contain)
 
@@ -1269,7 +1269,7 @@ Executes the functions if/unless the field contains the value. If it is an array
 
 ##### `none_contain`
 
-Executes the functions if/unless the field does not contain the value. If it is an array or a hash none of the field values may contain the string.
+Executes the functions if/unless the field does not contain the value. If it is an array or a hash, none of the field values may contain the string.
 
 [Example in Playground](https://metafacture.org/playground/?example=none_contain)
 
@@ -1287,7 +1287,7 @@ Executes the functions if/unless the first string contains the second string.
 
 ##### `all_equal`
 
-Executes the functions if/unless the field value equals the string. If it is an array or a hash all field values must equal the string.
+Executes the functions if/unless the field value equals the string. If it is an array or a hash, all field values must equal the string.
 
 [Example in Playground](https://metafacture.org/playground/?example=all_equal)
 
@@ -1295,7 +1295,7 @@ Executes the functions if/unless the field value equals the string. If it is an 
 
 ##### `any_equal`
 
-Executes the functions if/unless the field value equals the string. If it is an array or a hash one or more field values must equal the string.
+Executes the functions if/unless the field value equals the string. If it is an array or a hash, one or more field values must equal the string.
 
 [Example in Playground](https://metafacture.org/playground/?example=any_equal)
 
@@ -1303,7 +1303,7 @@ Executes the functions if/unless the field value equals the string. If it is an 
 
 ##### `none_equal`
 
-Executes the functions if/unless the field value does not equal the string. If it is an array or a hash none of the field values may equal the string.
+Executes the functions if/unless the field value does not equal the string. If it is an array or a hash, none of the field values may equal the string.
 
 [Example in Playground](https://metafacture.org/playground/?example=none_equal)
 
@@ -1429,7 +1429,7 @@ Executes the functions if/unless the field value is less than the given value.
 
 ##### `all_match`
 
-Executes the functions if/unless the field value matches the regular expression pattern. If it is an array or a hash all field values must match the regular expression pattern.
+Executes the functions if/unless the field value matches the regular expression pattern. If it is an array or a hash, all field values must match the regular expression pattern.
 
 [Example in Playground](https://metafacture.org/playground/?example=all_match)
 
@@ -1437,7 +1437,7 @@ Executes the functions if/unless the field value matches the regular expression 
 
 ##### `any_match`
 
-Executes the functions if/unless the field value matches the regular expression pattern. If it is an array or a hash one or more field values must match the regular expression pattern.
+Executes the functions if/unless the field value matches the regular expression pattern. If it is an array or a hash, one or more field values must match the regular expression pattern.
 
 [Example in Playground](https://metafacture.org/playground/?example=any_match)
 
@@ -1445,7 +1445,7 @@ Executes the functions if/unless the field value matches the regular expression 
 
 ##### `none_match`
 
-Executes the functions if/unless the field value does not match the regular expression pattern. If it is an array or a hash none of the field values may match the regular expression pattern.
+Executes the functions if/unless the field value does not match the regular expression pattern. If it is an array or a hash, none of the field values may match the regular expression pattern.
 
 [Example in Playground](https://metafacture.org/playground/?example=none_match)
 

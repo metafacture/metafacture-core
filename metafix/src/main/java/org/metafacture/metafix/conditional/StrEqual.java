@@ -24,6 +24,9 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Executes the functions if/unless the first string equals the second string.
+ */
 @FixCommand("str_equal")
 public class StrEqual implements FixPredicate {
 

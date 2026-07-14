@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Turn HTML text to plain text.
+ * Turns HTML text to plain text.
  *
  * @author Tobias Bülte (tobiasNx)
  *

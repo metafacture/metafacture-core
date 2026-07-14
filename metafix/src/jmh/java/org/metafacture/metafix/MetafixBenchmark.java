@@ -18,6 +18,9 @@ package org.metafacture.metafix;
 
 import org.openjdk.jmh.annotations.Param;
 
+/**
+ * Metafix benchmark.
+ */
 public class MetafixBenchmark extends AbstractMetafixBenchmark {
 
     @Param({ // checkstyle-disable-line AnnotationUseStyle
