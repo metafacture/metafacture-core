@@ -100,7 +100,7 @@ public final class TripleObjectRetriever extends DefaultObjectPipe<Triple, Objec
 
     private String retrieveObjectValue(final String urlString) {
         try {
-            final URL url = new URL(urlString);
+            final URL url = ResourceUtil.toURL(urlString);
             final URLConnection connection = url.openConnection();
             connection.connect();
             final String encodingName = connection.getContentEncoding();

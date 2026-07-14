@@ -23,6 +23,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HashValueTest {
 
@@ -37,6 +39,8 @@ public class HashValueTest {
     private static final Value VALUE = new Value("value");
     private static final Value OTHER_VALUE = new Value("other value");
 
+    private static final Pattern PATTERN = Pattern.compile("");
+
     public HashValueTest() {
     }
 
@@ -44,6 +48,7 @@ public class HashValueTest {
     public void shouldSatisfyEqualsContract() {
         EqualsVerifier.forClass(Value.Hash.class)
             .withPrefabValues(Value.class, Value.newArray(), Value.newHash())
+            .withPrefabValues(Matcher.class, PATTERN.matcher("a"), PATTERN.matcher("b"))
             .withPrefabValues(SimpleRegexTrie.class, new SimpleRegexTrie<String>(), new SimpleRegexTrie<String>())
             .withIgnoredFields("patternMatcher", "prefixCache", "trie", "trieCache")
             .verify();

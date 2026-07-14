@@ -18,6 +18,7 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.MetafactureLogger;
@@ -39,7 +40,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -290,7 +290,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
 
     private boolean isValidUrl(final String url) {
         try {
-            new URL(url);
+            ResourceUtil.toURL(url);
             return true;
         }
         catch (final MalformedURLException e) {

@@ -16,6 +16,7 @@
 
 package org.metafacture.json;
 
+import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 
@@ -113,7 +114,7 @@ public final class JsonValidatorTest {
 
     @Test
     public void callWireMockSchema() throws MalformedURLException, IOException {
-        final String schemaContent = readToString(new URL(wireMockRule.baseUrl() + MAIN_SCHEMA));
+        final String schemaContent = readToString(ResourceUtil.toURL(wireMockRule.baseUrl() + MAIN_SCHEMA));
         MatcherAssert.assertThat(schemaContent, CoreMatchers.both(CoreMatchers.containsString("$schema")).and(CoreMatchers.containsString("$ref")));
     }
 

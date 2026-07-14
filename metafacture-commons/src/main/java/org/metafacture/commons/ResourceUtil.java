@@ -25,6 +25,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -70,7 +72,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
                 .getResourceAsStream(name);
         if (stream == null) {
             try {
-                stream = new URL(name).openStream();
+                stream = toURL(name).openStream();
             }
             catch (final IOException e) {
                 throwFileNotFoundException(name, e);
@@ -177,7 +179,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
 
         final URL resourceUrl =
                 Thread.currentThread().getContextClassLoader().getResource(name);
-        return resourceUrl != null ? resourceUrl : new URL(name);
+        return resourceUrl != null ? resourceUrl : toURL(name);
     }
 
     /**
@@ -189,6 +191,52 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      */
     public static URL getUrl(final File file) throws MalformedURLException {
         return file.toURI().toURL();
+    }
+
+    /**
+     * Creates a URL by parsing the given spec within a specified context.
+     *
+     * @param context the context in which to parse the specification
+     * @param spec the String to parse as a URL
+     *
+     * @return the resolved URL
+     *
+     * @throws MalformedURLException if the spec is invalid
+     */
+    public static URL toURL(final URL context, final String spec) throws MalformedURLException {
+        try {
+            return context.toURI().resolve(toURI(spec)).toURL();
+        }
+        catch (final URISyntaxException e) {
+            throw new MalformedURLException(e.toString());
+        }
+    }
+
+    /**
+     * Creates a URL object from the String representation.
+     *
+     * @param spec the String to parse as a URL
+     *
+     * @return the URL
+     *
+     * @throws MalformedURLException if the spec is invalid
+     */
+    public static URL toURL(final String spec) throws MalformedURLException {
+        try {
+            return toURI(spec).toURL();
+        }
+        catch (final IllegalArgumentException e) {
+            throw new MalformedURLException(e.toString());
+        }
+    }
+
+    private static URI toURI(final String spec) throws MalformedURLException {
+        try {
+            return new URI(spec);
+        }
+        catch (final URISyntaxException e) {
+            throw new MalformedURLException(e.toString());
+        }
     }
 
     /**

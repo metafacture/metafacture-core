@@ -16,6 +16,7 @@
 
 package org.metafacture.json;
 
+import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.MetafactureLogger;
@@ -125,7 +126,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
         }
         SchemaLoaderBuilder schemaLoader = SchemaLoader.builder();
         try {
-            final URL url = new URL(schemaUrl);
+            final URL url = ResourceUtil.toURL(schemaUrl);
             schemaLoader = schemaLoader.schemaJson(jsonFrom(url.openStream()))
                     .resolutionScope(baseFor(url.toString()));
         }

@@ -26,6 +26,7 @@ dependencies {
   implementation project(':metafacture-mangling')
   implementation project(':metafacture-javaintegration')
   implementation "com.google.guava:guava:${versions.guava}"
+  implementation "org.openjdk.nashorn:nashorn-core:${versions.nashorn}"
   testRuntimeOnly slf4j_provider
   testImplementation "junit:junit:${versions.junit}"
   testImplementation "org.mockito:mockito-core:${versions.mockito}"

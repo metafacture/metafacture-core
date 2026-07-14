@@ -16,15 +16,14 @@
 
 package org.metafacture.metamorph.maps;
 
+import org.metafacture.commons.ResourceUtil;
 import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -73,7 +72,7 @@ public final class RestMap extends AbstractReadOnlyMap<String, String> {
     }
 
     private String readFromUrl(final String targetUrl) throws IOException, URISyntaxException {
-        final InputStream inputStream = new URL(new URI(targetUrl.replace(" ", "%20")).toASCIIString()).openConnection()
+        final InputStream inputStream = ResourceUtil.toURL(targetUrl.replace(" ", "%20")).openConnection()
                 .getInputStream();
         try {
             final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName(charsetName)));

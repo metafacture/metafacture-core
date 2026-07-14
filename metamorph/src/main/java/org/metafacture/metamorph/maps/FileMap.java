@@ -16,6 +16,7 @@
 
 package org.metafacture.metamorph.maps;
 
+import org.metafacture.commons.ResourceUtil;
 import org.metafacture.io.FileOpener;
 import org.metafacture.metamorph.api.MorphExecutionException;
 import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
@@ -229,7 +230,7 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> implement
     private Optional<InputStream> openAsUrl(final String file) {
         final URL url;
         try {
-            url = new URL(file);
+            url = ResourceUtil.toURL(file);
         }
         catch (final MalformedURLException e) {
             return Optional.empty();

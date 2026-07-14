@@ -75,7 +75,7 @@ public final class Case extends AbstractSimpleStatelessFunction {
         if (!LANGUAGES.contains(language)) {
             throw new MorphBuildException("Language " + language + " not supported.");
         }
-        this.locale = new Locale(language);
+        this.locale = Locale.forLanguageTag(language);
     }
 
 }
