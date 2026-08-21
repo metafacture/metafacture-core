@@ -85,8 +85,8 @@ public final class HelpPrinter {
         out.println();
         out.println(getVersionInfo());
 
-        out.println("\nUsage:\tflux FLOW_FILE [VARNAME=VALUE ...]\n");
-        out.println("Available flux commands:\n");
+        out.println("\nUsage:\tflux -f FLOW_FILE [-v VARNAME=VALUE ...]\n");
+        out.println("Available Flux commands:\n");
 
         final List<String> keyWords = new ArrayList<>(factory.keySet());
         Collections.sort(keyWords);

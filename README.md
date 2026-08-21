@@ -40,7 +40,7 @@ Regardless if you've built or downloaded, go on with:
     ```
 3. Run one of the example scripts:
     ```bash
-    $ ./flux.sh examples/read/marc21/read-marc21.flux
+    $ ./flux.sh -f examples/read/marc21/read-marc21.flux
     ```
     This example will print a number of MARC 21 records on standard output.
 
