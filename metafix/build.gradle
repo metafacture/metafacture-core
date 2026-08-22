@@ -92,6 +92,14 @@ test {
   maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
 }
 
+tasks.withType(JavaCompile) {
+  // JDK 21:
+  // metafix/src/main/xtext-gen/org/metafacture/metafix/parser/antlr/internal/InternalFixParser.java:139:
+  // warning: [this-escape] possible 'this' escape before subclass is fully initialized
+  // => TODO: Drop after removal of Xtext (see issue #579)
+  options.compilerArgs << '-Xlint:-this-escape'
+}
+
 task integrationTest(type: Exec, group: 'Verification') {
   def installDist = ':metafacture-runner:installDist'
   dependsOn installDist

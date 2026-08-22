@@ -77,7 +77,7 @@ public final class AbstractTripleSortTest { // checkstyle-disable-line AbstractC
         // Wait a tiny bit since GC Thread is not immediately done in Java 8
         Thread.sleep(10);
 
-        Assert.assertTrue(weakRef.isEnqueued());
+        Assert.assertTrue(weakRef.refersTo(null));
     }
 
 }

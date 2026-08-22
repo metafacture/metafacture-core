@@ -82,6 +82,7 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
     /**
      * Constructs an AbstractTripleSort. Calls {@link MemoryWarningSystem}.
      */
+    @SuppressWarnings("this-escape")
     protected AbstractTripleSort() {
         MemoryWarningSystem.addListener(this);
     }

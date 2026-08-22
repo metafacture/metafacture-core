@@ -132,6 +132,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
      * @param function an optional function that accepts the Metafix instance
      *                 and returns the Fix variables as a Map, or {@code null}
      */
+    @SuppressWarnings("this-escape")
     public Metafix(final Function<Metafix, Map<String, String>> function) {
         init(function);
         recordTransformer = null;
@@ -169,6 +170,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
      *
      * @throws IOException if an I/O error occurs
      */
+    @SuppressWarnings("this-escape")
     public Metafix(final String fixDef, final Function<Metafix, Map<String, String>> function) throws IOException {
         init(function);
 
@@ -209,6 +211,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
      * @param function an optional function that accepts the Metafix instance
      *                 and returns the Fix variables as a Map, or {@code null}
      */
+    @SuppressWarnings("this-escape")
     public Metafix(final Reader fixDef, final Function<Metafix, Map<String, String>> function) {
         init(function);
         recordTransformer = getRecordTransformer(fixDef);

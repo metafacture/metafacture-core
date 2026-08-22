@@ -65,6 +65,7 @@ public class FixRegistry {
      * Creates an instance of {@link FixRegistry}. {@link #registerProperties(String) Registers}
      * all Fix commands found in any {@value PROPERTIES_LOCATION} files.
      */
+    @SuppressWarnings("this-escape")
     public FixRegistry() {
         registerProperties(PROPERTIES_LOCATION);
     }
