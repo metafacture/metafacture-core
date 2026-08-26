@@ -64,7 +64,7 @@ import java.util.regex.Pattern;
     exitCodeListHeading = "%nExit codes:%n",
     exitCodeList = { "0:Successful program execution", "1:Internal software error", "2:Usage error" }
 )
-public final class Flux implements Callable<Integer> {
+public class Flux implements Callable<Integer> {
 
     public static final String PLUGINS_DIR_PROPERTY = "flux.pluginsdir";
     public static final String PROVIDED_DIR_PROPERTY = "flux.provideddir";
@@ -96,7 +96,7 @@ public final class Flux implements Callable<Integer> {
     @Spec
     private Model.CommandSpec commandSpec;
 
-    private Flux() {
+    /*package-private*/ Flux() {
         // No (public) instances allowed
     }
 
@@ -129,7 +129,7 @@ public final class Flux implements Callable<Integer> {
 
             // Only dedicated options
             if (listCommands) {
-                FluxProgramm.printHelp(System.out);
+                FluxProgramm.printHelp(commandLine.getOut());
                 return CommandLine.ExitCode.OK;
             }
             else if (fluxInput == null) { // TODO: Remove after deprecation period is over.
@@ -142,11 +142,11 @@ public final class Flux implements Callable<Integer> {
             }
         }
         else {
-            System.err.println(DEPRECATION_NOTICE);
+            commandLine.getErr().println(DEPRECATION_NOTICE);
 
             // No arguments at all
             if (legacyParameters.isEmpty()) {
-                FluxProgramm.printHelp(System.out);
+                FluxProgramm.printHelp(commandLine.getOut());
                 return CommandLine.ExitCode.USAGE;
             }
 
@@ -158,7 +158,7 @@ public final class Flux implements Callable<Integer> {
             while (iter.hasNext()) {
                 final Matcher matcher = VAR_PATTERN.matcher(iter.next());
                 if (!matcher.find()) {
-                    FluxProgramm.printHelp(System.err);
+                    FluxProgramm.printHelp(commandLine.getErr());
                     return CommandLine.ExitCode.OK; // TODO: Exit code 2 (usage error) instead?
                 }
                 vars.put(matcher.group(1), matcher.group(2));
@@ -167,7 +167,7 @@ public final class Flux implements Callable<Integer> {
 
         if (fluxFile != null) {
             if (!fluxFile.exists()) {
-                System.err.println("File not found: " + fluxFile);
+                commandLine.getErr().println("File not found: " + fluxFile);
                 return CommandLine.ExitCode.SOFTWARE; // TODO: Exit code 2 (usage error) instead?
             }
 
@@ -180,7 +180,7 @@ public final class Flux implements Callable<Integer> {
         return CommandLine.ExitCode.OK;
     }
 
-    private void runFlux(final String scriptHome, final InputStream inputStream) throws Exception {
+    /*package-private*/ void runFlux(final String scriptHome, final InputStream inputStream) throws Exception {
         vars.put(SCRIPT_HOME, scriptHome + System.getProperty("file.separator"));
 
         try {
