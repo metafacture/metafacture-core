@@ -37,7 +37,7 @@ subprojects {
       'everit':           '1.14.6',
       'guava':            '32.0.1-jre',
       'jackson':          '2.21.4',
-      'jdk':              '11',
+      'jdk':              '21',
       'jdom':             '2.0.6.1',
       'jena':             '4.10.0',
       'jndi':             '0.11.4.1',
@@ -195,6 +195,9 @@ subprojects {
       showStandardStreams = true
       exceptionFormat = 'full'
     }
+
+    // Required for ByteBuddy agent, used by EqualsVerifier and Mockito
+    jvmArgs += ['-XX:+EnableDynamicAgentLoading']
   }
 
   repositories {

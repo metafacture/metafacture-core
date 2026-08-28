@@ -40,6 +40,7 @@ public class ListFixPaths extends MetafixStreamAnalyzer {
     /**
      * Creates an instance of {@link ListFixPaths}.
      */
+    @SuppressWarnings("this-escape")
     public ListFixPaths() {
         super("nothing()", Compare.PREDICATE);
         setIndex(false);
