@@ -29,6 +29,7 @@ subprojects {
     versions = [
       'antlr':            '3.5.2',
       'assertj':          '3.27.7',
+      'checkstyle':       '14.1.0',
       'commons_compress': '1.28.0',
       'commons_io':       '2.21.0',
       'dbcp':             '1.4',
@@ -182,7 +183,7 @@ subprojects {
   }
 
   checkstyle {
-    toolVersion = '10.26.1'
+    toolVersion = versions.checkstyle
   }
 
   test {

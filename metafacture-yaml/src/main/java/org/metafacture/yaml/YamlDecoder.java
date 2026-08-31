@@ -167,7 +167,7 @@ public final class YamlDecoder extends DefaultObjectPipe<String, StreamReceiver>
     }
 
     private Stream<String> matches(final Object obj) {
-        final List<?> records = (obj instanceof List<?>) ? ((List<?>) obj) : Arrays.asList(obj);
+        final List<?> records = (obj instanceof List<?>) ? (List<?>) obj : Arrays.asList(obj);
 
         return records.stream().map(doc -> {
             try {
