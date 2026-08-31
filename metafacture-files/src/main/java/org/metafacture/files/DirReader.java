@@ -100,4 +100,5 @@ public final class DirReader extends DefaultObjectPipe<String, ObjectReceiver<St
             }
         }
     }
+
 }

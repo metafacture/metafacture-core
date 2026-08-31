@@ -116,4 +116,5 @@ public final class FormetaRecordsReaderTest {
         Mockito.verify(receiver).process(RECORD_ESCAPED_QUOTE);
         Mockito.verifyNoMoreInteractions(receiver);
     }
+
 }

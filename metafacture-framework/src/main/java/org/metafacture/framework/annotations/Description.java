@@ -31,10 +31,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Description {
+
     /**
      * Returns the description of the class.
      *
      * @return the description as String
      */
     String value();
+
 }

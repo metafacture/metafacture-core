@@ -112,4 +112,5 @@ public final class TripleCount extends AbstractTripleSort {
     public void setCountBy(final Compare countBy) {
         setCompare(countBy);
     }
+
 }

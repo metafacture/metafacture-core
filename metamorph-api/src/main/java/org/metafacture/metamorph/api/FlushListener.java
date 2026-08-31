@@ -22,6 +22,7 @@ package org.metafacture.metamorph.api;
  * @author Markus Michael Geipel
  */
 public interface FlushListener {
+
     /**
      * Flush collected data.
      *

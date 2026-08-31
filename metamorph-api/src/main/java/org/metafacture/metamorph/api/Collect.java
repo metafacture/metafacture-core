@@ -23,6 +23,7 @@ package org.metafacture.metamorph.api;
  *
  */
 public interface Collect extends FlushListener, ConditionAware, NamedValuePipe {
+
     /**
      * Flags whether to wait for a flush.
      *

@@ -152,4 +152,5 @@ public final class Splitter implements StreamPipe<StreamReceiver> {
             receiver.closeStream();
         }
     }
+
 }

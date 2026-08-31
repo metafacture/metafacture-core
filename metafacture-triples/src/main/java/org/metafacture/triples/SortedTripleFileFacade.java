@@ -33,6 +33,7 @@ import java.io.ObjectInputStream;
  *
  */
 public final class SortedTripleFileFacade {
+
     public static final int BUFFERSIZE = 2048;
     private final ObjectInputStream in;
     private final File file;

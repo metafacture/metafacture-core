@@ -151,4 +151,5 @@ public final class OreAggregationAdder extends DefaultStreamPipe<StreamReceiver>
         }
         getReceiver().literal(name, value);
     }
+
 }

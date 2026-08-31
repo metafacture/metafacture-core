@@ -24,6 +24,7 @@ package org.metafacture.metamorph.api;
  *
  */
 public interface MorphErrorHandler {
+
     /**
      * Provides custom error handling.
      *

@@ -26,6 +26,7 @@ package org.metafacture.biblio.pica;
  *
  */
 enum PicaConstants {
+
     // We use '\0' for null/empty
     RECORD_MARKER('\u001d', '\n'), //
     FIELD_MARKER('\u001e', '\0'), //
@@ -53,4 +54,5 @@ enum PicaConstants {
         }
         return NO_MARKER;
     }
+
 }

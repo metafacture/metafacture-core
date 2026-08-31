@@ -59,4 +59,5 @@ public final class StdInOpener extends DefaultObjectPipe<Object, ObjectReceiver<
             throw new IllegalArgumentException("Parameter not used. Must be null");
         }
     }
+
 }

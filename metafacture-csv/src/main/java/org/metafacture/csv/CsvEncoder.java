@@ -46,6 +46,7 @@ import java.util.List;
 @Out(String.class)
 @FluxCommand("encode-csv")
 public class CsvEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
+
     public static final char DEFAULT_SEP = CSVWriter.DEFAULT_SEPARATOR;
     private CSVWriter csvWriter;
     private StringWriter writer;

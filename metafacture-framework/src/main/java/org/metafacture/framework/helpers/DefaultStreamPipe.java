@@ -29,6 +29,7 @@ import org.metafacture.framework.StreamPipe;
  * @see ForwardingStreamPipe
  */
 public class DefaultStreamPipe<R extends Receiver> extends DefaultSender<R> implements StreamPipe<R> {
+
     /**
      * Creates an instance of {@link DefaultStreamPipe}.
      */

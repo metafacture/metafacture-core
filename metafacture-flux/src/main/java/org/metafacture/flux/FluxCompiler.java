@@ -36,6 +36,7 @@ import java.util.Map;
  * @author Markus Michael Geipel
  */
 public final class FluxCompiler {
+
     private FluxCompiler() {
         // no instances
     }
@@ -65,4 +66,5 @@ public final class FluxCompiler {
         flowBuilder.addVaribleAssignements(vars);
         return flowBuilder.flux();
     }
+
 }

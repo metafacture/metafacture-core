@@ -36,6 +36,7 @@ import javax.management.NotificationListener;
  * usage threshold can only be set to one number.
  */
 final class MemoryWarningSystem {
+
     private static final MemoryPoolMXBean TENURED_GEN_POOL = findTenuredGenPool();
     private static final double DEFAULT_THRESHOLD = 0.8;
     private static final Collection<Listener> LISTENERS = new CopyOnWriteArrayList<Listener>();

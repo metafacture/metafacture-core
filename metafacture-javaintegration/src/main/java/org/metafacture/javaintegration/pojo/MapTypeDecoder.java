@@ -53,4 +53,5 @@ class MapTypeDecoder implements TypeDecoder {
             streamReceiver.endEntity();
         }
     }
+
 }

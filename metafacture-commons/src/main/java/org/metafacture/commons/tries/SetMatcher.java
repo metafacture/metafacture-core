@@ -30,6 +30,7 @@ import java.util.Queue;
  * @author Markus Michael Geipel
  */
 public final class SetMatcher<T> {
+
     private final ACNode<T> root = new ACNode<>(null, 0);
     private boolean isPrepared;
 

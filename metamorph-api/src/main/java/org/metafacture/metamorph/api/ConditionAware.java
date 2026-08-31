@@ -23,6 +23,7 @@ package org.metafacture.metamorph.api;
  *
  */
 public interface ConditionAware {
+
     /**
      * makes statements conditional.
      *

@@ -189,4 +189,5 @@ public final class CsvEncoderTest {
         }
 
     }
+
 }

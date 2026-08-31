@@ -86,4 +86,5 @@ public final class StringDecoder extends DefaultObjectPipe<String, ObjectReceive
             }
         }
     }
+
 }

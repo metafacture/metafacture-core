@@ -214,4 +214,5 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
         }
         this.outputLocale = Locale.forLanguageTag(language);
     }
+
 }

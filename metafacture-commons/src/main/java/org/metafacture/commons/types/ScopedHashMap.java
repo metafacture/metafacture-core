@@ -86,4 +86,5 @@ public final class ScopedHashMap<K, V> extends HashMap<K, V> { // checkstyle-dis
     public String toString() {
         return super.toString() + (getOuterScope() == null ? "" : "\n" + getOuterScope().toString());
     }
+
 }

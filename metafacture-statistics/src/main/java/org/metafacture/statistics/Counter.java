@@ -123,4 +123,5 @@ public final class Counter extends DefaultStreamPipe<StreamReceiver> {
         final String streamClosed = isClosed() ? " Stream has been closed." : "";
         return "counted " + numRecords + " records, " + numEntities + " entities, " + numLiterals + " literals." + streamClosed;
     }
+
 }

@@ -23,6 +23,7 @@ package org.metafacture.commons.tries;
  * @author Markus Michael Geipel
  */
 public final class SimpleTrie<P> {
+
     private final Node<P> root = new Node<>(null);
 
     /**
@@ -106,4 +107,5 @@ public final class SimpleTrie<P> {
             return links.get(key);
         }
     }
+
 }

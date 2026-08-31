@@ -22,6 +22,7 @@ package org.metafacture.formeta.formatter;
  * @author Christoph Böhme
  */
 public enum FormatterStyle {
+
     /**
      * Dense and concise output style with minimal quotation and
      * item separation and without any unnecessary whitespace.
@@ -65,4 +66,5 @@ public enum FormatterStyle {
      * @return the Formatter
      */
     public abstract Formatter createFormatter();
+
 }

@@ -29,6 +29,7 @@ import java.util.Map;
  * @author Markus Michael Geipel
  */
 public final class SetReplacer {
+
     private final SetMatcher<String> matcher = new SetMatcher<String>();
 
     /**

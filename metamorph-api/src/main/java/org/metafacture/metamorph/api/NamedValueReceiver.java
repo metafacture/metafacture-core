@@ -24,6 +24,7 @@ package org.metafacture.metamorph.api;
  *
  */
 public interface NamedValueReceiver extends KnowsSourceLocation {
+
     /**
      * Receives named values.
      *

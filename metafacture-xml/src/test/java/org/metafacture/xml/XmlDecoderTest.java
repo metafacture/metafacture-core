@@ -71,4 +71,5 @@ public final class XmlDecoderTest {
             throw new RuntimeException(e);
         }
     }
+
 }

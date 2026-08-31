@@ -41,6 +41,7 @@ import java.io.Reader;
 @Out(String.class)
 @FluxCommand("extract-element")
 public class ElementExtractor extends DefaultObjectPipe<Reader, ObjectReceiver<String>> {
+
     private String selector;
 
     /**
@@ -61,4 +62,5 @@ public class ElementExtractor extends DefaultObjectPipe<Reader, ObjectReceiver<S
             e.printStackTrace();
         }
     }
+
 }

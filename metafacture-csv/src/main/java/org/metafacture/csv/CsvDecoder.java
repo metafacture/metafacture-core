@@ -157,4 +157,5 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
         this.separator = separator.charAt(0);
         initializeCsvParser();
     }
+
 }

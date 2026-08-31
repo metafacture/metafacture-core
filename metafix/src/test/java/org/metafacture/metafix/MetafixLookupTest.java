@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
  */
 @ExtendWith(MockitoExtension.class)
 public class MetafixLookupTest {
+
     private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
     private static final String CSV_PATH = "/maps/test.csv";
     private static final String CSV_URL = "%s" + CSV_PATH;

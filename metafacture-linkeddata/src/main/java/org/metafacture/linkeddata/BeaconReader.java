@@ -43,6 +43,7 @@ import java.util.regex.Pattern;
 @Out(StreamReceiver.class)
 @FluxCommand("read-beacon")
 public final class BeaconReader extends DefaultObjectPipe<java.io.Reader, StreamReceiver> {
+
     public static final String DEFAULT_RELATION = "seeAlso";
 
     private static final int MB = 1024 * 1024;

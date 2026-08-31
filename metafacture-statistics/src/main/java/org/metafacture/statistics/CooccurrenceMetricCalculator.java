@@ -129,4 +129,5 @@ public final class CooccurrenceMetricCalculator extends AbstractCountProcessor {
             getReceiver().process(new Triple(varA + "&" + varB, metric.toString(), String.valueOf(value)));
         }
     }
+
 }

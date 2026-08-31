@@ -146,4 +146,5 @@ public final class HtmlDecoderTest {
         ordered.verify(receiver, Mockito.never()).literal("value", "file:///img.png");
         ordered.verify(receiver, Mockito.times(3)).endEntity();
     }
+
 }

@@ -28,9 +28,11 @@ import java.io.Writer;
  */
 @Deprecated
 public interface IoWriterFactory {
+
     /**
      *
      * @return a {@link Writer}
      */
     Writer createWriter();
+
 }

@@ -48,4 +48,5 @@ public final class SimpleRegexTrieTest {
         trie.put(key, "value");
         Assert.assertTrue("Expecting to find: " + key, trie.get(key).size() == 1);
     }
+
 }

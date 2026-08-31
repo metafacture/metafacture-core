@@ -27,6 +27,7 @@ import java.util.Collection;
  *
  */
 public interface Collector<V> {
+
     /**
      *
      * Gets the Collection.

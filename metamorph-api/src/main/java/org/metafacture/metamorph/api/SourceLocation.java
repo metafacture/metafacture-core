@@ -23,6 +23,7 @@ package org.metafacture.metamorph.api;
  * @author Christoph Böhme
  */
 public interface SourceLocation {
+
     /**
      * Gets the filename.
      *

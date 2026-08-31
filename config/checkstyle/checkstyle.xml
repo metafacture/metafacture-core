@@ -166,6 +166,7 @@
     <module name="ThrowsCount">
       <property name="max" value="2"/>
     </module>
+    <module name="TypeBodyPadding"/>
     <module name="TypeName"/>
     <module name="TypecastParenPad"/>
     <module name="UnnecessaryParentheses"/>

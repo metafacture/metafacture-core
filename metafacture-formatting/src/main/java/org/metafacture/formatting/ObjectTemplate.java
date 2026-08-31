@@ -76,4 +76,5 @@ public final class ObjectTemplate<T> extends DefaultObjectPipe<T, ObjectReceiver
             getReceiver().process(matcher.replaceAll(obj.toString()));
         }
     }
+
 }

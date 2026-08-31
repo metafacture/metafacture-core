@@ -127,4 +127,5 @@ public final class OaiPmhOpener extends DefaultObjectPipe<String, ObjectReceiver
             throw new MetafactureException(e);
         }
     }
+
 }

@@ -31,10 +31,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Out {
+
     /**
      * Returns the class produced as output when using this class in a pipe.
      *
      * @return the Class
      */
     Class<?> value();
+
 }

@@ -141,4 +141,5 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
             getReceiver().literal(name, value);
         }
     }
+
 }

@@ -67,4 +67,5 @@ public final class ElementExtractorTest {
     public void cleanup() {
         elementExtractor.closeStream();
     }
+
 }

@@ -33,6 +33,7 @@ import com.google.common.net.PercentEscaper;
  * @author Pascal Christoph (dr0i)
  */
 public final class URLEncode extends AbstractSimpleStatelessFunction {
+
     private String safeChars = ".-*_";
     private boolean plusForSpace = true;
     private PercentEscaper percentEscaper = new PercentEscaper(safeChars, plusForSpace);
@@ -72,4 +73,5 @@ public final class URLEncode extends AbstractSimpleStatelessFunction {
         this.plusForSpace = plusForSpace;
         percentEscaper = new PercentEscaper(safeChars, plusForSpace);
     }
+
 }

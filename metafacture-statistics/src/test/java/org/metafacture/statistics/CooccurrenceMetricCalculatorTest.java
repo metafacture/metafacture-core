@@ -98,4 +98,5 @@ public final class CooccurrenceMetricCalculatorTest {
         calculator.process(new Triple("1:x", "", Integer.toString(COUNT_B)));
 
     }
+
 }
