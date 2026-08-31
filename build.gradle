@@ -43,7 +43,7 @@ subprojects {
       'jena':             '4.10.0',
       'jndi':             '0.11.4.1',
       'jsonpath':         '2.10.0',
-      'jsoup':            '1.15.4',
+      'jsoup':            '1.23.1',
       'junit':            '4.13.1',
       'junit_jupiter':    '5.8.2',
       'junit_platform':   '1.4.2',
