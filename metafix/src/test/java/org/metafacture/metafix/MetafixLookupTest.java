@@ -1285,6 +1285,44 @@ public class MetafixLookupTest {
         );
     }
 
+    @Test
+    public void shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateIfMissingLanguage() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_rdfmap('" + RDF_MAP + "', 'rdfmap', target: 'skos:prefLabel')",
+                "lookup('id', 'rdfmap')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("id", "No Language");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("id", "https://w3id.org/kim/hochschulfaechersystematik/n4");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNotLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguageIfMissingLanguage() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_rdfmap('" + RDF_MAP + "', 'rdfmap', target: 'skos:prefLabel', select_language: 'xx')",
+                "lookup('id', 'rdfmap')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("id", "No Language");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("id", "No Language");
+                o.get().endRecord();
+            }
+        );
+    }
+
     @Test // Scenario lookupRdfPropertyToProperty
     public void shouldLookupInExternalRdfMapGetPropertyOfSpecificLanguageWithTargetedPredicate() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
