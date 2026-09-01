@@ -16,8 +16,6 @@
 
 package org.metafacture.formeta.formatter;
 
-import org.metafacture.commons.StringUtil;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,7 +58,7 @@ public final class AbstractFormatterTest { // checkstyle-disable-line AbstractCl
 
     @Test
     public void issue161() {
-        final String longValue = StringUtil.repeatChars('a', AbstractFormatter.BUFFER_SIZE * 2 + 1);
+        final String longValue = "a".repeat(AbstractFormatter.BUFFER_SIZE * 2 + 1);
 
         abstractFormatter.escapeAndAppend(longValue);
 

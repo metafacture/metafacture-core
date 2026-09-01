@@ -16,8 +16,6 @@
 
 package org.metafacture.biblio.iso2709;
 
-import org.metafacture.commons.StringUtil;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +29,7 @@ import java.nio.charset.Charset;
  */
 public class DirectoryEntryTest {
 
-    private static final String DUMMY_LABEL = StringUtil.repeatChars(' ', 24);
+    private static final String DUMMY_LABEL = " ".repeat(24);
 
     private static final byte[] RECORD = asBytes(DUMMY_LABEL + "001234IMP" +
             "002567LEM" + "012090AKB" +  "012890AKB" +

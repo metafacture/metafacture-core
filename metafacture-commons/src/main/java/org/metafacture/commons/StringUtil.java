@@ -16,7 +16,6 @@
 
 package org.metafacture.commons;
 
-import java.nio.CharBuffer;
 import java.util.Map;
 
 /**
@@ -197,17 +196,6 @@ public final class StringUtil {
         }
         str.getChars(0, strLen, buffer, 0);
         return buffer;
-    }
-
-    /**
-     * Creates a string which contains a sequence of repeated characters.
-     *
-     * @param ch to repeat
-     * @param count number of repetitions
-     * @return a string with {@code count} consisting only of {@code ch}
-     */
-    public static String repeatChars(final char ch, final int count) {
-        return CharBuffer.allocate(count).toString().replace('\0', ch);
     }
 
 }

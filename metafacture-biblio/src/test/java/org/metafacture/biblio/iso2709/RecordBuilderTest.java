@@ -16,7 +16,6 @@
 
 package org.metafacture.biblio.iso2709;
 
-import org.metafacture.commons.StringUtil;
 import org.metafacture.framework.FormatException;
 
 import org.junit.Assert;
@@ -242,7 +241,7 @@ public final class RecordBuilderTest {
 
     @Test
     public void shouldWriteTwoDirectoryEntriesForReferenceFieldsWithLongValue() {
-        final String longValue = StringUtil.repeatChars('A', 110);
+        final String longValue = "A".repeat(110);
         builder.appendReferenceField(asChars("002"), asChars("IM"), longValue);
 
         final byte[] record = builder.build();
@@ -276,7 +275,7 @@ public final class RecordBuilderTest {
 
     @Test(expected = FormatException.class)
     public void shouldThrowFormatExceptionIfStartOfReferenceFieldIsNotInAddressRange() {
-        final String longValue = StringUtil.repeatChars('A', 1000);
+        final String longValue = "A".repeat(1000);
         builder.appendReferenceField(asChars("002"), asChars("IM"), longValue);
 
         builder.appendReferenceField(asChars("003"), asChars("IM"),
@@ -285,7 +284,7 @@ public final class RecordBuilderTest {
 
     @Test(expected = FormatException.class)
     public void shouldThrowFormatExceptionIfStartOfLastPartOfReferenceFieldIsNotInAddressRange() {
-        final String tooLongValue = StringUtil.repeatChars('A', 1100);
+        final String tooLongValue = "A".repeat(1100);
 
         builder.appendReferenceField(asChars("002"), asChars("IM"), tooLongValue);
         // Exception expected
@@ -488,8 +487,8 @@ public final class RecordBuilderTest {
 
     @Test
     public void shouldWriteTwoDirectoryEntriesForAFieldWithLongSubfields() {
-        final String longValue1 = StringUtil.repeatChars('A', 60);
-        final String longValue2 = StringUtil.repeatChars('B', 60);
+        final String longValue1 = "A".repeat(60);
+        final String longValue2 = "B".repeat(60);
         builder.startDataField(asChars("020"), asChars("IN"), asChars("  "));
         builder.appendSubfield(asChars("A"), longValue1);
         builder.appendSubfield(asChars("B"), longValue2);
@@ -531,7 +530,7 @@ public final class RecordBuilderTest {
 
     @Test(expected = FormatException.class)
     public void shouldThrowFormatExceptionIfLastPartOfDataFieldIsNotInAddressRange() {
-        final String longValue = StringUtil.repeatChars('A', 1100);
+        final String longValue = "A".repeat(1100);
         builder.startDataField(asChars("020"), asChars("IN"), asChars("IM"));
         builder.appendSubfield(asChars("A"), longValue);
         builder.appendSubfield(asChars("B"), "Value");
@@ -542,7 +541,7 @@ public final class RecordBuilderTest {
     @Test
     public void shouldLeaveRecordInACleanStateIfAppendingDataFieldFailed() {
         boolean exceptionThrown = false;
-        final String longValue = StringUtil.repeatChars('A', 1100);
+        final String longValue = "A".repeat(1100);
         builder.startDataField(asChars("020"), asChars("IN"), asChars("IM"));
         builder.appendSubfield(asChars("A"), longValue);
         builder.appendSubfield(asChars("B"), "Value");
@@ -667,7 +666,7 @@ public final class RecordBuilderTest {
                 .withFieldLengthLength(9)
                 .build();
         builder = new RecordBuilder(format);
-        final String longValue = StringUtil.repeatChars('C', 100000);
+        final String longValue = "C".repeat(100000);
         builder.appendReferenceField(asChars("002"), asChars("  "), longValue);
 
         builder.build();  // Exception expected
