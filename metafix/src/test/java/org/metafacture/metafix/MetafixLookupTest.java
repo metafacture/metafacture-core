@@ -1264,11 +1264,10 @@ public class MetafixLookupTest {
         );
     }
 
-    @Test // Scenario 2
-    public void shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguage() {
+    private void shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguage(final String language) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('id', 'Mathematics, Natural Sciences')",
-                "put_rdfmap('" + RDF_MAP + "', 'rdfmap', target: 'skos:prefLabel', select_language: 'en')",
+                "put_rdfmap('" + RDF_MAP + "', 'rdfmap', target: 'skos:prefLabel', select_language: '" + language + "')",
                 "lookup('id.*', 'rdfmap')"
             ),
             i -> {
@@ -1280,6 +1279,54 @@ public class MetafixLookupTest {
                 o.get().startRecord("1");
                 o.get().literal("prefLabel", "Mathematics, Natural Science");
                 o.get().literal("id", "https://w3id.org/kim/hochschulfaechersystematik/n4");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // Scenario 2
+    public void shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguage() {
+        shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguage("en");
+    }
+
+    @Test
+    public void shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguageCaseInsensitive() {
+        shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguage("EN");
+    }
+
+    @Test
+    public void shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateIfMissingLanguage() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_rdfmap('" + RDF_MAP + "', 'rdfmap', target: 'skos:prefLabel')",
+                "lookup('id', 'rdfmap')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("id", "No Language");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("id", "https://w3id.org/kim/hochschulfaechersystematik/n4");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNotLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguageIfMissingLanguage() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_rdfmap('" + RDF_MAP + "', 'rdfmap', target: 'skos:prefLabel', select_language: 'xx')",
+                "lookup('id', 'rdfmap')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("id", "No Language");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("id", "No Language");
                 o.get().endRecord();
             }
         );

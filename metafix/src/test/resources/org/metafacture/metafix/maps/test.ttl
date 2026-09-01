@@ -5,7 +5,7 @@
 @prefix vann: <http://purl.org/vocab/vann/> .
 
 <n4> a skos:Concept ;
-    skos:prefLabel "Mathematik, Naturwissenschaften"@de, "Mathematics, Natural Sciences"@en ;
+    skos:prefLabel "Mathematik, Naturwissenschaften"@de, "Mathematics, Natural Sciences"@EN, "No Language" ;
     skos:narrower   <n36>, <n37>, <n39>, <n40>, <n41>, <n42>, <n43>, <n44> ;
     skos:notation "4" ;
     skos:topConceptOf <scheme> .

@@ -21,9 +21,9 @@ import org.metafacture.metafix.FixExecutionException;
 import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
 
+import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -240,31 +240,25 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
 
     private String getSubjectUsingPropertyAndLiteral(final String resourceName, final Property targetProperty) {
         final ResIterator iter = model.listSubjectsWithProperty(targetProperty);
-        String result = map.get(Maps.DEFAULT_MAP_KEY);
 
         while (iter.hasNext()) {
             final Resource resource = iter.nextResource();
             final StmtIterator stmtIterator = resource.listProperties(targetProperty);
 
             while (stmtIterator.hasNext()) {
-                final RDFNode node = stmtIterator.next().getObject();
+                final Literal literal = stmtIterator.next().getObject().asLiteral();
 
-                if (!targetLanguage.isEmpty()) {
-                    if (node.asLiteral().toString().equals(resourceName + "@" + targetLanguage)) {
-                        result = resource.getURI();
-                        break;
+                if (literal.getString().equals(resourceName)) {
+                    if (!targetLanguage.isEmpty() && !literal.getLanguage().equals(targetLanguage)) {
+                        continue;
                     }
-                }
-                else {
-                    if (node.asLiteral().getString().equals(resourceName)) {
-                        result = resource.getURI();
-                        break;
-                    }
+
+                    return resource.getURI();
                 }
             }
         }
 
-        return result;
+        return map.get(Maps.DEFAULT_MAP_KEY);
     }
 
     /**
@@ -284,7 +278,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
      * @param targetLanguage the language of the target Property to be queried
      */
     public void setTargetLanguage(final String targetLanguage) {
-        this.targetLanguage = targetLanguage;
+        this.targetLanguage = targetLanguage.toLowerCase();
     }
 
     /**
