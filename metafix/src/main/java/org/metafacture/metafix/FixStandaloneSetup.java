@@ -3,8 +3,6 @@ package org.metafacture.metafix;
 import org.metafacture.metafix.fix.Fix;
 import org.metafacture.metafix.validation.XtextValidator;
 
-import com.google.common.io.CharStreams;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -81,7 +79,7 @@ public class FixStandaloneSetup extends FixStandaloneSetupGenerated {
         file.deleteOnExit();
 
         try (FileWriter out = new FileWriter(file)) {
-            CharStreams.copy(fixDef, out);
+            fixDef.transferTo(out);
         }
 
         return file.getAbsolutePath();
