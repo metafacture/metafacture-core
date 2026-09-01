@@ -1264,11 +1264,10 @@ public class MetafixLookupTest {
         );
     }
 
-    @Test // Scenario 2
-    public void shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguage() {
+    private void shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguage(final String language) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('id', 'Mathematics, Natural Sciences')",
-                "put_rdfmap('" + RDF_MAP + "', 'rdfmap', target: 'skos:prefLabel', select_language: 'en')",
+                "put_rdfmap('" + RDF_MAP + "', 'rdfmap', target: 'skos:prefLabel', select_language: '" + language + "')",
                 "lookup('id.*', 'rdfmap')"
             ),
             i -> {
@@ -1283,6 +1282,16 @@ public class MetafixLookupTest {
                 o.get().endRecord();
             }
         );
+    }
+
+    @Test // Scenario 2
+    public void shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguage() {
+        shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguage("en");
+    }
+
+    @Test
+    public void shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguageCaseInsensitive() {
+        shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguage("EN");
     }
 
     @Test

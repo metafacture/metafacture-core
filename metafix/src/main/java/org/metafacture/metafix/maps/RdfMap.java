@@ -278,7 +278,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
      * @param targetLanguage the language of the target Property to be queried
      */
     public void setTargetLanguage(final String targetLanguage) {
-        this.targetLanguage = targetLanguage;
+        this.targetLanguage = targetLanguage.toLowerCase();
     }
 
     /**
