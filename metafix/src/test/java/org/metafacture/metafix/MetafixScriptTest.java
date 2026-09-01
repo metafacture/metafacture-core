@@ -19,7 +19,6 @@ package org.metafacture.metafix;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
-import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -63,56 +62,56 @@ public class MetafixScriptTest {
     public void shouldPutSingleVariable() {
         assertVar("put_var('varName', 'value')",
                 null,
-                ImmutableMap.of("varName", "value"));
+                Map.of("varName", "value"));
     }
 
     @Test
     public void shouldPutMultipleVariables() {
         assertVar("put_var('varName', 'value')\nput_var('varName2', 'value2')",
                 null,
-                ImmutableMap.of("varName", "value", "varName2", "value2"));
+                Map.of("varName", "value", "varName2", "value2"));
     }
 
     @Test
     public void shouldPutMultipleVariablesFromMap() {
         assertVar("put_vars(varName: 'value', varName2: 'value2')",
                 null,
-                ImmutableMap.of("varName", "value", "varName2", "value2"));
+                Map.of("varName", "value", "varName2", "value2"));
     }
 
     @Test
     public void shouldResolveVariablesInSingleVariable() {
         assertVar("put_var('varName', 'value$[var]')",
-                ImmutableMap.of("var", "1"),
-                ImmutableMap.of("varName", "value1"));
+                Map.of("var", "1"),
+                Map.of("varName", "value1"));
     }
 
     @Test
     public void shouldResolveVariablesInMultipleVariables() {
         assertVar("put_var('varName', 'value$[var]')\nput_var('$[varName]Var', 'value2')",
-                ImmutableMap.of("var", "1"),
-                ImmutableMap.of("varName", "value1", "value1Var", "value2"));
+                Map.of("var", "1"),
+                Map.of("varName", "value1", "value1Var", "value2"));
     }
 
     @Test
     public void shouldResolveVariablesInOptionsKeys() {
         assertVar("put_vars('varName$[var]': 'value')",
-                ImmutableMap.of("var", "1"),
-                ImmutableMap.of("varName1", "value"));
+                Map.of("var", "1"),
+                Map.of("varName1", "value"));
     }
 
     @Test
     public void shouldResolveVariablesInOptionsValues() {
         assertVar("put_vars('varName': 'value$[var]')",
-                ImmutableMap.of("var", "1"),
-                ImmutableMap.of("varName", "value1"));
+                Map.of("var", "1"),
+                Map.of("varName", "value1"));
     }
 
     @Test
     public void shouldResolveVariablesInOptionsFromPreviousMap() {
         assertVar("put_vars('varName': 'value$[var]')\nput_vars('$[varName]Var': 'value2')",
-                ImmutableMap.of("var", "1"),
-                ImmutableMap.of("varName", "value1", "value1Var", "value2"));
+                Map.of("var", "1"),
+                Map.of("varName", "value1", "value1Var", "value2"));
     }
 
     @Test
@@ -121,7 +120,7 @@ public class MetafixScriptTest {
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "put_vars(varName: 'value$[var]', '$[varName]Var': 'value2')"
                 ),
-                ImmutableMap.of("var", "1"),
+                Map.of("var", "1"),
                 i -> {
                     i.startRecord("");
                     i.endRecord();

@@ -18,13 +18,13 @@ package org.metafacture.metafix; // checkstyle-disable-line JavaNCSS
 
 import org.metafacture.framework.StreamReceiver;
 
-import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Tests Metafix field level methods. Following the cheat sheet examples at
@@ -302,7 +302,7 @@ public class MetafixMethodTest {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "substring('rel', '0', '$[length]')"
             ),
-            ImmutableMap.of("length", "5"),
+            Map.of("length", "5"),
             i -> {
                 i.startRecord("1");
                 i.literal("rel", "grandson");

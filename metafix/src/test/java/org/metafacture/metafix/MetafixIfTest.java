@@ -18,13 +18,13 @@ package org.metafacture.metafix; // checkstyle-disable-line JavaNCSS
 
 import org.metafacture.framework.StreamReceiver;
 
-import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Test Metafix `if` conditionals.
@@ -933,7 +933,7 @@ public class MetafixIfTest {
                 "  add_field('type', 'Organization')",
                 "end"
             ),
-            ImmutableMap.of("var", "ver"),
+            Map.of("var", "ver"),
             i -> {
                 i.startRecord("1");
                 i.literal("name", "Mary");
@@ -977,7 +977,7 @@ public class MetafixIfTest {
                 "  add_field('type', 'Unknown')",
                 "end"
             ),
-            ImmutableMap.of("var", "nam"),
+            Map.of("var", "nam"),
             i -> {
                 i.startRecord("1");
                 i.literal("name", "Max Power");
@@ -1017,7 +1017,7 @@ public class MetafixIfTest {
                 "  add_field('type', 'Person')",
                 "end"
             ),
-            ImmutableMap.of("var", "ver"),
+            Map.of("var", "ver"),
             i -> {
                 i.startRecord("1");
                 i.literal("name", "Max");
@@ -2377,7 +2377,7 @@ public class MetafixIfTest {
                 "  add_field('type', 'Organization')",
                 "end"
             ),
-            ImmutableMap.of("var", "me"),
+            Map.of("var", "me"),
             i -> {
                 i.startRecord("1");
                 i.literal("name", "Mame");
@@ -2419,7 +2419,7 @@ public class MetafixIfTest {
                 "  add_field('type', 'Organization')",
                 "end"
             ),
-            ImmutableMap.of("var", "me"),
+            Map.of("var", "me"),
             i -> {
                 i.startRecord("1");
                 i.literal("name", "Mame");
@@ -2461,7 +2461,7 @@ public class MetafixIfTest {
                 "  add_field('type', 'Organization')",
                 "end"
             ),
-            ImmutableMap.of("var", "me"),
+            Map.of("var", "me"),
             i -> {
                 i.startRecord("1");
                 i.literal("name", "Mame");
