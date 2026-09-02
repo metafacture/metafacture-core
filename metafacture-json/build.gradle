@@ -26,6 +26,9 @@ dependencies {
   implementation "com.github.erosb:everit-json-schema:${versions.everit}"
   testImplementation "junit:junit:${versions.junit}"
   testImplementation "org.mockito:mockito-core:${versions.mockito}"
-  testImplementation "org.wiremock:wiremock:${versions.wiremock}"
+  testImplementation "org.wiremock:wiremock-core:${versions.wiremock}"
+  testImplementation "org.wiremock:wiremock-httpclient-apache5:${versions.wiremock}"
+  testImplementation "org.wiremock:wiremock-jetty:${versions.wiremock}"
+  testImplementation "org.wiremock:wiremock-junit4:${versions.wiremock}"
   testRuntimeOnly slf4j_provider
 }

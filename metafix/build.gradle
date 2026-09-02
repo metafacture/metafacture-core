@@ -25,7 +25,10 @@ dependencies {
   testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit_jupiter}"
   testImplementation "org.junit.platform:junit-platform-launcher:${versions.junit_platform}"
   testImplementation "org.simplify4u:slf4j2-mock:${versions.slf4j_mock}"
-  testImplementation "org.wiremock:wiremock:${versions.wiremock}"
+  testImplementation "org.wiremock:wiremock-core:${versions.wiremock}"
+  testImplementation "org.wiremock:wiremock-httpclient-apache5:${versions.wiremock}"
+  testImplementation "org.wiremock:wiremock-jetty:${versions.wiremock}"
+  testImplementation "org.wiremock:wiremock-junit4:${versions.wiremock}"
 
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit_jupiter}"
 

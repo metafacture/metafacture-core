@@ -65,8 +65,7 @@ public final class JsonValidatorTest {
     private static final String JSON_INVALID_SYNTAX_ERROR = "{\"id1\":\"val\",\"id2\":\"val\"";
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig()
-            .jettyAcceptors(Runtime.getRuntime().availableProcessors()).dynamicPort());
+    public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig().dynamicPort());
 
     private JsonValidator validator;
 

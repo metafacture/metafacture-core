@@ -54,7 +54,7 @@ subprojects {
       'slf4j_log4j':      '2.25.5',
       'slf4j_mock':       '2.4.0',
       'tukaani':          '1.6',
-      'wiremock':         '3.13.2',
+      'wiremock':         '4.0.0-beta.38',
       'xalan':            '2.7.3',
       'xtext':            '2.37.0'
     ]

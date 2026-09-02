@@ -57,9 +57,7 @@ public class MetafixLookupTest {
     private static final String TSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.tsv";
     private static final String LOOKUP = "lookup('title.*',";
 
-    private static final WireMockServer WIRE_MOCK_SERVER = new WireMockRule(WireMockConfiguration.wireMockConfig()
-        .jettyAcceptors(Runtime.getRuntime().availableProcessors())
-        .dynamicPort());
+    private static final WireMockServer WIRE_MOCK_SERVER = new WireMockRule(WireMockConfiguration.wireMockConfig().dynamicPort());
 
     @Mock
     private StreamReceiver streamReceiver;

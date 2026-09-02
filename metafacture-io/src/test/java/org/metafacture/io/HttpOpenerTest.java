@@ -78,9 +78,7 @@ public final class HttpOpenerTest {
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig()
-            .jettyAcceptors(Runtime.getRuntime().availableProcessors())
-            .dynamicPort());
+    public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig().dynamicPort());
 
     @Mock
     private ObjectReceiver<Reader> receiver;
