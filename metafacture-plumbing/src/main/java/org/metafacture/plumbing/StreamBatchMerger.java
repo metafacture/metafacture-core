@@ -60,6 +60,20 @@ public final class StreamBatchMerger extends DefaultStreamPipe<StreamReceiver> {
      *
      * @param batchSize the number of records that should be merged.
      */
+    public void setBatchSize(final int batchSize) {
+        // NOTE: ConfigurableClass.convertValue() doesn't support long.
+        setBatchSize((long) batchSize);
+    }
+
+    /**
+     * Sets the number of records that should be merged into a batch.
+     * <p>
+     * The default batch size is 1, wich means that no records are merged.
+     * <p>
+     * This parameter must not be changed during processing.
+     *
+     * @param batchSize the number of records that should be merged.
+     */
     public void setBatchSize(final long batchSize) {
         this.batchSize = batchSize;
     }
