@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Provides method for creating and initialising classes. The
@@ -90,7 +91,7 @@ public final class ConfigurableClass<T> {
 
     private void initSettersCache() {
         settersCache = new HashMap<>();
-        originalSettersCache = new HashMap<>();
+        originalSettersCache = new TreeMap<>();
         for (final Method method : plainClass.getMethods()) {
             if (isSetter(method)) {
                 final String setterName = method.getName().substring(SETTER_PREFIX.length());
