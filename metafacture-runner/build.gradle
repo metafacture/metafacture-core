@@ -22,6 +22,8 @@ plugins {
 ext.mavenName = 'Metafacture Runner'
 description = 'CLI application for data processing with Flux and Metamorph'
 
+def metafactureVersion = parent.project.version.toString()
+
 apply plugin: 'distribution'
 apply plugin: 'signing'
 
@@ -41,6 +43,8 @@ dependencies {
   implementation project(':metafacture-framework')
   implementation project(':metafacture-commons')
   implementation project(':metafacture-flux')
+
+  implementation "info.picocli:picocli:${versions.picocli}"
 
   plugins project(':metafacture-biblio')
   plugins project(':metafacture-csv')
@@ -92,6 +96,9 @@ dependencies {
   implementation('org.antlr:antlr-runtime') {
     version { strictly '3.2' }
   }
+
+  testImplementation "junit:junit:${versions.junit}"
+  testImplementation "org.mockito:mockito-core:${versions.mockito}"
 }
 
 jar {
@@ -105,7 +112,7 @@ jar {
   }
   filesMatching('build.properties', {
     filter(ReplaceTokens, tokens: [
-      version: parent.project.version.toString(),
+      version: metafactureVersion,
       timestamp: new Date().getTime().toString(),
       userName: System.properties['user.name']
     ])
@@ -190,5 +197,7 @@ tasks.withType(JavaExec) {
     System.properties.each { k, v ->
       if (k.startsWith(prefix)) systemProperties[k] = v
     }
+
+    systemProperties[prefix + 'metafactureVersion'] = metafactureVersion
   }
 }
