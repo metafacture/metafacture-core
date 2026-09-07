@@ -122,7 +122,7 @@ public final class HelpPrinter {
             out.println("- arguments:\t" + arguments);
         }
 
-        printAttributes(out, configurableClass, configurableClass.getSetters());
+        printAttributes(out, configurableClass, configurableClass.getOriginalSetters());
         printSignature(out, moduleClass);
 
         final String[] examplesEntry = EXAMPLES_MAP.get(name);

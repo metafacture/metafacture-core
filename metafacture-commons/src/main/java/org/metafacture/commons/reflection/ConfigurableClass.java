@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Provides method for creating and initialising classes. The
@@ -45,6 +46,7 @@ public final class ConfigurableClass<T> {
     private final Class<T> plainClass;
 
     private Map<String, Method> settersCache;
+    private Map<String, Method> originalSettersCache;
 
     /**
      *
@@ -77,13 +79,24 @@ public final class ConfigurableClass<T> {
         return settersCache;
     }
 
+    /**
+     * Gets all public "set" methods of this class under their original name.
+     *
+     * @return the Map of the setter methods of this class
+     */
+    public Map<String, Method> getOriginalSetters() {
+        getSetters();
+        return originalSettersCache;
+    }
+
     private void initSettersCache() {
         settersCache = new HashMap<>();
+        originalSettersCache = new TreeMap<>();
         for (final Method method : plainClass.getMethods()) {
             if (isSetter(method)) {
-                final String setterName = method.getName().substring(
-                        SETTER_PREFIX.length()).toLowerCase();
-                settersCache.put(setterName, method);
+                final String setterName = method.getName().substring(SETTER_PREFIX.length());
+                settersCache.put(setterName.toLowerCase(), method);
+                originalSettersCache.put(setterName.substring(0, 1).toLowerCase() + setterName.substring(1), method);
             }
         }
     }
