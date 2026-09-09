@@ -27,7 +27,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 /**
- * Helper class to open stdin
+ * Helper class to open stdin. In order to use the standard input in a Flux file, utilize the `>` instruction at the beginning of a workflow instead of a string and an opener. Also see example: metafacture-runner/src/main/dist/examples/misc/open-stdin/test.flux.
  *
  * @author Markus Michael Geipel
  *
