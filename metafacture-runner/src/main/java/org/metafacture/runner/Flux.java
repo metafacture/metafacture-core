@@ -159,7 +159,7 @@ public class Flux implements Callable<Integer> {
                 final Matcher matcher = VAR_PATTERN.matcher(iter.next());
                 if (!matcher.find()) {
                     FluxProgramm.printHelp(commandLine.getErr());
-                    return CommandLine.ExitCode.OK; // TODO: Exit code 2 (usage error) instead?
+                    return CommandLine.ExitCode.USAGE;
                 }
                 vars.put(matcher.group(1), matcher.group(2));
             }
@@ -168,7 +168,7 @@ public class Flux implements Callable<Integer> {
         if (fluxFile != null) {
             if (!fluxFile.exists()) {
                 commandLine.getErr().println("File not found: " + fluxFile);
-                return CommandLine.ExitCode.SOFTWARE; // TODO: Exit code 2 (usage error) instead?
+                return CommandLine.ExitCode.USAGE;
             }
 
             runFlux(fluxFile.getAbsoluteFile().getParent(), ResourceUtil.getStream(fluxFile));

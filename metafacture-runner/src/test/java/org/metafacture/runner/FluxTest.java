@@ -63,7 +63,7 @@ public class FluxTest {
     @Test
     public void shouldRejectMissingFluxFile() {
         final String file = "no-such-file";
-        assertCommand(1, false, null, FILE_NOT_FOUND + file, "-f", file);
+        assertCommand(2, false, null, FILE_NOT_FOUND + file, "-f", file);
     }
 
     @Test
@@ -144,7 +144,7 @@ public class FluxTest {
     @Test
     public void shouldRejectMissingLegacyFluxFile() {
         final String file = "no-such-file";
-        assertCommand(1, false, null, List.of(DEPRECATION_NOTICE, FILE_NOT_FOUND + file), file);
+        assertCommand(2, false, null, List.of(DEPRECATION_NOTICE, FILE_NOT_FOUND + file), file);
     }
 
     @Test
@@ -154,7 +154,7 @@ public class FluxTest {
 
     @Test
     public void shouldRejectLegacyFluxFileAndInvalidVarsArgument() {
-        assertCommand(0, false, null, List.of(DEPRECATION_NOTICE, LIST_COMMANDS_OUTPUT), getTempFile(), "var-without-value");
+        assertCommand(2, false, null, List.of(DEPRECATION_NOTICE, LIST_COMMANDS_OUTPUT), getTempFile(), "var-without-value");
     }
 
     private void assertCommand(final int expectedExitCode, final boolean expectedRanFlux, final String expectedOut, final String expectedErr, final String... args) {
