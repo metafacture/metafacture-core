@@ -26,6 +26,7 @@ import org.metafacture.framework.Receiver;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -182,6 +183,16 @@ public final class FluxProgramm {
      * @throws IOException when an I/O error occurs
      */
     public static void printHelp(final PrintStream out) throws IOException {
+        HelpPrinter.print(COMMAND_FACTORY, out);
+    }
+
+    /**
+     * Prints the help to the given PrintWriter.
+     *
+     * @param out the PrintWriter to print to
+     * @throws IOException when an I/O error occurs
+     */
+    public static void printHelp(final PrintWriter out) throws IOException {
         HelpPrinter.print(COMMAND_FACTORY, out);
     }
 
