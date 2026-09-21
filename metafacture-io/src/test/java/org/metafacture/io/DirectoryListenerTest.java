@@ -28,8 +28,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import static org.mockito.Mockito.times;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -90,12 +88,11 @@ public final class DirectoryListenerTest {
     public void testFileOccursAndIsIgnoredWhenDeleted() throws InterruptedException {
         final String pathToTestfile = pathToDirectory + FILE_NAME + "1";
         createFile(pathToTestfile);
-        Mockito.verify(receiver, org.mockito.Mockito.timeout(MAX_MILLISECONDS_WAITING_OF_THREAD)).process(pathToTestfile);
-        Mockito.verify(receiver,times(1)).process(pathToTestfile);
+        Mockito.verify(receiver, Mockito.timeout(MAX_MILLISECONDS_WAITING_OF_THREAD)).process(pathToTestfile);
+        Mockito.verify(receiver, Mockito.times(1)).process(pathToTestfile);
         removeFile(pathToTestfile);
         Thread.sleep(100); // because of https://bugs.openjdk.org/browse/JDK-8202759
-        Mockito.verify(receiver,times(1)).process(pathToTestfile);
-
+        Mockito.verify(receiver, Mockito.times(1)).process(pathToTestfile);
     }
 
     @Test
@@ -104,6 +101,15 @@ public final class DirectoryListenerTest {
         createFile(pathToTestfile);
         Thread.sleep(100); // because of https://bugs.openjdk.org/browse/JDK-8202759
         Mockito.verify(receiver, org.mockito.Mockito.timeout(MAX_MILLISECONDS_WAITING_OF_THREAD).times(0)).process(pathToTestfile);
+    }
+
+    @Test
+    public void closeIfPathToWatchIsNotADirectory() throws InterruptedException {
+        final String pathToTestfile = pathToDirectory + FILE_NAME + "_not-a-directory";
+        createFile(pathToTestfile);
+        DIRECTORY_LISTENER.process(pathToTestfile);
+        Thread.sleep(100); // because of https://bugs.openjdk.org/browse/JDK-8202759
+        Assert.assertTrue(DIRECTORY_LISTENER.isClosed());
     }
 
     @Test
