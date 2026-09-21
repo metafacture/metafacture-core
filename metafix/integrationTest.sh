@@ -224,8 +224,9 @@ function test_expected_patterns() {
 }
 
 function run_tests() {
-  local test matched=1\
+  local test line matched=1\
     test_directory test_fix test_input test_expected test_todo\
+    flux_command_args_file flux_command_args metafix_command_args\
     metafix_command_output metafix_command_error metafix_start_time\
     metafix_exit_status metafix_output metafix_diff metafix_elapsed_time
 
@@ -256,9 +257,17 @@ function run_tests() {
       metafix_command_error="$test_directory/metafix.err"
       metafix_command_args="$test_directory/metafix.args"
 
+      flux_command_args_file="$test_directory/flux.args"
+      flux_command_args=()
+      if [ -r "$flux_command_args_file" ]; then
+        while read -r line; do
+          flux_command_args+=("$line")
+        done <"$flux_command_args_file"
+      fi
+
       metafix_start_time=$(current_time)
 
-      run_metafix "$test_directory/$metafix_file" "$metafix_command_args" >"$metafix_command_output" 2>"$metafix_command_error"
+      run_metafix "$test_directory/$metafix_file" "$metafix_command_args" "${flux_command_args[@]}" >"$metafix_command_output" 2>"$metafix_command_error"
       metafix_exit_status=$?
 
       metafix_elapsed_time=$(elapsed_time "$metafix_start_time")
