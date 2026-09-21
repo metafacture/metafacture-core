@@ -74,22 +74,26 @@ public final class DirectoryListener extends DefaultObjectPipe<String, ObjectRec
     private static final Map<WatchKey, Path> KEYS = new HashMap<>();
 
     /**
-     * Creates an instance of {@link DirectoryListener} if no IOException occurs.
+     * Creates an instance of {@link DirectoryListener}.
      */
     public DirectoryListener() {
     }
 
     @Override
-    public void process(final String directory) {
+    public void process(final String filename) {
 
-        final Path dir = Path.of(directory);
+        final Path path = Path.of(filename);
+        if (!Files.exists(path) || !Files.isDirectory(path)) {
+            LOG.warn("Cannot watch {} for it either doesn't exist or is no directory: ", path.toString());
+            closeStream();
+        }
         try {
-            registerAll(dir);
+            registerAll(path);
         }
         catch (final IOException e) {
             throw new RuntimeException(e);
         }
-        start(directory);
+        start(filename);
     }
 
     private void start(final String directory) {
@@ -106,7 +110,7 @@ public final class DirectoryListener extends DefaultObjectPipe<String, ObjectRec
      */
     private void register(final Path dir) throws IOException {
         final WatchKey key = dir.register(WATCHER, java.nio.file.StandardWatchEventKinds.ENTRY_CREATE, java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY);
-        LOG.info("Add directory to watch: " + dir.toString());
+        LOG.info("Add directory to watch: " + dir);
         KEYS.put(key, dir);
     }
 
@@ -153,7 +157,6 @@ public final class DirectoryListener extends DefaultObjectPipe<String, ObjectRec
                     LOG.warn("WatchKey not recognized!");
                     continue;
                 }
-
                 for (final WatchEvent<?> event : key.pollEvents()) {
                     // an OVERFLOW event can occur if events are lost or discarded
                     if (event.kind() == java.nio.file.StandardWatchEventKinds.OVERFLOW) {
@@ -170,7 +173,7 @@ public final class DirectoryListener extends DefaultObjectPipe<String, ObjectRec
                 final boolean valid = key.reset();
                 if (!valid) {
                     KEYS.remove(key);
-                    LOG.info("Directory no longer accessible: " + key.toString());
+                    LOG.info("Directory no longer accessible: " + key);
                     // all directories are inaccessible
                     if (KEYS.isEmpty()) {
                         LOG.warn("Root directory {} is not accessible anymore. Closing ...", directory);
