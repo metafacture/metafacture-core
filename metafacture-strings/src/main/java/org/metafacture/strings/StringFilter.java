@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  * @author Christoph Böhme
  *
  */
-@Description("Only forwards records which match (or do not match) a regular expression.")
+@Description("Only forwards records which match (or do not match) a regular expression. Patterns are not implicitly anchored and therefore without anchoring the filter works as long as the pattern matches a part of the incoming string.")
 @In(String.class)
 @Out(String.class)
 @FluxCommand("filter-strings")
