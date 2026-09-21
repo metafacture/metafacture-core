@@ -261,6 +261,7 @@ Options:
 - `encoding`: Sets the encoding used to open the resource.
 - `expected_columns`: Sets number of expected columns; lines with different number of columns are ignored. Set to `-1` to disable the check and allow arbitrary number of columns. (Default: `2`)
 - `ignore_pattern`: Sets the pattern which determines whether a line should be ignored.
+- `ignore_unreadable`: Sets whether to ignore unreadable files instead of throwing an exception. (Default: `false`)
 - `key_column`: Defines the column to be used for keys. Uses zero index. (Default: `0`)
 - `value_column`: Defines the column to be used for values. Uses zero index. (Default: `1`)
 

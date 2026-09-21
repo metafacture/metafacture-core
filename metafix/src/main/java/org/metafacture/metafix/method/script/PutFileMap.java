@@ -56,6 +56,7 @@ public class PutFileMap implements FixFunction {
         withOption(options, "encoding", fileMap::setEncoding);
         withOption(options, "expected_columns", fileMap::setExpectedColumns, this::getInteger);
         withOption(options, "ignore_pattern", fileMap::setIgnorePattern);
+        withOption(options, "ignore_unreadable", fileMap::setIgnoreUnreadableFiles, this::getBoolean);
         withOption(options, "key_column", fileMap::setKeyColumn, this::getInteger);
         withOption(options, "value_column", fileMap::setValueColumn, this::getInteger);
 
