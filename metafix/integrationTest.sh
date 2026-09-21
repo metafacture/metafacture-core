@@ -89,7 +89,7 @@ function run_metafix() {
     opts+=("-XX:StartFlightRecording=dumponexit=true,filename=${file%.*}.jfr,settings=profile")
   fi
 
-  FLUX_JAVA_OPTIONS="${opts[@]}" $flux_command "$file" "$@"
+  FLUX_JAVA_OPTIONS="${opts[@]}" $flux_command -f "$file" "$@"
 }
 
 function run_catmandu() {

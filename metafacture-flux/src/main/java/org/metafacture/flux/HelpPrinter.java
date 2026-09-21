@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -78,15 +79,28 @@ public final class HelpPrinter {
      * @param out     the PrintStream to print to
      * @throws IOException when an I/O error occurs
      */
-    public static void print(final ObjectFactory<?> factory,
-            final PrintStream out) throws IOException {
+    public static void print(final ObjectFactory<?> factory, final PrintStream out) throws IOException {
+        try (PrintWriter pw = new PrintWriter(out)) {
+            print(factory, pw);
+        }
+    }
+
+    /**
+     * Prints Flux help for a given ObjectFactory. Excerpts setters and their
+     * arguments, {@code @in} annotations and {@code @out} annotations.
+     *
+     * @param factory the ObjectFactory
+     * @param out     the PrintWriter to print to
+     * @throws IOException when an I/O error occurs
+     */
+    public static void print(final ObjectFactory<?> factory, final PrintWriter out) throws IOException {
         out.println("Welcome to Metafacture");
         out.println("======================");
         out.println();
         out.println(getVersionInfo());
 
-        out.println("\nUsage:\tflux FLOW_FILE [VARNAME=VALUE ...]\n");
-        out.println("Available flux commands:\n");
+        out.println("\nUsage:\tflux -f FLOW_FILE [-v VARNAME=VALUE ...]\n");
+        out.println("Available Flux commands:\n");
 
         final List<String> keyWords = new ArrayList<>(factory.keySet());
         Collections.sort(keyWords);
@@ -105,7 +119,7 @@ public final class HelpPrinter {
         }
     }
 
-    private static <T> void describe(final String name, final ObjectFactory<T> factory, final PrintStream out) { // checkstyle-disable-line ExecutableStatementCount
+    private static <T> void describe(final String name, final ObjectFactory<T> factory, final PrintWriter out) { // checkstyle-disable-line ExecutableStatementCount
         final ConfigurableClass<? extends T> configurableClass = factory.get(name);
         final Class<? extends T> moduleClass = configurableClass.getPlainClass();
         final Description desc = moduleClass.getAnnotation(Description.class);
@@ -145,7 +159,7 @@ public final class HelpPrinter {
         out.println();
     }
 
-    private static <T> void printSignature(final PrintStream out, final Class<? extends T> moduleClass) {
+    private static <T> void printSignature(final PrintWriter out, final Class<? extends T> moduleClass) {
         String inString = "<unknown>";
         String outString = "";
         final In inClass = moduleClass.getAnnotation(In.class);
@@ -159,7 +173,7 @@ public final class HelpPrinter {
         out.println("- signature:\t" + inString + " -> " + outString);
     }
 
-    private static <T> void printAttributes(final PrintStream out, final ConfigurableClass<? extends T> configurableClass, final Map<String, Method> attributes) {
+    private static <T> void printAttributes(final PrintWriter out, final ConfigurableClass<? extends T> configurableClass, final Map<String, Method> attributes) {
         if (!attributes.isEmpty()) {
             out.print("- options:\t");
             final StringBuilder builder = new StringBuilder();
