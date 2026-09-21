@@ -16,21 +16,20 @@
 
 package org.metafacture.io;
 
-import org.metafacture.framework.ObjectReceiver;
-
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import static org.mockito.Mockito.times;
-
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,7 +42,7 @@ import java.nio.file.Path;
 public final class DirectoryListenerTest {
 
     private static final DirectoryListener DIRECTORY_LISTENER = new DirectoryListener();
-    private static final int MAX_MILLISECONDS_WAITING_OF_THREAD = 3000;
+    private static final int MAX_MILLISECONDS_WAITING_OF_THREAD = 9000;
     private static final String FILE_NAME = "test";
     private static final String SUBDIRECTORY_NAME = "subdir";
 
@@ -53,8 +52,9 @@ public final class DirectoryListenerTest {
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
 
-    private String pathToDirectory;
-    private String pathToSubdirectory;
+    private static String pathToDirectory;
+    private static String pathToSubdirectory;
+    final static Thread thread = new Thread(DIRECTORY_LISTENER);
 
     @Mock
     private ObjectReceiver<String> receiver;
@@ -65,9 +65,45 @@ public final class DirectoryListenerTest {
     @Before
     public void setup() {
         pathToDirectory = tempFolder.getRoot() + File.separator;
+        final Thread thread = new Thread(DIRECTORY_LISTENER);
+        thread.start();
         DIRECTORY_LISTENER.setReceiver(receiver);
         DIRECTORY_LISTENER.process(pathToDirectory);
         pathToSubdirectory = pathToDirectory + SUBDIRECTORY_NAME + File.separator;
+    }
+
+    @After
+    public void takeDown() {
+    thread.interrupt();
+    }
+
+    @Test
+    public void twoTestFileOccurs() {
+        final String pathToTestfile = pathToDirectory + FILE_NAME;
+        createFile(pathToTestfile);
+        Mockito.verify(receiver, org.mockito.Mockito.timeout(MAX_MILLISECONDS_WAITING_OF_THREAD)).process(pathToTestfile);
+        final String pathToTestfile2 = pathToDirectory + FILE_NAME +"_2";
+        createFile(pathToTestfile2);
+        Mockito.verify(receiver, org.mockito.Mockito.timeout(MAX_MILLISECONDS_WAITING_OF_THREAD)).process(pathToTestfile);
+    }
+
+    @Test
+    public void testFileOccursAndIsDeletedAndOccursAgain() {
+        final String pathToTestfile = pathToDirectory + FILE_NAME;
+        createFile(pathToTestfile);
+        Mockito.verify(receiver, org.mockito.Mockito.timeout(MAX_MILLISECONDS_WAITING_OF_THREAD)).process(pathToTestfile);
+        removeFile(pathToTestfile);
+        createFile(pathToTestfile);
+        Mockito.verify(receiver, org.mockito.Mockito.timeout(MAX_MILLISECONDS_WAITING_OF_THREAD)).process(pathToTestfile);
+    }
+
+    @Test
+    public void testFileOccursAndIsModified() {
+        final String pathToTestfile = pathToDirectory + FILE_NAME;
+        createFile(pathToTestfile);
+        Mockito.verify(receiver, org.mockito.Mockito.timeout(MAX_MILLISECONDS_WAITING_OF_THREAD)).process(pathToTestfile);
+        writeToFile(pathToTestfile);
+        Mockito.verify(receiver, org.mockito.Mockito.timeout(MAX_MILLISECONDS_WAITING_OF_THREAD)).process(pathToTestfile);
     }
 
     @Test
@@ -90,12 +126,11 @@ public final class DirectoryListenerTest {
     public void testFileOccursAndIsIgnoredWhenDeleted() throws InterruptedException {
         final String pathToTestfile = pathToDirectory + FILE_NAME + "1";
         createFile(pathToTestfile);
-        Mockito.verify(receiver, org.mockito.Mockito.timeout(MAX_MILLISECONDS_WAITING_OF_THREAD)).process(pathToTestfile);
-        Mockito.verify(receiver,times(1)).process(pathToTestfile);
+        Mockito.verify(receiver, Mockito.timeout(MAX_MILLISECONDS_WAITING_OF_THREAD)).process(pathToTestfile);
+        Mockito.verify(receiver, Mockito.times(1)).process(pathToTestfile);
         removeFile(pathToTestfile);
         Thread.sleep(100); // because of https://bugs.openjdk.org/browse/JDK-8202759
-        Mockito.verify(receiver,times(1)).process(pathToTestfile);
-
+        Mockito.verify(receiver, Mockito.times(1)).process(pathToTestfile);
     }
 
     @Test
@@ -104,6 +139,15 @@ public final class DirectoryListenerTest {
         createFile(pathToTestfile);
         Thread.sleep(100); // because of https://bugs.openjdk.org/browse/JDK-8202759
         Mockito.verify(receiver, org.mockito.Mockito.timeout(MAX_MILLISECONDS_WAITING_OF_THREAD).times(0)).process(pathToTestfile);
+    }
+
+    @Test
+    public void closeIfPathToWatchIsNotADirectory() throws InterruptedException {
+        final String pathToTestfile = pathToDirectory + FILE_NAME + "_not-a-directory";
+        createFile(pathToTestfile);
+        DIRECTORY_LISTENER.process(pathToTestfile);
+        Thread.sleep(100); // because of https://bugs.openjdk.org/browse/JDK-8202759
+        Assert.assertTrue(DIRECTORY_LISTENER.isClosed());
     }
 
     @Test
@@ -121,6 +165,15 @@ public final class DirectoryListenerTest {
         try {
             testFile.createNewFile();
         }
+        catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void writeToFile(final String path) {
+            try (FileOutputStream stream = new FileOutputStream(path)) {
+                stream.write(new byte[123]);
+            }
         catch (final IOException e) {
             throw new RuntimeException(e);
         }

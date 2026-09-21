@@ -55,18 +55,20 @@ import java.util.Map;
 @In(String.class)
 @Out(String.class)
 @FluxCommand("listen-directory")
-public final class DirectoryListener extends DefaultObjectPipe<String, ObjectReceiver<String>> {
+public final class DirectoryListener extends DefaultObjectPipe<String, ObjectReceiver<String>> implements Runnable {
 
     /* This special filename triggers the end of listing and closes the module */
     public static final String TRIGGER_SHUTDOWN_FILENAME = "shutdownEtlNow";
     private static final WatchService WATCHER;
     private static final MetafactureLogger LOG = new MetafactureLogger(DirectoryListener.class);
 
+    private boolean startViaFluxSh=true;
     static {
         try {
             WATCHER = FileSystems.getDefault().newWatchService();
         }
-        catch (final IOException e) {
+       // catch (final IOException e) {
+        catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -74,29 +76,40 @@ public final class DirectoryListener extends DefaultObjectPipe<String, ObjectRec
     private static final Map<WatchKey, Path> KEYS = new HashMap<>();
 
     /**
-     * Creates an instance of {@link DirectoryListener} if no IOException occurs.
+     * Creates an instance of {@link DirectoryListener}.
      */
     public DirectoryListener() {
     }
 
     @Override
-    public void process(final String directory) {
+    public void process(final String filename) {
 
-        final Path dir = Path.of(directory);
+        final Path path = Path.of(filename);
+        if (!Files.exists(path) || !Files.isDirectory(path)) {
+            LOG.warn("Cannot watch {} for it either doesn't exist or is not a directory: ", path.toString());
+            closeStream();
+        }
         try {
-            registerAll(dir);
+            registerAll(path);
         }
         catch (final IOException e) {
             throw new RuntimeException(e);
         }
-        start(directory);
+        start(filename);
     }
 
     private void start(final String directory) {
         final DirectoryWatcher directoryWatcher = new DirectoryWatcher();
         directoryWatcher.setDirectory(directory);
-        final Thread thread = new Thread(directoryWatcher);
-        thread.start();
+        try {
+            final Thread thread = new Thread(directoryWatcher);
+            if (startViaFluxSh) {
+                thread.run();// gut fü flux.sh. No thread but normal method call
+            } else {
+                thread.start(); // gut für tests, macht einen Thread
+            }
+        } catch (final Exception e) {
+        }
     }
 
     /**
@@ -106,7 +119,7 @@ public final class DirectoryListener extends DefaultObjectPipe<String, ObjectRec
      */
     private void register(final Path dir) throws IOException {
         final WatchKey key = dir.register(WATCHER, java.nio.file.StandardWatchEventKinds.ENTRY_CREATE, java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY);
-        LOG.info("Add directory to watch: " + dir.toString());
+        LOG.info("Add directory to watch: " + dir);
         KEYS.put(key, dir);
     }
 
@@ -127,6 +140,11 @@ public final class DirectoryListener extends DefaultObjectPipe<String, ObjectRec
         });
     }
 
+    @Override
+    public void run() {
+        this.startViaFluxSh=false;
+    }
+
     final class DirectoryWatcher implements Runnable {
         private String directory;
 
@@ -137,14 +155,14 @@ public final class DirectoryListener extends DefaultObjectPipe<String, ObjectRec
             this.directory = directory;
         }
 
+        @Override
         public void run() {
-
             while (true) {
                 final WatchKey key;
                 try {
                     key = WATCHER.take();
                 }
-                catch (final InterruptedException e) {
+                catch (final Exception e) {
                     Thread.currentThread().interrupt();
                     return;
                 }
@@ -153,7 +171,6 @@ public final class DirectoryListener extends DefaultObjectPipe<String, ObjectRec
                     LOG.warn("WatchKey not recognized!");
                     continue;
                 }
-
                 for (final WatchEvent<?> event : key.pollEvents()) {
                     // an OVERFLOW event can occur if events are lost or discarded
                     if (event.kind() == java.nio.file.StandardWatchEventKinds.OVERFLOW) {
@@ -170,11 +187,12 @@ public final class DirectoryListener extends DefaultObjectPipe<String, ObjectRec
                 final boolean valid = key.reset();
                 if (!valid) {
                     KEYS.remove(key);
-                    LOG.info("Directory no longer accessible: " + key.toString());
+                    LOG.info("Directory no longer accessible: " + directory);
                     // all directories are inaccessible
                     if (KEYS.isEmpty()) {
                         LOG.warn("Root directory {} is not accessible anymore. Closing ...", directory);
                         closeStream();
+                        Thread.currentThread().interrupt();
                         break;
                     }
                 }
