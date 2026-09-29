@@ -107,7 +107,9 @@ As a general rule, we don't change public commit history, i.e. we don’t use ``
 
 Please format your code according to [this EditorConfig file](https://github.com/metafacture/metafacture-core/blob/master/.editorconfig) and consider our current [code quality and style guidelines](https://github.com/metafacture/metafacture-core/wiki/Code-Quality-and-Style).
 
-The [metafacture-core build](https://github.com/metafacture/metafacture-core/blob/master/build.gradle) performs automated [EditorConfig](https://github.com/metafacture/metafacture-core/blob/master/.editorconfig) and [Checkstyle](https://github.com/metafacture/metafacture-core/blob/master/config/checkstyle/checkstyle.xml) checks.
+The [metafacture-core build](https://github.com/metafacture/metafacture-core/blob/master/build.gradle) performs automated [EditorConfig](https://github.com/metafacture/metafacture-core/blob/master/.editorconfig), [Checkstyle](https://github.com/metafacture/metafacture-core/blob/master/config/checkstyle/checkstyle.xml), and [Spotless](https://github.com/diffplug/spotless/tree/main/plugin-gradle) checks.
+
+You can manually run Spotless checks with `./gradlew spotlessCheck`, which are configured in the Gradle build file (`build.gradle`). Apply all Spotless formatter rules to fix violations with `./gradlew spotlessApply`. To automatically format your code every time you save in an editor, run `./gradlew --continuous spotlessApply` in a separate terminal.
 
 The code is automatically [quality-checked on sonarcloud.io](https://sonarcloud.io/dashboard?id=org.metafacture%3Ametafacture-core) when pushed to GitHub.
 
