@@ -17,6 +17,7 @@
 package org.metafacture.metamorph.maps;
 
 import org.metafacture.commons.ResourceUtil;
+import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.io.FileOpener;
 import org.metafacture.metamorph.api.MorphExecutionException;
 import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
@@ -64,6 +65,8 @@ import java.util.regex.Pattern;
  */
 public final class FileMap extends AbstractReadOnlyMap<String, String> implements Closeable {
 
+    private static final MetafactureLogger LOG = new MetafactureLogger(FileMap.class);
+
     private final FileOpener fileOpener = new FileOpener();
     private final Map<String, String> map = new HashMap<>();
 
@@ -71,6 +74,7 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> implement
     private Matcher ignoreMatcher;
     private Pattern split = Pattern.compile("\t", Pattern.LITERAL);
     private boolean allowEmptyValues;
+    private boolean ignoreUnreadableFiles;
     private boolean isUninitialized = true;
     private int expectedColumns;
     private int keyColumn;
@@ -120,6 +124,17 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> implement
      */
     public void setIgnorePattern(final String ignorePattern) {
         this.ignoreMatcher = Pattern.compile(ignorePattern).matcher("");
+    }
+
+    /**
+     * Sets whether to ignore unreadable files instead of throwing an exception.
+     *
+     * <strong>Default value: false</strong>
+     *
+     * @param ignoreUnreadableFiles true if unreadable files should be ignored
+     */
+    public void setIgnoreUnreadableFiles(final boolean ignoreUnreadableFiles) {
+        this.ignoreUnreadableFiles = ignoreUnreadableFiles;
     }
 
     /**
@@ -193,8 +208,18 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> implement
                 map.put(parts[keyColumn], parts[valueColumn]);
             }
         }
-        catch (final IOException | UncheckedIOException e) {
-            throw new MorphExecutionException("filemap: cannot read map file", e);
+        catch (final IOException | UncheckedIOException | MorphExecutionException e) {
+            final String message = "filemap: cannot read map file";
+
+            if (ignoreUnreadableFiles) {
+                LOG.externalWarn("{}: {}", message, e.getMessage());
+            }
+            else if (e instanceof MorphExecutionException mee) {
+                throw mee; // propagated from openStream()
+            }
+            else {
+                throw new MorphExecutionException(message, e);
+            }
         }
     }
 
