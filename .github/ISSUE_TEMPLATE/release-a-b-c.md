@@ -22,11 +22,12 @@ Following [maintaining guidelines](https://github.com/metafacture/metafacture-co
   - [ ] playground (by @TobiasNx or @dr0i)
   - [ ] oersi (by @TobiasNx)
   - [ ] limetrans (by @blackwinter)
+  - [ ] language server (@katauber)
 - [ ] [release on maven central](https://central.sonatype.com/search?q=metafacture)
+- [ ] write [blog post](https://github.com/metafacture/metafacture-blog/issues/39) and review by @blackwinter, @dr0i and @fsteeg since blogpost is also used as release note on github.
 - [ ] [release on github](https://github.com/metafacture/metafacture-core/releases/)
-- [ ] update [metafacture-playground](https://github.com/metafacture/metafacture-playground/issues/221)
-- [ ] update [flux-commands](https://github.com/metafacture/metafacture-documentation/blob/master/docs/Documentation-Maintainer-Guide.md)
+- [ ] update [metafacture-playground](https://github.com/metafacture/metafacture-playground/issues/221) TODO: create new issue and adjust link
+- [ ] update [flux-commands](https://github.com/metafacture/metafacture-documentation/blob/master/MAINTAINING.md)
 - [ ] update [metafacture-fix functions](https://github.com/metafacture/metafacture-documentation/blob/master/docs/fix/Fix-functions.md)
-- [ ] write [blog post](https://github.com/metafacture/metafacture-blog/issues/39)
 - [ ] [toot](https://openbiblio.social/@metafacture/)
 - [ ] announce at [metadaten.community](https://metadaten.community/c/software-und-tools/metafacture/8)
