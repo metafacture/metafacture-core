@@ -22,6 +22,7 @@ plugins {
   id 'org.sonarqube' version '2.6.2'
   id 'org.xtext.builder' version '4.0.0'
   id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
+  id 'com.diffplug.spotless' version '8.10.3'
 }
 
 subprojects {
@@ -116,6 +117,30 @@ editorconfig {
 task editorconfigChecker(type: Exec, group: 'Verification') {
   executable 'misc/bin/editorconfig-checker'
   args('-exclude', '/\\.|/bin/|\\.beacon$|\\.txt\\.|^LICENSE$|^\\.project$|^gradlew.*')
+}
+
+spotless {
+  repositories {
+    mavenCentral()
+  }
+  java {
+    target '**/*.java'
+    targetExclude '**/xtext-gen/**'
+    removeUnusedImports()
+    forbidWildcardImports()
+    formatAnnotations()
+    googleJavaFormat().aosp().reflowLongStrings()
+  }
+  flexmark {
+    target '**/*.md'
+    flexmark()
+  }
+  format 'misc', {
+    target '**/*.gradle', '**/*.gitignore', '**/*.xml'
+    trimTrailingWhitespace()
+    leadingTabsToSpaces()
+    endWithNewline()
+  }
 }
 
 subprojects {
