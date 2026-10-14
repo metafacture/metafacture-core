@@ -2,9 +2,7 @@ package org.metafacture.io;
 
 import org.metafacture.framework.MetafactureException;
 
-/**
- * Base class for IO exceptions.
- */
+/** Base class for IO exceptions. */
 public class IoFailed extends MetafactureException {
 
     /**
@@ -29,10 +27,9 @@ public class IoFailed extends MetafactureException {
      * Creates an instance of {@link IoFailed} by a given message and a cause.
      *
      * @param message the message
-     * @param cause   the {@link Throwable}
+     * @param cause the {@link Throwable}
      */
     public IoFailed(final String message, final Throwable cause) {
         super(message, cause);
     }
-
 }

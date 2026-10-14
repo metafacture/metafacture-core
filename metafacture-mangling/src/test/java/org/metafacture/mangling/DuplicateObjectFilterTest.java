@@ -16,11 +16,10 @@
 
 package org.metafacture.mangling;
 
-import org.metafacture.framework.ObjectReceiver;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -29,7 +28,6 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link DuplicateObjectFilter}.
  *
  * @author Alexander Haffner
- *
  */
 public final class DuplicateObjectFilterTest {
 
@@ -38,11 +36,9 @@ public final class DuplicateObjectFilterTest {
 
     private DuplicateObjectFilter<String> duplicateObjectFilter;
 
-    @Mock
-    private ObjectReceiver<String> receiver;
+    @Mock private ObjectReceiver<String> receiver;
 
-    public DuplicateObjectFilterTest() {
-    }
+    public DuplicateObjectFilterTest() {}
 
     @Before
     public void setup() {
@@ -66,5 +62,4 @@ public final class DuplicateObjectFilterTest {
         Mockito.verify(receiver).process(OBJECT2);
         Mockito.verifyNoMoreInteractions(receiver);
     }
-
 }

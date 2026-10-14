@@ -15,6 +15,9 @@
 
 package org.metafacture.biblio.marc21;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.function.Function;
 import org.metafacture.commons.XmlUtil;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -25,18 +28,16 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.function.Function;
-
 /**
  * Encodes a stream into MARCXML.
  *
  * @author some Jan (Eberhardt) did almost all
  * @author Pascal Christoph (dr0i) dug it up again
  */
-
-@Description("Encodes a stream into MARCXML. If you can't ensure valid MARC21 (e.g. the leader isn't correct or not set as one literal) then set the parameter `ensureCorrectMarc21Xml` to `true`.")
+@Description(
+        "Encodes a stream into MARCXML. If you can't ensure valid MARC21 (e.g. the leader isn't"
+            + " correct or not set as one literal) then set the parameter `ensureCorrectMarc21Xml`"
+            + " to `true`.")
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("encode-marcxml")
@@ -44,13 +45,12 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     public static final String NAMESPACE_NAME = "marc";
     public static final String XML_ENCODING = "UTF-8";
-    public static final String XML_VERSION =  "1.0";
+    public static final String XML_VERSION = "1.0";
     public static final boolean PRETTY_PRINTED = true;
     public static final boolean OMIT_XML_DECLARATION = false;
     public static final boolean ENSURE_CORRECT_MARC21_XML = false;
 
     private enum Tag {
-
         collection(" xmlns%s=\"" + NAMESPACE + "\"%s"),
         controlfield(" tag=\"%s\""),
         datafield(" tag=\"%s\" ind1=\"%s\" ind2=\"%s\""),
@@ -76,14 +76,16 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         public String close(final Object[] args) {
             return String.format(closeTemplate, args);
         }
-
     }
 
     private static final String NAMESPACE = "http://www.loc.gov/MARC21/slim";
     private static final String NAMESPACE_PREFIX = NAMESPACE_NAME + ":";
     private static final String NAMESPACE_SUFFIX = ":" + NAMESPACE_NAME;
 
-    private static final String SCHEMA_ATTRIBUTES = " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"" + NAMESPACE + " http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd\"";
+    private static final String SCHEMA_ATTRIBUTES =
+            " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\""
+                    + NAMESPACE
+                    + " http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd\"";
 
     private static final String ATTRIBUTE_TEMPLATE = " %s=\"%s\"";
 
@@ -107,23 +109,18 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     private DefaultStreamPipe<ObjectReceiver<String>> pipe;
 
-    /**
-     * Creates an instance of {@link MarcXmlEncoder}.
-     */
+    /** Creates an instance of {@link MarcXmlEncoder}. */
     public MarcXmlEncoder() {
         final Marc21Decoder decoder = new Marc21Decoder();
         decoder.setEmitLeaderAsWhole(true);
 
-        wrapper
-            .setReceiver(decoder)
-            .setReceiver(encoder);
+        wrapper.setReceiver(decoder).setReceiver(encoder);
 
         setEnsureCorrectMarc21Xml(ENSURE_CORRECT_MARC21_XML);
     }
 
     /**
-     * Sets the flag to decide whether to emit the {@value #NAMESPACE_NAME}
-     * namespace
+     * Sets the flag to decide whether to emit the {@value #NAMESPACE_NAME} namespace
      *
      * @param emitNamespace true if the namespace is emitted, otherwise false
      */
@@ -132,19 +129,17 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     }
 
     /**
-     * Sets the flag to decide whether to omit the XML declaration.
-     * <strong>Default value: {@value #OMIT_XML_DECLARATION}</strong>
+     * Sets the flag to decide whether to omit the XML declaration. <strong>Default value: {@value
+     * #OMIT_XML_DECLARATION}</strong>
      *
-     * @param currentOmitXmlDeclaration true if the XML declaration is omitted, otherwise
-     *                           false
+     * @param currentOmitXmlDeclaration true if the XML declaration is omitted, otherwise false
      */
     public void omitXmlDeclaration(final boolean currentOmitXmlDeclaration) {
         encoder.omitXmlDeclaration(currentOmitXmlDeclaration);
     }
 
     /**
-     * Sets the XML version.
-     * <strong>Default value: {@value #XML_VERSION}</strong>
+     * Sets the XML version. <strong>Default value: {@value #XML_VERSION}</strong>
      *
      * @param xmlVersion the XML version
      */
@@ -153,8 +148,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     }
 
     /**
-     * Sets the XML encoding.
-     * <strong>Default value: {@value #XML_ENCODING}</strong>
+     * Sets the XML encoding. <strong>Default value: {@value #XML_ENCODING}</strong>
      *
      * @param xmlEncoding the XML encoding
      */
@@ -163,21 +157,24 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     }
 
     /**
-     * Sets to ensure correct MARC21 XML.
-     * If true, the input data is validated to ensure correct MARC21. Also the leader may be generated.
-     * It acts as a wrapper: the input is piped to {@link org.metafacture.biblio.marc21.Marc21Encoder}, whose output is piped to {@link org.metafacture.biblio.marc21.Marc21Decoder}, whose output is piped to {@link org.metafacture.biblio.marc21.MarcXmlEncoder}.
-     * This validation and treatment of the leader is more safe but comes with a performance impact.
-     * <strong>Default value: {@value #ENSURE_CORRECT_MARC21_XML}</strong>
+     * Sets to ensure correct MARC21 XML. If true, the input data is validated to ensure correct
+     * MARC21. Also the leader may be generated. It acts as a wrapper: the input is piped to {@link
+     * org.metafacture.biblio.marc21.Marc21Encoder}, whose output is piped to {@link
+     * org.metafacture.biblio.marc21.Marc21Decoder}, whose output is piped to {@link
+     * org.metafacture.biblio.marc21.MarcXmlEncoder}. This validation and treatment of the leader is
+     * more safe but comes with a performance impact. <strong>Default value: {@value
+     * #ENSURE_CORRECT_MARC21_XML}</strong>
      *
-     * @param ensureCorrectMarc21Xml if true the input data is validated to ensure correct MARC21. Also the leader may be generated.
+     * @param ensureCorrectMarc21Xml if true the input data is validated to ensure correct MARC21.
+     *     Also the leader may be generated.
      */
     public void setEnsureCorrectMarc21Xml(final boolean ensureCorrectMarc21Xml) {
         pipe = ensureCorrectMarc21Xml ? wrapper : encoder;
     }
 
     /**
-     * Formats the resulting xml by indentation. Aka "pretty printing".
-     * <strong>Default value: {@value #PRETTY_PRINTED}</strong>
+     * Formats the resulting xml by indentation. Aka "pretty printing". <strong>Default value:
+     * {@value #PRETTY_PRINTED}</strong>
      *
      * @param formatted true if formatting is activated, otherwise false
      */
@@ -248,7 +245,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         private String currentEntity = "";
 
         private boolean emitNamespace = true;
-        private Object[] namespacePrefix = new Object[]{NAMESPACE_PREFIX};
+        private Object[] namespacePrefix = new Object[] {NAMESPACE_PREFIX};
 
         private int indentationLevel;
         private boolean escapeUnicode;
@@ -256,12 +253,11 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         private int recordAttributeOffset;
         private int recordLeaderOffset;
 
-        private Encoder() {
-        }
+        private Encoder() {}
 
         public void setEmitNamespace(final boolean emitNamespace) {
             this.emitNamespace = emitNamespace;
-            namespacePrefix = new Object[]{emitNamespace ? NAMESPACE_PREFIX : EMPTY};
+            namespacePrefix = new Object[] {emitNamespace ? NAMESPACE_PREFIX : EMPTY};
         }
 
         public void omitXmlDeclaration(final boolean currentOmitXmlDeclaration) {
@@ -291,7 +287,10 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
                     writeHeader();
                     prettyPrintNewLine();
                 }
-                writeTag(Tag.collection::open, emitNamespace ? NAMESPACE_SUFFIX : EMPTY, emitNamespace ? SCHEMA_ATTRIBUTES : EMPTY);
+                writeTag(
+                        Tag.collection::open,
+                        emitNamespace ? NAMESPACE_SUFFIX : EMPTY,
+                        emitNamespace ? SCHEMA_ATTRIBUTES : EMPTY);
                 prettyPrintNewLine();
                 incrementIndentationLevel();
             }
@@ -320,8 +319,15 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
             currentEntity = name;
             if (!name.equals(Marc21EventNames.LEADER_ENTITY)) {
                 if (name.length() != LEADER_ENTITY_LENGTH) {
-                    final String message = String.format("Entity too short." + "Got a string ('%s') of length %d." +
-                            "Expected a length of " + LEADER_ENTITY_LENGTH + " (field + indicators).", name, name.length());
+                    final String message =
+                            String.format(
+                                    "Entity too short."
+                                            + "Got a string ('%s') of length %d."
+                                            + "Expected a length of "
+                                            + LEADER_ENTITY_LENGTH
+                                            + " (field + indicators).",
+                                    name,
+                                    name.length());
                     throw new MetafactureException(message);
                 }
 
@@ -351,11 +357,12 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
             if ("".equals(currentEntity)) {
                 if (name.equals(Marc21EventNames.MARCXML_TYPE_LITERAL)) {
                     if (value != null) {
-                        builder.insert(recordAttributeOffset, String.format(ATTRIBUTE_TEMPLATE, name, value));
+                        builder.insert(
+                                recordAttributeOffset,
+                                String.format(ATTRIBUTE_TEMPLATE, name, value));
                         recordLeaderOffset = builder.length();
                     }
-                }
-                else if (!appendLeader(name, value)) {
+                } else if (!appendLeader(name, value)) {
                     prettyPrintIndentation();
                     writeTag(Tag.controlfield::open, name);
                     if (value != null) {
@@ -364,8 +371,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
                     writeTag(Tag.controlfield::close, false);
                     prettyPrintNewLine();
                 }
-            }
-            else if (!appendLeader(currentEntity, value)) {
+            } else if (!appendLeader(currentEntity, value)) {
                 prettyPrintIndentation();
                 writeTag(Tag.subfield::open, name);
                 writeEscaped(value.trim());
@@ -436,8 +442,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
             if (name.equals(Marc21EventNames.LEADER_ENTITY)) {
                 leaderBuilder.append(value);
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         }
@@ -469,7 +474,8 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         }
 
         private void writeTag(final Function<Object[], String> function, final Object... args) {
-            final Object[] allArgs = Arrays.copyOf(namespacePrefix, namespacePrefix.length + args.length);
+            final Object[] allArgs =
+                    Arrays.copyOf(namespacePrefix, namespacePrefix.length + args.length);
             System.arraycopy(args, 0, allArgs, namespacePrefix.length, args.length);
             writeRaw(function.apply(allArgs));
         }
@@ -500,7 +506,5 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
             leaderBuilder.delete(0, leaderBuilder.length());
             recordAttributeOffset = 0;
         }
-
     }
-
 }

@@ -17,24 +17,22 @@
 
 package org.metafacture.metamorph;
 
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-import org.metafacture.metamorph.api.Maps;
-import org.metafacture.metamorph.api.NamedValueReceiver;
-
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
+import org.metafacture.metamorph.api.Maps;
+import org.metafacture.metamorph.api.NamedValueReceiver;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * Tests for class {@link Metamorph}.
@@ -44,16 +42,13 @@ import java.util.function.Consumer;
  */
 public final class MetamorphTest {
 
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private NamedValueReceiver receiver;
+    @Mock private NamedValueReceiver receiver;
 
     private Metamorph metamorph;
 
-    public MetamorphTest() {
-    }
+    public MetamorphTest() {}
 
     @Before
     public void createSystemUnderTest() {
@@ -63,65 +58,79 @@ public final class MetamorphTest {
 
     @Test
     public void shouldMapMatchingPath() {
-        assertNamedValue(true, i -> {
-            i.literal("testEntity.testLiteral", "testValue");
-        });
+        assertNamedValue(
+                true,
+                i -> {
+                    i.literal("testEntity.testLiteral", "testValue");
+                });
     }
 
     @Test
     public void shouldNotMapNonMatchingPath() {
-        assertNamedValue(false, i -> {
-            i.literal("nonMatching.path", "testValue");
-        });
+        assertNamedValue(
+                false,
+                i -> {
+                    i.literal("nonMatching.path", "testValue");
+                });
     }
 
     @Test
     public void shouldMapMatchingLiteralInMatchingEntity() {
-        assertNamedValue(true, i -> {
-            i.startEntity("testEntity");
-            i.literal("testLiteral", "testValue");
-        });
+        assertNamedValue(
+                true,
+                i -> {
+                    i.startEntity("testEntity");
+                    i.literal("testLiteral", "testValue");
+                });
     }
 
     @Test
     public void shouldNotMapNonMatchingLiteralInMatchingEntity() {
-        assertNamedValue(false, i -> {
-            i.startEntity("testEntity");
-            i.literal("nonMatching", "testValue");
-        });
+        assertNamedValue(
+                false,
+                i -> {
+                    i.startEntity("testEntity");
+                    i.literal("nonMatching", "testValue");
+                });
     }
 
     @Test
     public void shouldNotMapMatchingLiteralInNonMatchingEntity() {
-        assertNamedValue(false, i -> {
-            i.startEntity("nonMatching");
-            i.literal("testLiteral", "testValue");
-        });
+        assertNamedValue(
+                false,
+                i -> {
+                    i.startEntity("nonMatching");
+                    i.literal("testLiteral", "testValue");
+                });
     }
 
     @Test
     public void shouldNotMapLiteralWithoutMatchingEntity() {
-        assertNamedValue(false, i -> {
-            i.literal("testLiteral", "testValue");
-        });
+        assertNamedValue(
+                false,
+                i -> {
+                    i.literal("testLiteral", "testValue");
+                });
     }
 
     @Test
     public void shouldFedbackLiteralsStartingWithAtIntoMetamorph() {
-        assertNamedValue(true, i -> {
-            final Data data1;
-            data1 = new Data();
-            data1.setName("@feedback");
-            i.addNamedValueSource(data1);
-            i.registerNamedValueReceiver("testLiteral", data1);
+        assertNamedValue(
+                true,
+                i -> {
+                    final Data data1;
+                    data1 = new Data();
+                    data1.setName("@feedback");
+                    i.addNamedValueSource(data1);
+                    i.registerNamedValueReceiver("testLiteral", data1);
 
-            final Data data2 = new Data();
-            data2.setName("outName");
-            data2.setNamedValueReceiver(receiver);
-            i.registerNamedValueReceiver("@feedback", data2);
+                    final Data data2 = new Data();
+                    data2.setName("outName");
+                    data2.setNamedValueReceiver(receiver);
+                    i.registerNamedValueReceiver("@feedback", data2);
 
-            i.literal("testLiteral", "testValue");
-        });
+                    i.literal("testLiteral", "testValue");
+                });
     }
 
     @Test
@@ -151,13 +160,13 @@ public final class MetamorphTest {
         metamorph.startEntity("testEntity");
         metamorph.startEntity("testEntity");
         metamorph.endEntity();
-        metamorph.endRecord();  // Exception expected
+        metamorph.endRecord(); // Exception expected
     }
 
     private void assertNamedValue(final boolean matching, final Consumer<Metamorph> in) {
         /**
-         * Creates the Metamorph structure that corresponds to the Metamorph XML
-         * statement {@code <data source="testEntity.testLiteral" name="outName" />}.
+         * Creates the Metamorph structure that corresponds to the Metamorph XML statement {@code
+         * <data source="testEntity.testLiteral" name="outName" />}.
          */
         final Data data = new Data();
         data.setName("outName");
@@ -169,17 +178,19 @@ public final class MetamorphTest {
 
         try {
             if (matching) {
-                Mockito.verify(receiver).receive(
-                        ArgumentMatchers.eq("outName"), ArgumentMatchers.eq("testValue"),
-                        ArgumentMatchers.any(), ArgumentMatchers.eq(1), ArgumentMatchers.anyInt());
+                Mockito.verify(receiver)
+                        .receive(
+                                ArgumentMatchers.eq("outName"),
+                                ArgumentMatchers.eq("testValue"),
+                                ArgumentMatchers.any(),
+                                ArgumentMatchers.eq(1),
+                                ArgumentMatchers.anyInt());
             }
 
             Mockito.verifyNoMoreInteractions(receiver);
-        }
-        catch (final MockitoAssertionError e) {
+        } catch (final MockitoAssertionError e) {
             System.out.println(Mockito.mockingDetails(receiver).printInvocations());
             throw e;
         }
     }
-
 }

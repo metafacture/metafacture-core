@@ -20,17 +20,18 @@ import org.metafacture.metamorph.api.Function;
 import org.metafacture.metamorph.api.NamedValueSource;
 
 /**
- * Baseclass for {@link Function}s returning only one or zero results and do not
- * maintain a state.
+ * Baseclass for {@link Function}s returning only one or zero results and do not maintain a state.
  *
  * @author Markus Michael Geipel
- *
  */
 public abstract class AbstractSimpleStatelessFunction extends AbstractFunction {
 
     @Override
-    public final void receive(final String name, final String value,
-            final NamedValueSource source, final int recordCount,
+    public final void receive(
+            final String name,
+            final String value,
+            final NamedValueSource source,
+            final int recordCount,
             final int entityCount) {
 
         final String processedValue = process(value);
@@ -38,10 +39,8 @@ public abstract class AbstractSimpleStatelessFunction extends AbstractFunction {
             return;
         }
 
-        getNamedValueReceiver().receive(name, processedValue, this,
-                recordCount, entityCount);
+        getNamedValueReceiver().receive(name, processedValue, this, recordCount, entityCount);
     }
 
     protected abstract String process(String value);
-
 }

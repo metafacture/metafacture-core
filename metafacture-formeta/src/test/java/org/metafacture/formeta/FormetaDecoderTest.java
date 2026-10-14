@@ -16,11 +16,10 @@
 
 package org.metafacture.formeta;
 
-import org.metafacture.framework.StreamReceiver;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -30,7 +29,6 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link FormetaDecoder}.
  *
  * @author Christoph Böhme
- *
  */
 public final class FormetaDecoderTest {
 
@@ -39,11 +37,9 @@ public final class FormetaDecoderTest {
 
     private FormetaDecoder decoder;
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public FormetaDecoderTest() {
-    }
+    public FormetaDecoderTest() {}
 
     @Before
     public void setup() {
@@ -71,5 +67,4 @@ public final class FormetaDecoderTest {
         ordered.verify(receiver).literal("lit4", "value '3'");
         ordered.verify(receiver).endRecord();
     }
-
 }

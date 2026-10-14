@@ -17,11 +17,9 @@
 package org.metafacture.biblio.iso2709;
 
 /**
- * Constants defining the positions and lengths of the elements of an ISO
- * 2709:2008 record.
+ * Constants defining the positions and lengths of the elements of an ISO 2709:2008 record.
  *
  * @author Christoph Böhme
- *
  */
 public final class Iso2709Constants {
 
@@ -63,5 +61,4 @@ public final class Iso2709Constants {
     private Iso2709Constants() {
         throw new AssertionError("class should not be instantiated");
     }
-
 }

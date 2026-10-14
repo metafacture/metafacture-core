@@ -16,11 +16,10 @@
 
 package org.metafacture.metamorph.collectors;
 
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.TestHelpers;
-
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -33,24 +32,22 @@ import org.mockito.junit.MockitoRule;
  */
 public final class CombineTest {
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public CombineTest() {
-    }
+    public CombineTest() {}
 
     @Test
     public void shouldCombineTwoValues() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <combine name='combination' value='${one}${two}'>" +
-                "    <data source='data2' name='one' />" +
-                "    <data source='data1' name='two' />" +
-                "  </combine>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <combine name='combination' value='${one}${two}'>"
+                        + "    <data source='data2' name='one' />"
+                        + "    <data source='data1' name='two' />"
+                        + "  </combine>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "a");
@@ -63,19 +60,19 @@ public final class CombineTest {
                     o.get().literal("combination", "ba");
                     o.get().literal("combination", "ca");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldOnlyCombineValuesFromTheSameEntityIfSet() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <combine name='combination' value='${A}${B}' sameEntity='true'>" +
-                "    <data source='entity.data1' name='B' />" +
-                "    <data source='entity.data2' name='A' />" +
-                "  </combine>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <combine name='combination' value='${A}${B}' sameEntity='true'>"
+                        + "    <data source='entity.data1' name='B' />"
+                        + "    <data source='entity.data2' name='A' />"
+                        + "  </combine>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -100,19 +97,19 @@ public final class CombineTest {
                     o.get().literal("combination", "ab");
                     o.get().literal("combination", "fg");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldResetCombinedValueIfResetIsTrue() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <combine name='combination' value='${A}${B}' reset='true'>" +
-                "    <data source='data1' name='B' />" +
-                "    <data source='data2' name='A' />" +
-                "  </combine>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <combine name='combination' value='${A}${B}' reset='true'>"
+                        + "    <data source='data1' name='B' />"
+                        + "    <data source='data2' name='A' />"
+                        + "  </combine>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "b");
@@ -127,19 +124,19 @@ public final class CombineTest {
                     o.get().literal("combination", "ab");
                     o.get().literal("combination", "de");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldEmitCurrentValueOnFlushEvent() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <combine name='combi' value='${one}${two}' flushWith='e' reset='true'>" +
-                "    <data source='e.l' name='one' />" +
-                "    <data source='e.m' name='two' />" +
-                "  </combine>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <combine name='combi' value='${one}${two}' flushWith='e' reset='true'>"
+                        + "    <data source='e.l' name='one' />"
+                        + "    <data source='e.m' name='two' />"
+                        + "  </combine>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("e");
@@ -160,19 +157,16 @@ public final class CombineTest {
                     o.get().literal("combi", "22");
                     o.get().literal("combi", "3");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldNotEmitCurrentValueOnFlushEventIfIncomplete() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <combine name='combi' value='${one}${two}' flushWith='e' flushIncomplete='false' reset='true'>" +
-                "    <data source='e.l' name='one' />" +
-                "    <data source='e.m' name='two' />" +
-                "  </combine>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>  <combine name='combi' value='${one}${two}' flushWith='e'"
+                    + " flushIncomplete='false' reset='true'>    <data source='e.l' name='one' />  "
+                    + "  <data source='e.m' name='two' />  </combine></rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("e");
@@ -191,21 +185,21 @@ public final class CombineTest {
                     o.get().startRecord("1");
                     o.get().literal("combi", "22");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldPostprocessCombinedValue() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <combine name='outLit' value='${V}' flushWith='record'>" +
-                "    <data name='V' source='inLit' />" +
-                "    <postprocess>" +
-                "      <case to='upper' />" +
-                "    </postprocess>" +
-                "  </combine>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <combine name='outLit' value='${V}' flushWith='record'>"
+                        + "    <data name='V' source='inLit' />"
+                        + "    <postprocess>"
+                        + "      <case to='upper' />"
+                        + "    </postprocess>"
+                        + "  </combine>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("inLit", "value");
@@ -215,8 +209,6 @@ public final class CombineTest {
                     o.get().startRecord("1");
                     o.get().literal("outLit", "VALUE");
                     o.get().endRecord();
-                }
-        );
+                });
     }
-
 }

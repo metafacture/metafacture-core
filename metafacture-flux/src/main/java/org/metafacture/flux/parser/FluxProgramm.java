@@ -16,14 +16,6 @@
 
 package org.metafacture.flux.parser;
 
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.commons.reflection.ConfigurableClass;
-import org.metafacture.commons.reflection.ObjectFactory;
-import org.metafacture.commons.reflection.ReflectionUtil;
-import org.metafacture.flux.FluxParseException;
-import org.metafacture.flux.HelpPrinter;
-import org.metafacture.framework.Receiver;
-
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -36,10 +28,16 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.commons.reflection.ConfigurableClass;
+import org.metafacture.commons.reflection.ObjectFactory;
+import org.metafacture.commons.reflection.ReflectionUtil;
+import org.metafacture.flux.FluxParseException;
+import org.metafacture.flux.HelpPrinter;
+import org.metafacture.framework.Receiver;
 
 /**
  * @author Markus Michael Geipel
- *
  */
 public final class FluxProgramm {
 
@@ -48,14 +46,16 @@ public final class FluxProgramm {
 
     static {
         try {
-            final Enumeration<URL> enumeration = Thread.currentThread().getContextClassLoader()
-                    .getResources(PROPERTIES_LOCATION);
+            final Enumeration<URL> enumeration =
+                    Thread.currentThread()
+                            .getContextClassLoader()
+                            .getResources(PROPERTIES_LOCATION);
             while (enumeration.hasMoreElements()) {
                 final URL url = enumeration.nextElement();
-                COMMAND_FACTORY.loadClassesFromMap(ResourceUtil.loadProperties(url), Receiver.class);
+                COMMAND_FACTORY.loadClassesFromMap(
+                        ResourceUtil.loadProperties(url), Receiver.class);
             }
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new FluxParseException("unable to load properties.", e);
         }
     }
@@ -65,21 +65,17 @@ public final class FluxProgramm {
     private final Map<String, Wormhole> wormholeNameMapping = new HashMap<String, Wormhole>();
     private final Map<Flow, Wormhole> wormholeInFlowMapping = new Hashtable<Flow, Wormhole>();
 
-    /**
-     * Creates an instance of {@link FluxProgramm}.
-     */
-    public FluxProgramm() {
-    }
+    /** Creates an instance of {@link FluxProgramm}. */
+    public FluxProgramm() {}
 
-    private static Receiver createElement(final String name, final Map<String, String> namedArgs,
-            final List<Object> cArgs) {
+    private static Receiver createElement(
+            final String name, final Map<String, String> namedArgs, final List<Object> cArgs) {
 
         final Receiver newElement;
         if (COMMAND_FACTORY.containsKey(name)) {
             newElement = COMMAND_FACTORY.newInstance(name, namedArgs, cArgs.toArray());
 
-        }
-        else {
+        } else {
             final ConfigurableClass<? extends Receiver> elementClass =
                     ReflectionUtil.loadClass(name, Receiver.class);
             newElement = elementClass.newInstance(namedArgs, cArgs.toArray());
@@ -87,7 +83,8 @@ public final class FluxProgramm {
         return newElement;
     }
 
-    protected void addElement(final String name, final Map<String, String> namedArgs, final List<Object> cArgs) {
+    protected void addElement(
+            final String name, final Map<String, String> namedArgs, final List<Object> cArgs) {
         currentFlow.addElement(createElement(name, namedArgs, cArgs));
     }
 
@@ -126,7 +123,6 @@ public final class FluxProgramm {
         }
         wormhole.addIn(currentFlow);
         wormholeInFlowMapping.put(currentFlow, wormhole);
-
     }
 
     protected void setWormholeStart(final String name) {
@@ -140,7 +136,6 @@ public final class FluxProgramm {
             wormholeNameMapping.put(name, wormhole);
         }
         wormhole.setOut(currentFlow);
-
     }
 
     protected void nextFlow() {
@@ -151,7 +146,8 @@ public final class FluxProgramm {
 
         for (final Wormhole wormhole : wormholeNameMapping.values()) {
             if (wormhole.getOut() == null) {
-                throw new FluxParseException("Wormhole " + wormhole.getName() + " is going nowhere");
+                throw new FluxParseException(
+                        "Wormhole " + wormhole.getName() + " is going nowhere");
             }
 
             for (final Flow flow : wormhole.getIns()) {
@@ -161,16 +157,13 @@ public final class FluxProgramm {
         }
     }
 
-    /**
-     * Starts all flows.
-     */
+    /** Starts all flows. */
     public void start() {
         for (final Flow flow : initialFlows) {
             flow.start();
             if (!wormholeInFlowMapping.containsKey(flow)) {
                 flow.close();
-            }
-            else {
+            } else {
                 wormholeInFlowMapping.get(flow).finished(flow);
             }
         }
@@ -236,5 +229,4 @@ public final class FluxProgramm {
             }
         }
     }
-
 }

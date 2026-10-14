@@ -19,12 +19,12 @@ package org.metafacture.biblio.iso2709;
 import java.util.Arrays;
 
 /**
- * Builds a record label for an ISO 2709:2008 record. The record label consists
- * of the first 24 octets of the record.
+ * Builds a record label for an ISO 2709:2008 record. The record label consists of the first 24
+ * octets of the record.
+ *
  * <p>
  *
  * @author Christoph Böhme
- *
  */
 class LabelBuilder {
 
@@ -119,13 +119,11 @@ class LabelBuilder {
     }
 
     void copyToBuffer(final byte[] destBuffer) {
-        System.arraycopy(buffer.getByteArray(), 0, destBuffer, 0,
-                buffer.getLength());
+        System.arraycopy(buffer.getByteArray(), 0, destBuffer, 0, buffer.getLength());
     }
 
     @Override
     public String toString() {
         return buffer.stringAt(0, buffer.getLength(), Iso646Constants.CHARSET);
     }
-
 }

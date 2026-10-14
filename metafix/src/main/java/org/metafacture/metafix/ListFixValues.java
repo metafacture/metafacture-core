@@ -28,9 +28,11 @@ import org.metafacture.triples.AbstractTripleSort.Compare;
  *
  * @author Fabian Steeg
  */
-@Description("Lists all values found for the given path. The paths can be found using fix-list-paths. Options: " +
-        "`count` (output occurence frequency of each value, sorted by highest frequency first; default: `true`)" +
-        "`template` (for formatting the internal triple structure; default: `${o}\t|\t${s}` if count is true, else `${s}`)")
+@Description(
+        "Lists all values found for the given path. The paths can be found using fix-list-paths."
+                + " Options: `count` (output occurence frequency of each value, sorted by highest"
+                + " frequency first; default: `true`)`template` (for formatting the internal triple"
+                + " structure; default: `${o}\t|\t${s}` if count is true, else `${s}`)")
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("list-fix-values")
@@ -46,9 +48,6 @@ public class ListFixValues extends MetafixStreamAnalyzer {
     }
 
     private static String fix(final String path) {
-        return
-            "copy_field(\"" + path + "\",\"value.$append\")\n" +
-            "retain(\"value\")";
+        return "copy_field(\"" + path + "\",\"value.$append\")\n" + "retain(\"value\")";
     }
-
 }

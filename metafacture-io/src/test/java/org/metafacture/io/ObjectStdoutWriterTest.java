@@ -16,27 +16,23 @@
 
 package org.metafacture.io;
 
-import org.junit.Before;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import org.junit.Before;
 
 /**
  * Tests for class {@link ObjectStdoutWriter}.
  *
  * @author Christoph Böhme
- *
  */
-public final class ObjectStdoutWriterTest
-        extends AbstractConfigurableObjectWriterTest {
+public final class ObjectStdoutWriterTest extends AbstractConfigurableObjectWriterTest {
 
     private ObjectStdoutWriter<String> writer;
 
     private ByteArrayOutputStream stdoutBuffer;
 
-    public ObjectStdoutWriterTest() {
-    }
+    public ObjectStdoutWriterTest() {}
 
     @Before
     public void setup() {
@@ -57,5 +53,4 @@ public final class ObjectStdoutWriterTest
         System.out.flush();
         return stdoutBuffer.toString();
     }
-
 }

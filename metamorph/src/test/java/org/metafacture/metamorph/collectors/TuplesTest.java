@@ -16,11 +16,10 @@
 
 package org.metafacture.metamorph.collectors;
 
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.TestHelpers;
-
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -33,25 +32,23 @@ import org.mockito.junit.MockitoRule;
  */
 public final class TuplesTest {
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public TuplesTest() {
-    }
+    public TuplesTest() {}
 
     @Test
     public void shouldEmitTwoAndThreeTuples() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <tuples name='product'>" +
-                "    <data source='1' />" +
-                "    <data source='3' />" +
-                "    <data source='2' />" +
-                "  </tuples>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <tuples name='product'>"
+                        + "    <data source='1' />"
+                        + "    <data source='3' />"
+                        + "    <data source='2' />"
+                        + "  </tuples>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "a");
@@ -85,20 +82,20 @@ public final class TuplesTest {
                     o.get().literal("product", "cDY");
                     o.get().literal("product", "dDY");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldOnlyEmitTriplesWithMoreThanMinNValues() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <tuples name='product' minN='3'>" +
-                "    <data source='1' />" +
-                "    <data source='3' />" +
-                "    <data source='2' />" +
-                "  </tuples>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <tuples name='product' minN='3'>"
+                        + "    <data source='1' />"
+                        + "    <data source='3' />"
+                        + "    <data source='2' />"
+                        + "  </tuples>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "a");
@@ -128,20 +125,20 @@ public final class TuplesTest {
                     o.get().literal("product", "cDY");
                     o.get().literal("product", "dDY");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldEmitTuplesWithMinNIfNotAllStatementsFired() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <tuples name='product' minN='1'>" +
-                "    <data source='1' />" +
-                "    <data source='3' />" +
-                "    <data source='2' />" +
-                "  </tuples>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <tuples name='product' minN='1'>"
+                        + "    <data source='1' />"
+                        + "    <data source='3' />"
+                        + "    <data source='2' />"
+                        + "  </tuples>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "a");
@@ -153,8 +150,6 @@ public final class TuplesTest {
                     o.get().literal("product", "a");
                     o.get().literal("product", "b");
                     o.get().endRecord();
-                }
-        );
+                });
     }
-
 }

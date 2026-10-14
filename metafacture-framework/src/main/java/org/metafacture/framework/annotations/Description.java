@@ -38,5 +38,4 @@ public @interface Description {
      * @return the description as String
      */
     String value();
-
 }

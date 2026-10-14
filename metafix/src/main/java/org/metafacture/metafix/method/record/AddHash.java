@@ -16,32 +16,30 @@
 
 package org.metafacture.metafix.method.record;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Creates a new hash (with optional values).
- */
+/** Creates a new hash (with optional values). */
 @FixCommand("add_hash")
 public class AddHash implements FixFunction {
 
-    /**
-     * Creates an instance of {@link AddHash}.
-     */
-    public AddHash() {
-    }
+    /** Creates an instance of {@link AddHash}. */
+    public AddHash() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final String field = params.get(0);
-        final Value newValue = Value.newHash(h -> options.forEach((f, v) -> h.put(f, new Value(v))));
+        final Value newValue =
+                Value.newHash(h -> options.forEach((f, v) -> h.put(f, new Value(v))));
         record.set(field, newValue);
     }
-
 }

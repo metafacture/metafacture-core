@@ -16,19 +16,17 @@
 
 package org.metafacture.triples;
 
-import org.metafacture.framework.objects.Triple;
-
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import org.metafacture.framework.objects.Triple;
 
 /**
  * Tests for class {@link TripleObjectWriter}.
@@ -41,26 +39,23 @@ public final class TripleObjectWriterTest {
     private static final String SUBJECT2 = "subject2";
     private static final String STRUCTURED_SUBJECT_A = "a";
     private static final String STRUCTURED_SUBJECT_B = "b";
-    private static final String STRUCTURED_SUBJECT = STRUCTURED_SUBJECT_A + "/" +
-            STRUCTURED_SUBJECT_B;
+    private static final String STRUCTURED_SUBJECT =
+            STRUCTURED_SUBJECT_A + "/" + STRUCTURED_SUBJECT_B;
     private static final String PREDICATE = "predicate";
     private static final String OBJECT1 = "object-data 1";
     private static final String OBJECT2 = "object-data 2";
 
-    @Rule
-    public TemporaryFolder tempFolder = new TemporaryFolder();
+    @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
 
     private Path baseDir;
     private TripleObjectWriter tripleObjectWriter;
 
-    public TripleObjectWriterTest() {
-    }
+    public TripleObjectWriterTest() {}
 
     @Before
     public void createSystemUnderTest() throws IOException {
         baseDir = tempFolder.newFolder().toPath();
-        tripleObjectWriter = new TripleObjectWriter(
-            baseDir.toAbsolutePath().toString());
+        tripleObjectWriter = new TripleObjectWriter(baseDir.toAbsolutePath().toString());
     }
 
     @After
@@ -83,8 +78,8 @@ public final class TripleObjectWriterTest {
     public void shouldMapStructuredSubjectsToDirectories() throws IOException {
         tripleObjectWriter.process(new Triple(STRUCTURED_SUBJECT, PREDICATE, OBJECT1));
 
-        final Path file = baseDir.resolve(Paths.get(STRUCTURED_SUBJECT_A,
-                    STRUCTURED_SUBJECT_B, PREDICATE));
+        final Path file =
+                baseDir.resolve(Paths.get(STRUCTURED_SUBJECT_A, STRUCTURED_SUBJECT_B, PREDICATE));
         Assert.assertEquals(readFileContents(file), OBJECT1);
     }
 
@@ -92,5 +87,4 @@ public final class TripleObjectWriterTest {
         final byte[] data = Files.readAllBytes(file);
         return new String(data, tripleObjectWriter.getEncoding());
     }
-
 }

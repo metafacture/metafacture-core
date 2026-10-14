@@ -16,6 +16,13 @@
 
 package org.metafacture.linkeddata;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
@@ -24,19 +31,10 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Reads BEACON format
  *
  * @author markus m geipel
- *
  */
 @Description("Reads BEACON format")
 @In(java.io.Reader.class)
@@ -58,11 +56,8 @@ public final class BeaconReader extends DefaultObjectPipe<java.io.Reader, Stream
     private Pattern metaDataFilter = Pattern.compile(".*");
     private String relation = DEFAULT_RELATION;
 
-    /**
-     * Creates an instance of {@link BeaconReader}.
-     */
-    public BeaconReader() {
-    }
+    /** Creates an instance of {@link BeaconReader}. */
+    public BeaconReader() {}
 
     /**
      * Sets the buffer size.
@@ -111,21 +106,19 @@ public final class BeaconReader extends DefaultObjectPipe<java.io.Reader, Stream
                             final String value = line.substring(splitPoint + 1).trim();
                             if (TARGET.equals(key)) {
                                 target = value;
-                            }
-                            else if (metaDataFilter.matcher(key).find()) {
+                            } else if (metaDataFilter.matcher(key).find()) {
                                 institution.put(key, value);
                             }
                         }
-                    }
-                    else {
+                    } else {
                         final String[] parts = line.split("\\|");
                         final String url;
                         if (parts.length == COLUMNS_EXTENDED_BEACON) {
                             url = parts[2];
-                        }
-                        else {
+                        } else {
                             if (target == null || target.isEmpty()) {
-                                throw new MetafactureException("Error in BEACON file: target missing");
+                                throw new MetafactureException(
+                                        "Error in BEACON file: target missing");
                             }
                             final Matcher matcher = ID_PATTERN.matcher(target);
                             url = matcher.replaceFirst(parts[0]);
@@ -144,10 +137,8 @@ public final class BeaconReader extends DefaultObjectPipe<java.io.Reader, Stream
             }
             bReader.close();
 
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException("Error reading BEACON format", e);
         }
     }
-
 }

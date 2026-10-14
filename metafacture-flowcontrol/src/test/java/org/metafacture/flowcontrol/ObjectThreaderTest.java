@@ -16,52 +16,51 @@
 
 package org.metafacture.flowcontrol;
 
-import org.metafacture.framework.ObjectReceiver;
-
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
- * Tests for class {@link ObjectThreader} (which itself uses
- * {@link org.metafacture.flowcontrol.ObjectPipeDecoupler} to thread receivers).
+ * Tests for class {@link ObjectThreader} (which itself uses {@link
+ * org.metafacture.flowcontrol.ObjectPipeDecoupler} to thread receivers).
  *
  * @author Pascal Christoph (dr0i)
- *
  */
 public final class ObjectThreaderTest {
 
-    private static final int ACTIVE_THREADS_AT_BEGINNING = Thread.getAllStackTraces().keySet().size();
+    private static final int ACTIVE_THREADS_AT_BEGINNING =
+            Thread.getAllStackTraces().keySet().size();
 
-    @Mock
-    private ObjectReceiver<String> receiverThread1;
-    @Mock
-    private ObjectReceiver<String> receiverThread2;
+    @Mock private ObjectReceiver<String> receiverThread1;
+    @Mock private ObjectReceiver<String> receiverThread2;
 
     private final ObjectThreader<String> objectThreader = new ObjectThreader<>();
 
-    public ObjectThreaderTest() {
-    }
+    public ObjectThreaderTest() {}
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        objectThreader//
-                .addReceiver(receiverThread1)//
+        objectThreader //
+                .addReceiver(receiverThread1) //
                 .addReceiver(receiverThread2);
     }
 
     @Test
-    public void shouldSplitAllObjectsToAllThreadedDownStreamReceivers() throws InterruptedException {
+    public void shouldSplitAllObjectsToAllThreadedDownStreamReceivers()
+            throws InterruptedException {
         objectThreader.process("a");
         objectThreader.process("b");
         objectThreader.process("a");
         objectThreader.process("c");
         // check if two more threads were indeed created
-        Assertions.assertThat(Thread.getAllStackTraces().keySet().size() - ACTIVE_THREADS_AT_BEGINNING).isEqualTo(2);
+        Assertions.assertThat(
+                        Thread.getAllStackTraces().keySet().size() - ACTIVE_THREADS_AT_BEGINNING)
+                .isEqualTo(2);
         objectThreader.closeStream();
         // verify thread 1
         Mockito.verify(receiverThread1, Mockito.atLeast(2)).process("a");
@@ -72,5 +71,4 @@ public final class ObjectThreaderTest {
         Mockito.verify(receiverThread2, Mockito.atLeast(1)).process("b");
         Mockito.verify(receiverThread2, Mockito.atLeast(1)).process("c");
     }
-
 }

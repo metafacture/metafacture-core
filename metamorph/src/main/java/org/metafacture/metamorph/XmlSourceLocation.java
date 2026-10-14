@@ -20,8 +20,7 @@ import org.metafacture.metamorph.api.SourceLocation;
 import org.metafacture.metamorph.xml.Location;
 
 /**
- * Implementation of {@link SourceLocation} which is backed by {@link Location}
- * objects.
+ * Implementation of {@link SourceLocation} which is backed by {@link Location} objects.
  *
  * @author Christoph Böhme
  */
@@ -72,5 +71,4 @@ final class XmlSourceLocation implements SourceLocation {
     public String toString() {
         return location.toString();
     }
-
 }

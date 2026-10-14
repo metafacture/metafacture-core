@@ -16,10 +16,9 @@
 
 package org.metafacture.flowcontrol;
 
-import org.metafacture.framework.ObjectReceiver;
-
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
@@ -29,18 +28,14 @@ import org.mockito.junit.MockitoRule;
  * Tests for class {@link CloseSuppressor}.
  *
  * @author Markus Geipel
- *
  */
 public final class CloseSuppressorTest {
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private ObjectReceiver<Object> receiver;
+    @Mock private ObjectReceiver<Object> receiver;
 
-    public CloseSuppressorTest() {
-    }
+    public CloseSuppressorTest() {}
 
     @Test
     public void testSuppression() {
@@ -54,5 +49,4 @@ public final class CloseSuppressorTest {
         supressor.closeStream();
         Mockito.verifyNoMoreInteractions(receiver);
     }
-
 }

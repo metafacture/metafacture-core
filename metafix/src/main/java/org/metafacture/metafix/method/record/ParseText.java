@@ -16,67 +16,72 @@
 
 package org.metafacture.metafix.method.record;
 
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-/**
- * Parses a text into an array or hash of values using regular expressions
- * and grouping.
- */
+/** Parses a text into an array or hash of values using regular expressions and grouping. */
 @FixCommand("parse_text")
 public class ParseText implements FixFunction {
 
     private static final Pattern NAMED_GROUP_PATTERN = Pattern.compile("\\(\\?<(.+?)>");
 
-    /**
-     * Creates an instance of {@link ParseText}.
-     */
-    public ParseText() {
-    }
+    /** Creates an instance of {@link ParseText}. */
+    public ParseText() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final String field = params.get(0);
 
-        record.getList(field, a -> a.forEach(v -> {
-            final Pattern p = Pattern.compile(params.get(1));
-            final Matcher m = p.matcher(v.asString());
-            if (m.matches()) {
-                record.remove(field);
+        record.getList(
+                field,
+                a ->
+                        a.forEach(
+                                v -> {
+                                    final Pattern p = Pattern.compile(params.get(1));
+                                    final Matcher m = p.matcher(v.asString());
+                                    if (m.matches()) {
+                                        record.remove(field);
 
-                /**
-                 * {@code Pattern.namedGroups()} not available as API,
-                 * see https://stackoverflow.com/a/65012527.
-                 *
-                 * Assumptions: 1. Named groups are not escaped/quoted;
-                 * 2. Named groups are not mixed with unnamed groups.
-                 */
-                final Matcher groupMatcher = NAMED_GROUP_PATTERN.matcher(p.pattern());
-                final Value value = Value.newHash(h -> {
-                    while (groupMatcher.find()) {
-                        final String group = groupMatcher.group(1);
-                        h.put(group, new Value(m.group(group)));
-                    }
-                });
+                                        /**
+                                         * {@code Pattern.namedGroups()} not available as API, see
+                                         * https://stackoverflow.com/a/65012527.
+                                         *
+                                         * <p>Assumptions: 1. Named groups are not escaped/quoted;
+                                         * 2. Named groups are not mixed with unnamed groups.
+                                         */
+                                        final Matcher groupMatcher =
+                                                NAMED_GROUP_PATTERN.matcher(p.pattern());
+                                        final Value value =
+                                                Value.newHash(
+                                                        h -> {
+                                                            while (groupMatcher.find()) {
+                                                                final String group =
+                                                                        groupMatcher.group(1);
+                                                                h.put(
+                                                                        group,
+                                                                        new Value(m.group(group)));
+                                                            }
+                                                        });
 
-                if (!value.asHash().isEmpty()) {
-                    record.addNested(field, value);
-                }
-                else {
-                    for (int i = 1; i <= m.groupCount(); i = i + 1) {
-                        record.addNested(field, new Value(m.group(i)));
-                    }
-                }
-            }
-        }));
+                                        if (!value.asHash().isEmpty()) {
+                                            record.addNested(field, value);
+                                        } else {
+                                            for (int i = 1; i <= m.groupCount(); i = i + 1) {
+                                                record.addNested(field, new Value(m.group(i)));
+                                            }
+                                        }
+                                    }
+                                }));
     }
-
 }

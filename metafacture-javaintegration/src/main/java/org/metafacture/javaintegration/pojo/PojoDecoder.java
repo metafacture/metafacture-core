@@ -24,55 +24,47 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 /**
- * Outputs a record by decoding the members of a given pojo (Plain Old Java
- * Object). Each public getter or public field defines a member. The member name
- * is either the getter name without the get prefix or the field name.
- * <p>
- * The generated stream events depend on the member type:
+ * Outputs a record by decoding the members of a given pojo (Plain Old Java Object). Each public
+ * getter or public field defines a member. The member name is either the getter name without the
+ * get prefix or the field name.
+ *
+ * <p>The generated stream events depend on the member type:
+ *
  * <ul>
- *   <li>Simple types like Strings or the primitive types produces a literal
- *   event with the member name as literal name and the member value as literal
- *   value
- *
- *   <li>Instances of {@link MetafactureSource} can insert user defined events
- *   into the stream by implementing the {@link MetafactureSource#sendToStream}
- *   method.
- *
- *   <li>Complex types like other pojos produces an entity with the member name
- *   as entity name and the decoded pojo members as the entity's elements
- *
- *   <li>Lists, Arrays and Sets produce events for each entry according to the
- *   rules above. Each of these events is named by the member name.
- *
- *   <li>Maps produces an entity with the member name as entity name. Each map
- *   entry produces a sub entity with the string representation of the entry key
- *   as entity name and the entry value decoded to the rules above.
+ *   <li>Simple types like Strings or the primitive types produces a literal event with the member
+ *       name as literal name and the member value as literal value
+ *   <li>Instances of {@link MetafactureSource} can insert user defined events into the stream by
+ *       implementing the {@link MetafactureSource#sendToStream} method.
+ *   <li>Complex types like other pojos produces an entity with the member name as entity name and
+ *       the decoded pojo members as the entity's elements
+ *   <li>Lists, Arrays and Sets produce events for each entry according to the rules above. Each of
+ *       these events is named by the member name.
+ *   <li>Maps produces an entity with the member name as entity name. Each map entry produces a sub
+ *       entity with the string representation of the entry key as entity name and the entry value
+ *       decoded to the rules above.
  * </ul>
- * <p>
- * Here are some examples:
+ *
+ * <p>Here are some examples:
+ *
  * <ul>
  *   <li>{@code String str = "abc" &rarr; literal("str", "abc")}
- *
  *   <li>{@code boolean bo = true &rarr; literal("bo", "true")}
- *
- *   <li>{@code List&lt;String&gt; li = &hellip; ("a", "b") &rarr; literal("li", "a"), literal("li", "b")}
- *
+ *   <li>{@code List&lt;String&gt; li = &hellip; ("a", "b") &rarr; literal("li", "a"), literal("li",
+ *       "b")}
  *   <li>{@code String[] ar = &hellip; ("a", "b") &rarr; literal("ar", "a"), literal("ar", "b")}
- *
- *   <li>{@code Set&lt;String&gt; se = &hellip; ("a", "b") &rarr; literal("se", "a"), literal("se", "b")}
- *
- *   <li>{@code Map&lt;String, String&gt; ma = &hellip; ("a" : "b", "c" : "d") &rarr; startEntity("ma"), literal("a", "b"), literal("c", "d"), endEntity()}
+ *   <li>{@code Set&lt;String&gt; se = &hellip; ("a", "b") &rarr; literal("se", "a"), literal("se",
+ *       "b")}
+ *   <li>{@code Map&lt;String, String&gt; ma = &hellip; ("a" : "b", "c" : "d") &rarr;
+ *       startEntity("ma"), literal("a", "b"), literal("c", "d"), endEntity()}
  * </ul>
- * <p>
- * See in the test cases in {@code PojoDecoderTest} for more examples.
  *
- * @param <T>
- *            input object type
+ * <p>See in the test cases in {@code PojoDecoderTest} for more examples.
  *
+ * @param <T> input object type
  * @author Thomas Seidel
- *
  */
-@Description("Outputs a record containing the member values of the input pojo (Plain Old Java Object)")
+@Description(
+        "Outputs a record containing the member values of the input pojo (Plain Old Java Object)")
 @In(Object.class)
 @Out(StreamReceiver.class)
 @FluxCommand("decode-pojo")
@@ -80,11 +72,8 @@ public class PojoDecoder<T> extends DefaultObjectPipe<T, StreamReceiver> {
 
     private final TypeDecoderFactory typeDecoderFactory = new TypeDecoderFactory();
 
-    /**
-     * Creates an instance of {@link PojoDecoder}.
-     */
-    public PojoDecoder() {
-    }
+    /** Creates an instance of {@link PojoDecoder}. */
+    public PojoDecoder() {}
 
     @Override
     public void process(final T obj) {
@@ -97,5 +86,4 @@ public class PojoDecoder<T> extends DefaultObjectPipe<T, StreamReceiver> {
         typeDecoder.decodeToStream(getReceiver(), null, obj);
         getReceiver().endRecord();
     }
-
 }

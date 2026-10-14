@@ -16,11 +16,10 @@
 
 package org.metafacture.metamorph.collectors;
 
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.TestHelpers;
-
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -32,24 +31,22 @@ import org.mockito.junit.MockitoRule;
  */
 public final class NoneTest {
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public NoneTest() {
-    }
+    public NoneTest() {}
 
     @Test
     public void shouldFireOnlyifNoElementFired() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <none>" +
-                "    <data source='data1' />" +
-                "    <data source='data2' />" +
-                "  </none>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <none>"
+                        + "    <data source='data1' />"
+                        + "    <data source='data2' />"
+                        + "  </none>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "A");
@@ -69,19 +66,19 @@ public final class NoneTest {
                     o.get().startRecord("3");
                     o.get().literal("", "true");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldSupportUserdefinedNameAndValue() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <none name='NONE' value='found none'>" +
-                "    <data source='data1' />" +
-                "    <data source='data2' />" +
-                "  </none>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <none name='NONE' value='found none'>"
+                        + "    <data source='data1' />"
+                        + "    <data source='data2' />"
+                        + "  </none>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data3", "A");
@@ -91,18 +88,18 @@ public final class NoneTest {
                     o.get().startRecord("1");
                     o.get().literal("NONE", "found none");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldNotFireAgainIfFlushedTwoTimesAndResetIsFalse() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <none flushWith='entity'>" +
-                "    <data source='data2' />" +
-                "  </none>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <none flushWith='entity'>"
+                        + "    <data source='data2' />"
+                        + "  </none>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -117,18 +114,18 @@ public final class NoneTest {
                     o.get().startRecord("1");
                     o.get().literal("", "true");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldFireAgainIfFlushedTwoTimesAndTesetIsTrue() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <none flushWith='entity' reset='true'>" +
-                "    <data source='data2' />" +
-                "  </none>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <none flushWith='entity' reset='true'>"
+                        + "    <data source='data2' />"
+                        + "  </none>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -143,18 +140,18 @@ public final class NoneTest {
                     o.get().startRecord("1");
                     f.apply(2).literal("", "true");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldResetWhenEntityChangesIfSameEntity() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <none sameEntity='true'>" +
-                "    <data source='entity.data2' />" +
-                "  </none>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <none sameEntity='true'>"
+                        + "    <data source='entity.data2' />"
+                        + "  </none>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -169,8 +166,6 @@ public final class NoneTest {
                     o.get().startRecord("1");
                     o.get().literal("", "true");
                     o.get().endRecord();
-                }
-        );
+                });
     }
-
 }

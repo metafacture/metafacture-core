@@ -57,5 +57,4 @@ public abstract class AbstractObjectWriter<T> implements ConfigurableObjectWrite
     public final void setSeparator(final String separator) {
         this.separator = separator;
     }
-
 }

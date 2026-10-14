@@ -16,11 +16,10 @@
 
 package org.metafacture.monitoring;
 
-import org.metafacture.framework.ObjectReceiver;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -31,7 +30,6 @@ import org.slf4j.Logger;
  * Tests for class {@link ObjectLogger}.
  *
  * @author Jens Wille
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public final class ObjectLoggerTest extends TestHelpers {
@@ -39,13 +37,11 @@ public final class ObjectLoggerTest extends TestHelpers {
     @Mock(name = "external.org.metafacture.monitoring.ObjectLogger")
     private Logger logLogger;
 
-    @Mock
-    private ObjectReceiver<String> receiver;
+    @Mock private ObjectReceiver<String> receiver;
 
     private ObjectLogger<String> logger;
 
-    public ObjectLoggerTest() {
-    }
+    public ObjectLoggerTest() {}
 
     @Before
     public void setup() {
@@ -66,11 +62,14 @@ public final class ObjectLoggerTest extends TestHelpers {
         ordered.verifyNoMoreInteractions();
         Mockito.verifyNoMoreInteractions(receiver);
 
-        assertLog(logLogger, "INFO", c -> {
-            assertLog(c, "{}{}", "", "object");
-            assertLog(c, "{}resetStream", "");
-            assertLog(c, "{}closeStream", "");
-        });
+        assertLog(
+                logLogger,
+                "INFO",
+                c -> {
+                    assertLog(c, "{}{}", "", "object");
+                    assertLog(c, "{}resetStream", "");
+                    assertLog(c, "{}closeStream", "");
+                });
     }
 
     @Test
@@ -83,11 +82,14 @@ public final class ObjectLoggerTest extends TestHelpers {
 
         Mockito.verifyNoMoreInteractions(receiver);
 
-        assertLog(logLogger, "INFO", c -> {
-            assertLog(c, "{}{}", "", "object");
-            assertLog(c, "{}resetStream", "");
-            assertLog(c, "{}closeStream", "");
-        });
+        assertLog(
+                logLogger,
+                "INFO",
+                c -> {
+                    assertLog(c, "{}{}", "", "object");
+                    assertLog(c, "{}resetStream", "");
+                    assertLog(c, "{}closeStream", "");
+                });
     }
 
     @Test
@@ -99,11 +101,14 @@ public final class ObjectLoggerTest extends TestHelpers {
         logger.resetStream();
         logger.closeStream();
 
-        assertLog(logLogger, "INFO", c -> {
-            assertLog(c, "{}{}", prefix, "object");
-            assertLog(c, "{}resetStream", prefix);
-            assertLog(c, "{}closeStream", prefix);
-        });
+        assertLog(
+                logLogger,
+                "INFO",
+                c -> {
+                    assertLog(c, "{}{}", prefix, "object");
+                    assertLog(c, "{}resetStream", prefix);
+                    assertLog(c, "{}closeStream", prefix);
+                });
     }
 
     @Test
@@ -114,11 +119,13 @@ public final class ObjectLoggerTest extends TestHelpers {
         logger.resetStream();
         logger.closeStream();
 
-        assertLog(logLogger, "WARN", c -> {
-            assertLog(c, "{}{}", "", "object");
-            assertLog(c, "{}resetStream", "");
-            assertLog(c, "{}closeStream", "");
-        });
+        assertLog(
+                logLogger,
+                "WARN",
+                c -> {
+                    assertLog(c, "{}{}", "", "object");
+                    assertLog(c, "{}resetStream", "");
+                    assertLog(c, "{}closeStream", "");
+                });
     }
-
 }

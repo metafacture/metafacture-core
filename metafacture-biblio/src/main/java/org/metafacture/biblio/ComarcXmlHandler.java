@@ -16,6 +16,8 @@
 
 package org.metafacture.biblio;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.XmlReceiver;
@@ -23,24 +25,18 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * A class handling ComarcXML. Comarc is the MARC version used by the National
- * Library of Slovenia. It does not have a leader, instead most (all?) the
- * meta-information is placed in field 000, particularly the record ID which is
- * in 000 $x.
- * <p>
- * This implementation works with the assumption that field 000 is
- * <em>always</em> the first field in the record and that this field has no
- * indicators. The consequence is that when the reader reads a record it does
- * not call receiver.startRecord until it has read the complete field 000 so
- * that it can initialise the record with the ID found in 000 $x.
+ * A class handling ComarcXML. Comarc is the MARC version used by the National Library of Slovenia.
+ * It does not have a leader, instead most (all?) the meta-information is placed in field 000,
+ * particularly the record ID which is in 000 $x.
+ *
+ * <p>This implementation works with the assumption that field 000 is <em>always</em> the first
+ * field in the record and that this field has no indicators. The consequence is that when the
+ * reader reads a record it does not call receiver.startRecord until it has read the complete field
+ * 000 so that it can initialise the record with the ID found in 000 $x.
  *
  * @author Lars Svensson
  */
@@ -63,46 +59,43 @@ public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private String currentTag = "";
     private StringBuilder builder = new StringBuilder();
 
-    /**
-     * Creates an instance of {@link ComarcXmlHandler}.
-     */
-    public ComarcXmlHandler() {
-    }
+    /** Creates an instance of {@link ComarcXmlHandler}. */
+    public ComarcXmlHandler() {}
 
     @Override
-    public void startElement(final String uri, final String localName,
-            final String qName, final Attributes attributes)
+    public void startElement(
+            final String uri,
+            final String localName,
+            final String qName,
+            final Attributes attributes)
             throws SAXException {
         if (SUBFIELD.equals(localName)) {
             this.builder = new StringBuilder();
             this.currentTag = attributes.getValue("code");
-        }
-        else if (DATAFIELD.equals(localName) && this.state == RECORD_INITIALISED) {
-            getReceiver().startEntity(
-                    attributes.getValue("tag") +
-                    attributes.getValue("ind1") +
-                    attributes.getValue("ind2"));
-        }
-        else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
+        } else if (DATAFIELD.equals(localName) && this.state == RECORD_INITIALISED) {
+            getReceiver()
+                    .startEntity(
+                            attributes.getValue("tag")
+                                    + attributes.getValue("ind1")
+                                    + attributes.getValue("ind2"));
+        } else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
             this.state = RECORD_NOT_INITIALISED;
         }
     }
 
     @Override
     @SuppressWarnings("fallthrough")
-    public void endElement(final String uri, final String localName,
-            final String qName) throws SAXException {
+    public void endElement(final String uri, final String localName, final String qName)
+            throws SAXException {
         if (SUBFIELD.equals(localName)) {
-            this.subfieldValues.add(new Entry(this.currentTag, this.builder
-                    .toString().trim()));
-        }
-        else if (DATAFIELD.equals(localName)) {
+            this.subfieldValues.add(new Entry(this.currentTag, this.builder.toString().trim()));
+        } else if (DATAFIELD.equals(localName)) {
             switch (this.state) {
                 case RECORD_NOT_INITIALISED:
                     super.getReceiver().startRecord(getFirstSubfield("x"));
                     super.getReceiver().startEntity("000  ");
                     this.state = RECORD_INITIALISED;
-                    // fall through so that the entity 000 is properly ended
+                // fall through so that the entity 000 is properly ended
                 case RECORD_INITIALISED:
                     for (final Entry entry : this.subfieldValues) {
                         super.getReceiver().literal(entry.getKey(), entry.getValue());
@@ -111,11 +104,9 @@ public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
                     this.subfieldValues.clear();
                     break;
                 default:
-                    throw new SAXException(
-                            "State was not one of initialised or not initialised");
+                    throw new SAXException("State was not one of initialised or not initialised");
             }
-        }
-        else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
+        } else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
             getReceiver().endRecord();
         }
     }
@@ -154,5 +145,4 @@ public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
             return value;
         }
     }
-
 }

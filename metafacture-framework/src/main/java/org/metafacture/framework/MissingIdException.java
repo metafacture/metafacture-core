@@ -20,7 +20,6 @@ package org.metafacture.framework;
  * Thrown if a record has no id.
  *
  * @author Markus Michael Geipel
- *
  */
 public final class MissingIdException extends MetafactureException {
 
@@ -36,14 +35,13 @@ public final class MissingIdException extends MetafactureException {
     }
 
     /**
-     * Creates an instance of {@link MissingIdException} by given message and given
-     * cause of the exception.
+     * Creates an instance of {@link MissingIdException} by given message and given cause of the
+     * exception.
      *
      * @param message the message
-     * @param cause   the {@link Throwable}
+     * @param cause the {@link Throwable}
      */
     public MissingIdException(final String message, final Throwable cause) {
         super(message, cause);
     }
-
 }

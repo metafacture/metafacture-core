@@ -1,33 +1,19 @@
 /* Copyright 2025 Pascal Christoph
 
- * Licensed under the Apache License, Version 2.0 the "License";
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+* Licensed under the Apache License, Version 2.0 the "License";
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 package org.metafacture.io;
-
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.framework.FluxCommand;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.annotations.Description;
-import org.metafacture.framework.annotations.In;
-import org.metafacture.framework.annotations.Out;
-import org.metafacture.framework.helpers.DefaultObjectPipe;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -40,24 +26,40 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.annotations.Description;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
+import org.metafacture.framework.helpers.DefaultObjectPipe;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
- * Opens an SRU (Search Retrieval by URL) stream and passes a reader to the receiver. Pages through the SRU.
+ * Opens an SRU (Search Retrieval by URL) stream and passes a reader to the receiver. Pages through
+ * the SRU.
  *
  * @author Pascal Christoph (dr0i)
  */
-@Description(// checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
-        "Opens a SRU stream and passes a reader to the receiver. The input is the base URL of the SRU service " +
-                "to be retrieved from. Mandatory argument is: QUERY.\n" +
-                "The output is an XML document holding the user defined \"maximumRecords\" as documents - or all, if not set." +
-                " If there are more documents than defined by \"maximumRecords\" and there are more documents wanted (defined by " +
-                "\"totalRecords\") there will be consecutive XML documents output as it pages through the SRU.")
+@Description( // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
+        "Opens a SRU stream and passes a reader to the receiver. The input is the base URL of the"
+                + " SRU service to be retrieved from. Mandatory argument is: QUERY.\n"
+                + "The output is an XML document holding the user defined \"maximumRecords\" as"
+                + " documents - or all, if not set. If there are more documents than defined by"
+                + " \"maximumRecords\" and there are more documents wanted (defined by"
+                + " \"totalRecords\") there will be consecutive XML documents output as it pages"
+                + " through the SRU.")
 @In(String.class)
 @Out(java.io.Reader.class)
 @FluxCommand("open-sru")
 public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
-    private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+    private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY =
+            DocumentBuilderFactory.newInstance();
     private static final String DEFAULT_QUERY = "cql.allRecords = 1";
     private static final String OPERATION = "searchRetrieve";
     private static final String USER_AGENT = "metafacture-core";
@@ -71,14 +73,11 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     private int startRecord = START_RECORD;
     private int totalRecords = Integer.MAX_VALUE;
 
-    /**
-     * Default constructor
-     */
+    /** Default constructor */
     public SruOpener() {
         try {
             docBuilder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
-        }
-        catch (final ParserConfigurationException e) {
+        } catch (final ParserConfigurationException e) {
             throw new MetafactureException(e);
         }
 
@@ -102,7 +101,6 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
      *
      * @param query the query
      */
-
     public void setQuery(final String query) {
         queryParameters.put("query", query);
     }
@@ -118,8 +116,8 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     }
 
     /**
-     * Sets the maximum of records returned in one lookup.
-     * The lookup is repeated as long as {@code maximumRecords} is less than {@code totalRecords}.
+     * Sets the maximum of records returned in one lookup. The lookup is repeated as long as {@code
+     * maximumRecords} is less than {@code totalRecords}.
      *
      * @param maximumRecords maximum of records returned in one lookup
      */
@@ -128,7 +126,8 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     }
 
     /**
-     * Sets where to start when retrieving records. <strong>Default value: {@value START_RECORD}</strong>.
+     * Sets where to start when retrieving records. <strong>Default value: {@value
+     * START_RECORD}</strong>.
      *
      * @param startRecord where to start when retrieving records
      */
@@ -166,9 +165,13 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     @Override
     public void process(final String baseUrl) {
         final StringBuilder urlBuilder = new StringBuilder(baseUrl).append("?");
-        queryParameters.forEach((k, v) -> urlBuilder
-                .append(URLEncoder.encode(k, StandardCharsets.UTF_8)).append("=")
-                .append(URLEncoder.encode(v, StandardCharsets.UTF_8)).append("&"));
+        queryParameters.forEach(
+                (k, v) ->
+                        urlBuilder
+                                .append(URLEncoder.encode(k, StandardCharsets.UTF_8))
+                                .append("=")
+                                .append(URLEncoder.encode(v, StandardCharsets.UTF_8))
+                                .append("&"));
         urlBuilder.append("startRecord=");
 
         final String url = urlBuilder.toString();
@@ -178,22 +181,26 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
         while (recordsRetrieved < totalRecords && startRecord < numberOfRecords) {
             final AtomicReference<String> responseBody = new AtomicReference<>();
 
-            final boolean successful = httpOpener.open(url + startRecord, r -> {
-                try {
-                    responseBody.set(ResourceUtil.readAll(r));
-                }
-                catch (final IOException e) {
-                    throw new MetafactureException(e);
-                }
-            });
+            final boolean successful =
+                    httpOpener.open(
+                            url + startRecord,
+                            r -> {
+                                try {
+                                    responseBody.set(ResourceUtil.readAll(r));
+                                } catch (final IOException e) {
+                                    throw new MetafactureException(e);
+                                }
+                            });
 
             try {
                 try (Reader reader = new StringReader(responseBody.get())) {
                     final Document xmldoc = docBuilder.parse(new InputSource(reader));
 
                     numberOfRecords = getIntegerValueFromElement(xmldoc, "numberOfRecords", 0);
-                    final int recordPosition = getIntegerValueFromElement(xmldoc, "recordPosition", 0);
-                    final int nextRecordPosition = getIntegerValueFromElement(xmldoc, "nextRecordPosition", totalRecords);
+                    final int recordPosition =
+                            getIntegerValueFromElement(xmldoc, "recordPosition", 0);
+                    final int nextRecordPosition =
+                            getIntegerValueFromElement(xmldoc, "nextRecordPosition", totalRecords);
 
                     recordsRetrieved = recordsRetrieved + nextRecordPosition - recordPosition;
                     startRecord = nextRecordPosition;
@@ -202,8 +209,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
                 try (Reader reader = new StringReader(responseBody.get())) {
                     getReceiver().process(reader);
                 }
-            }
-            catch (final IOException | SAXException e) {
+            } catch (final IOException | SAXException e) {
                 throw new MetafactureException(e);
             }
 
@@ -213,9 +219,9 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
         }
     }
 
-    private int getIntegerValueFromElement(final Document xmlDoc, final String tagName, final int fallback) {
+    private int getIntegerValueFromElement(
+            final Document xmlDoc, final String tagName, final int fallback) {
         final Node node = xmlDoc.getElementsByTagName(tagName).item(0);
         return node != null ? Integer.parseInt(node.getTextContent()) : fallback;
     }
-
 }

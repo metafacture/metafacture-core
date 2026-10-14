@@ -16,11 +16,10 @@
 
 package org.metafacture.metamorph.collectors;
 
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.TestHelpers;
-
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -34,27 +33,25 @@ public final class TestCollectorIf {
 
     // TODO: Can this be changed into a JUnit test for AbstractCollect?
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public TestCollectorIf() {
-    }
+    public TestCollectorIf() {}
 
     @Test
     public void shouldOnlyFireIfConditionIsMet() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <combine name='combined' value='${data1}-${data2}'>" +
-                "    <if>" +
-                "      <data source='data3' />" +
-                "    </if>" +
-                "    <data source='data1' />" +
-                "    <data source='data2' />" +
-                "  </combine>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <combine name='combined' value='${data1}-${data2}'>"
+                        + "    <if>"
+                        + "      <data source='data3' />"
+                        + "    </if>"
+                        + "    <data source='data1' />"
+                        + "    <data source='data2' />"
+                        + "  </combine>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "a");
@@ -73,24 +70,24 @@ public final class TestCollectorIf {
                     o.get().endRecord();
                     o.get().startRecord("2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldAllowToUseSameSourceInbodyAndCondition() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <combine name='combined' value='${data1}-${data2}'>" +
-                "    <if>" +
-                "      <data source='data2'>" +
-                "        <equals string='b' />" +
-                "      </data>" +
-                "    </if>" +
-                "    <data source='data1' />" +
-                "    <data source='data2' />" +
-                "  </combine>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <combine name='combined' value='${data1}-${data2}'>"
+                        + "    <if>"
+                        + "      <data source='data2'>"
+                        + "        <equals string='b' />"
+                        + "      </data>"
+                        + "    </if>"
+                        + "    <data source='data1' />"
+                        + "    <data source='data2' />"
+                        + "  </combine>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "a");
@@ -107,25 +104,25 @@ public final class TestCollectorIf {
                     o.get().endRecord();
                     o.get().startRecord("2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldAllowQuantorsInIfStatements() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <combine name='combined' value='${data1}-${data2}'>" +
-                "    <if>" +
-                "      <any>" +
-                "        <data source='data3' />" +
-                "        <data source='data4' />" +
-                "      </any>" +
-                "    </if>" +
-                "    <data source='data1' />" +
-                "    <data source='data2' />" +
-                "  </combine>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <combine name='combined' value='${data1}-${data2}'>"
+                        + "    <if>"
+                        + "      <any>"
+                        + "        <data source='data3' />"
+                        + "        <data source='data4' />"
+                        + "      </any>"
+                        + "    </if>"
+                        + "    <data source='data1' />"
+                        + "    <data source='data2' />"
+                        + "  </combine>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "a");
@@ -152,21 +149,21 @@ public final class TestCollectorIf {
                     o.get().endRecord();
                     o.get().startRecord("3");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldResetConditionWithCollector() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <combine name='result' value='${VAL}' reset='true'>" +
-                "    <if>" +
-                "      <data source='entity.data2' />" +
-                "    </if>" +
-                "    <data source='entity.data1' name='VAL' />" +
-                "  </combine>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <combine name='result' value='${VAL}' reset='true'>"
+                        + "    <if>"
+                        + "      <data source='entity.data2' />"
+                        + "    </if>"
+                        + "    <data source='entity.data1' name='VAL' />"
+                        + "  </combine>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -183,22 +180,17 @@ public final class TestCollectorIf {
                     o.get().startRecord("1");
                     o.get().literal("result", "output");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldResetConditionWithCollectorOnFlushWith() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <combine name='result' value='${VAL1}${VAL2}' reset='true' flushWith='entity'>" +
-                "    <if>" +
-                "      <data source='entity.data2' />" +
-                "    </if>" +
-                "    <data source='entity.data1' name='VAL1' />" +
-                "    <data source='entity.data4' name='VAL2' />" +
-                "  </combine>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>  <combine name='result' value='${VAL1}${VAL2}' reset='true'"
+                    + " flushWith='entity'>    <if>      <data source='entity.data2' />    </if>   "
+                    + " <data source='entity.data1' name='VAL1' />    <data source='entity.data4'"
+                    + " name='VAL2' />  </combine></rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -215,22 +207,22 @@ public final class TestCollectorIf {
                     o.get().startRecord("1");
                     o.get().literal("result", "output");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldResetConditionWithCollectorOnSameEntity() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <combine name='result' value='${VAL1}+${VAL2}' sameEntity='true'>" +
-                "    <if>" +
-                "      <data source='entity.data2' />" +
-                "    </if>" +
-                "    <data source='entity.data1' name='VAL1' />" +
-                "    <data source='entity.data4' name='VAL2' />" +
-                "  </combine>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <combine name='result' value='${VAL1}+${VAL2}' sameEntity='true'>"
+                        + "    <if>"
+                        + "      <data source='entity.data2' />"
+                        + "    </if>"
+                        + "    <data source='entity.data1' name='VAL1' />"
+                        + "    <data source='entity.data4' name='VAL2' />"
+                        + "  </combine>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -247,24 +239,18 @@ public final class TestCollectorIf {
                 o -> {
                     o.get().startRecord("1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldResetOnFlushWithIfConditionWasNotMet() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <combine name='result' value='${V1}${V2}' flushWith='entity' reset='true'>" +
-                "    <if>" +
-                "      <data source='entity.condition'>" +
-                "        <equals string='true' />" +
-                "      </data>" +
-                "    </if>" +
-                "    <data source='entity.literal1' name='V1' />" +
-                "    <data source='entity.literal2' name='V2' />" +
-                "  </combine>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>  <combine name='result' value='${V1}${V2}' flushWith='entity'"
+                    + " reset='true'>    <if>      <data source='entity.condition'>        <equals"
+                    + " string='true' />      </data>    </if>    <data source='entity.literal1'"
+                    + " name='V1' />    <data source='entity.literal2' name='V2' />  </combine>"
+                    + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -281,8 +267,6 @@ public final class TestCollectorIf {
                     o.get().startRecord("1");
                     o.get().literal("result", "value2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
-
 }

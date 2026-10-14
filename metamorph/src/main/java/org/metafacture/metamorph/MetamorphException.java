@@ -19,8 +19,7 @@ package org.metafacture.metamorph;
 import org.metafacture.framework.MetafactureException;
 
 /**
- * Thrown if an error occurs while building or executing a Metamorph
- * transformation pipeline.
+ * Thrown if an error occurs while building or executing a Metamorph transformation pipeline.
  *
  * @author Christoph Böhme
  */
@@ -29,14 +28,12 @@ public class MetamorphException extends MetafactureException {
     private static final long serialVersionUID = 0L;
 
     /**
-     * Creates an instance of {@link MetamorphException} by a given message and
-     * cause.
+     * Creates an instance of {@link MetamorphException} by a given message and cause.
      *
      * @param message the message
-     * @param cause   the {@link Throwable}
+     * @param cause the {@link Throwable}
      */
     public MetamorphException(final String message, final Throwable cause) {
         super(message, cause);
     }
-
 }

@@ -19,22 +19,17 @@ package org.metafacture.metamorph.functions;
 import org.metafacture.metamorph.api.helpers.AbstractFilter;
 
 /**
- * Checks whether the received value does not equal a
- * given value.
+ * Checks whether the received value does not equal a given value.
  *
  * @author Markus Michael Geipel
  */
 public final class NotEquals extends AbstractFilter {
 
-    /**
-     * Creates an instance of {@link NotEquals}.
-     */
-    public NotEquals() {
-    }
+    /** Creates an instance of {@link NotEquals}. */
+    public NotEquals() {}
 
     @Override
     protected boolean accept(final String value) {
         return !getString().equals(value);
     }
-
 }

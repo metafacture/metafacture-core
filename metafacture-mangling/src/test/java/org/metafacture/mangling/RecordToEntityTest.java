@@ -16,10 +16,9 @@
 
 package org.metafacture.mangling;
 
-import org.metafacture.framework.StreamReceiver;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -29,17 +28,14 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link RecordToEntity}.
  *
  * @author Christoph Böhme
- *
  */
 public class RecordToEntityTest {
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
     private RecordToEntity recordToEntity;
 
-    public RecordToEntityTest() {
-    }
+    public RecordToEntityTest() {}
 
     @Before
     public void init() {
@@ -58,8 +54,7 @@ public class RecordToEntityTest {
         recordToEntity.closeStream();
 
         final InOrder ordered = Mockito.inOrder(receiver);
-        ordered.verify(receiver)
-                .startEntity(RecordToEntity.DEFAULT_ENTITY_NAME);
+        ordered.verify(receiver).startEntity(RecordToEntity.DEFAULT_ENTITY_NAME);
         ordered.verify(receiver).literal("literal", "value");
         ordered.verify(receiver).startEntity("entity");
         ordered.verify(receiver, Mockito.times(2)).endEntity();
@@ -89,9 +84,7 @@ public class RecordToEntityTest {
         receiver.closeStream();
 
         final InOrder ordered = Mockito.inOrder(receiver);
-        ordered.verify(receiver)
-                .startEntity(RecordToEntity.DEFAULT_ENTITY_NAME);
+        ordered.verify(receiver).startEntity(RecordToEntity.DEFAULT_ENTITY_NAME);
         ordered.verify(receiver).literal("record-id", "1");
     }
-
 }

@@ -16,8 +16,6 @@
 
 package org.metafacture.io;
 
-import org.metafacture.framework.ObjectReceiver;
-
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -27,14 +25,6 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import com.github.tomakehurst.wiremock.matching.StringValuePattern;
 import com.github.tomakehurst.wiremock.matching.UrlPattern;
-import org.junit.Assert;
-import org.junit.ComparisonFailure;
-import org.junit.Rule;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Reader;
@@ -42,6 +32,14 @@ import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.zip.GZIPOutputStream;
+import org.junit.Assert;
+import org.junit.ComparisonFailure;
+import org.junit.Rule;
+import org.junit.Test;
+import org.metafacture.framework.ObjectReceiver;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 /**
  * Tests for class {@link HttpOpener}.
@@ -68,189 +66,258 @@ public final class HttpOpenerTest {
             gzip.close();
 
             GZIPPED_RESPONSE_BODY = out.toByteArray();
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
     }
 
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig().dynamicPort());
+    public WireMockRule wireMockRule =
+            new WireMockRule(WireMockConfiguration.wireMockConfig().dynamicPort());
 
-    @Mock
-    private ObjectReceiver<Reader> receiver;
+    @Mock private ObjectReceiver<Reader> receiver;
 
-    public HttpOpenerTest() {
-    }
+    public HttpOpenerTest() {}
 
     @Test
     public void shouldPerformGetRequestWithInputAsUrlByDefault() throws IOException {
-        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> { });
+        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> {});
     }
 
     @Test
     public void shouldPerformGetRequestWithUrlParameter() throws IOException {
-        shouldPerformRequest(TEST_STRING, HttpOpener.Method.GET, (o, u) -> {
-            o.setUrl(u);
-        });
+        shouldPerformRequest(
+                TEST_STRING,
+                HttpOpener.Method.GET,
+                (o, u) -> {
+                    o.setUrl(u);
+                });
     }
 
     @Test
     public void shouldPerformPostRequestWithInputAsUrl() throws IOException {
-        shouldPerformRequest(TEST_URL, HttpOpener.Method.POST, (o, u) -> {
-            o.setMethod(HttpOpener.Method.POST);
-            o.setBody(REQUEST_BODY);
-        });
+        shouldPerformRequest(
+                TEST_URL,
+                HttpOpener.Method.POST,
+                (o, u) -> {
+                    o.setMethod(HttpOpener.Method.POST);
+                    o.setBody(REQUEST_BODY);
+                });
     }
 
     @Test
     public void shouldPerformPostRequestWithUrlParameter() throws IOException {
-        shouldPerformRequest(REQUEST_BODY, HttpOpener.Method.POST, (o, u) -> {
-            o.setMethod(HttpOpener.Method.POST);
-            o.setUrl(u);
-        });
+        shouldPerformRequest(
+                REQUEST_BODY,
+                HttpOpener.Method.POST,
+                (o, u) -> {
+                    o.setMethod(HttpOpener.Method.POST);
+                    o.setUrl(u);
+                });
     }
 
     @Test
     public void shouldPerformPostRequestWithBodyParameter() throws IOException {
-        shouldPerformRequest(TEST_STRING, HttpOpener.Method.POST, (o, u) -> {
-            o.setMethod(HttpOpener.Method.POST);
-            o.setUrl(u);
-            o.setBody(REQUEST_BODY);
-        });
+        shouldPerformRequest(
+                TEST_STRING,
+                HttpOpener.Method.POST,
+                (o, u) -> {
+                    o.setMethod(HttpOpener.Method.POST);
+                    o.setUrl(u);
+                    o.setBody(REQUEST_BODY);
+                });
     }
 
     @Test
     public void shouldPerformPostRequestInsteadOfGetWithBodyParameter() throws IOException {
-        shouldPerformRequest(TEST_URL, HttpOpener.Method.POST, (o, u) -> {
-            o.setMethod(HttpOpener.Method.GET);
-            o.setBody(REQUEST_BODY);
-        });
+        shouldPerformRequest(
+                TEST_URL,
+                HttpOpener.Method.POST,
+                (o, u) -> {
+                    o.setMethod(HttpOpener.Method.GET);
+                    o.setBody(REQUEST_BODY);
+                });
     }
 
     @Test
     public void shouldPerformPostRequestInsteadOfGetWithInputAsBodyParameter() throws IOException {
-        shouldPerformRequest(REQUEST_BODY, HttpOpener.Method.POST, (o, u) -> {
-            o.setMethod(HttpOpener.Method.GET);
-            o.setUrl(u);
-            o.setBody("@-");
-        });
+        shouldPerformRequest(
+                REQUEST_BODY,
+                HttpOpener.Method.POST,
+                (o, u) -> {
+                    o.setMethod(HttpOpener.Method.GET);
+                    o.setUrl(u);
+                    o.setBody("@-");
+                });
     }
 
     @Test
-    public void shouldPerformGetRequestWithoutBodyWithAlreadyUsedInputAsBodyParameter() throws IOException {
-        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> {
-            o.setBody("@-");
-        });
+    public void shouldPerformGetRequestWithoutBodyWithAlreadyUsedInputAsBodyParameter()
+            throws IOException {
+        shouldPerformRequest(
+                TEST_URL,
+                HttpOpener.Method.GET,
+                (o, u) -> {
+                    o.setBody("@-");
+                });
     }
 
     @Test
     public void shouldPerformPutRequestWithUrlParameter() throws IOException {
-        shouldPerformRequest(REQUEST_BODY, HttpOpener.Method.PUT, (o, u) -> {
-            o.setMethod(HttpOpener.Method.PUT);
-            o.setUrl(u);
-        });
+        shouldPerformRequest(
+                REQUEST_BODY,
+                HttpOpener.Method.PUT,
+                (o, u) -> {
+                    o.setMethod(HttpOpener.Method.PUT);
+                    o.setUrl(u);
+                });
     }
 
     @Test
     public void shouldPerformPutRequestWithBodyParameter() throws IOException {
-        shouldPerformRequest(TEST_STRING, HttpOpener.Method.PUT, (o, u) -> {
-            o.setMethod(HttpOpener.Method.PUT);
-            o.setUrl(u);
-            o.setBody(REQUEST_BODY);
-        });
+        shouldPerformRequest(
+                TEST_STRING,
+                HttpOpener.Method.PUT,
+                (o, u) -> {
+                    o.setMethod(HttpOpener.Method.PUT);
+                    o.setUrl(u);
+                    o.setBody(REQUEST_BODY);
+                });
     }
 
     @Test
     public void shouldPerformDeleteRequestWithUrlParameter() throws IOException {
-        shouldPerformRequest(REQUEST_BODY, HttpOpener.Method.DELETE, (o, u) -> {
-            o.setMethod(HttpOpener.Method.DELETE);
-            o.setUrl(u);
-        });
+        shouldPerformRequest(
+                REQUEST_BODY,
+                HttpOpener.Method.DELETE,
+                (o, u) -> {
+                    o.setMethod(HttpOpener.Method.DELETE);
+                    o.setUrl(u);
+                });
     }
 
     @Test
     public void shouldPerformHeadRequestWithUrlParameter() throws IOException {
-        shouldPerformRequest(REQUEST_BODY, HttpOpener.Method.HEAD, (o, u) -> {
-            o.setMethod(HttpOpener.Method.HEAD);
-            o.setUrl(u);
-        });
+        shouldPerformRequest(
+                REQUEST_BODY,
+                HttpOpener.Method.HEAD,
+                (o, u) -> {
+                    o.setMethod(HttpOpener.Method.HEAD);
+                    o.setUrl(u);
+                });
     }
 
     @Test
     public void shouldPerformOptionsRequestWithUrlParameter() throws IOException {
-        shouldPerformRequest(REQUEST_BODY, HttpOpener.Method.OPTIONS, (o, u) -> {
-            o.setMethod(HttpOpener.Method.OPTIONS);
-            o.setUrl(u);
-        });
+        shouldPerformRequest(
+                REQUEST_BODY,
+                HttpOpener.Method.OPTIONS,
+                (o, u) -> {
+                    o.setMethod(HttpOpener.Method.OPTIONS);
+                    o.setUrl(u);
+                });
     }
 
     @Test
     public void shouldPerformTraceRequestWithUrlParameter() throws IOException {
-        shouldPerformRequest(REQUEST_BODY, HttpOpener.Method.TRACE, (o, u) -> {
-            o.setMethod(HttpOpener.Method.TRACE);
-            o.setUrl(u);
-        });
+        shouldPerformRequest(
+                REQUEST_BODY,
+                HttpOpener.Method.TRACE,
+                (o, u) -> {
+                    o.setMethod(HttpOpener.Method.TRACE);
+                    o.setUrl(u);
+                });
     }
 
     @Test
     public void shouldPerformGetRequestWithAcceptParameter() throws IOException {
-        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> {
-            o.setAccept(TEST_STRING);
-        }, "Accept");
+        shouldPerformRequest(
+                TEST_URL,
+                HttpOpener.Method.GET,
+                (o, u) -> {
+                    o.setAccept(TEST_STRING);
+                },
+                "Accept");
     }
 
     @Test
     public void shouldPerformGetRequestWithSingleValuedHeaderParameter() throws IOException {
-        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> {
-            o.setHeader("x-api-key: " + TEST_STRING);
-        }, "x-api-key");
+        shouldPerformRequest(
+                TEST_URL,
+                HttpOpener.Method.GET,
+                (o, u) -> {
+                    o.setHeader("x-api-key: " + TEST_STRING);
+                },
+                "x-api-key");
     }
 
     @Test
     public void shouldPerformGetRequestWithMultiValuedHeaderParameter() throws IOException {
-        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> {
-            o.setHeader("x-api-key: " + TEST_STRING + "\nx-other-header: " + TEST_STRING);
-        }, "x-api-key", "x-other-header");
+        shouldPerformRequest(
+                TEST_URL,
+                HttpOpener.Method.GET,
+                (o, u) -> {
+                    o.setHeader("x-api-key: " + TEST_STRING + "\nx-other-header: " + TEST_STRING);
+                },
+                "x-api-key",
+                "x-other-header");
     }
 
     @Test
     public void shouldPerformGetRequestWithMultipledHeaderParameters() throws IOException {
-        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> {
-            o.setHeader("x-api-key: " + TEST_STRING);
-            o.setHeader("x-other-header: " + TEST_STRING);
-        }, "x-api-key", "x-other-header");
+        shouldPerformRequest(
+                TEST_URL,
+                HttpOpener.Method.GET,
+                (o, u) -> {
+                    o.setHeader("x-api-key: " + TEST_STRING);
+                    o.setHeader("x-other-header: " + TEST_STRING);
+                },
+                "x-api-key",
+                "x-other-header");
     }
 
     @Test
     public void shouldPerformPostRequestWithContentTypeParameter() throws IOException {
-        shouldPerformRequest(REQUEST_BODY, HttpOpener.Method.POST, (o, u) -> {
-            o.setMethod(HttpOpener.Method.POST);
-            o.setUrl(u);
-            o.setContentType(TEST_STRING);
-        }, "Content-Type");
+        shouldPerformRequest(
+                REQUEST_BODY,
+                HttpOpener.Method.POST,
+                (o, u) -> {
+                    o.setMethod(HttpOpener.Method.POST);
+                    o.setUrl(u);
+                    o.setContentType(TEST_STRING);
+                },
+                "Content-Type");
     }
 
-    private void shouldPerformPostRequestWithCharsetParameter(final String expectedMessage) throws IOException {
+    private void shouldPerformPostRequestWithCharsetParameter(final String expectedMessage)
+            throws IOException {
         final String charset = "ISO-8859-1";
         final String header = "Accept-Charset";
         final StringValuePattern value = WireMock.equalTo(charset);
 
         String actualMessage;
         try {
-            shouldPerformRequest(REQUEST_BODY, HttpOpener.Method.POST, (o, u) -> {
-                o.setMethod(HttpOpener.Method.POST);
-                o.setUrl(u);
-                o.setAcceptCharset(charset);
-            }, s -> s.withHeader(header, value), q -> q.withHeader(header, value), expectedMessage != null ?
-                r -> r.withHeader(HttpOpener.CONTENT_TYPE_HEADER, "text/plain; charset=" + charset) : null);
+            shouldPerformRequest(
+                    REQUEST_BODY,
+                    HttpOpener.Method.POST,
+                    (o, u) -> {
+                        o.setMethod(HttpOpener.Method.POST);
+                        o.setUrl(u);
+                        o.setAcceptCharset(charset);
+                    },
+                    s -> s.withHeader(header, value),
+                    q -> q.withHeader(header, value),
+                    expectedMessage != null
+                            ? r ->
+                                    r.withHeader(
+                                            HttpOpener.CONTENT_TYPE_HEADER,
+                                            "text/plain; charset=" + charset)
+                            : null);
 
             actualMessage = null;
-        }
-        catch (final ComparisonFailure e) {
+        } catch (final ComparisonFailure e) {
             actualMessage = e.getMessage();
         }
 
@@ -263,52 +330,111 @@ public final class HttpOpenerTest {
     }
 
     @Test
-    public void shouldPerformPostRequestWithCharsetParameterAndContentTypeResponseHeader() throws IOException {
-        shouldPerformPostRequestWithCharsetParameter("expected:<response b[ö]dy> but was:<response b[Ã¶]dy>");
+    public void shouldPerformPostRequestWithCharsetParameterAndContentTypeResponseHeader()
+            throws IOException {
+        shouldPerformPostRequestWithCharsetParameter(
+                "expected:<response b[ö]dy> but was:<response b[Ã¶]dy>");
     }
 
     @Test
     public void shouldPerformGetRequestWithErrorResponse() throws IOException {
-        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> { },
-                null, null, WireMock.badRequest().withBody(RESPONSE_BODY), "ERROR: " + RESPONSE_BODY);
+        shouldPerformRequest(
+                TEST_URL,
+                HttpOpener.Method.GET,
+                (o, u) -> {},
+                null,
+                null,
+                WireMock.badRequest().withBody(RESPONSE_BODY),
+                "ERROR: " + RESPONSE_BODY);
     }
 
     @Test
-    public void shouldPerformGetRequestWithErrorResponseAndErrorPrefixParameter() throws IOException {
-        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> o.setErrorPrefix(TEST_STRING),
-                null, null, WireMock.badRequest().withBody(RESPONSE_BODY), TEST_STRING + RESPONSE_BODY);
+    public void shouldPerformGetRequestWithErrorResponseAndErrorPrefixParameter()
+            throws IOException {
+        shouldPerformRequest(
+                TEST_URL,
+                HttpOpener.Method.GET,
+                (o, u) -> o.setErrorPrefix(TEST_STRING),
+                null,
+                null,
+                WireMock.badRequest().withBody(RESPONSE_BODY),
+                TEST_STRING + RESPONSE_BODY);
     }
 
     @Test
-    public void shouldPerformGetRequestWithErrorResponseAndWithoutErrorPrefixParameter() throws IOException {
-        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> o.setErrorPrefix(null),
-                null, null, WireMock.badRequest().withBody(RESPONSE_BODY), RESPONSE_BODY);
+    public void shouldPerformGetRequestWithErrorResponseAndWithoutErrorPrefixParameter()
+            throws IOException {
+        shouldPerformRequest(
+                TEST_URL,
+                HttpOpener.Method.GET,
+                (o, u) -> o.setErrorPrefix(null),
+                null,
+                null,
+                WireMock.badRequest().withBody(RESPONSE_BODY),
+                RESPONSE_BODY);
     }
 
     @Test
     public void shouldPerformGetRequestWithGzippedContentEncoding() throws IOException {
-        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> o.setAcceptEncoding("gzip"),
-                null, null, WireMock.ok().withBody(GZIPPED_RESPONSE_BODY).withHeader(HttpOpener.CONTENT_ENCODING_HEADER, "gzip"), RESPONSE_BODY);
+        shouldPerformRequest(
+                TEST_URL,
+                HttpOpener.Method.GET,
+                (o, u) -> o.setAcceptEncoding("gzip"),
+                null,
+                null,
+                WireMock.ok()
+                        .withBody(GZIPPED_RESPONSE_BODY)
+                        .withHeader(HttpOpener.CONTENT_ENCODING_HEADER, "gzip"),
+                RESPONSE_BODY);
     }
 
-    private void shouldPerformRequest(final String input, final HttpOpener.Method method, final BiConsumer<HttpOpener, String> consumer, final String... headers) throws IOException {
-        shouldPerformRequest(input, method, consumer,
+    private void shouldPerformRequest(
+            final String input,
+            final HttpOpener.Method method,
+            final BiConsumer<HttpOpener, String> consumer,
+            final String... headers)
+            throws IOException {
+        shouldPerformRequest(
+                input,
+                method,
+                consumer,
                 s -> Arrays.stream(headers).forEach(h -> s.withHeader(h, TEST_VALUE)),
-                q -> Arrays.stream(headers).forEach(h -> q.withHeader(h, TEST_VALUE)), null);
+                q -> Arrays.stream(headers).forEach(h -> q.withHeader(h, TEST_VALUE)),
+                null);
     }
 
-    private void shouldPerformRequest(final String input, final HttpOpener.Method method, final BiConsumer<HttpOpener, String> consumer, final Consumer<MappingBuilder> stubConsumer, final Consumer<RequestPatternBuilder> requestConsumer, final Consumer<ResponseDefinitionBuilder> responseConsumer) throws IOException { // checkstyle-disable-line ParameterNumber
+    private void shouldPerformRequest(
+            final String input,
+            final HttpOpener.Method method,
+            final BiConsumer<HttpOpener, String> consumer,
+            final Consumer<MappingBuilder> stubConsumer,
+            final Consumer<RequestPatternBuilder> requestConsumer,
+            final Consumer<ResponseDefinitionBuilder> responseConsumer)
+            throws IOException { // checkstyle-disable-line ParameterNumber
         final ResponseDefinitionBuilder response = WireMock.ok().withBody(RESPONSE_BODY);
         if (responseConsumer != null) {
             responseConsumer.accept(response);
         }
 
-        shouldPerformRequest(input, method,
-                consumer, stubConsumer, requestConsumer,
-                response, method.getResponseHasBody() ? RESPONSE_BODY : "");
+        shouldPerformRequest(
+                input,
+                method,
+                consumer,
+                stubConsumer,
+                requestConsumer,
+                response,
+                method.getResponseHasBody() ? RESPONSE_BODY : "");
     }
 
-    private void shouldPerformRequest(final String input, final HttpOpener.Method method, final BiConsumer<HttpOpener, String> consumer, final Consumer<MappingBuilder> stubConsumer, final Consumer<RequestPatternBuilder> requestConsumer, final ResponseDefinitionBuilder response, final String responseBody) throws IOException { // checkstyle-disable-line ParameterNumber
+    private void shouldPerformRequest(
+            final String input,
+            final HttpOpener.Method method,
+            final BiConsumer<HttpOpener, String> consumer,
+            final Consumer<MappingBuilder> stubConsumer,
+            final Consumer<RequestPatternBuilder> requestConsumer,
+            final ResponseDefinitionBuilder response,
+            final String responseBody)
+            throws IOException { // checkstyle-disable-line ParameterNumber
         final String baseUrl = wireMockRule.baseUrl();
         final String url = String.format(TEST_URL, baseUrl);
 
@@ -324,24 +450,31 @@ public final class HttpOpenerTest {
             stubConsumer.accept(stub);
         }
 
-        final RequestPatternBuilder request = new RequestPatternBuilder(RequestMethod.fromString(methodName), urlPattern)
-            .withRequestBody(method.getRequestHasBody() ? WireMock.equalTo(REQUEST_BODY) : WireMock.absent());
+        final RequestPatternBuilder request =
+                new RequestPatternBuilder(RequestMethod.fromString(methodName), urlPattern)
+                        .withRequestBody(
+                                method.getRequestHasBody()
+                                        ? WireMock.equalTo(REQUEST_BODY)
+                                        : WireMock.absent());
         if (requestConsumer != null) {
             requestConsumer.accept(request);
         }
 
         WireMock.stubFor(stub);
 
-        TestHelpers.assertReader(receiver, () -> {
-            opener.process(String.format(input, baseUrl));
+        TestHelpers.assertReader(
+                receiver,
+                () -> {
+                    opener.process(String.format(input, baseUrl));
 
-            // use the opener a second time in a workflow:
-            opener.process(String.format(input, baseUrl));
+                    // use the opener a second time in a workflow:
+                    opener.process(String.format(input, baseUrl));
 
-            opener.closeStream();
-        }, responseBody, responseBody);
+                    opener.closeStream();
+                },
+                responseBody,
+                responseBody);
 
         WireMock.verify(request);
     }
-
 }

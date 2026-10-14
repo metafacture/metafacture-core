@@ -16,16 +16,15 @@
 
 package org.metafacture.mangling;
 
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 /**
- * Tracks the <i>path</i> of the current entity. The entity path consists of the
- * names of all parent entities of the current entity separated by a separator
- * string. For example, the following sequence of events yields the path
- * <i>granny.mommy.me</i>:
+ * Tracks the <i>path</i> of the current entity. The entity path consists of the names of all parent
+ * entities of the current entity separated by a separator string. For example, the following
+ * sequence of events yields the path <i>granny.mommy.me</i>:
+ *
  * <pre>{@literal
  * start-record "1"
  * start-entity "granny"
@@ -47,11 +46,8 @@ public class EntityPathTracker extends DefaultStreamReceiver {
 
     private String entitySeparator = DEFAULT_ENTITY_SEPARATOR;
 
-    /**
-     * Creates an instance of {@link EntityPathTracker}.
-     */
-    public EntityPathTracker() {
-    }
+    /** Creates an instance of {@link EntityPathTracker}. */
+    public EntityPathTracker() {}
 
     /**
      * Returns the current entity path.
@@ -65,11 +61,10 @@ public class EntityPathTracker extends DefaultStreamReceiver {
     /**
      * Returns the current entity path with the given literal name appended.
      *
-     * @param literalName the literal name to append to the current entity path.
-     *                    Must not be null.
+     * @param literalName the literal name to append to the current entity path. Must not be null.
      * @return the current entity path with the literal name appended. The {@link
-     * #getEntitySeparator()} is used to separate both unless no entity was
-     * received yet in which case only the literal name is returned.
+     *     #getEntitySeparator()} is used to separate both unless no entity was received yet in
+     *     which case only the literal name is returned.
      */
     public String getCurrentPathWith(final String literalName) {
         if (entityStack.size() == 0) {
@@ -97,14 +92,13 @@ public class EntityPathTracker extends DefaultStreamReceiver {
     }
 
     /**
-     * Sets the separator between entity names in the path. The default separator
-     * is {@value DEFAULT_ENTITY_SEPARATOR}.
+     * Sets the separator between entity names in the path. The default separator is {@value
+     * DEFAULT_ENTITY_SEPARATOR}.
      *
      * <p>The separator must not be changed while processing a stream.
      *
-     * @param entitySeparator the new entity separator. Can be empty to join
-     *                        entity names without any separator. Multi-character
-     *                        separators are also supported. Must not be null.
+     * @param entitySeparator the new entity separator. Can be empty to join entity names without
+     *     any separator. Multi-character separators are also supported. Must not be null.
      */
     public void setEntitySeparator(final String entitySeparator) {
         this.entitySeparator = entitySeparator;
@@ -163,5 +157,4 @@ public class EntityPathTracker extends DefaultStreamReceiver {
         }
         currentPath.setLength(oldPathLength - lastEntityLength);
     }
-
 }

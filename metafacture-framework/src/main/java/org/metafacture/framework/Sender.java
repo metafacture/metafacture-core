@@ -22,11 +22,8 @@ import org.metafacture.framework.helpers.DefaultSender;
  * Interface for objects that can be connected to a downstream module (receiver).
  *
  * @param <T> receiver base type of the downstream module
- *
  * @see DefaultSender
- *
  * @author Christoph Böhme
- *
  */
 public interface Sender<T extends Receiver> extends LifeCycle {
 
@@ -38,5 +35,4 @@ public interface Sender<T extends Receiver> extends LifeCycle {
      * @return reference to the downstream receiver to enable method chaining
      */
     <R extends T> R setReceiver(R receiver);
-
 }

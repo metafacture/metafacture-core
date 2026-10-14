@@ -16,12 +16,11 @@
 
 package org.metafacture.formeta;
 
-import org.metafacture.formeta.formatter.FormatterStyle;
-import org.metafacture.framework.ObjectReceiver;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.formeta.formatter.FormatterStyle;
+import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -30,7 +29,6 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link FormetaEncoder}.
  *
  * @author Christoph Böhme
- *
  */
 public final class FormetaEncoderTest {
 
@@ -38,25 +36,24 @@ public final class FormetaEncoderTest {
             "1{lit1:value 1,' ent1'{lit2:value \\{x\\},lit\\\\3:'value 2 '}lit4:value \\'3\\'}";
 
     private static final String VERBOSE_RECORD =
-            "1{ lit1: 'value 1', ' ent1'{ lit2: 'value {x}', 'lit\\\\3': 'value 2 ' }, lit4: 'value \\'3\\'' }";
+            "1{ lit1: 'value 1', ' ent1'{ lit2: 'value {x}', 'lit\\\\3': 'value 2 ' }, lit4: 'value"
+                    + " \\'3\\'' }";
 
     private static final String MULTILINE_RECORD =
-            "'1' {\n" +
-            "\t'lit1': 'value 1',\n" +
-            "\t' ent1' {\n" +
-            "\t\t'lit2': 'value {x}',\n" +
-            "\t\t'lit\\\\3': 'value 2 '\n" +
-            "\t},\n" +
-            "\t'lit4': 'value \\'3\\''\n" +
-            "}";
+            "'1' {\n"
+                    + "\t'lit1': 'value 1',\n"
+                    + "\t' ent1' {\n"
+                    + "\t\t'lit2': 'value {x}',\n"
+                    + "\t\t'lit\\\\3': 'value 2 '\n"
+                    + "\t},\n"
+                    + "\t'lit4': 'value \\'3\\''\n"
+                    + "}";
 
-    @Mock
-    private ObjectReceiver<String> receiver;
+    @Mock private ObjectReceiver<String> receiver;
 
     private FormetaEncoder encoder;
 
-    public FormetaEncoderTest() {
-    }
+    public FormetaEncoderTest() {}
 
     @Before
     public void setup() {
@@ -120,5 +117,4 @@ public final class FormetaEncoderTest {
         encoder.literal("lit4", "value '3'");
         encoder.endRecord();
     }
-
 }

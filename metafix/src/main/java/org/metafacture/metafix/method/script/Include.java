@@ -16,29 +16,29 @@
 
 package org.metafacture.metafix.method.script;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-
 /**
- * Includes a Fix file and executes it as if its statements were written in
- * place of the function call.
+ * Includes a Fix file and executes it as if its statements were written in place of the function
+ * call.
  */
 @FixCommand("include")
 public class Include implements FixFunction {
 
-    /**
-     * Creates an instance of {@link Include}.
-     */
-    public Include() {
-    }
+    /** Creates an instance of {@link Include}. */
+    public Include() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final String includeFile = params.get(0);
 
         if (!Metafix.isFixFile(includeFile)) {
@@ -50,5 +50,4 @@ public class Include implements FixFunction {
 
         metafix.getRecordTransformer(includePath).transform(record, options);
     }
-
 }

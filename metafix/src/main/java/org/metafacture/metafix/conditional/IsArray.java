@@ -16,30 +16,27 @@
 
 package org.metafacture.metafix.conditional;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixPredicate;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Executes the functions if/unless the field value is an array.
- */
+/** Executes the functions if/unless the field value is an array. */
 @FixCommand("is_array")
 public class IsArray implements FixPredicate {
 
-    /**
-     * Creates an instance of {@link IsArray}.
-     */
-    public IsArray() {
-    }
+    /** Creates an instance of {@link IsArray}. */
+    public IsArray() {}
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public boolean test(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         return testConditional(record, params, Value::isArray);
     }
-
 }

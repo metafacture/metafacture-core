@@ -16,11 +16,10 @@
 
 package org.metafacture.biblio.marc21;
 
-import org.metafacture.framework.StreamReceiver;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -32,7 +31,6 @@ import org.xml.sax.helpers.AttributesImpl;
  * Tests for class {@link MarcXmlHandler}.
  *
  * @author Christoph Böhme
- *
  */
 public final class MarcXmlHandlerTest {
 
@@ -44,11 +42,9 @@ public final class MarcXmlHandlerTest {
 
     private MarcXmlHandler marcXmlHandler;
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public MarcXmlHandlerTest() {
-    }
+    public MarcXmlHandlerTest() {}
 
     @Before
     public void setup() {
@@ -63,8 +59,7 @@ public final class MarcXmlHandlerTest {
     }
 
     @Test
-    public void shouldFindTagAttributeAtSecondPositionInControlFieldElement()
-            throws SAXException {
+    public void shouldFindTagAttributeAtSecondPositionInControlFieldElement() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
         attributes.addAttribute(NAMESPACE, "id", "id", "CDATA", "id-1");
         attributes.addAttribute(NAMESPACE, "tag", "tag", "CDATA", "001");
@@ -93,8 +88,7 @@ public final class MarcXmlHandlerTest {
     }
 
     @Test
-    public void issue233ShouldNotRemoveWhitespaceFromLeader()
-            throws SAXException {
+    public void issue233ShouldNotRemoveWhitespaceFromLeader() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
         final String leaderValue = "  cdefghijklmnopqrstuv  ";
 
@@ -106,8 +100,7 @@ public final class MarcXmlHandlerTest {
     }
 
     @Test
-    public void shouldRecognizeRecordsWithNamespace()
-            throws SAXException {
+    public void shouldRecognizeRecordsWithNamespace() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
         marcXmlHandler.startElement(NAMESPACE, RECORD, "", attributes);
@@ -121,8 +114,7 @@ public final class MarcXmlHandlerTest {
     }
 
     @Test
-    public void shouldNotRecognizeRecordsWithoutNamespace()
-            throws SAXException {
+    public void shouldNotRecognizeRecordsWithoutNamespace() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
         marcXmlHandler.startElement(null, RECORD, "", attributes);
@@ -132,8 +124,7 @@ public final class MarcXmlHandlerTest {
     }
 
     @Test
-    public void issue330ShouldOptionallyRecognizeRecordsWithoutNamespace()
-            throws SAXException {
+    public void issue330ShouldOptionallyRecognizeRecordsWithoutNamespace() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
         marcXmlHandler.setNamespace(null);
@@ -148,8 +139,7 @@ public final class MarcXmlHandlerTest {
     }
 
     @Test
-    public void shouldRecognizeRecordsWithoutNamespace()
-            throws SAXException {
+    public void shouldRecognizeRecordsWithoutNamespace() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
         marcXmlHandler.setNamespace("");
@@ -176,8 +166,7 @@ public final class MarcXmlHandlerTest {
     }
 
     @Test
-    public void issue569ShouldRecognizeRecordsWithAndWithoutNamespace()
-            throws SAXException {
+    public void issue569ShouldRecognizeRecordsWithAndWithoutNamespace() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
         marcXmlHandler.setIgnoreNamespace(true);
@@ -209,8 +198,7 @@ public final class MarcXmlHandlerTest {
     }
 
     @Test
-    public void issue569ShouldNotRecognizeRecordsWithAndWithoutNamespace()
-            throws SAXException {
+    public void issue569ShouldNotRecognizeRecordsWithAndWithoutNamespace() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
         marcXmlHandler.setIgnoreNamespace(false);
@@ -239,7 +227,8 @@ public final class MarcXmlHandlerTest {
     }
 
     @Test
-    public void issue336_shouldEncodeTypeAttributeAsLiteralWithConfiguredMarker() throws SAXException {
+    public void issue336_shouldEncodeTypeAttributeAsLiteralWithConfiguredMarker()
+            throws SAXException {
         final String marker = "~";
         marcXmlHandler.setAttributeMarker(marker);
 
@@ -256,5 +245,4 @@ public final class MarcXmlHandlerTest {
         ordered.verifyNoMoreInteractions();
         Mockito.verifyNoMoreInteractions(receiver);
     }
-
 }

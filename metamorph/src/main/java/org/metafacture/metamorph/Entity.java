@@ -16,18 +16,17 @@
 
 package org.metafacture.metamorph;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
 import org.metafacture.commons.StringUtil;
 import org.metafacture.flowcontrol.StreamBuffer;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.metamorph.api.NamedValueReceiver;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Supplier;
 
 /**
  * Corresponds to the <code>&lt;entity&gt;</code> tag.
@@ -55,8 +54,8 @@ public final class Entity extends AbstractFlushingCollect {
     }
 
     /**
-     * Creates an instance of {@link Entity} by a given {@link Supplier} of object
-     * type {@link StreamReceiver}.
+     * Creates an instance of {@link Entity} by a given {@link Supplier} of object type {@link
+     * StreamReceiver}.
      *
      * @param receiver the {@link Supplier} of object type {@link StreamReceiver}
      */
@@ -81,8 +80,7 @@ public final class Entity extends AbstractFlushingCollect {
         if (namedValueReceiver instanceof Entity) {
             final Entity parent = (Entity) namedValueReceiver;
             parent.receive(null, null, this, getRecordCount(), getEntityCount());
-        }
-        else {
+        } else {
             write(receiver.get());
         }
     }
@@ -100,12 +98,10 @@ public final class Entity extends AbstractFlushingCollect {
     protected void receive(final String name, final String value, final NamedValueSource source) {
         if (source == nameSource) {
             currentName = value;
-        }
-        else if (source instanceof Entity) {
+        } else if (source instanceof Entity) {
             final Entity child = (Entity) source;
             child.write(buffer);
-        }
-        else {
+        } else {
             buffer.literal(name, value);
         }
         sourcesLeft.remove(source);
@@ -128,5 +124,4 @@ public final class Entity extends AbstractFlushingCollect {
         sourceList.add(namedValueSource);
         sourcesLeft.add(namedValueSource);
     }
-
 }

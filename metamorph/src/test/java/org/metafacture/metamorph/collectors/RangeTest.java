@@ -16,11 +16,10 @@
 
 package org.metafacture.metamorph.collectors;
 
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.TestHelpers;
-
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -32,24 +31,22 @@ import org.mockito.junit.MockitoRule;
  */
 public final class RangeTest {
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public RangeTest() {
-    }
+    public RangeTest() {}
 
     @Test
     public void shouldOutputAllnNmbersbBetweenFirstAndLastInclusive() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <range name='range' flushWith='record'>" +
-                "    <data source='first' />" +
-                "    <data source='last' />" +
-                "  </range>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <range name='range' flushWith='record'>"
+                        + "    <data source='first' />"
+                        + "    <data source='last' />"
+                        + "  </range>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1789");
@@ -65,19 +62,19 @@ public final class RangeTest {
                     o.get().literal("range", "1793");
                     o.get().literal("range", "1794");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldOutputFirstIfLastEqualsFirst() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <range name='range' flushWith='record'>" +
-                "    <data source='first' />" +
-                "    <data source='last' />" +
-                "  </range>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <range name='range' flushWith='record'>"
+                        + "    <data source='first' />"
+                        + "    <data source='last' />"
+                        + "  </range>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1989");
@@ -88,19 +85,19 @@ public final class RangeTest {
                     o.get().startRecord("1");
                     o.get().literal("range", "1989");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldOutputMultipleRanges() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <range name='range' flushWith='record'>" +
-                "    <data source='first' />" +
-                "    <data source='last' />" +
-                "  </range>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <range name='range' flushWith='record'>"
+                        + "    <data source='first' />"
+                        + "    <data source='last' />"
+                        + "  </range>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1789");
@@ -122,19 +119,19 @@ public final class RangeTest {
                     o.get().literal("range", "1798");
                     o.get().literal("range", "1799");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldRemoveDuplicateNumbersFromOverlappingRanges() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <range name='range' flushWith='record'>" +
-                "    <data source='first' />" +
-                "    <data source='last' />" +
-                "  </range>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <range name='range' flushWith='record'>"
+                        + "    <data source='first' />"
+                        + "    <data source='last' />"
+                        + "  </range>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1789");
@@ -150,19 +147,19 @@ public final class RangeTest {
                     o.get().literal("range", "1791");
                     o.get().literal("range", "1792");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldUseUserdefinedIncrement() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <range name='range' increment='3' flushWith='record'>" +
-                "    <data source='first' />" +
-                "    <data source='last' />" +
-                "  </range>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <range name='range' increment='3' flushWith='record'>"
+                        + "    <data source='first' />"
+                        + "    <data source='last' />"
+                        + "  </range>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1789");
@@ -176,19 +173,19 @@ public final class RangeTest {
                     o.get().literal("range", "1795");
                     o.get().literal("range", "1798");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldAllowNegativeIncrements() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <range name='range' increment='-3' flushWith='record'>" +
-                "    <data source='first' />" +
-                "    <data source='last' />" +
-                "  </range>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <range name='range' increment='-3' flushWith='record'>"
+                        + "    <data source='first' />"
+                        + "    <data source='last' />"
+                        + "  </range>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1799");
@@ -202,8 +199,6 @@ public final class RangeTest {
                     o.get().literal("range", "1793");
                     o.get().literal("range", "1790");
                     o.get().endRecord();
-                }
-        );
+                });
     }
-
 }

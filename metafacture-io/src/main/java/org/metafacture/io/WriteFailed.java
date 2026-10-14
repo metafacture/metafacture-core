@@ -1,8 +1,6 @@
 package org.metafacture.io;
 
-/**
- * Error while writing to output stream.
- */
+/** Error while writing to output stream. */
 public class WriteFailed extends IoFailed {
 
     /**
@@ -27,10 +25,9 @@ public class WriteFailed extends IoFailed {
      * Creates an instance of {@link WriteFailed} by given message and cause.
      *
      * @param message the message
-     * @param cause   the {@link Throwable}
+     * @param cause the {@link Throwable}
      */
     public WriteFailed(final String message, final Throwable cause) {
         super(message, cause);
     }
-
 }

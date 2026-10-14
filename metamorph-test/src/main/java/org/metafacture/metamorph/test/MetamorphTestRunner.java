@@ -16,20 +16,18 @@
 
 package org.metafacture.metamorph.test;
 
+import java.net.URL;
+import java.util.List;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
-
-import java.net.URL;
-import java.util.List;
 
 /**
  * Executes test cases defined in a metamorph-test file.
  *
  * @author Christoph Böhme
  * @author Markus Michael Geipel
- *
  */
 final class MetamorphTestRunner extends ParentRunner<MetamorphTestCase> {
 
@@ -67,15 +65,12 @@ final class MetamorphTestRunner extends ParentRunner<MetamorphTestCase> {
     }
 
     @Override
-    protected void runChild(final MetamorphTestCase child,
-            final RunNotifier notifier) {
+    protected void runChild(final MetamorphTestCase child, final RunNotifier notifier) {
         final Description description = describeChild(child);
         if (child.isIgnore()) {
             notifier.fireTestIgnored(description);
-        }
-        else {
+        } else {
             runLeaf(child, description, notifier);
         }
     }
-
 }

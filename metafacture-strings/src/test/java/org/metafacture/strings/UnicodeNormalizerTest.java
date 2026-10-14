@@ -16,11 +16,10 @@
 
 package org.metafacture.strings;
 
-import org.metafacture.framework.ObjectReceiver;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -29,7 +28,6 @@ import org.mockito.MockitoAnnotations;
  * Tests class {@link UnicodeNormalizer}.
  *
  * @author Christoph Böhme
- *
  */
 public final class UnicodeNormalizerTest {
 
@@ -41,11 +39,9 @@ public final class UnicodeNormalizerTest {
 
     private UnicodeNormalizer normalizer;
 
-    @Mock
-    private ObjectReceiver<String> receiver;
+    @Mock private ObjectReceiver<String> receiver;
 
-    public UnicodeNormalizerTest() {
-    }
+    public UnicodeNormalizerTest() {}
 
     @Before
     public void setup() {
@@ -65,5 +61,4 @@ public final class UnicodeNormalizerTest {
 
         Mockito.verify(receiver).process(STRING_WITH_PRECOMPOSED_CHARS);
     }
-
 }

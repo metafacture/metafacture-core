@@ -26,9 +26,7 @@ import org.metafacture.framework.annotations.Out;
 /**
  * Benchmarks the execution time of the downstream modules.
  *
- * @param <T>
- *            object type.
- *
+ * @param <T> object type.
  * @author Christoph Böhme
  */
 @In(Object.class)
@@ -38,9 +36,7 @@ import org.metafacture.framework.annotations.Out;
 public final class ObjectTimer<T> extends TimerBase<ObjectReceiver<T>>
         implements ObjectPipe<T, ObjectReceiver<T>> {
 
-    /**
-     * Creates an instance of {@link ObjectTimer}.
-     */
+    /** Creates an instance of {@link ObjectTimer}. */
     public ObjectTimer() {
         this("");
     }
@@ -60,5 +56,4 @@ public final class ObjectTimer<T> extends TimerBase<ObjectReceiver<T>>
         getReceiver().process(obj);
         stopMeasurement();
     }
-
 }

@@ -16,11 +16,10 @@
 
 package org.metafacture.metamorph.functions;
 
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.TestHelpers;
-
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -33,26 +32,24 @@ import org.mockito.junit.MockitoRule;
  */
 public final class UniqueTest {
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public UniqueTest() {
-    }
+    public UniqueTest() {}
 
     @Test
     public void shouldAllowSelectingTheUniqueScope() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <data source='data' name='inRecord'>" +
-                "    <unique />" +
-                "  </data>" +
-                "  <data source='e.data' name='inEntity'>" +
-                "    <unique in='entity' />" +
-                "  </data>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <data source='data' name='inRecord'>"
+                        + "    <unique />"
+                        + "  </data>"
+                        + "  <data source='e.data' name='inEntity'>"
+                        + "    <unique in='entity' />"
+                        + "  </data>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("e");
@@ -90,64 +87,62 @@ public final class UniqueTest {
                     f.apply(2).literal("inEntity", "d");
                     o.get().literal("inRecord", "d");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldAllowSelectingTheUniquePart() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <group name='name'>" +
-                "    <group>" +
-                "      <data source='data1' />" +
-                "      <data source='data2' />" +
-                "      <postprocess>" +
-                "        <unique part='name' />" +
-                "      </postprocess>" +
-                "    </group>" +
-                "  </group>" +
-                "  <group name='value'>" +
-                "    <group>" +
-                "      <data source='data1' />" +
-                "      <data source='data2' />" +
-                "      <postprocess>" +
-                "        <unique part='value' />" +
-                "      </postprocess>" +
-                "    </group>" +
-                "  </group>" +
-                "  <group name='both'>" +
-                "    <group>" +
-                "      <data source='data1' />" +
-                "      <data source='data2' />" +
-                "      <postprocess>" +
-                "        <unique part='name-value' />" +
-                "      </postprocess>" +
-                "    </group>" +
-                "  </group>" +
-                "</rules>",
-            i -> {
-                i.startRecord("1");
-                i.literal("data1", "d1");
-                i.literal("data1", "d1");
-                i.literal("data1", "d2");
-                i.literal("data1", "d2");
-                i.literal("data2", "d2");
-                i.literal("data2", "d2");
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().literal("name", "d1");
-                o.get().literal("value", "d1");
-                o.get().literal("both", "d1");
-                o.get().literal("value", "d2");
-                o.get().literal("both", "d2");
-                o.get().literal("name", "d2");
-                o.get().literal("both", "d2");
-                o.get().endRecord();
-            }
-        );
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <group name='name'>"
+                        + "    <group>"
+                        + "      <data source='data1' />"
+                        + "      <data source='data2' />"
+                        + "      <postprocess>"
+                        + "        <unique part='name' />"
+                        + "      </postprocess>"
+                        + "    </group>"
+                        + "  </group>"
+                        + "  <group name='value'>"
+                        + "    <group>"
+                        + "      <data source='data1' />"
+                        + "      <data source='data2' />"
+                        + "      <postprocess>"
+                        + "        <unique part='value' />"
+                        + "      </postprocess>"
+                        + "    </group>"
+                        + "  </group>"
+                        + "  <group name='both'>"
+                        + "    <group>"
+                        + "      <data source='data1' />"
+                        + "      <data source='data2' />"
+                        + "      <postprocess>"
+                        + "        <unique part='name-value' />"
+                        + "      </postprocess>"
+                        + "    </group>"
+                        + "  </group>"
+                        + "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data1", "d1");
+                    i.literal("data1", "d1");
+                    i.literal("data1", "d2");
+                    i.literal("data1", "d2");
+                    i.literal("data2", "d2");
+                    i.literal("data2", "d2");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("name", "d1");
+                    o.get().literal("value", "d1");
+                    o.get().literal("both", "d1");
+                    o.get().literal("value", "d2");
+                    o.get().literal("both", "d2");
+                    o.get().literal("name", "d2");
+                    o.get().literal("both", "d2");
+                    o.get().endRecord();
+                });
     }
-
 }

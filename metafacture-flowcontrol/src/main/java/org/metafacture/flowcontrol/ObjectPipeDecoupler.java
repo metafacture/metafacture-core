@@ -16,6 +16,8 @@
 
 package org.metafacture.flowcontrol;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.ObjectPipe;
@@ -24,14 +26,10 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
 /**
  * Creates a new thread in which subsequent flow elements run.
  *
  * @param <T> Object type
- *
  * @author Markus Micheal Geipel
  * @author Pascal Christoph (dr0i)
  */
@@ -50,8 +48,8 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
     private boolean debug;
 
     /**
-     * Creates an instance of {@link ObjectPipeDecoupler} by setting a default
-     * capacity of {@value #DEFAULT_CAPACITY}.
+     * Creates an instance of {@link ObjectPipeDecoupler} by setting a default capacity of {@value
+     * #DEFAULT_CAPACITY}.
      */
     public ObjectPipeDecoupler() {
         queue = new LinkedBlockingQueue<>(DEFAULT_CAPACITY);
@@ -95,8 +93,7 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
             if (debug) {
                 LOG.info("Current buffer size: {}", queue.size());
             }
-        }
-        catch (final InterruptedException e) {
+        } catch (final InterruptedException e) {
             Thread.currentThread().interrupt();
         }
     }
@@ -109,7 +106,8 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
     @Override
     public <R extends ObjectReceiver<T>> R setReceiver(final R newReceiver) {
         if (null != thread) {
-            throw new IllegalStateException("Receiver cannot be changed while processing thread is running.");
+            throw new IllegalStateException(
+                    "Receiver cannot be changed while processing thread is running.");
         }
 
         receiver = newReceiver;
@@ -120,8 +118,7 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
     public void resetStream() {
         try {
             queue.put(Feeder.BLUE_PILL);
-        }
-        catch (final InterruptedException e) {
+        } catch (final InterruptedException e) {
             Thread.currentThread().interrupt();
         }
     }
@@ -131,8 +128,7 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
         try {
             queue.put(Feeder.RED_PILL);
             thread.join();
-        }
-        catch (final InterruptedException e) {
+        } catch (final InterruptedException e) {
             Thread.currentThread().interrupt();
         }
         thread = null;
@@ -172,12 +168,10 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
                     }
                     receiver.process((T) object);
                 }
-            }
-            catch (final InterruptedException e) {
+            } catch (final InterruptedException e) {
                 Thread.currentThread().interrupt();
                 return;
             }
         }
     }
-
 }

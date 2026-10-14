@@ -19,13 +19,10 @@ package org.metafacture.commons.tries;
 import java.util.List;
 
 /**
- * A wrapper for the {@link WildcardTrie} enabling the use of simple character
- * classes .
+ * A wrapper for the {@link WildcardTrie} enabling the use of simple character classes .
  *
  * @author Pascal Christoph
- *
- * @param <P>
- *            type of value stored
+ * @param <P> type of value stored
  */
 public class SimpleRegexTrie<P> {
 
@@ -35,15 +32,12 @@ public class SimpleRegexTrie<P> {
 
     private final WildcardTrie<P> trie = new WildcardTrie<P>();
 
-    /**
-     * Creates an instance of {@link SimpleRegexTrie}.
-     */
-    public SimpleRegexTrie() {
-    }
+    /** Creates an instance of {@link SimpleRegexTrie}. */
+    public SimpleRegexTrie() {}
 
     /**
-     * Enables the use of simple character classes like 'a[agt][ac]'. Calls the
-     * method of {@link WildcardTrie} for further treatment.
+     * Enables the use of simple character classes like 'a[agt][ac]'. Calls the method of {@link
+     * WildcardTrie} for further treatment.
      *
      * @param keys pattern of keys
      * @param value value to associate with the key pattern
@@ -58,8 +52,7 @@ public class SimpleRegexTrie<P> {
                 final String end = keys.substring(charClassEnd + 1, keys.length());
                 put(begin + middle + end, value);
             }
-        }
-        else {
+        } else {
             trie.put(keys, value);
         }
     }
@@ -74,5 +67,4 @@ public class SimpleRegexTrie<P> {
     public List<P> get(final String key) {
         return trie.get(key);
     }
-
 }

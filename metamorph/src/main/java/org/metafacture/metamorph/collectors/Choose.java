@@ -16,12 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.metafacture.commons.StringUtil;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Corresponds to the {@code <choose>} tag.
@@ -37,18 +36,19 @@ public final class Choose extends AbstractFlushingCollect {
     private final Map<NamedValueSource, Integer> priorities = new HashMap<>();
     private int nextPriority;
 
-    /**
-     * Creates an instance of {@link Choose}.
-     */
-    public Choose() {
-    }
+    /** Creates an instance of {@link Choose}. */
+    public Choose() {}
 
     @Override
     protected void emit() {
         if (!isEmpty()) {
-            getNamedValueReceiver().receive(StringUtil.fallback(getName(), name),
-                    StringUtil.fallback(getValue(), value), this, getRecordCount(),
-                    getEntityCount());
+            getNamedValueReceiver()
+                    .receive(
+                            StringUtil.fallback(getName(), name),
+                            StringUtil.fallback(getValue(), value),
+                            this,
+                            getRecordCount(),
+                            getEntityCount());
         }
     }
 
@@ -69,7 +69,8 @@ public final class Choose extends AbstractFlushingCollect {
     }
 
     @Override
-    protected void receive(final String newName, final String newValue, final NamedValueSource source) {
+    protected void receive(
+            final String newName, final String newValue, final NamedValueSource source) {
         final int sourcePriority = priorities.get(source).intValue();
         if (sourcePriority <= priority) {
             name = newName;
@@ -83,5 +84,4 @@ public final class Choose extends AbstractFlushingCollect {
         priorities.put(namedValueSource, Integer.valueOf(nextPriority));
         nextPriority += 1;
     }
-
 }

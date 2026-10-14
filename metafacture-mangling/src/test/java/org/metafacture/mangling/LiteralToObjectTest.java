@@ -16,11 +16,10 @@
 
 package org.metafacture.mangling;
 
-import org.metafacture.framework.ObjectReceiver;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -29,23 +28,18 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link LiteralToObject}.
  *
  * @author Christoph Böhme
- *
  */
 public final class LiteralToObjectTest {
 
     private static final String LITERAL_NAME = "extract_this";
-    private static final String LITERAL_VALUE1 =
-            "I've been extracted from a record";
-    private static final String LITERAL_VALUE2 =
-            "I've been extracted from a record, too";
+    private static final String LITERAL_VALUE1 = "I've been extracted from a record";
+    private static final String LITERAL_VALUE2 = "I've been extracted from a record, too";
 
-    @Mock
-    private ObjectReceiver<String> receiver;
+    @Mock private ObjectReceiver<String> receiver;
 
     private LiteralToObject literalToObject;
 
-    public LiteralToObjectTest() {
-    }
+    public LiteralToObjectTest() {}
 
     @Before
     public void setup() {
@@ -101,5 +95,4 @@ public final class LiteralToObjectTest {
         Mockito.verify(receiver).process(LITERAL_VALUE2);
         Mockito.verifyNoMoreInteractions(receiver);
     }
-
 }

@@ -16,6 +16,18 @@
 
 package org.metafacture.json;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.ValidationException;
+import org.everit.json.schema.loader.SchemaClient;
+import org.everit.json.schema.loader.SchemaLoader;
+import org.everit.json.schema.loader.SchemaLoader.SchemaLoaderBuilder;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -26,28 +38,16 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-import org.everit.json.schema.Schema;
-import org.everit.json.schema.ValidationException;
-import org.everit.json.schema.loader.SchemaClient;
-import org.everit.json.schema.loader.SchemaLoader;
-import org.everit.json.schema.loader.SchemaLoader.SchemaLoaderBuilder;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-
 /**
  * Validate JSON against a given schema, pass only valid input to the receiver.
  *
  * @author Fabian Steeg (fsteeg)
  */
-@Description("Validate JSON against a given schema, send only valid input to the receiver. Pass the schema location to validate against. " +
-        "Write valid and/or invalid output to locations specified with `writeValid` and `writeInvalid`. " +
-        "Set the JSON key for the record ID value with `idKey` (for logging output, defaults to `id`).")
+@Description(
+        "Validate JSON against a given schema, send only valid input to the receiver. Pass the"
+            + " schema location to validate against. Write valid and/or invalid output to locations"
+            + " specified with `writeValid` and `writeInvalid`. Set the JSON key for the record ID"
+            + " value with `idKey` (for logging output, defaults to `id`).")
 @In(String.class)
 @Out(String.class)
 @FluxCommand("validate-json")
@@ -94,8 +94,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
     public void process(final String json) {
         try {
             validate(json, new JSONObject(json) /* throws JSONException on syntax error */);
-        }
-        catch (final JSONException e) {
+        } catch (final JSONException e) {
             handleInvalid(json, null, e.getMessage());
         }
     }
@@ -106,8 +105,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
             getReceiver().process(json);
             ++success;
             write(json, writeValid);
-        }
-        catch (final ValidationException e) {
+        } catch (final ValidationException e) {
             handleInvalid(json, object, e.getAllMessages().toString());
         }
     }
@@ -127,14 +125,17 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
         SchemaLoaderBuilder schemaLoader = SchemaLoader.builder();
         try {
             final URL url = ResourceUtil.toURL(schemaUrl);
-            schemaLoader = schemaLoader.schemaJson(jsonFrom(url.openStream()))
-                    .resolutionScope(baseFor(url.toString()));
-        }
-        catch (final IOException e) {
+            schemaLoader =
+                    schemaLoader
+                            .schemaJson(jsonFrom(url.openStream()))
+                            .resolutionScope(baseFor(url.toString()));
+        } catch (final IOException e) {
             LOG.debug("Could not read as URL: {}, trying to load from class path", schemaUrl);
-            schemaLoader = schemaLoader.schemaClient(SchemaClient.classPathAwareClient())
-                    .schemaJson(jsonFrom(getClass().getResourceAsStream(schemaUrl)))
-                    .resolutionScope("classpath://" + baseFor(schemaUrl));
+            schemaLoader =
+                    schemaLoader
+                            .schemaClient(SchemaClient.classPathAwareClient())
+                            .schemaJson(jsonFrom(getClass().getResourceAsStream(schemaUrl)))
+                            .resolutionScope("classpath://" + baseFor(schemaUrl));
         }
         schema = schemaLoader.build().load().build();
     }
@@ -142,8 +143,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
     private JSONObject jsonFrom(final InputStream inputStream) {
         try {
             return new JSONObject(new JSONTokener(inputStream));
-        }
-        catch (final JSONException e) {
+        } catch (final JSONException e) {
             throw new MetafactureException(e.getMessage(), e);
         }
     }
@@ -155,15 +155,15 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
     private FileWriter fileWriter(final String fileLocation) {
         try {
             return new FileWriter(fileLocation);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e.getMessage(), e);
         }
     }
 
-    private void handleInvalid(final String json, final JSONObject object,
-            final String errorMessage) {
-        LOG.externalInfo("Invalid JSON: {} in {}", errorMessage, object != null ? object.opt(idKey) : json);
+    private void handleInvalid(
+            final String json, final JSONObject object, final String errorMessage) {
+        LOG.externalInfo(
+                "Invalid JSON: {} in {}", errorMessage, object != null ? object.opt(idKey) : json);
         ++fail;
         write(json, writeInvalid);
     }
@@ -173,8 +173,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
             try {
                 fileWriter.append(json);
                 fileWriter.append("\n");
-            }
-            catch (final IOException e) {
+            } catch (final IOException e) {
                 throw new MetafactureException(e.getMessage(), e);
             }
         }
@@ -184,11 +183,9 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
         if (fileWriter != null) {
             try {
                 fileWriter.close();
-            }
-            catch (final IOException e) {
+            } catch (final IOException e) {
                 throw new MetafactureException(e.getMessage(), e);
             }
         }
     }
-
 }

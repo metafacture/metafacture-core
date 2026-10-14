@@ -16,30 +16,25 @@
 
 package org.metafacture.metamorph.test.validators;
 
-import org.metafacture.javaintegration.EventList;
-
+import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.javaintegration.EventList;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.function.Consumer;
-
 /**
  * Tests for class {@link StreamValidator}.
  *
  * @author Christoph Böhme
- *
  */
 public final class StreamValidatorTest {
 
-    @Mock
-    private Consumer<String> errorHandler;
+    @Mock private Consumer<String> errorHandler;
 
-    public StreamValidatorTest() {
-    }
+    public StreamValidatorTest() {}
 
     @Before
     public void initMocks() {
@@ -61,5 +56,4 @@ public final class StreamValidatorTest {
 
         Mockito.verify(errorHandler, Mockito.atLeastOnce()).accept(ArgumentMatchers.any());
     }
-
 }

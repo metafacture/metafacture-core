@@ -16,9 +16,8 @@
 
 package org.metafacture.javaintegration.pojo;
 
-import org.metafacture.framework.StreamReceiver;
-
 import java.util.Collection;
+import org.metafacture.framework.StreamReceiver;
 
 /**
  * Decodes a {@link Collection} to a Metafacture event stream.
@@ -38,12 +37,12 @@ class CollectionTypeDecoder implements TypeDecoder {
     }
 
     @Override
-    public void decodeToStream(final StreamReceiver streamReceiver, final String name, final Object object) {
+    public void decodeToStream(
+            final StreamReceiver streamReceiver, final String name, final Object object) {
         final Collection<?> collection = (Collection<?>) object;
         for (final Object element : collection) {
             final TypeDecoder typeDecoder = typeDecoderFactury.create(element.getClass());
             typeDecoder.decodeToStream(streamReceiver, name, element);
         }
     }
-
 }

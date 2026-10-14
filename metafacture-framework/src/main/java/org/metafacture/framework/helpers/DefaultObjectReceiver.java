@@ -20,29 +20,21 @@ import org.metafacture.framework.ObjectPipe;
 import org.metafacture.framework.ObjectReceiver;
 
 /**
- * Empty implementation of {@link ObjectReceiver} which
- * simply does nothing. Do not use this class as a base class
- * for modules which are implement {@link ObjectPipe}; use
- * {@link DefaultObjectPipe} for that.
+ * Empty implementation of {@link ObjectReceiver} which simply does nothing. Do not use this class
+ * as a base class for modules which are implement {@link ObjectPipe}; use {@link DefaultObjectPipe}
+ * for that.
  *
  * @param <T> object type
- *
  * @see DefaultObjectPipe
- *
  * @author Christoph Böhme
- *
  */
 public class DefaultObjectReceiver<T> extends DefaultLifeCycle implements ObjectReceiver<T> {
 
-    /**
-     * Creates an instance of {@link DefaultObjectReceiver}.
-     */
-    public DefaultObjectReceiver() {
-    }
+    /** Creates an instance of {@link DefaultObjectReceiver}. */
+    public DefaultObjectReceiver() {}
 
     @Override
     public void process(final T obj) {
         // Default implementation does nothing
     }
-
 }

@@ -16,29 +16,26 @@
 
 package org.metafacture.metafix.conditional;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixPredicate;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * <i>Alias for {@link In}.</i>
- */
+/** <i>Alias for {@link In}.</i> */
 @FixCommand("is_contained_in")
 public class IsContainedIn implements FixPredicate {
 
-    /**
-     * Creates an instance of {@link IsContainedIn}.
-     */
-    public IsContainedIn() {
-    }
+    /** Creates an instance of {@link IsContainedIn}. */
+    public IsContainedIn() {}
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public boolean test(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         return new In().test(metafix, record, params, options);
     }
-
 }

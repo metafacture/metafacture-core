@@ -23,17 +23,13 @@ import org.metafacture.framework.StreamReceiver;
  * Emits full records.
  *
  * @author Christoph Böhme
- *
  */
 public final class FullRecordEmitter implements Emitter {
 
     private StreamReceiver receiver;
 
-    /**
-     * Creates an instance of {@link FullRecordEmitter}.
-     */
-    public FullRecordEmitter() {
-    }
+    /** Creates an instance of {@link FullRecordEmitter}. */
+    public FullRecordEmitter() {}
 
     @Override
     public void setReceiver(final StreamReceiver receiver) {
@@ -44,8 +40,7 @@ public final class FullRecordEmitter implements Emitter {
     public void startGroup(final String name, final int nestingLevel) {
         if (nestingLevel == 0) {
             receiver.startRecord(name);
-        }
-        else {
+        } else {
             receiver.startEntity(name);
         }
     }
@@ -54,8 +49,7 @@ public final class FullRecordEmitter implements Emitter {
     public void endGroup(final int nestingLevel) {
         if (nestingLevel == 0) {
             receiver.endRecord();
-        }
-        else {
+        } else {
             receiver.endEntity();
         }
     }
@@ -67,5 +61,4 @@ public final class FullRecordEmitter implements Emitter {
         }
         receiver.literal(name, value);
     }
-
 }

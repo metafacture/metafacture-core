@@ -16,32 +16,37 @@
 
 package org.metafacture.metafix.method.field;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Sums numbers in an array and replaces the field value with this number.
- */
+/** Sums numbers in an array and replaces the field value with this number. */
 @FixCommand("sum")
 public class Sum implements FixFunction {
 
-    /**
-     * Creates an instance of {@link Sum}.
-     */
-    public Sum() {
-    }
+    /** Creates an instance of {@link Sum}. */
+    public Sum() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-        record.transform(params.get(0), (m, c) -> m
-                .ifArray(a -> c.accept(new Value(a.stream().map(Value::asString).mapToInt(Integer::parseInt).sum())))
-        );
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
+        record.transform(
+                params.get(0),
+                (m, c) ->
+                        m.ifArray(
+                                a ->
+                                        c.accept(
+                                                new Value(
+                                                        a.stream()
+                                                                .map(Value::asString)
+                                                                .mapToInt(Integer::parseInt)
+                                                                .sum()))));
     }
-
 }

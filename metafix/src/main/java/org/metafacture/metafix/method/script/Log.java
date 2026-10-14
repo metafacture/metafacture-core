@@ -16,33 +16,30 @@
 
 package org.metafacture.metafix.method.script;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Sends a message to the logs.
- */
+/** Sends a message to the logs. */
 @FixCommand("log")
 public class Log implements FixFunction {
 
     private static final MetafactureLogger LOG = new MetafactureLogger(Log.class);
 
-    /**
-     * Creates an instance of {@link Log}.
-     */
-    public Log() {
-    }
+    /** Creates an instance of {@link Log}. */
+    public Log() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         // does not support Catmandu log level option FATAL, but does (incidentally) support TRACE
         LOG.externalLog(options.getOrDefault("level", "INFO"), params.get(0));
     }
-
 }

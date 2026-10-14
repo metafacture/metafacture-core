@@ -19,8 +19,8 @@ package org.metafacture.metafix;
 import org.metafacture.framework.MetafactureException;
 
 /**
- * Indicates dynamic (i.e., data-dependent) issues during Fix execution that
- * should be subject to {@link Metafix.Strictness strictness} handling.
+ * Indicates dynamic (i.e., data-dependent) issues during Fix execution that should be subject to
+ * {@link Metafix.Strictness strictness} handling.
  *
  * @see FixProcessException
  */
@@ -39,10 +39,9 @@ public class FixExecutionException extends MetafactureException {
      * Creates an instance of {@link FixExecutionException}.
      *
      * @param message the exception message
-     * @param cause   the exception cause
+     * @param cause the exception cause
      */
     public FixExecutionException(final String message, final Throwable cause) {
         super(message, cause);
     }
-
 }

@@ -16,17 +16,15 @@
 
 package org.metafacture.metamorph.maps;
 
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.TestHelpers;
-
+import java.util.function.Consumer;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-
-import java.util.function.Consumer;
 
 /**
  * Tests for class {@link FileMap}.
@@ -39,27 +37,28 @@ public final class FileMapTest {
     private static final String MAPS = "org/metafacture/metamorph/maps/";
 
     private static final String MORPH =
-        "<rules>" +
-        "  <data source='1'>" +
-        "    <%s='map1' />" +
-        "  </data>" +
-        "</rules>" +
-        "<maps>" +
-        "  <filemap name='map1' files='" + MAPS + "%s' %s/>" +
-        "</maps>";
+            "<rules>"
+                    + "  <data source='1'>"
+                    + "    <%s='map1' />"
+                    + "  </data>"
+                    + "</rules>"
+                    + "<maps>"
+                    + "  <filemap name='map1' files='"
+                    + MAPS
+                    + "%s' %s/>"
+                    + "</maps>";
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public FileMapTest() {
-    }
+    public FileMapTest() {}
 
     @Test
     public void shouldLookupValuesInFileBasedMap() {
-        TestHelpers.assertMorph(receiver, buildMorph("lookup in", ""),
+        TestHelpers.assertMorph(
+                receiver,
+                buildMorph("lookup in", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -71,13 +70,14 @@ public final class FileMapTest {
                     o.get().literal("1", "Germany");
                     o.get().literal("1", "Fiji");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldLookupValuesInFileBasedMapWithColumnOptions() {
-        TestHelpers.assertMorph(receiver, buildMorph("lookup in", "keyColumn=\"1\" valueColumn=\"0\" expectedColumns=\"2\""),
+        TestHelpers.assertMorph(
+                receiver,
+                buildMorph("lookup in", "keyColumn=\"1\" valueColumn=\"0\" expectedColumns=\"2\""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "Germany");
@@ -89,13 +89,14 @@ public final class FileMapTest {
                     o.get().literal("1", "gw");
                     o.get().literal("1", "fj");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldLookupValuesInFileBasedMapWithIgnorePattern() {
-        TestHelpers.assertMorph(receiver, buildMorph("lookup in", "ignorePattern=\"g.*\""),
+        TestHelpers.assertMorph(
+                receiver,
+                buildMorph("lookup in", "ignorePattern=\"g.*\""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -108,13 +109,14 @@ public final class FileMapTest {
                     o.get().literal("1", "Fiji");
                     o.get().literal("1", "HongKong");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldWhitelistValuesInFileBasedMap() {
-        TestHelpers.assertMorph(receiver, buildMorph("whitelist map", ""),
+        TestHelpers.assertMorph(
+                receiver,
+                buildMorph("whitelist map", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -127,13 +129,14 @@ public final class FileMapTest {
                     o.get().literal("1", "gw");
                     o.get().literal("1", "fj");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldReplaceValuesUsingFileBasedMap() {
-        TestHelpers.assertMorph(receiver, buildMorph("setreplace map", ""),
+        TestHelpers.assertMorph(
+                receiver,
+                buildMorph("setreplace map", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw-fj: 1:1");
@@ -145,13 +148,14 @@ public final class FileMapTest {
                     o.get().literal("1", "Germany-Fiji: 1:1");
                     o.get().literal("1", "Fiji-Germany: 0:0");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldReplaceCommaSeparatedValuesUsingFileBasedMapSetting() {
-        TestHelpers.assertMorph(receiver, buildMorph("setreplace map", "separator=\",\""),
+        TestHelpers.assertMorph(
+                receiver,
+                buildMorph("setreplace map", "separator=\",\""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -163,13 +167,14 @@ public final class FileMapTest {
                     o.get().literal("1", "gw");
                     o.get().literal("1", "Southern");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldReplaceEmptyValuesUsingFileBasedMapSetting() {
-        TestHelpers.assertMorph(receiver, buildMorph("setreplace map", "allowEmptyValues=\"true\""),
+        TestHelpers.assertMorph(
+                receiver,
+                buildMorph("setreplace map", "allowEmptyValues=\"true\""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "zz");
@@ -179,13 +184,14 @@ public final class FileMapTest {
                     o.get().startRecord("1");
                     o.get().literal("1", "");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldNotReplaceEmptyValuesUsingFileBasedMapSetting() {
-        TestHelpers.assertMorph(receiver, buildMorph("setreplace map", ""),
+        TestHelpers.assertMorph(
+                receiver,
+                buildMorph("setreplace map", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "zz");
@@ -195,13 +201,14 @@ public final class FileMapTest {
                     o.get().startRecord("1");
                     o.get().literal("1", "zz");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldLookupValuesInGzipFileMap() {
-        TestHelpers.assertMorph(receiver, buildMorph("lookup in", "file-map-test.txt.gz", ""),
+        TestHelpers.assertMorph(
+                receiver,
+                buildMorph("lookup in", "file-map-test.txt.gz", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -213,13 +220,14 @@ public final class FileMapTest {
                     o.get().literal("1", "Germany");
                     o.get().literal("1", "Fiji");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldNotLookupValuesInBlockedGzipFileMapWithoutDecompressConcatenated() {
-        TestHelpers.assertMorph(receiver, buildMorph("lookup in", "file-map-test.txt.bgzf", ""),
+        TestHelpers.assertMorph(
+                receiver,
+                buildMorph("lookup in", "file-map-test.txt.bgzf", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -229,13 +237,15 @@ public final class FileMapTest {
                 o -> {
                     o.get().startRecord("1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldLookupValuesInBlockedGzipFileMap() {
-        TestHelpers.assertMorph(receiver, buildMorph("lookup in", "file-map-test.txt.bgzf", "decompressConcatenated=\"true\""),
+        TestHelpers.assertMorph(
+                receiver,
+                buildMorph(
+                        "lookup in", "file-map-test.txt.bgzf", "decompressConcatenated=\"true\""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -247,125 +257,150 @@ public final class FileMapTest {
                     o.get().literal("1", "Germany");
                     o.get().literal("1", "Fiji");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldLoadFile() {
-        assertMap(379, i -> {
-            Assert.assertEquals("Puerto Rico", i.get("pr"));
-            Assert.assertNull(i.get("zz"));
-        });
+        assertMap(
+                379,
+                i -> {
+                    Assert.assertEquals("Puerto Rico", i.get("pr"));
+                    Assert.assertNull(i.get("zz"));
+                });
     }
 
     @Test
     public void shouldLoadFileWithEmptyValues() {
-        assertMap(380, i -> {
-            i.setAllowEmptyValues(true);
+        assertMap(
+                380,
+                i -> {
+                    i.setAllowEmptyValues(true);
 
-            Assert.assertEquals("Puerto Rico", i.get("pr"));
-            Assert.assertEquals("", i.get("zz"));
-        });
+                    Assert.assertEquals("Puerto Rico", i.get("pr"));
+                    Assert.assertEquals("", i.get("zz"));
+                });
     }
 
     @Test
     public void shouldLoadFileWithSeparator() {
-        assertMap(99, i -> {
-            i.setSeparator(" ");
+        assertMap(
+                99,
+                i -> {
+                    i.setSeparator(" ");
 
-            Assert.assertNull(i.get("pp\tPapua"));
-            Assert.assertEquals("Rico", i.get("pr\tPuerto"));
-        });
+                    Assert.assertNull(i.get("pp\tPapua"));
+                    Assert.assertEquals("Rico", i.get("pr\tPuerto"));
+                });
     }
 
     @Test
     public void shouldLoadFileWithKeyColumn() {
-        assertMap(21, i -> {
-            i.setSeparator(" ");
-            i.setKeyColumn(2);
+        assertMap(
+                21,
+                i -> {
+                    i.setSeparator(" ");
+                    i.setKeyColumn(2);
 
-            Assert.assertEquals("New", i.get("Guinea"));
-        });
+                    Assert.assertEquals("New", i.get("Guinea"));
+                });
     }
 
     @Test
     public void shouldLoadFileWithValueColumn() {
-        assertMap(24, i -> {
-            i.setSeparator(" ");
-            i.setValueColumn(2);
+        assertMap(
+                24,
+                i -> {
+                    i.setSeparator(" ");
+                    i.setValueColumn(2);
 
-            Assert.assertEquals("Guinea", i.get("pp\tPapua"));
-        });
+                    Assert.assertEquals("Guinea", i.get("pp\tPapua"));
+                });
     }
 
     @Test
     public void shouldLoadFileWithKeyAndValueColumn() {
-        assertMap(66, i -> {
-            i.setSeparator(" ");
-            i.setKeyColumn(1);
-            i.setValueColumn(0);
+        assertMap(
+                66,
+                i -> {
+                    i.setSeparator(" ");
+                    i.setKeyColumn(1);
+                    i.setValueColumn(0);
 
-            Assert.assertEquals("pr\tPuerto", i.get("Rico"));
-        });
+                    Assert.assertEquals("pr\tPuerto", i.get("Rico"));
+                });
     }
 
     @Test
     public void shouldLoadFileWithExpectedColumns() {
-        assertMap(24, i -> {
-            i.setSeparator(" ");
-            i.setExpectedColumns(3);
+        assertMap(
+                24,
+                i -> {
+                    i.setSeparator(" ");
+                    i.setExpectedColumns(3);
 
-            Assert.assertEquals("New", i.get("pp\tPapua"));
-        });
+                    Assert.assertEquals("New", i.get("pp\tPapua"));
+                });
     }
 
     @Test
     public void shouldLoadFileWithArbitraryExpectedColumns() {
-        assertMap(149, i -> {
-            i.setSeparator(" ");
-            i.setExpectedColumns(-1);
+        assertMap(
+                149,
+                i -> {
+                    i.setSeparator(" ");
+                    i.setExpectedColumns(-1);
 
-            Assert.assertEquals("New", i.get("pp\tPapua"));
-        });
+                    Assert.assertEquals("New", i.get("pp\tPapua"));
+                });
     }
 
     @Test
     public void shouldLoadFileWithIgnorePattern() {
-        assertMap(369, i -> {
-            i.setIgnorePattern(".*New.*");
+        assertMap(
+                369,
+                i -> {
+                    i.setIgnorePattern(".*New.*");
 
-            Assert.assertNull(i.get("pp"));
-            Assert.assertEquals("Puerto Rico", i.get("pr"));
-        });
+                    Assert.assertNull(i.get("pp"));
+                    Assert.assertEquals("Puerto Rico", i.get("pr"));
+                });
     }
 
     @Test
     public void shouldNotLoadFileWithOutOfRangeKeyColumn() {
-        assertMap(0, i -> {
-            i.setKeyColumn(2);
-        });
+        assertMap(
+                0,
+                i -> {
+                    i.setKeyColumn(2);
+                });
     }
 
     @Test
     public void shouldNotLoadFileWithOutOfRangeValueColumn() {
-        assertMap(0, i -> {
-            i.setValueColumn(2);
-        });
+        assertMap(
+                0,
+                i -> {
+                    i.setValueColumn(2);
+                });
     }
 
     @Test
     public void shouldNotLoadFileWithTooFewExpectedColumns() {
-        assertMap(0, i -> {
-            i.setExpectedColumns(1);
-        });
+        assertMap(
+                0,
+                i -> {
+                    i.setExpectedColumns(1);
+                });
     }
 
     @Test
     public void shouldNotLoadFileWithTooManyExpectedColumns() {
-        assertMap(0, i -> {
-            i.setExpectedColumns(99);
-        });
+        assertMap(
+                0,
+                i -> {
+                    i.setExpectedColumns(99);
+                });
     }
 
     private void assertMap(final int size, final Consumer<FileMap> consumer) {
@@ -383,5 +418,4 @@ public final class FileMapTest {
     private String buildMorph(final String data, final String map, final String options) {
         return String.format(MORPH, data, map, options);
     }
-
 }

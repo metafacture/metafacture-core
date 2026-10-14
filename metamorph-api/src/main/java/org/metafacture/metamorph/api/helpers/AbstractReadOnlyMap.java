@@ -21,9 +21,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Base class for maps which are read only. Allows access to the key set. It's
- * up to the extending class when overriding {@link #keySet()} to return an
- * {@link java.util.Collections#unmodifiableSet(Set)}.
+ * Base class for maps which are read only. Allows access to the key set. It's up to the extending
+ * class when overriding {@link #keySet()} to return an {@link
+ * java.util.Collections#unmodifiableSet(Set)}.
  *
  * @param <K> type of keys
  * @param <V> type of values
@@ -64,7 +64,6 @@ public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V> {
     @Override
     public final void putAll(final Map<? extends K, ? extends V> m) {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
@@ -73,8 +72,8 @@ public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V> {
     }
 
     /**
-     * It's up to the extending class to return an
-     * {@link java.util.Collections#unmodifiableSet(Set)} when overriding.
+     * It's up to the extending class to return an {@link
+     * java.util.Collections#unmodifiableSet(Set)} when overriding.
      */
     @Override
     public Set<K> keySet() {
@@ -90,5 +89,4 @@ public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V> {
     public final Set<java.util.Map.Entry<K, V>> entrySet() {
         throw new UnsupportedOperationException();
     }
-
 }

@@ -27,18 +27,19 @@ import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
  */
 public final class Group extends AbstractFlushingCollect {
 
-    /**
-     * Creates an instance of {@link Group}.
-     */
-    public Group() {
-    }
+    /** Creates an instance of {@link Group}. */
+    public Group() {}
 
     @Override
-    protected void receive(final String recName, final String recValue, final NamedValueSource source) {
-        getNamedValueReceiver().receive(
-                StringUtil.fallback(getName(), recName),
-                StringUtil.fallback(getValue(), recValue), this,
-                getRecordCount(), getEntityCount());
+    protected void receive(
+            final String recName, final String recValue, final NamedValueSource source) {
+        getNamedValueReceiver()
+                .receive(
+                        StringUtil.fallback(getName(), recName),
+                        StringUtil.fallback(getValue(), recValue),
+                        this,
+                        getRecordCount(),
+                        getEntityCount());
     }
 
     @Override
@@ -56,5 +57,4 @@ public final class Group extends AbstractFlushingCollect {
     protected void emit() {
         // Nothing to do
     }
-
 }

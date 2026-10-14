@@ -26,16 +26,13 @@ public final class SimpleTrie<P> {
 
     private final Node<P> root = new Node<>(null);
 
-    /**
-     * Creates an instance of {@link SimpleTrie}.
-     */
-    public SimpleTrie() {
-    }
+    /** Creates an instance of {@link SimpleTrie}. */
+    public SimpleTrie() {}
 
     /**
      * Adds a value for the key.
      *
-     * @param key   the name of the key
+     * @param key the name of the key
      * @param value the value
      */
     public void put(final String key, final P value) {
@@ -52,8 +49,7 @@ public final class SimpleTrie<P> {
         next = node.getNext(key.charAt(length - 1));
         if (next == null) {
             next = node.addNext(key.charAt(length - 1), value);
-        }
-        else {
+        } else {
             throw new IllegalStateException("Value '" + value + "' already in trie");
         }
     }
@@ -107,5 +103,4 @@ public final class SimpleTrie<P> {
             return links.get(key);
         }
     }
-
 }

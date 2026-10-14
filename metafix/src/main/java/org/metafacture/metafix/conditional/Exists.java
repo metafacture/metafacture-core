@@ -16,29 +16,26 @@
 
 package org.metafacture.metafix.conditional;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixPredicate;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Executes the functions if/unless the field exists.
- */
+/** Executes the functions if/unless the field exists. */
 @FixCommand("exists")
 public class Exists implements FixPredicate {
 
-    /**
-     * Creates an instance of {@link Exists}.
-     */
-    public Exists() {
-    }
+    /** Creates an instance of {@link Exists}. */
+    public Exists() {}
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public boolean test(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         return record.containsPath(params.get(0));
     }
-
 }

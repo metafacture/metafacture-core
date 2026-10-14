@@ -17,8 +17,8 @@
 package org.metafacture.javaintegration.pojo;
 
 /**
- * Sets a pojos's member, via setter method or field access.
- * Used by {@link ComplexTypeEncoder} only.
+ * Sets a pojos's member, via setter method or field access. Used by {@link ComplexTypeEncoder}
+ * only.
  *
  * @author Thomas Seidel
  */
@@ -29,5 +29,4 @@ interface ValueSetter {
     String getName();
 
     ValueType getValueType();
-
 }

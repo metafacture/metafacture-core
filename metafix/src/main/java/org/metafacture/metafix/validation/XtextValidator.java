@@ -1,8 +1,8 @@
 package org.metafacture.metafix.validation;
 
-import org.metafacture.framework.MetafactureLogger;
-import org.metafacture.metafix.FixParseException;
-
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.ISetup;
 import org.eclipse.xtext.XtextStandaloneSetup;
@@ -11,14 +11,10 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.Issue;
+import org.metafacture.framework.MetafactureLogger;
+import org.metafacture.metafix.FixParseException;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-/**
- * Validator for Xtext resources.
- */
+/** Validator for Xtext resources. */
 public class XtextValidator {
 
     private static final MetafactureLogger LOG = new MetafactureLogger(XtextValidator.class);
@@ -28,17 +24,29 @@ public class XtextValidator {
     }
 
     private static boolean validate(final XtextResource resource, final ISetup setup) {
-        final List<Issue> issues = resource.getResourceServiceProvider()
-            .getResourceValidator().validate(resource, CheckMode.ALL, CancelIndicator.NullImpl);
+        final List<Issue> issues =
+                resource.getResourceServiceProvider()
+                        .getResourceValidator()
+                        .validate(resource, CheckMode.ALL, CancelIndicator.NullImpl);
 
         final int count = issues.size();
 
         if (count > 0) {
-            LOG.externalWarn("The {} file '{}' has {} issue{}:",
-                    resourceType(setup), resource.getURI().toFileString(), count, count > 1 ? "s" : "");
+            LOG.externalWarn(
+                    "The {} file '{}' has {} issue{}:",
+                    resourceType(setup),
+                    resource.getURI().toFileString(),
+                    count,
+                    count > 1 ? "s" : "");
 
-            issues.forEach(i -> LOG.externalWarn("- {}: {} ({}:{})",
-                        i.getSeverity(), i.getMessage(), i.getLineNumber(), i.getColumn()));
+            issues.forEach(
+                    i ->
+                            LOG.externalWarn(
+                                    "- {}: {} ({}:{})",
+                                    i.getSeverity(),
+                                    i.getMessage(),
+                                    i.getLineNumber(),
+                                    i.getColumn()));
 
             return false;
         }
@@ -49,9 +57,8 @@ public class XtextValidator {
     /**
      * Validates the resource.
      *
-     * @param path  the path to the resource
+     * @param path the path to the resource
      * @param setup the resource setup
-     *
      * @return true if the resource is valid, otherwise false
      */
     public static boolean validate(final String path, final ISetup setup) {
@@ -64,23 +71,22 @@ public class XtextValidator {
 
         try {
             absolutePath = file.getCanonicalPath();
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             absolutePath = file.getAbsolutePath();
         }
 
-        return (XtextResource) setup.createInjectorAndDoEMFRegistration()
-            .getInstance(XtextResourceSet.class).getResource(URI.createFileURI(absolutePath), true);
+        return (XtextResource)
+                setup.createInjectorAndDoEMFRegistration()
+                        .getInstance(XtextResourceSet.class)
+                        .getResource(URI.createFileURI(absolutePath), true);
     }
 
     /**
      * Parses and validates the resource.
      *
-     * @param path  the path to the resource
+     * @param path the path to the resource
      * @param setup the resource setup
-     *
      * @return the resource
-     *
      * @throws FixParseException if the resource is invalid
      */
     public static XtextResource getValidatedResource(final String path, final ISetup setup) {
@@ -88,8 +94,7 @@ public class XtextValidator {
 
         if (validate(resource, setup)) {
             return resource;
-        }
-        else {
+        } else {
             throw new FixParseException("Invalid " + resourceType(setup) + " resource: " + path);
         }
     }
@@ -99,8 +104,7 @@ public class XtextValidator {
     }
 
     /**
-     * Validates the Xtext file. Exits with error code {@code 1} if validation
-     * fails.
+     * Validates the Xtext file. Exits with error code {@code 1} if validation fails.
      *
      * @param args the pathname of the Xtext file to validate
      */
@@ -109,7 +113,7 @@ public class XtextValidator {
             System.exit(validate(args[0], new XtextStandaloneSetup()) ? 0 : 1);
         }
 
-        throw new IllegalArgumentException(String.format("Usage: %s <xtext-file>", XtextValidator.class.getName()));
+        throw new IllegalArgumentException(
+                String.format("Usage: %s <xtext-file>", XtextValidator.class.getName()));
     }
-
 }

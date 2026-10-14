@@ -16,10 +16,9 @@
 
 package org.metafacture.metamorph;
 
+import java.util.List;
 import org.metafacture.commons.tries.SimpleRegexTrie;
 import org.metafacture.commons.tries.WildcardTrie;
-
-import java.util.List;
 
 /**
  * Implements {@link Registry} with a {@link WildcardTrie}.
@@ -31,18 +30,15 @@ final class WildcardRegistry<T> implements Registry<T> {
 
     private final SimpleRegexTrie<T> trie = new SimpleRegexTrie<T>();
 
-    WildcardRegistry() {
-    }
+    WildcardRegistry() {}
 
     @Override
     public void register(final String path, final T value) {
         trie.put(path, value);
-
     }
 
     @Override
     public List<T> get(final String path) {
         return trie.get(path);
     }
-
 }

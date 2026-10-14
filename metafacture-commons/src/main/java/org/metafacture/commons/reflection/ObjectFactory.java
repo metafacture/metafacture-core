@@ -25,8 +25,8 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
- * Provides instances of preregistered classes. New classes can be registered
- * during runtime. This class is not thread-safe.
+ * Provides instances of preregistered classes. New classes can be registered during runtime. This
+ * class is not thread-safe.
  *
  * @param <T> the type of objects created
  * @author Markus Michael Geipel
@@ -34,14 +34,10 @@ import java.util.Set;
  */
 public class ObjectFactory<T> {
 
-    private final Map<String, ConfigurableClass<? extends T>> classes =
-            new HashMap<>();
+    private final Map<String, ConfigurableClass<? extends T>> classes = new HashMap<>();
 
-    /**
-     * Creates an instance of {@link ObjectFactory}.
-     */
-    public ObjectFactory() {
-    }
+    /** Creates an instance of {@link ObjectFactory}. */
+    public ObjectFactory() {}
 
     /**
      * Loads classes from a map.
@@ -61,7 +57,7 @@ public class ObjectFactory<T> {
     /**
      * Registers a Class as a ConfigurableClass.
      *
-     * @param key         the key associcated with the Class
+     * @param key the key associcated with the Class
      * @param objectClass the Class
      */
     public final void registerClass(final String key, final Class<? extends T> objectClass) {
@@ -71,17 +67,18 @@ public class ObjectFactory<T> {
     /**
      * Registers a ConfigurableClass.
      *
-     * @param key         the key associcated with the ConfigurableClass
+     * @param key the key associcated with the ConfigurableClass
      * @param objectClass the ConfigurableClass
      */
-    public final void registerClass(final String key, final ConfigurableClass<? extends T> objectClass) {
+    public final void registerClass(
+            final String key, final ConfigurableClass<? extends T> objectClass) {
         classes.put(key, objectClass);
     }
 
     /**
      * Returns a new instance of a ConfigurableClass with no setters.
      *
-     * @param key             the name of the class
+     * @param key the name of the class
      * @param constructorArgs the args of the constructor
      * @return a new instance
      */
@@ -92,12 +89,13 @@ public class ObjectFactory<T> {
     /**
      * Returns a new instance of a ConfigurableClass.
      *
-     * @param key             the name of the class
-     * @param values          the Map of Strings of the setters
+     * @param key the name of the class
+     * @param values the Map of Strings of the setters
      * @param constructorArgs the args of the constructor
      * @return a new instance
      */
-    public final T newInstance(final String key, final Map<String, String> values, final Object... constructorArgs) {
+    public final T newInstance(
+            final String key, final Map<String, String> values, final Object... constructorArgs) {
         if (!classes.containsKey(key)) {
             throw new NoSuchElementException("no registered class for: " + key);
         }
@@ -133,5 +131,4 @@ public class ObjectFactory<T> {
     public final ConfigurableClass<? extends T> get(final String key) {
         return classes.get(key);
     }
-
 }

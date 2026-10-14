@@ -20,18 +20,17 @@ import org.metafacture.framework.MetafactureException;
 
 /**
  * @author Markus Michael Geipel
- *
  */
 public final class FluxParseException extends MetafactureException {
 
     private static final long serialVersionUID = -5728526458760884738L;
 
     /**
-     * Creates an instance of {@link FluxParseException} by a given message and the
-     * cause of the exception.
+     * Creates an instance of {@link FluxParseException} by a given message and the cause of the
+     * exception.
      *
      * @param message the message
-     * @param cause   the cause
+     * @param cause the cause
      */
     public FluxParseException(final String message, final Throwable cause) {
         super(message, cause);
@@ -45,5 +44,4 @@ public final class FluxParseException extends MetafactureException {
     public FluxParseException(final String message) {
         super(message);
     }
-
 }

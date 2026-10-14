@@ -1,21 +1,22 @@
 /*
-* Copyright 2024 hbz
-*
-* Licensed under the Apache License, Version 2.0 the "License";
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2024 hbz
+ *
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.metafacture.flowcontrol;
 
+import java.util.concurrent.TimeUnit;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -23,8 +24,6 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Lets the process sleep for a specific amount of time between objects.
@@ -46,15 +45,11 @@ public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<
     private TimeUnit timeUnit = DEFAULT_TIME_UNIT;
     private long sleepTime = DEFAULT_SLEEP_TIME;
 
-    /**
-     * Creates an instance of {@link ObjectSleeper}.
-    */
-    public ObjectSleeper() {
-    }
+    /** Creates an instance of {@link ObjectSleeper}. */
+    public ObjectSleeper() {}
 
     /**
-     * Sets the amount of time for the sleep phase (measured in {@link
-     * #setTimeUnit time unit}).
+     * Sets the amount of time for the sleep phase (measured in {@link #setTimeUnit time unit}).
      *
      * @param sleepTime the time to sleep
      */
@@ -64,8 +59,7 @@ public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<
     }
 
     /**
-     * Sets the amount of time for the sleep phase (measured in {@link
-     * #setTimeUnit time unit}).
+     * Sets the amount of time for the sleep phase (measured in {@link #setTimeUnit time unit}).
      *
      * @param sleepTime the time to sleep
      */
@@ -74,8 +68,7 @@ public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<
     }
 
     /**
-     * Gets the amount of time for the sleep phase (measured in {@link
-     * #setTimeUnit time unit}).
+     * Gets the amount of time for the sleep phase (measured in {@link #setTimeUnit time unit}).
      *
      * @return the time to sleep
      */
@@ -84,8 +77,8 @@ public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<
     }
 
     /**
-     * Sets the time unit for the sleep phase. See {@link TimeUnit available
-     * time units}, case-insensitive, trailing "s" optional.
+     * Sets the time unit for the sleep phase. See {@link TimeUnit available time units},
+     * case-insensitive, trailing "s" optional.
      *
      * @param timeUnit the time unit
      */
@@ -93,7 +86,8 @@ public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<
         // NOTE: Adds NANOSECONDS and DAYS over Catmandu's supported time units.
 
         final String timeUnitName = timeUnit.toUpperCase();
-        final String timeUnitSuffix = timeUnitName.endsWith(TIME_UNIT_SUFFIX) ? "" : TIME_UNIT_SUFFIX;
+        final String timeUnitSuffix =
+                timeUnitName.endsWith(TIME_UNIT_SUFFIX) ? "" : TIME_UNIT_SUFFIX;
 
         setTimeUnit(TimeUnit.valueOf(timeUnitName + timeUnitSuffix));
     }
@@ -116,14 +110,11 @@ public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<
         return timeUnit;
     }
 
-    /**
-     * Sleeps for the specified amount of time.
-     */
+    /** Sleeps for the specified amount of time. */
     public void sleep() {
         try {
             timeUnit.sleep(sleepTime);
-        }
-        catch (final InterruptedException e) {
+        } catch (final InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new MetafactureException(e.getMessage(), e);
         }
@@ -134,5 +125,4 @@ public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<
         sleep();
         getReceiver().process(obj);
     }
-
 }

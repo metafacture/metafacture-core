@@ -22,10 +22,8 @@ import org.metafacture.framework.StreamReceiver;
  * Decodes an object to a metafacture stream using a given name.
  *
  * @author Thomas Seidel
- *
  */
 interface TypeDecoder {
 
     void decodeToStream(StreamReceiver streamReceiver, String name, Object object);
-
 }

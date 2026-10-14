@@ -16,10 +16,9 @@
 
 package org.metafacture.strings;
 
-import org.metafacture.framework.ObjectReceiver;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -29,7 +28,6 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link LineSplitter}.
  *
  * @author Christoph Böhme
- *
  */
 public final class LineSplitterTest {
 
@@ -39,11 +37,9 @@ public final class LineSplitterTest {
 
     private LineSplitter lineSplitter;
 
-    @Mock
-    private ObjectReceiver<String> receiver;
+    @Mock private ObjectReceiver<String> receiver;
 
-    public LineSplitterTest() {
-    }
+    public LineSplitterTest() {}
 
     @Before
     public void setup() {
@@ -99,5 +95,4 @@ public final class LineSplitterTest {
         Mockito.verify(receiver).process(PART1);
         Mockito.verifyNoMoreInteractions(receiver);
     }
-
 }

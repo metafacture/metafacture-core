@@ -16,6 +16,7 @@
 
 package org.metafacture.javaintegration;
 
+import java.util.Map;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StandardEventNames;
 import org.metafacture.framework.StreamReceiver;
@@ -23,31 +24,29 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-import java.util.Map;
-
 /**
- * Emits a {@link Map} as a record with a literal for each entry in the map.
- * When receiving an empty map only a <i>start-record</i> and <i>end-record</i>
- * event is emitted.
- * <p>
- * If the map contains an entry whose key value matches the one set as
- * {@link #setIdKey(Object)}, this entry's value is used as the record ID.
- * <p>
- * The keys and values in the map can be of any type. They will be converted to
- * strings using their {@link Object#toString()} method. Neither key nor value
- * may be null.
- * <p>
- * The order in which the literals are emitted is unspecified.
- * <p>
- * For example, when receiving the following map with string keys and integer
- * values:
+ * Emits a {@link Map} as a record with a literal for each entry in the map. When receiving an empty
+ * map only a <i>start-record</i> and <i>end-record</i> event is emitted.
+ *
+ * <p>If the map contains an entry whose key value matches the one set as {@link #setIdKey(Object)},
+ * this entry's value is used as the record ID.
+ *
+ * <p>The keys and values in the map can be of any type. They will be converted to strings using
+ * their {@link Object#toString()} method. Neither key nor value may be null.
+ *
+ * <p>The order in which the literals are emitted is unspecified.
+ *
+ * <p>For example, when receiving the following map with string keys and integer values:
+ *
  * <pre>{@literal
  * final Map<String, Integer> map = new HashMap<>();
  * map.put("_id", 1);
  * map.put("lit-A", 2);
  * map.put("lit-B", 3);
  * }</pre>
+ *
  * Then this module will emit the following sequence of events:
+ *
  * <pre>{@literal
  * start-record "1"
  * literal "lit-A": 2
@@ -64,23 +63,19 @@ public final class MapToStream extends DefaultObjectPipe<Map<?, ?>, StreamReceiv
 
     private Object idKey = StandardEventNames.ID;
 
-    /**
-     * Creates an instance of {@link MapToStream}.
-     */
-    public MapToStream() {
-    }
+    /** Creates an instance of {@link MapToStream}. */
+    public MapToStream() {}
 
     /**
      * Sets the key of the map entry that is used for the record ID.
-     * <p>
-     * The default ID key is
-     * {@value org.metafacture.framework.StandardEventNames#ID}.
-     * <p>
-     * This parameter can be changed anytime during processing. The new value
-     * becomes effective with the next record being processed.
      *
-     * @param idKey the ID key. The object passed here is used in a call to
-     * {@link Map#get(Object)} to get the identifier value.
+     * <p>The default ID key is {@value org.metafacture.framework.StandardEventNames#ID}.
+     *
+     * <p>This parameter can be changed anytime during processing. The new value becomes effective
+     * with the next record being processed.
+     *
+     * @param idKey the ID key. The object passed here is used in a call to {@link Map#get(Object)}
+     *     to get the identifier value.
      */
     public void setIdKey(final Object idKey) {
         this.idKey = idKey;
@@ -100,15 +95,12 @@ public final class MapToStream extends DefaultObjectPipe<Map<?, ?>, StreamReceiv
         final Object id = map.get(idKey);
         if (id == null) {
             getReceiver().startRecord("");
-        }
-        else {
+        } else {
             getReceiver().startRecord(id.toString());
         }
-        for (final Map.Entry<?, ?> entry: map.entrySet()) {
-            getReceiver().literal(entry.getKey().toString(),
-                    entry.getValue().toString());
+        for (final Map.Entry<?, ?> entry : map.entrySet()) {
+            getReceiver().literal(entry.getKey().toString(), entry.getValue().toString());
         }
         getReceiver().endRecord();
     }
-
 }

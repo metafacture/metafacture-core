@@ -16,11 +16,10 @@
 
 package org.metafacture.metamorph.functions;
 
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.TestHelpers;
-
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -33,29 +32,27 @@ import org.mockito.junit.MockitoRule;
  */
 public final class RegexpTest {
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public RegexpTest() {
-    }
+    public RegexpTest() {}
 
     @Test
     public void shouldMatchAndReplaceUsingRegularExpressions() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <data source='001.' name='subject'>" +
-                "    <regexp match='.*' format='resource:P${0}' />" +
-                "  </data>" +
-                "  <data source='001.' name='subject'>" +
-                "    <regexp match='.*' format='${1}' />" +
-                "  </data>" +
-                "  <data source='001.' name='subject'>" +
-                "    <regexp match='.*' />" +
-                "  </data>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <data source='001.' name='subject'>"
+                        + "    <regexp match='.*' format='resource:P${0}' />"
+                        + "  </data>"
+                        + "  <data source='001.' name='subject'>"
+                        + "    <regexp match='.*' format='${1}' />"
+                        + "  </data>"
+                        + "  <data source='001.' name='subject'>"
+                        + "    <regexp match='.*' />"
+                        + "  </data>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("001");
@@ -69,18 +66,18 @@ public final class RegexpTest {
                     o.get().literal("subject", "");
                     o.get().literal("subject", "184000");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldIgnoreEmptyMatchGroups() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <data source='s'>" +
-                "    <regexp match='aa(bb*)?(cc*)(dd*)' format='${1}${2}${3}' />" +
-                "  </data>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <data source='s'>"
+                        + "    <regexp match='aa(bb*)?(cc*)(dd*)' format='${1}${2}${3}' />"
+                        + "  </data>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("s", "aaccdd");
@@ -91,18 +88,18 @@ public final class RegexpTest {
                     o.get().startRecord("1");
                     o.get().literal("s", "ccdd");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldIgnoreNullValues() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <data source='s'>" +
-                "    <regexp match='a.*' />" +
-                "  </data>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <data source='s'>"
+                        + "    <regexp match='a.*' />"
+                        + "  </data>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("s", "aaccdd");
@@ -113,8 +110,6 @@ public final class RegexpTest {
                     o.get().startRecord("1");
                     o.get().literal("s", "aaccdd");
                     o.get().endRecord();
-                }
-        );
+                });
     }
-
 }

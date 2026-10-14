@@ -16,17 +16,16 @@
 
 package org.metafacture.metamorph.functions;
 
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.metamorph.api.MorphBuildException;
-import org.metafacture.metamorph.api.MorphExecutionException;
-import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
-
 import java.io.IOException;
 import java.io.Reader;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.metamorph.api.MorphBuildException;
+import org.metafacture.metamorph.api.MorphExecutionException;
+import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
  * A function which executes a JavaScript function.
@@ -38,11 +37,8 @@ public final class Script extends AbstractSimpleStatelessFunction {
     private Invocable invocable;
     private String invoke;
 
-    /**
-     * Creates an instance of {@link Script}.
-     */
-    public Script() {
-    }
+    /** Creates an instance of {@link Script}. */
+    public Script() {}
 
     /**
      * Flags whether to invoke the script.
@@ -64,11 +60,9 @@ public final class Script extends AbstractSimpleStatelessFunction {
         // TODO: The script file should be loaded relatively to the base URI
         try (Reader reader = ResourceUtil.getReader(file)) {
             engine.eval(reader);
-        }
-        catch (final ScriptException e) {
+        } catch (final ScriptException e) {
             throw new MorphBuildException("Error in script", e);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MorphBuildException("Error loading script '" + file + "'", e);
         }
         invocable = (Invocable) engine;
@@ -80,14 +74,11 @@ public final class Script extends AbstractSimpleStatelessFunction {
         try {
             obj = invocable.invokeFunction(invoke, value);
             return obj.toString();
-        }
-        catch (final ScriptException e) {
+        } catch (final ScriptException e) {
             throw new MorphExecutionException(
                     "Error in script while evaluating 'process' method", e);
-        }
-        catch (final NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             throw new MorphExecutionException("'process' method is missing in script", e);
         }
     }
-
 }

@@ -16,19 +16,6 @@
 
 package org.metafacture.xml;
 
-import org.metafacture.framework.FluxCommand;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.MetafactureLogger;
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.framework.annotations.Description;
-import org.metafacture.framework.annotations.In;
-import org.metafacture.framework.annotations.Out;
-import org.metafacture.framework.helpers.DefaultStreamPipe;
-
-import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
-import org.xml.sax.InputSource;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -42,23 +29,38 @@ import java.util.function.Function;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
+import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.MetafactureLogger;
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.framework.annotations.Description;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
+import org.metafacture.framework.helpers.DefaultStreamPipe;
+import org.xml.sax.InputSource;
 
 /**
- * A sink, writing an xml file. The filename is constructed from the xpath given
- * via setProperty().
+ * A sink, writing an xml file. The filename is constructed from the xpath given via setProperty().
  *
  * @author Pascal Christoph
  * @author Christoph Böhme
  */
-@Description("Writes the XML into the filesystem. The filename is constructed from the XPATH given as 'property'." + // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
-    " Variables are:" + "`target` (determining the output directory)" +
-    ", `property` (the element in the XML entity. Constitutes the main part of the file's name.)" +
-    ", `startIndex` ( a subfolder will be extracted out of the filename. This marks the index' beginning )" +
-    ", `stopIndex` ( a subfolder will be extracted out of the filename. This marks the index' end )")
+@Description(
+        "Writes the XML into the filesystem. The filename is constructed from the XPATH given as"
+                + " 'property'."
+                + // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
+                " Variables are:`target` (determining the output directory), `property` (the"
+              + " element in the XML entity. Constitutes the main part of the file's name.),"
+              + " `startIndex` ( a subfolder will be extracted out of the filename. This marks the"
+              + " index' beginning ), `stopIndex` ( a subfolder will be extracted out of the"
+              + " filename. This marks the index' end )")
 @In(StreamReceiver.class)
 @Out(Void.class)
 @FluxCommand("write-xml-files")
-public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<String>> implements FilenameExtractor {
+public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<String>>
+        implements FilenameExtractor {
 
     private static final MetafactureLogger LOG = new MetafactureLogger(XmlFilenameWriter.class);
 
@@ -67,9 +69,7 @@ public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<St
 
     private String compression;
 
-    /**
-     * Default constructor
-     */
+    /** Default constructor */
     public XmlFilenameWriter() {
         setFileSuffix(".xml");
     }
@@ -77,8 +77,7 @@ public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<St
     /**
      * Sets the compression. Default is no compression.
      *
-     * @param compression
-     *            The compression. At the moment only 'bz2' is possible.
+     * @param compression The compression. At the moment only 'bz2' is possible.
      */
     public void setCompression(final String compression) {
         this.compression = compression;
@@ -102,7 +101,6 @@ public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<St
     @Override
     public void setFileSuffix(final String fileSuffix) {
         filenameUtil.setFileSuffix(fileSuffix);
-
     }
 
     @Override
@@ -130,8 +128,7 @@ public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<St
         filenameUtil.ensurePathExists(file);
         if (compression == null) {
             writeXml(xml, file);
-        }
-        else if ("bz2".equals(compression)) {
+        } else if ("bz2".equals(compression)) {
             final File compressedFile = new File(file.getPath() + ".bz2");
             writeXml(xml, compressedFile, this::createBZip2Compressor);
         }
@@ -140,9 +137,11 @@ public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<St
     private String extractIdentifier(final String xml) {
         final String identifier;
         try {
-            identifier = xPath.evaluate(this.filenameUtil.getProperty(), new InputSource(new StringReader(xml)));
-        }
-        catch (final XPathExpressionException e) {
+            identifier =
+                    xPath.evaluate(
+                            this.filenameUtil.getProperty(),
+                            new InputSource(new StringReader(xml)));
+        } catch (final XPathExpressionException e) {
             throw new MetafactureException(e);
         }
         if (identifier == null || identifier.length() < filenameUtil.getEndIndex()) {
@@ -154,7 +153,8 @@ public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<St
     }
 
     private File buildTargetFileName(final String identifier) {
-        final String directory = identifier.substring(filenameUtil.getStartIndex(), filenameUtil.getEndIndex());
+        final String directory =
+                identifier.substring(filenameUtil.getStartIndex(), filenameUtil.getEndIndex());
         return Paths.get(filenameUtil.getTarget())
                 .resolve(directory)
                 .resolve(identifier + filenameUtil.getFileSuffix())
@@ -165,15 +165,16 @@ public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<St
         writeXml(xml, file, Function.identity());
     }
 
-    private void writeXml(final String xml, final File file, final Function<OutputStream, OutputStream> compressorFactory) {
-        try (
-                OutputStream fileStream = new FileOutputStream(file);
+    private void writeXml(
+            final String xml,
+            final File file,
+            final Function<OutputStream, OutputStream> compressorFactory) {
+        try (OutputStream fileStream = new FileOutputStream(file);
                 OutputStream compressedStream = compressorFactory.apply(fileStream);
-                Writer writer = new OutputStreamWriter(compressedStream, filenameUtil.getEncoding())
-        ) {
+                Writer writer =
+                        new OutputStreamWriter(compressedStream, filenameUtil.getEncoding())) {
             writer.write(xml);
-        }
-        catch (final IOException | UncheckedIOException e) {
+        } catch (final IOException | UncheckedIOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -181,10 +182,8 @@ public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<St
     private OutputStream createBZip2Compressor(final OutputStream stream) {
         try {
             return new BZip2CompressorOutputStream(stream);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new UncheckedIOException(e);
         }
     }
-
 }

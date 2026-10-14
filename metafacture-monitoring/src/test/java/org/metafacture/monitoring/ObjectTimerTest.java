@@ -16,11 +16,10 @@
 
 package org.metafacture.monitoring;
 
-import org.metafacture.framework.helpers.DefaultObjectReceiver;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.metafacture.framework.helpers.DefaultObjectReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
@@ -29,7 +28,6 @@ import org.slf4j.Logger;
  * Tests for class {@link ObjectTimer}.
  *
  * @author Christoph Böhme
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public final class ObjectTimerTest extends TestHelpers {
@@ -40,8 +38,7 @@ public final class ObjectTimerTest extends TestHelpers {
     private ObjectTimer<String> objectTimer;
     private BenchmarkedModule benchmarkedModule;
 
-    public ObjectTimerTest() {
-    }
+    public ObjectTimerTest() {}
 
     @Before
     public void setup() {
@@ -82,24 +79,20 @@ public final class ObjectTimerTest extends TestHelpers {
         assertLog(logger, prefix, 4);
     }
 
-    /**
-     * A module with a slow process method.
-     */
+    /** A module with a slow process method. */
     private static final class BenchmarkedModule extends DefaultObjectReceiver<String> {
 
         private static final long[] DURATIONS = {150L, 20L, 30L, 202L};
 
         private int i;
 
-        private BenchmarkedModule() {
-        }
+        private BenchmarkedModule() {}
 
         @Override
         public void process(final String obj) {
             try {
                 Thread.sleep(getDuration());
-            }
-            catch (final InterruptedException e) {
+            } catch (final InterruptedException e) {
                 return;
             }
         }
@@ -112,7 +105,5 @@ public final class ObjectTimerTest extends TestHelpers {
             }
             return duration;
         }
-
     }
-
 }

@@ -16,34 +16,31 @@
 
 package org.metafacture.metafix.method.field;
 
+import java.util.List;
+import java.util.Map;
+import org.jsoup.Jsoup;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
 
-import org.jsoup.Jsoup;
-
-import java.util.List;
-import java.util.Map;
-
 /**
  * Turns HTML text to plain text.
  *
  * @author Tobias Bülte (tobiasNx)
- *
  */
 @FixCommand("html_to_text")
 public class HtmlToText implements FixFunction {
 
-    /**
-     * Creates an instance of {@link HtmlToText}.
-     */
-    public HtmlToText() {
-    }
+    /** Creates an instance of {@link HtmlToText}. */
+    public HtmlToText() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         record.transform(params.get(0), s -> Jsoup.parse(s).wholeText());
     }
-
 }

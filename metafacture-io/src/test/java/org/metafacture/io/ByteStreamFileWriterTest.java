@@ -1,5 +1,10 @@
 package org.metafacture.io;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Rule;
@@ -8,27 +13,18 @@ import org.junit.rules.TemporaryFolder;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
-
 public class ByteStreamFileWriterTest {
 
     private static final String SOME_DATA = "Nil desperandum";
     private static final String SOME_MORE_DATA = "De omnibus dubitandum";
 
-    @Rule
-    public TemporaryFolder tempFolder = new TemporaryFolder();
+    @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
 
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     private ByteStreamFileWriter byteStreamFileWriter;
 
-    public ByteStreamFileWriterTest() {
-    }
+    public ByteStreamFileWriterTest() {}
 
     @Before
     public void setupSystemUnderTest() {
@@ -49,9 +45,7 @@ public class ByteStreamFileWriterTest {
 
     @Test
     public void shouldStartNewOutputFileOnResetStreamEvent() throws IOException {
-        final List<File> outputFiles = Arrays.asList(
-                tempFolder.newFile(),
-                tempFolder.newFile());
+        final List<File> outputFiles = Arrays.asList(tempFolder.newFile(), tempFolder.newFile());
         byteStreamFileWriter.setFileNameSupplier(outputFiles.iterator()::next);
 
         byteStreamFileWriter.process(SOME_DATA.getBytes(StandardCharsets.UTF_8));
@@ -91,7 +85,7 @@ public class ByteStreamFileWriterTest {
         byteStreamFileWriter.closeStream();
 
         Assertions.assertThat(outputFile).isFile();
-        Assertions.assertThat(Assertions.contentOf(outputFile)).isEqualTo(SOME_DATA + SOME_MORE_DATA);
+        Assertions.assertThat(Assertions.contentOf(outputFile))
+                .isEqualTo(SOME_DATA + SOME_MORE_DATA);
     }
-
 }

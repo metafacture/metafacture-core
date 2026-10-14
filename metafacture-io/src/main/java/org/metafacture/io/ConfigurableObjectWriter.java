@@ -19,9 +19,8 @@ package org.metafacture.io;
 import org.metafacture.framework.ObjectReceiver;
 
 /**
- * Back end implementations for {@link ObjectWriter} should offer
- * a default set of configuration options. These are defined by
- * this interface.
+ * Back end implementations for {@link ObjectWriter} should offer a default set of configuration
+ * options. These are defined by this interface.
  *
  * @param <T> object type
  * @author Christoph Böhme
@@ -42,8 +41,7 @@ public interface ConfigurableObjectWriter<T> extends ObjectReceiver<T> {
     /**
      * Sets the encoding used by the underlying writer.
      *
-     * @param encoding
-     *            name of the encoding
+     * @param encoding name of the encoding
      */
     void setEncoding(String encoding);
 
@@ -109,5 +107,4 @@ public interface ConfigurableObjectWriter<T> extends ObjectReceiver<T> {
      * @param separator new separator string
      */
     void setSeparator(String separator);
-
 }

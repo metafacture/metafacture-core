@@ -33,11 +33,8 @@ public final class Any extends AbstractCollect {
     private boolean receivedInput;
     private boolean emittedResult;
 
-    /**
-     * Creates an instance of {@link Any}.
-     */
-    public Any() {
-    }
+    /** Creates an instance of {@link Any}. */
+    public Any() {}
 
     @Override
     protected void receive(final String name, final String value, final NamedValueSource source) {
@@ -70,5 +67,4 @@ public final class Any extends AbstractCollect {
         emit();
         clear();
     }
-
 }

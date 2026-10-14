@@ -16,6 +16,16 @@
 
 package org.metafacture.xml;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.commons.XmlUtil;
 import org.metafacture.framework.FluxCommand;
@@ -28,26 +38,15 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
-
 /**
- *
  * Encodes a stream as XML.
  *
  * @author Markus Michael Geipel
  * @author Christoph Böhme
- *
  */
-@Description("Encodes a stream as XML. Defaults: `rootTag=\"records\"`, `recordTag=\"record\"`, no attributeMarker.")
+@Description(
+        "Encodes a stream as XML. Defaults: `rootTag=\"records\"`, `recordTag=\"record\"`, no"
+                + " attributeMarker.")
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("stream-to-xml")
@@ -88,11 +87,8 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
     private Element element;
     private boolean atStreamStart = true;
 
-    /**
-     * Creates an instance of {@link SimpleXmlEncoder}.
-     */
-    public SimpleXmlEncoder() {
-    }
+    /** Creates an instance of {@link SimpleXmlEncoder}. */
+    public SimpleXmlEncoder() {}
 
     /**
      * Sets the root tag.
@@ -139,8 +135,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
         final Properties properties;
         try {
             properties = ResourceUtil.loadProperties(file);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException("Failed to load namespaces list", e);
         }
         propertiesToMap(properties);
@@ -155,8 +150,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
         final Properties properties;
         try {
             properties = ResourceUtil.loadProperties(url);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException("Failed to load namespaces list", e);
         }
         propertiesToMap(properties);
@@ -195,7 +189,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
      * @param writeRootTag true if the root tag should be written
      */
     public void setWriteRootTag(final boolean writeRootTag) {
-        this.writeRootTag  = writeRootTag;
+        this.writeRootTag = writeRootTag;
     }
 
     /**
@@ -219,17 +213,15 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
     /**
      * Sets the namespace(s).
      *
-     * @param namespacesString the namespaces as a String. It allows Java Properties
-     *                         structure, i.e. a key-value structure where the key is separated from the value
-     *                         by an equal sign '=', a colon ':' or a white space ' '. Multiple namespaces
-     *                         are separated by a line feed '\n'
+     * @param namespacesString the namespaces as a String. It allows Java Properties structure, i.e.
+     *     a key-value structure where the key is separated from the value by an equal sign '=', a
+     *     colon ':' or a white space ' '. Multiple namespaces are separated by a line feed '\n'
      */
     public void setNamespaces(final String namespacesString) {
         final Properties properties = new Properties();
         try (StringReader sr = new StringReader(namespacesString)) {
             properties.load(sr);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException("Failed to create namespace list");
         }
         propertiesToMap(properties);
@@ -257,8 +249,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
     public void startRecord(final String identifier) {
         if (separateRoots) {
             writeHeader();
-        }
-        else if (atStreamStart) {
+        } else if (atStreamStart) {
             writeHeader();
             sendAndClearData();
         }
@@ -301,11 +292,9 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
     public void literal(final String name, final String value) {
         if (name.equals(valueTag)) {
             element.setText(value);
-        }
-        else if (name.startsWith(attributeMarker)) {
+        } else if (name.startsWith(attributeMarker)) {
             element.addAttribute(name.substring(attributeMarker.length()), value);
-        }
-        else {
+        } else {
             element.createChild(name).setText(value);
         }
     }
@@ -376,10 +365,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
         properties.forEach((k, v) -> namespaces.put(k.toString(), v.toString()));
     }
 
-    /**
-     * An XML element.
-     *
-     */
+    /** An XML element. */
     private static final class Element {
 
         private static final List<Element> NO_CHILDREN = Collections.emptyList();
@@ -463,7 +449,5 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
                 builder.append(INDENT);
             }
         }
-
     }
-
 }

@@ -19,8 +19,7 @@ package org.metafacture.metafix;
 import org.metafacture.framework.MetafactureException;
 
 /**
- * Indicates static (i.e., data-independent) issues with the usage of Fix
- * expressions.
+ * Indicates static (i.e., data-independent) issues with the usage of Fix expressions.
  *
  * @see FixExecutionException
  */
@@ -39,10 +38,9 @@ public class FixProcessException extends MetafactureException {
      * Creates an instance of {@link FixProcessException}.
      *
      * @param message the exception message
-     * @param cause   the exception cause
+     * @param cause the exception cause
      */
     public FixProcessException(final String message, final Throwable cause) {
         super(message, cause);
     }
-
 }

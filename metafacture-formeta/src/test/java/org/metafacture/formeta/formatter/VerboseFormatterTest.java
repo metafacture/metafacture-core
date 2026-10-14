@@ -24,26 +24,23 @@ import org.junit.Test;
  * Tests for {@link VerboseFormatter}.
  *
  * @author Christoph Böhme
- *
  */
 public final class VerboseFormatterTest {
 
     private static final String VERBOSE_RECORD =
-            "1{ lit1: 'value 1', ' ent1'{ lit2: 'value {x}', 'lit\\\\3': 'value 2 ' }, lit4: 'value \\'3\\'' }";
+            "1{ lit1: 'value 1', ' ent1'{ lit2: 'value {x}', 'lit\\\\3': 'value 2 ' }, lit4: 'value"
+                    + " \\'3\\'' }";
 
     private static final String INNER_RECORD =
             "inner{ lit1: value 1, ent1{ lit2: 'hello worlds\\'s end!' } }";
 
     private static final String OUTER_RECORD =
-            "outer{ " +
-            "nested: 'inner{ lit1: value 1, ent1{ lit2: \\'hello worlds\\\\\\'s end!\\' } }', " +
-            "note: 'nested records'" +
-            " }";
+            "outer{ nested: 'inner{ lit1: value 1, ent1{ lit2: \\'hello worlds\\\\\\'s end!\\' }"
+                    + " }', note: 'nested records' }";
 
     private VerboseFormatter verboseFormatter;
 
-    public VerboseFormatterTest() {
-    }
+    public VerboseFormatterTest() {}
 
     @Before
     public void setup() {
@@ -73,5 +70,4 @@ public final class VerboseFormatterTest {
 
         Assert.assertEquals(OUTER_RECORD, verboseFormatter.toString());
     }
-
 }

@@ -30,19 +30,25 @@ Download the latest distribution package from the [release page](https://github.
 Regardless if you've built or downloaded, go on with:
 
 1. Extract the archive:
-    ```bash
-    $ tar xzf metafacture-core-$VERSION-dist.tar.gz
-    ```
-    This will create a new directory containing a ready-to-use Metafacture distribution.
+
+   ```bash
+   $ tar xzf metafacture-core-$VERSION-dist.tar.gz
+   ```
+
+   This will create a new directory containing a ready-to-use Metafacture distribution.
+
 2. Change into the newly created directory:
-    ```bash
-    $ cd metafacture-core-$VERSION
-    ```
+
+   ```bash
+   $ cd metafacture-core-$VERSION
+   ```
 3. Run one of the example scripts:
-    ```bash
-    $ ./flux.sh -f examples/read/marc21/read-marc21.flux
-    ```
-    This example will print a number of MARC 21 records on standard output.
+
+   ```bash
+   $ ./flux.sh -f examples/read/marc21/read-marc21.flux
+   ```
+
+   This example will print a number of MARC 21 records on standard output.
 
 The `examples` folder contains many more examples which provide a good starting point for learning Metafacture. If you have any questions please take a look at the [German Metafacture forum](https://metadaten.community/c/software-und-tools/metafacture/8) and create a topic there or open an issue over at metafacture-documentation [metafacture-documentation](https://github.com/metafacture/metafacture-documentation).
 
@@ -75,25 +81,27 @@ TODO: Link to getting started tutorial
 -->
 
 <a name="build_from_source"></a>
+
 # Building metafacture-core from source
 
 Building metafacture-core from source is easy. All you need is git and JDK 17:
 
 1. Clone the metafacture-core repository and change into the directory:
-    ```bash
-    $ git clone https://github.com/metafacture/metafacture-core.git
-    $ cd metafacture-core
-    ```
 
+   ```bash
+   $ git clone https://github.com/metafacture/metafacture-core.git
+   $ cd metafacture-core
+   ```
 2. Invoke the Gradle wrapper to download Gradle and build metafacture-core (on Windows call `gradlew.bat publishToMavenLocal` instead) and publish these to your local Maven repository:
-    ```bash
-    $ ./gradlew publishToMavenLocal
-    ```
 
+   ```bash
+   $ ./gradlew publishToMavenLocal
+   ```
 3. Create a distribution if you need one. The resulting distribution can be found in `metafacture-core/metafacture-runner/build/distributions/`:
-    ```bash
-    $ ./gradlew assembleDist
-    ```
+
+   ```bash
+   $ ./gradlew assembleDist
+   ```
 
 (To import the projects in Eclipse, choose `File > Import > Existing Gradle Project` and select the `metafacture-core` directory.)
 
@@ -161,13 +169,13 @@ Array wildcards resemble [Catmandu's concept of wildcards](http://librecat.org/C
 
 When working with arrays and repeated fields you can use wildcards instead of an index number to select elements of an array.
 
-| Wildcard | Meaning |
-|----------|:--------|
-| `*` | Selects _all_ elements of an array. |
-| `$first` | Selects only the _first_ element of an array. |
-| `$last` | Selects only the _last_ element of an array. |
+|  Wildcard  | Meaning                                                                                                             |
+|------------|:--------------------------------------------------------------------------------------------------------------------|
+| `*`        | Selects _all_ elements of an array.                                                                                 |
+| `$first`   | Selects only the _first_ element of an array.                                                                       |
+| `$last`    | Selects only the _last_ element of an array.                                                                        |
 | `$prepend` | Selects the position _before_ the first element of an array. Can only be used when adding new elements to an array. |
-| `$append` | Selects the position _after_ the last element of an array. Can only be used when adding new elements to an array. |
+| `$append`  | Selects the position _after_ the last element of an array. Can only be used when adding new elements to an array.   |
 
 #### Path wildcards
 
@@ -175,12 +183,12 @@ Path wildcards resemble [Metamorph's concept of wildcards](https://github.com/me
 
 You can use path wildcards to select fields matching a pattern. They only match path _segments_ (field names), though, not _whole_ paths of nested fields. These wildcards cannot be used to add new elements.
 
-| Wildcard | Meaning |
-|----------|:--------|
-| `*` | Placeholder for zero or more characters. |
-| `?` | Placeholder for exactly one character. |
-| `\|` | Alternation of multiple patterns. |
-| `[...]` | Enumeration of characters. |
+| Wildcard | Meaning                                  |
+|----------|:-----------------------------------------|
+| `*`      | Placeholder for zero or more characters. |
+| `?`      | Placeholder for exactly one character.   |
+| `\|`     | Alternation of multiple patterns.        |
+| `[...]`  | Enumeration of characters.               |
 
 ### Functions
 
@@ -459,6 +467,7 @@ hash("<sourceField>")
 ```
 
 E.g.:
+
 ```perl
 hash("foo")
 # ["name", "value"] => {"name":"value"}

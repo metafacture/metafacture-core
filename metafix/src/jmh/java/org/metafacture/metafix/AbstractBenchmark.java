@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix;
 
+import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -25,18 +26,15 @@ import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
-//import org.openjdk.jmh.profile.GCProfiler;
-//import org.openjdk.jmh.profile.StackProfiler;
-//import org.openjdk.jmh.runner.Runner;
-//import org.openjdk.jmh.runner.RunnerException;
-//import org.openjdk.jmh.runner.options.Options;
-//import org.openjdk.jmh.runner.options.OptionsBuilder;
 
-import java.util.concurrent.TimeUnit;
+// import org.openjdk.jmh.profile.GCProfiler;
+// import org.openjdk.jmh.profile.StackProfiler;
+// import org.openjdk.jmh.runner.Runner;
+// import org.openjdk.jmh.runner.RunnerException;
+// import org.openjdk.jmh.runner.options.Options;
+// import org.openjdk.jmh.runner.options.OptionsBuilder;
 
-/**
- * Base class for benchmarks.
- */
+/** Base class for benchmarks. */
 @Fork(2)
 @Warmup(iterations = 2)
 @Measurement(iterations = 4) // checkstyle-disable-line MagicNumber
@@ -45,15 +43,10 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Thread)
 public abstract class AbstractBenchmark {
 
-    /**
-     * Creates an instance of {@link AbstractBenchmark}.
-     */
-    public AbstractBenchmark() {
-    }
+    /** Creates an instance of {@link AbstractBenchmark}. */
+    public AbstractBenchmark() {}
 
-    /**
-     * Performs the benchmark.
-     */
+    /** Performs the benchmark. */
     @Benchmark
     public void benchmark() {
         workload();

@@ -16,13 +16,6 @@
 
 package org.metafacture.metafix.method.field;
 
-import org.metafacture.metafix.FixCommand;
-import org.metafacture.metafix.Metafix;
-import org.metafacture.metafix.Record;
-import org.metafacture.metafix.api.FixFunction;
-import org.metafacture.metafix.method.script.PutFileMap;
-import org.metafacture.metamorph.api.Maps;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,39 +23,44 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.function.Consumer;
+import org.metafacture.metafix.FixCommand;
+import org.metafacture.metafix.Metafix;
+import org.metafacture.metafix.Record;
+import org.metafacture.metafix.api.FixFunction;
+import org.metafacture.metafix.method.script.PutFileMap;
+import org.metafacture.metamorph.api.Maps;
 
 /**
- * Looks up matching values in a map and replaces the field value with this match.
- * {@link org.metafacture.metafix.method.script.PutFileMap External files},
- * {@link org.metafacture.metafix.method.script.PutMap internal maps} as well as
- * {@link org.metafacture.metafix.method.script.PutRdfMap RDF resources} can be used.
+ * Looks up matching values in a map and replaces the field value with this match. {@link
+ * org.metafacture.metafix.method.script.PutFileMap External files}, {@link
+ * org.metafacture.metafix.method.script.PutMap internal maps} as well as {@link
+ * org.metafacture.metafix.method.script.PutRdfMap RDF resources} can be used.
  */
 @FixCommand("lookup")
 public class Lookup implements FixFunction {
 
     private static final Map<Metafix, LongAdder> SCOPED_COUNTER = new HashMap<>();
 
-    /**
-     * Creates an instance of {@link Lookup}.
-     */
-    public Lookup() {
-    }
+    /** Creates an instance of {@link Lookup}. */
+    public Lookup() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final Map<String, String> map;
 
         if (params.size() <= 1) {
             map = options;
-        }
-        else {
+        } else {
             final String mapName = params.get(1);
 
             if (!metafix.getMapNames().contains(mapName)) {
                 if (mapName.contains(".") || mapName.contains(File.separator)) {
                     new PutFileMap().apply(metafix, record, Arrays.asList(mapName), options);
-                }
-                else {
+                } else {
                     // Probably an unknown internal map? Log a warning?
                 }
             }
@@ -74,27 +72,30 @@ public class Lookup implements FixFunction {
         final boolean delete = getBoolean(options, "delete");
         final boolean printUnknown = getBoolean(options, "print_unknown");
 
-        final Consumer<Consumer<String>> consumer = c -> record.transform(params.get(0), oldValue -> {
-            final String newValue = map.get(oldValue);
-            if (newValue != null) {
-                return newValue;
-            }
-            else {
-                if (c != null) {
-                    c.accept(oldValue);
-                }
+        final Consumer<Consumer<String>> consumer =
+                c ->
+                        record.transform(
+                                params.get(0),
+                                oldValue -> {
+                                    final String newValue = map.get(oldValue);
+                                    if (newValue != null) {
+                                        return newValue;
+                                    } else {
+                                        if (c != null) {
+                                            c.accept(oldValue);
+                                        }
 
-                return defaultValue != null ? defaultValue : delete ? null : oldValue;
-            }
-        });
+                                        return defaultValue != null
+                                                ? defaultValue
+                                                : delete ? null : oldValue;
+                                    }
+                                });
 
         if (printUnknown) {
             options.putIfAbsent("append", "true");
             withWriter(metafix, record, options, SCOPED_COUNTER, consumer);
-        }
-        else {
+        } else {
             consumer.accept(null);
         }
     }
-
 }

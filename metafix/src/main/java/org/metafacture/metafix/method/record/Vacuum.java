@@ -16,29 +16,26 @@
 
 package org.metafacture.metafix.method.record;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Deletes empty fields, arrays and objects.
- */
+/** Deletes empty fields, arrays and objects. */
 @FixCommand("vacuum")
 public class Vacuum implements FixFunction {
 
-    /**
-     * Creates an instance of {@link Vacuum}.
-     */
-    public Vacuum() {
-    }
+    /** Creates an instance of {@link Vacuum}. */
+    public Vacuum() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         record.removeEmptyValues();
     }
-
 }

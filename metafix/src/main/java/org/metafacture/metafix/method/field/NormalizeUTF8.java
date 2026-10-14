@@ -16,15 +16,14 @@
 
 package org.metafacture.metafix.method.field;
 
-import org.metafacture.metafix.FixCommand;
-import org.metafacture.metafix.Metafix;
-import org.metafacture.metafix.Record;
-import org.metafacture.metafix.api.FixFunction;
-
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.List;
 import java.util.Map;
+import org.metafacture.metafix.FixCommand;
+import org.metafacture.metafix.Metafix;
+import org.metafacture.metafix.Record;
+import org.metafacture.metafix.api.FixFunction;
 
 /**
  * Performs normalization of diacritics in UTF-8 encoded strings.
@@ -34,15 +33,15 @@ import java.util.Map;
 @FixCommand("normalize_utf8")
 public class NormalizeUTF8 implements FixFunction {
 
-    /**
-     * Creates an instance of {@link NormalizeUTF8}.
-     */
-    public NormalizeUTF8() {
-    }
+    /** Creates an instance of {@link NormalizeUTF8}. */
+    public NormalizeUTF8() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         record.transform(params.get(0), s -> Normalizer.normalize(s, Form.NFC));
     }
-
 }

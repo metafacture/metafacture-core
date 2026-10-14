@@ -16,17 +16,15 @@
 
 package org.metafacture.javaintegration;
 
-import org.metafacture.framework.StreamReceiver;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.metafacture.framework.StreamReceiver;
 
 /**
  * Stores the received stream events in a list.
  *
  * @author Christoph Böhme
- *
  */
 public final class EventList implements StreamReceiver {
 
@@ -34,11 +32,8 @@ public final class EventList implements StreamReceiver {
 
     private boolean closed;
 
-    /**
-     * Creates an instance of {@link EventList}.
-     */
-    public EventList() {
-    }
+    /** Creates an instance of {@link EventList}. */
+    public EventList() {}
 
     /**
      * Get events.
@@ -106,11 +101,13 @@ public final class EventList implements StreamReceiver {
      */
     public static final class Event {
 
-        /**
-         * Event types
-         */
+        /** Event types */
         public enum Type {
-            START_RECORD, END_RECORD, START_ENTITY, END_ENTITY, LITERAL
+            START_RECORD,
+            END_RECORD,
+            START_ENTITY,
+            END_ENTITY,
+            LITERAL
         }
 
         private final Type type;
@@ -173,7 +170,5 @@ public final class EventList implements StreamReceiver {
             }
             return builder.toString();
         }
-
     }
-
 }

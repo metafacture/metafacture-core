@@ -16,25 +16,18 @@
 
 package org.metafacture.metafix;
 
+import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 
-import java.util.concurrent.TimeUnit;
-
-/**
- * Baseline benchmark.
- */
+/** Baseline benchmark. */
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 public class BaselineBenchmark extends AbstractBenchmark {
 
-    /**
-     * Creates an instance of {@link BaselineBenchmark}.
-     */
-    public BaselineBenchmark() {
-    }
+    /** Creates an instance of {@link BaselineBenchmark}. */
+    public BaselineBenchmark() {}
 
     @Override
     protected void workload() {
         // this method was intentionally left blank.
     }
-
 }

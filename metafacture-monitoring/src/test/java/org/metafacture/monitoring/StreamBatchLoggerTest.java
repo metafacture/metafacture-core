@@ -16,12 +16,11 @@
 
 package org.metafacture.monitoring;
 
-import org.metafacture.framework.StreamReceiver;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -32,7 +31,6 @@ import org.slf4j.Logger;
  * Tests for class {@link StreamBatchLogger}.
  *
  * @author Jens Wille
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public final class StreamBatchLoggerTest extends TestHelpers {
@@ -40,13 +38,11 @@ public final class StreamBatchLoggerTest extends TestHelpers {
     @Mock(name = "external.org.metafacture.monitoring.StreamBatchLogger")
     private Logger logger;
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
     private StreamBatchLogger streamBatchLogger;
 
-    public StreamBatchLoggerTest() {
-    }
+    public StreamBatchLoggerTest() {}
 
     @Before
     public void setup() {
@@ -90,11 +86,14 @@ public final class StreamBatchLoggerTest extends TestHelpers {
         ordered.verifyNoMoreInteractions();
         Mockito.verifyNoMoreInteractions(receiver);
 
-        assertLog(logger, "INFO", c -> {
-            assertLog(c, "records processed: 2");
-            assertLog(c, "records processed: 4");
-            assertLog(c, "records processed: 5");
-        });
+        assertLog(
+                logger,
+                "INFO",
+                c -> {
+                    assertLog(c, "records processed: 2");
+                    assertLog(c, "records processed: 4");
+                    assertLog(c, "records processed: 5");
+                });
     }
 
     @Test
@@ -107,14 +106,20 @@ public final class StreamBatchLoggerTest extends TestHelpers {
 
         Mockito.verifyNoMoreInteractions(receiver);
 
-        assertLog(logger, "INFO", c -> {
-            assertLog(c, "records processed: 0");
-        });
+        assertLog(
+                logger,
+                "INFO",
+                c -> {
+                    assertLog(c, "records processed: 0");
+                });
     }
 
     @Test
     public void shouldLogWithCustomFormat() {
-        streamBatchLogger = new StreamBatchLogger("records=${records}, totalRecords=${totalRecords}, batches=${batches}, batchSize=${batchSize}");
+        streamBatchLogger =
+                new StreamBatchLogger(
+                        "records=${records}, totalRecords=${totalRecords}, batches=${batches},"
+                                + " batchSize=${batchSize}");
         streamBatchLogger.setReceiver(receiver);
 
         streamBatchLogger.startRecord("1");
@@ -124,9 +129,12 @@ public final class StreamBatchLoggerTest extends TestHelpers {
         streamBatchLogger.endRecord();
         streamBatchLogger.closeStream();
 
-        assertLog(logger, "INFO", c -> {
-            assertLog(c, "records=1, totalRecords=1, batches=0, batchSize=1000");
-        });
+        assertLog(
+                logger,
+                "INFO",
+                c -> {
+                    assertLog(c, "records=1, totalRecords=1, batches=0, batchSize=1000");
+                });
     }
 
     @Test
@@ -137,9 +145,11 @@ public final class StreamBatchLoggerTest extends TestHelpers {
         streamBatchLogger.endRecord();
         streamBatchLogger.closeStream();
 
-        assertLog(logger, "WARN", c -> {
-            assertLog(c, "records processed: 1");
-        });
+        assertLog(
+                logger,
+                "WARN",
+                c -> {
+                    assertLog(c, "records processed: 1");
+                });
     }
-
 }

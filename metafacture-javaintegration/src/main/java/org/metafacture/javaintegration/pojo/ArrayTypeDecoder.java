@@ -36,14 +36,12 @@ class ArrayTypeDecoder implements TypeDecoder {
     }
 
     @Override
-    public void decodeToStream(final StreamReceiver streamReceiver,
-            final String name, final Object object) {
+    public void decodeToStream(
+            final StreamReceiver streamReceiver, final String name, final Object object) {
         final Object[] array = (Object[]) object;
         for (final Object element : array) {
-            final TypeDecoder typeDecoder = typeDecoderFactory
-                    .create(element.getClass());
+            final TypeDecoder typeDecoder = typeDecoderFactory.create(element.getClass());
             typeDecoder.decodeToStream(streamReceiver, name, element);
         }
     }
-
 }

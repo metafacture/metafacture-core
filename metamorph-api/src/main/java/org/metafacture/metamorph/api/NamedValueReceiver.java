@@ -21,20 +21,20 @@ package org.metafacture.metamorph.api;
  *
  * @author Markus Michael Geipel
  * @author Christoph Böhme
- *
  */
 public interface NamedValueReceiver extends KnowsSourceLocation {
 
     /**
      * Receives named values.
      *
-     * @param name        the name of the key
-     * @param value       the value of the key
-     * @param source      the {@link NamedValueSource}
+     * @param name the name of the key
+     * @param value the value of the key
+     * @param source the {@link NamedValueSource}
      * @param recordCount the record count
      * @param entityCount the entity count
      */
-    void receive(String name, String value, NamedValueSource source, int recordCount, int entityCount);
+    void receive(
+            String name, String value, NamedValueSource source, int recordCount, int entityCount);
 
     /**
      * Adds a named value source.
@@ -42,5 +42,4 @@ public interface NamedValueReceiver extends KnowsSourceLocation {
      * @param namedValueSource the {@link NamedValueSource}
      */
     void addNamedValueSource(NamedValueSource namedValueSource);
-
 }

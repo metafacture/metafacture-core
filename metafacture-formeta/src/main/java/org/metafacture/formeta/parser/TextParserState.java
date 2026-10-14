@@ -20,12 +20,10 @@ import org.metafacture.formeta.Formeta;
 import org.metafacture.framework.FormatException;
 
 /**
- * FSA for parsing identifiers, names and values. The initial parser
- * state is {@code LEADING_WHITESPACE}, the final (accepting) state
- * is {@code DELIMITER_REACHED}.
+ * FSA for parsing identifiers, names and values. The initial parser state is {@code
+ * LEADING_WHITESPACE}, the final (accepting) state is {@code DELIMITER_REACHED}.
  */
 enum TextParserState {
-
     LEADING_WHITESPACE {
         public TextParserState processChar(final char ch, final TextParserContext ctx) {
             final TextParserState newState;
@@ -48,8 +46,7 @@ enum TextParserState {
                 default:
                     if (Formeta.isWhitespace(ch)) {
                         newState = LEADING_WHITESPACE;
-                    }
-                    else {
+                    } else {
                         ctx.setQuoted(false);
                         ctx.appendChar(ch);
                         newState = TEXT;
@@ -116,7 +113,8 @@ enum TextParserState {
         }
 
         public void endOfInput(final TextParserContext ctx) {
-            throw new FormatException("incomplete escape sequence and quoted string is not terminated");
+            throw new FormatException(
+                    "incomplete escape sequence and quoted string is not terminated");
         }
     },
     TRAILING_WHITESPACE {
@@ -132,14 +130,18 @@ enum TextParserState {
                 default:
                     if (Formeta.isWhitespace(ch)) {
                         newState = TRAILING_WHITESPACE;
-                    }
-                    else {
+                    } else {
                         final String sep = "', '";
-                        final String expected = "whitespace or one of '" +
-                            Formeta.GROUP_START + sep +
-                            Formeta.GROUP_END + sep +
-                            Formeta.ITEM_SEPARATOR + sep +
-                            Formeta.NAME_VALUE_SEPARATOR + "'";
+                        final String expected =
+                                "whitespace or one of '"
+                                        + Formeta.GROUP_START
+                                        + sep
+                                        + Formeta.GROUP_END
+                                        + sep
+                                        + Formeta.ITEM_SEPARATOR
+                                        + sep
+                                        + Formeta.NAME_VALUE_SEPARATOR
+                                        + "'";
                         throw new FormatException(getUnexpectedCharMsg(expected, ch));
                     }
             }
@@ -148,7 +150,8 @@ enum TextParserState {
     },
     DELIMITER_REACHED {
         public TextParserState processChar(final char ch, final TextParserContext ctx) {
-            throw new UnsupportedOperationException("Cannot process characters in state DELIMITER_REACHED");
+            throw new UnsupportedOperationException(
+                    "Cannot process characters in state DELIMITER_REACHED");
         }
     };
 
@@ -161,5 +164,4 @@ enum TextParserState {
     private static String getUnexpectedCharMsg(final String expected, final char actual) {
         return expected + " expected but got '" + actual + "'";
     }
-
 }

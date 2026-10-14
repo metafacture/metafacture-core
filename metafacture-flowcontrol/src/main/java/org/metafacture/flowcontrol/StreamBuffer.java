@@ -16,37 +16,33 @@
 
 package org.metafacture.flowcontrol;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * {@link StreamPipe} which buffers incoming records and replays them upon
- * request.
+ * {@link StreamPipe} which buffers incoming records and replays them upon request.
  *
  * @author Markus Michael Geipel
- *
  */
 public final class StreamBuffer extends DefaultStreamPipe<StreamReceiver> {
 
-    /**
-     * Defines entity and literal message types.
-     */
+    /** Defines entity and literal message types. */
     private enum MessageType {
-        RECORD_START, RECORD_END, ENTITY_START, ENTITY_END, LITERAL
+        RECORD_START,
+        RECORD_END,
+        ENTITY_START,
+        ENTITY_END,
+        LITERAL
     }
 
     private final List<MessageType> typeBuffer = new ArrayList<StreamBuffer.MessageType>();
     private final List<String> valueBuffer = new ArrayList<String>();
 
-    /**
-     * Creates an instance of {@link StreamBuffer}.
-     */
-    public StreamBuffer() {
-    }
+    /** Creates an instance of {@link StreamBuffer}. */
+    public StreamBuffer() {}
 
     /**
      * Checks whether there are messages stored.
@@ -57,9 +53,7 @@ public final class StreamBuffer extends DefaultStreamPipe<StreamReceiver> {
         return typeBuffer.isEmpty();
     }
 
-    /**
-     * Replays the buffered event.
-     */
+    /** Replays the buffered event. */
     public void replay() {
 
         int index = 0;
@@ -88,9 +82,7 @@ public final class StreamBuffer extends DefaultStreamPipe<StreamReceiver> {
         }
     }
 
-    /**
-     * Clears the buffer.
-     */
+    /** Clears the buffer. */
     public void clear() {
         typeBuffer.clear();
         valueBuffer.clear();
@@ -134,5 +126,4 @@ public final class StreamBuffer extends DefaultStreamPipe<StreamReceiver> {
     protected void onResetStream() {
         clear();
     }
-
 }

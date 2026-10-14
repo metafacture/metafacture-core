@@ -16,14 +16,13 @@
 
 package org.metafacture.metamorph.collectors;
 
-import org.metafacture.commons.StringUtil;
-import org.metafacture.metamorph.api.NamedValueSource;
-import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.metafacture.commons.StringUtil;
+import org.metafacture.metamorph.api.NamedValueSource;
+import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
 
 /**
  * Corresponds to the <code>&lt;collect&gt;</code> tag.
@@ -36,11 +35,8 @@ public final class Combine extends AbstractFlushingCollect {
     private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
     private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
 
-    /**
-     * Creates an instance of {@link Combine}.
-     */
-    public Combine() {
-    }
+    /** Creates an instance of {@link Combine}. */
+    public Combine() {}
 
     @Override
     protected void emit() {
@@ -71,5 +67,4 @@ public final class Combine extends AbstractFlushingCollect {
         sourcesLeft.addAll(sources);
         variables.clear();
     }
-
 }

@@ -20,23 +20,17 @@ import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
 
 /**
- * Default implementation of {@link StreamReceiver} which
- * simply does nothing. Do not use this class as a base class
- * for modules which are implement {@link StreamPipe}; use
- * {@link DefaultStreamPipe} for that.
+ * Default implementation of {@link StreamReceiver} which simply does nothing. Do not use this class
+ * as a base class for modules which are implement {@link StreamPipe}; use {@link DefaultStreamPipe}
+ * for that.
  *
  * @see DefaultStreamPipe
- *
  * @author Markus Michael Geipel, Christoph Böhme
- *
  */
 public class DefaultStreamReceiver extends DefaultLifeCycle implements StreamReceiver {
 
-    /**
-     * Creates an instance of {@link DefaultStreamReceiver}.
-     */
-    public DefaultStreamReceiver() {
-    }
+    /** Creates an instance of {@link DefaultStreamReceiver}. */
+    public DefaultStreamReceiver() {}
 
     @Override
     public void startRecord(final String identifier) {
@@ -62,5 +56,4 @@ public class DefaultStreamReceiver extends DefaultLifeCycle implements StreamRec
     public void literal(final String name, final String value) {
         // Default implementation does nothing
     }
-
 }

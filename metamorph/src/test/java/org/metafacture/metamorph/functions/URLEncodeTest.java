@@ -16,18 +16,16 @@
 
 package org.metafacture.metamorph.functions;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests {@link URLEncode}
  *
  * @author Pascal Christoph (dr0i)
  */
-
 public final class URLEncodeTest {
 
     private static final String CAFE_UTF8 = "café";
@@ -36,14 +34,13 @@ public final class URLEncodeTest {
     private static final String SOME_CHARS_ENCODED = "%2F%26%25%5C%2B";
     private static final String SPECIAL_CHARACTERS = ".-*_";
     private static final String URL =
-            "http://lobid.org/resources/search?q=hasItem.hasItem.heldBy.id:\"http://lobid" +
-                    ".org/organisations/DE-290#!\"&format=json";
+            "http://lobid.org/resources/search?q=hasItem.hasItem.heldBy.id:\"http://lobid"
+                    + ".org/organisations/DE-290#!\"&format=json";
     private static final String WHITESPACE = " ";
     private static final String WHITESPACE_AS_PLUS_ENCODED = "+";
     private static final String WHITESPACE_PERCENT_ENCODED = "%20";
 
-    public URLEncodeTest() {
-    }
+    public URLEncodeTest() {}
 
     @Test
     public void testUtf8() {
@@ -88,5 +85,4 @@ public final class URLEncodeTest {
         final URLEncode urlEncode = new URLEncode();
         Assert.assertEquals(urlEncode.process(URL), URLEncoder.encode(URL, "UTF-8"));
     }
-
 }

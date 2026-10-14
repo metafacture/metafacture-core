@@ -16,29 +16,26 @@
 
 package org.metafacture.triples;
 
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.objects.Triple;
-import org.metafacture.framework.objects.Triple.ObjectType;
-
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.objects.Triple;
+import org.metafacture.framework.objects.Triple.ObjectType;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 
 /**
  * Tests for class {@link TripleObjectRetriever}.
  *
  * @author Christoph Böhme
- *
  */
 public final class TripleObjectRetrieverTest {
 
@@ -47,17 +44,14 @@ public final class TripleObjectRetrieverTest {
     private static final String OBJECT_VALUE = "object-data";
     private static final String ENTITY = "{l=v}";
 
-    @Rule
-    public TemporaryFolder tempFolder = new TemporaryFolder();
+    @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
 
-    @Mock
-    private ObjectReceiver<Triple> receiver;
+    @Mock private ObjectReceiver<Triple> receiver;
 
     private String objectUrl;
     private TripleObjectRetriever tripleObjectRetriever;
 
-    public TripleObjectRetrieverTest() {
-    }
+    public TripleObjectRetrieverTest() {}
 
     @Before
     public void setup() throws IOException {
@@ -91,10 +85,8 @@ public final class TripleObjectRetrieverTest {
 
     @Test
     public void shouldSkipTriplesWithObjectTypeEntity() {
-        tripleObjectRetriever.process(
-                new Triple(SUBJECT, PREDICATE, ENTITY, ObjectType.ENTITY));
+        tripleObjectRetriever.process(new Triple(SUBJECT, PREDICATE, ENTITY, ObjectType.ENTITY));
 
         Mockito.verifyZeroInteractions(receiver);
     }
-
 }

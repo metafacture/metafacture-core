@@ -16,9 +16,6 @@
 
 package org.metafacture.csv;
 
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.StreamReceiver;
-
 import com.opencsv.exceptions.CsvMalformedLineException;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
@@ -26,6 +23,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -35,17 +34,14 @@ import org.mockito.MockitoAnnotations;
  * Tests for {@link CsvDecoder}.
  *
  * @author Fabian steeg (fsteeg)
- *
  */
 public final class CsvDecoderTest {
 
     private CsvDecoder decoder;
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public CsvDecoderTest() {
-    }
+    public CsvDecoderTest() {}
 
     @Before
     public void setup() {
@@ -85,14 +81,20 @@ public final class CsvDecoderTest {
 
     @Test
     public void testInvalidSyntax() {
-        assertException(MetafactureException.class, CsvMalformedLineException.class,
-                "Unterminated quoted field at end of CSV line", "a,\"b1,b2,b3,c"); // missing closing "
+        assertException(
+                MetafactureException.class,
+                CsvMalformedLineException.class,
+                "Unterminated quoted field at end of CSV line",
+                "a,\"b1,b2,b3,c"); // missing closing "
     }
 
     @Test
     public void testInvalidColumns() {
-        assertException(IllegalArgumentException.class, null,
-                "wrong number of columns (expected 3, was 2)", "a,b"); // missing third column
+        assertException(
+                IllegalArgumentException.class,
+                null,
+                "wrong number of columns (expected 3, was 2)",
+                "a,b"); // missing third column
     }
 
     @Test
@@ -140,10 +142,7 @@ public final class CsvDecoderTest {
         ordered.verify(receiver).endRecord();
     }
 
-    /**
-     * In: "a","b\t","c\\t","\","\cd\"
-     * Out: a, b	, c\\t, \, \cd\
-     */
+    /** In: "a","b\t","c\\t","\","\cd\" Out: a, b , c\\t, \, \cd\ */
     @Test
     public void issue496_escaping() {
         decoder.setHasHeader(false);
@@ -158,8 +157,13 @@ public final class CsvDecoderTest {
         ordered.verify(receiver).endRecord();
     }
 
-    private void assertException(final Class<? extends Throwable> exceptionClass, final Class<?> expectedClass, final String expectedMessage, final String input) {
-        final Throwable thrownException = Assert.assertThrows(exceptionClass, () -> decoder.process(input));
+    private void assertException(
+            final Class<? extends Throwable> exceptionClass,
+            final Class<?> expectedClass,
+            final String expectedMessage,
+            final String input) {
+        final Throwable thrownException =
+                Assert.assertThrows(exceptionClass, () -> decoder.process(input));
         final Throwable actualException;
 
         final String expectedSuffix;
@@ -169,13 +173,13 @@ public final class CsvDecoderTest {
             Assert.assertEquals(expectedClass, actualException.getClass());
 
             expectedSuffix = ". ";
-        }
-        else {
+        } else {
             actualException = thrownException;
             expectedSuffix = " in ";
         }
 
-        MatcherAssert.assertThat(actualException.getMessage(), CoreMatchers.startsWith(expectedMessage + expectedSuffix));
+        MatcherAssert.assertThat(
+                actualException.getMessage(),
+                CoreMatchers.startsWith(expectedMessage + expectedSuffix));
     }
-
 }

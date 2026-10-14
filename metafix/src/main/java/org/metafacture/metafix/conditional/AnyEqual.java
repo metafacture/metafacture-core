@@ -16,30 +16,29 @@
 
 package org.metafacture.metafix.conditional;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixPredicate;
 
-import java.util.List;
-import java.util.Map;
-
 /**
- * Executes the functions if/unless the field value equals the string. If it is
- * an array or a hash, one or more field values must equal the string.
+ * Executes the functions if/unless the field value equals the string. If it is an array or a hash,
+ * one or more field values must equal the string.
  */
 @FixCommand("any_equal")
 public class AnyEqual implements FixPredicate {
 
-    /**
-     * Creates an instance of {@link AnyEqual}.
-     */
-    public AnyEqual() {
-    }
+    /** Creates an instance of {@link AnyEqual}. */
+    public AnyEqual() {}
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public boolean test(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         return testConditional(record, params, ANY, EQUALS);
     }
-
 }

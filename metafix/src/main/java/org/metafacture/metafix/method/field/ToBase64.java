@@ -16,33 +16,30 @@
 
 package org.metafacture.metafix.method.field;
 
+import java.util.Base64;
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-
-/**
- * Replaces the value with its Base64 encoding.
- */
+/** Replaces the value with its Base64 encoding. */
 @FixCommand("to_base64")
 public class ToBase64 implements FixFunction {
 
-    /**
-     * Creates an instance of {@link ToBase64}.
-     */
-    public ToBase64() {
-    }
+    /** Creates an instance of {@link ToBase64}. */
+    public ToBase64() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final boolean urlSafe = getBoolean(options, "url_safe");
         final Base64.Encoder encoder = urlSafe ? Base64.getUrlEncoder() : Base64.getEncoder();
 
         record.transform(params.get(0), s -> encoder.encodeToString(s.getBytes()));
     }
-
 }

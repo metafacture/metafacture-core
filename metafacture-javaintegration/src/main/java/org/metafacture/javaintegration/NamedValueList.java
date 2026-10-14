@@ -16,31 +16,27 @@
 
 package org.metafacture.javaintegration;
 
-import org.metafacture.commons.types.NamedValue;
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import org.metafacture.commons.types.NamedValue;
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 /**
  * Collects the received results in a {@link List}.
  *
  * @author Markus Michael Geipel
- *
  */
-public final class NamedValueList extends DefaultStreamReceiver implements List<NamedValue>, Collector<List<NamedValue>> {
+public final class NamedValueList extends DefaultStreamReceiver
+        implements List<NamedValue>, Collector<List<NamedValue>> {
 
     private Collection<List<NamedValue>> collection;
     private List<NamedValue> list = new ArrayList<>();
 
-    /**
-     * Creates an instance of {@link NamedValueList}.
-     */
-    public NamedValueList() {
-    }
+    /** Creates an instance of {@link NamedValueList}. */
+    public NamedValueList() {}
 
     /**
      * Constructs a NamedValueList with a given Collection.
@@ -112,7 +108,8 @@ public final class NamedValueList extends DefaultStreamReceiver implements List<
     }
 
     @Override
-    public boolean addAll(final int index, final Collection<? extends NamedValue> currentCollection) {
+    public boolean addAll(
+            final int index, final Collection<? extends NamedValue> currentCollection) {
         return list.addAll(index, currentCollection);
     }
 
@@ -193,5 +190,4 @@ public final class NamedValueList extends DefaultStreamReceiver implements List<
     public void setCollection(final Collection<List<NamedValue>> collection) {
         this.collection = collection;
     }
-
 }

@@ -1,8 +1,5 @@
 package org.metafacture.metafix;
 
-import org.metafacture.metafix.fix.Fix;
-import org.metafacture.metafix.tests.FixInjectorProvider;
-
 import com.google.inject.Inject;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -13,6 +10,8 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.metafacture.metafix.fix.Fix;
+import org.metafacture.metafix.tests.FixInjectorProvider;
 
 @ExtendWith(InjectionExtension.class)
 @InjectWith(FixInjectorProvider.class)
@@ -20,17 +19,13 @@ public class FixParsingTest {
 
     private static final String LITERAL_END = "end";
 
-    @Inject
-    private ParseHelper<Fix> parseHelper;
+    @Inject private ParseHelper<Fix> parseHelper;
 
-    public FixParsingTest() {
-    }
+    public FixParsingTest() {}
 
     @Test
     public void shouldParseSimple() throws Exception {
-        parse(
-                "copy_field(a,b)"
-        );
+        parse("copy_field(a,b)");
     }
 
     @Test
@@ -43,8 +38,7 @@ public class FixParsingTest {
                 "add_field(hello,'\\tw\\n\\torld')",
                 "add_field(hello,'\"world\"')",
                 "add_field(\"hello\",world)",
-                "add_field('hello','world')"
-        );
+                "add_field('hello','world')");
     }
 
     @Test
@@ -63,8 +57,7 @@ public class FixParsingTest {
                 "# pass-through for fields by default, use retain to only keep certain elements",
                 "",
                 "retain(f1, b)",
-                ""
-        );
+                "");
     }
 
     @Test
@@ -103,8 +96,7 @@ public class FixParsingTest {
                 "\t\tcopy_field('$i.a','authors.$append')",
                 "\t" + LITERAL_END,
                 LITERAL_END,
-                ""
-        );
+                "");
     }
 
     private void parse(final String... fix) throws Exception {
@@ -112,7 +104,7 @@ public class FixParsingTest {
         Assertions.assertNotNull(result);
 
         final EList<Resource.Diagnostic> errors = result.eResource().getErrors();
-        Assertions.assertTrue(errors.isEmpty(), "Unexpected errors: " + IterableExtensions.join(errors, ", "));
+        Assertions.assertTrue(
+                errors.isEmpty(), "Unexpected errors: " + IterableExtensions.join(errors, ", "));
     }
-
 }

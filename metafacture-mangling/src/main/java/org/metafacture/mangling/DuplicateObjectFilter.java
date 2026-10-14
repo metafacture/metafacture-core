@@ -27,9 +27,7 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * Filters consecutive duplicated data objects.
  *
  * @param <T> object type
- *
  * @author Alexander Haffner
- *
  */
 @Description("Filters consecutive duplicated data objects.")
 @In(Object.class)
@@ -39,11 +37,8 @@ public final class DuplicateObjectFilter<T> extends DefaultObjectPipe<T, ObjectR
 
     private T lastObj;
 
-    /**
-     * Creates an instance of {@link DuplicateObjectFilter}.
-     */
-    public DuplicateObjectFilter() {
-    }
+    /** Creates an instance of {@link DuplicateObjectFilter}. */
+    public DuplicateObjectFilter() {}
 
     @Override
     public void process(final T obj) {
@@ -57,5 +52,4 @@ public final class DuplicateObjectFilter<T> extends DefaultObjectPipe<T, ObjectR
     protected void onResetStream() {
         lastObj = null;
     }
-
 }

@@ -16,10 +16,9 @@
 
 package org.metafacture.metamorph.functions;
 
-import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
  * Offers ISBN conversions.
@@ -47,11 +46,8 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
     private boolean verifyCheckDigit;
     private String errorString;
 
-    /**
-     * Creates an instance of {@link ISBN}.
-     */
-    public ISBN() {
-    }
+    /** Creates an instance of {@link ISBN}. */
+    public ISBN() {}
 
     /**
      * Sets the error message as a placeholder if the ISBN couln't be validated.
@@ -69,15 +65,12 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
 
         if (verifyCheckDigit && !isValid(result)) {
             result = errorString;
-        }
-        else if (!(size == ISBN10_SIZE || size == ISBN13_SIZE)) {
+        } else if (!(size == ISBN10_SIZE || size == ISBN13_SIZE)) {
             result = errorString;
-        }
-        else {
+        } else {
             if (to10 && ISBN13_SIZE == size) {
                 result = isbn13to10(result);
-            }
-            else if (to13 && ISBN10_SIZE == size) {
+            } else if (to13 && ISBN10_SIZE == size) {
                 result = isbn10to13(result);
             }
         }
@@ -85,12 +78,10 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
     }
 
     /**
-     * Cleanse the ISBN free of semantic sugar and uppercase a possible "x"
-     * character.
+     * Cleanse the ISBN free of semantic sugar and uppercase a possible "x" character.
      *
      * @param isbn the ISBN
-     * @return the normalized ISBN or an empty string if normalization is not
-     *         succesful
+     * @return the normalized ISBN or an empty string if normalization is not succesful
      */
     public static String cleanse(final String isbn) {
         String normValue = isbn.replace('x', 'X');
@@ -132,8 +123,7 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
             final int digit = charToInt(isbn13Data.charAt(i));
             if ((i % 2) == 0) {
                 accumulator = accumulator + digit;
-            }
-            else {
+            } else {
                 accumulator = accumulator + ISBN13_MAGIC * digit;
             }
         }
@@ -157,8 +147,7 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
      */
     public static String isbn13to10(final String isbn) {
         if (isbn.length() != ISBN13_SIZE) {
-            throw new IllegalArgumentException(
-                    "isbn must be 13 characters long");
+            throw new IllegalArgumentException("isbn must be 13 characters long");
         }
         final String isbn10Data = isbn.substring(3, 12);
 
@@ -173,8 +162,7 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
      */
     public static String isbn10to13(final String isbn) {
         if (isbn.length() != ISBN10_SIZE) {
-            throw new IllegalArgumentException(
-                    "isbn must be 10 characters long");
+            throw new IllegalArgumentException("isbn must be 10 characters long");
         }
 
         final String isbn13Data = "978" + isbn.substring(0, ISBN10_SIZE - 1);
@@ -192,12 +180,9 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
         boolean result = false;
 
         if (isbn.length() == ISBN10_SIZE) {
-            result = check10(isbn.substring(0, ISBN10_SIZE - 1)) == isbn
-                    .charAt(ISBN10_SIZE - 1);
-        }
-        else if (isbn.length() == ISBN13_SIZE) {
-            result = check13(isbn.substring(0, ISBN13_SIZE - 1)) == isbn
-                    .charAt(ISBN13_SIZE - 1);
+            result = check10(isbn.substring(0, ISBN10_SIZE - 1)) == isbn.charAt(ISBN10_SIZE - 1);
+        } else if (isbn.length() == ISBN13_SIZE) {
+            result = check13(isbn.substring(0, ISBN13_SIZE - 1)) == isbn.charAt(ISBN13_SIZE - 1);
         }
         return result;
     }
@@ -210,5 +195,4 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
     public void setVerifyCheckDigit(final String verifyCheckDigit) {
         this.verifyCheckDigit = "true".equals(verifyCheckDigit);
     }
-
 }

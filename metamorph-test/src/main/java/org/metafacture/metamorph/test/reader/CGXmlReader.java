@@ -22,15 +22,11 @@ import org.metafacture.xml.CGXmlHandler;
  * Reads and decodes a <i>Culturegraph XML</i> document.
  *
  * @author Christoph Böhme
- *
  */
 public final class CGXmlReader extends XmlReaderBase {
 
-    /**
-     * Creates an instance of {@link CGXmlReader}.
-     */
+    /** Creates an instance of {@link CGXmlReader}. */
     public CGXmlReader() {
         super(new CGXmlHandler());
     }
-
 }

@@ -16,6 +16,9 @@
 
 package org.metafacture.biblio.pica;
 
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import org.metafacture.flowcontrol.StreamBuffer;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
@@ -24,26 +27,21 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
 /**
  * Groups multiscript fields in entities.
- * <p>
- * In Pica records some fields can be repeated if they contain contents with a
- * non-latin script. These fields can be recognised by the existence of the
- * subfields {@code $U} and {@code $T}. {@code $U} contains the name of the
- * script used for the values of the fields. {@code $T} contains a number which
- * is used to group fields together which contain the same contents in different
- * scripts. All fields having the same field name and the same number in
- * {@code $T} are considered to belong together.
- * <p>
- * This module scans the input stream for Pica multiscript fields and remodels
- * them by merging all fields belong to the same multiscript group into one
- * entity. This entity has the original field name. Within this entity a new
- * entity for each of the original fields is created. These entities are named
- * depending on the type of script used. Three scripts are distinguished:
+ *
+ * <p>In Pica records some fields can be repeated if they contain contents with a non-latin script.
+ * These fields can be recognised by the existence of the subfields {@code $U} and {@code $T}.
+ * {@code $U} contains the name of the script used for the values of the fields. {@code $T} contains
+ * a number which is used to group fields together which contain the same contents in different
+ * scripts. All fields having the same field name and the same number in {@code $T} are considered
+ * to belong together.
+ *
+ * <p>This module scans the input stream for Pica multiscript fields and remodels them by merging
+ * all fields belong to the same multiscript group into one entity. This entity has the original
+ * field name. Within this entity a new entity for each of the original fields is created. These
+ * entities are named depending on the type of script used. Three scripts are distinguished:
+ *
  * <ul>
  *   <li>Latin
  *   <li>NonLatinLR
@@ -78,27 +76,22 @@ import java.util.TreeMap;
  *    }
  * </pre>
  *
- * Fields which do not contain subfields $U and $T are passed through the module
- * unaffected. If a multiscript field is encountered which only exists in a
- * single script it is not remodeled but simply passed through. The module
- * assumes that no more than two script-variants of a field exist. If a field
- * with more than two variants is encountered then the behaviour of
- * {@code PicaMultiscriptRemodeler} is undefined.
- * <p>
- * The order of the output is determined by the order of the second occurrences
- * of the multiscript fields. Multiscript fields without a second occurrences are
- * output when the second occurrence of a field with a greater group number is
- * encountered.
- * <p>
- * If a field contains only $U or $T but not both, the field is simply passed
- * through.
- * <p>
- * If the sequence of input events does not follow the Pica record definitions
- * (order of fields, nesting of entities) the behaviour of this module is
- * undefined.
+ * Fields which do not contain subfields $U and $T are passed through the module unaffected. If a
+ * multiscript field is encountered which only exists in a single script it is not remodeled but
+ * simply passed through. The module assumes that no more than two script-variants of a field exist.
+ * If a field with more than two variants is encountered then the behaviour of {@code
+ * PicaMultiscriptRemodeler} is undefined.
+ *
+ * <p>The order of the output is determined by the order of the second occurrences of the
+ * multiscript fields. Multiscript fields without a second occurrences are output when the second
+ * occurrence of a field with a greater group number is encountered.
+ *
+ * <p>If a field contains only $U or $T but not both, the field is simply passed through.
+ *
+ * <p>If the sequence of input events does not follow the Pica record definitions (order of fields,
+ * nesting of entities) the behaviour of this module is undefined.
  *
  * @author Christoph Böhme
- *
  */
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
@@ -122,13 +115,11 @@ public final class PicaMultiscriptRemodeler extends DefaultStreamPipe<StreamRece
     private BufferedField currentField;
     private BufferedField lastField;
 
-    private final SortedMap<String, BufferedField> bufferedFields = new TreeMap<String, BufferedField>();
+    private final SortedMap<String, BufferedField> bufferedFields =
+            new TreeMap<String, BufferedField>();
 
-    /**
-     * Creates an instance of {@link PicaMultiscriptRemodeler}.
-     */
-    public PicaMultiscriptRemodeler() {
-    }
+    /** Creates an instance of {@link PicaMultiscriptRemodeler}. */
+    public PicaMultiscriptRemodeler() {}
 
     @Override
     public void startRecord(final String identifier) {
@@ -160,13 +151,12 @@ public final class PicaMultiscriptRemodeler extends DefaultStreamPipe<StreamRece
     public void endEntity() {
         if (currentField.getGroup() == null || currentField.getScript() == null) {
             emitNonMultiscriptField();
-        }
-        else {
+        } else {
             if (bufferedFields.containsKey(currentField.getGroup())) {
                 emitAsSingleMultiscriptFields(getSingleMultiscriptFieldsBeforeCurrentField());
-                emitRemodeledMultiscriptField(bufferedFields.remove(currentField.getGroup()), currentField);
-            }
-            else {
+                emitRemodeledMultiscriptField(
+                        bufferedFields.remove(currentField.getGroup()), currentField);
+            } else {
                 bufferMultiscriptField(currentField);
             }
         }
@@ -181,8 +171,7 @@ public final class PicaMultiscriptRemodeler extends DefaultStreamPipe<StreamRece
 
         if (GROUP_SUBFIELD.equals(name)) {
             currentField.setGroup(value);
-        }
-        else if (SCRIPT_SUBFIELD.equals(name)) {
+        } else if (SCRIPT_SUBFIELD.equals(name)) {
             currentField.setScript(value);
         }
     }
@@ -201,7 +190,8 @@ public final class PicaMultiscriptRemodeler extends DefaultStreamPipe<StreamRece
         getReceiver().endEntity();
     }
 
-    private void emitRemodeledMultiscriptField(final BufferedField firstField, final BufferedField secondField) {
+    private void emitRemodeledMultiscriptField(
+            final BufferedField firstField, final BufferedField secondField) {
         getReceiver().startEntity(firstField.getName());
 
         getReceiver().startEntity(mapScriptToEntityName(firstField.getScript()));
@@ -225,8 +215,11 @@ public final class PicaMultiscriptRemodeler extends DefaultStreamPipe<StreamRece
     }
 
     private String mapScriptToEntityName(final String script) {
-        return LATIN_SCRIPT.equals(script)                                 ? ENTITY_NAME_FOR_LATIN :
-            (ARABIC_SCRIPT.equals(script) || HEBREW_SCRIPT.equals(script)) ? ENTITY_NAME_FOR_NON_LATIN_RL : ENTITY_NAME_FOR_NON_LATIN_LR;
+        return LATIN_SCRIPT.equals(script)
+                ? ENTITY_NAME_FOR_LATIN
+                : (ARABIC_SCRIPT.equals(script) || HEBREW_SCRIPT.equals(script))
+                        ? ENTITY_NAME_FOR_NON_LATIN_RL
+                        : ENTITY_NAME_FOR_NON_LATIN_LR;
     }
 
     private static class BufferedField {
@@ -271,7 +264,5 @@ public final class PicaMultiscriptRemodeler extends DefaultStreamPipe<StreamRece
         public String getScript() {
             return script;
         }
-
     }
-
 }

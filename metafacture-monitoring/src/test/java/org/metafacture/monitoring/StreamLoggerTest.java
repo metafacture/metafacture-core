@@ -16,11 +16,10 @@
 
 package org.metafacture.monitoring;
 
-import org.metafacture.framework.StreamReceiver;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -32,7 +31,6 @@ import org.slf4j.Logger;
  *
  * @author Markus Michael Geipel
  * @author Christoph Böhme (refactored to Mockito)
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public final class StreamLoggerTest extends TestHelpers {
@@ -40,13 +38,11 @@ public final class StreamLoggerTest extends TestHelpers {
     @Mock(name = "external.org.metafacture.monitoring.StreamLogger")
     private Logger logLogger;
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
     private StreamLogger logger;
 
-    public StreamLoggerTest() {
-    }
+    public StreamLoggerTest() {}
 
     @Before
     public void setup() {
@@ -75,15 +71,18 @@ public final class StreamLoggerTest extends TestHelpers {
         ordered.verifyNoMoreInteractions();
         Mockito.verifyNoMoreInteractions(receiver);
 
-        assertLog(logLogger, "INFO", c -> {
-            assertLog(c, "{}start record {}", "", "1");
-            assertLog(c, "{}start entity {}", "", "entity");
-            assertLog(c, "{}literal {}={}", "", "literal", "value");
-            assertLog(c, "{}end entity", "");
-            assertLog(c, "{}end record", "");
-            assertLog(c, "{}resetStream", "");
-            assertLog(c, "{}closeStream", "");
-        });
+        assertLog(
+                logLogger,
+                "INFO",
+                c -> {
+                    assertLog(c, "{}start record {}", "", "1");
+                    assertLog(c, "{}start entity {}", "", "entity");
+                    assertLog(c, "{}literal {}={}", "", "literal", "value");
+                    assertLog(c, "{}end entity", "");
+                    assertLog(c, "{}end record", "");
+                    assertLog(c, "{}resetStream", "");
+                    assertLog(c, "{}closeStream", "");
+                });
     }
 
     @Test
@@ -100,15 +99,18 @@ public final class StreamLoggerTest extends TestHelpers {
 
         Mockito.verifyNoMoreInteractions(receiver);
 
-        assertLog(logLogger, "INFO", c -> {
-            assertLog(c, "{}start record {}", "", "1");
-            assertLog(c, "{}start entity {}", "", "entity");
-            assertLog(c, "{}literal {}={}", "", "literal", "value");
-            assertLog(c, "{}end entity", "");
-            assertLog(c, "{}end record", "");
-            assertLog(c, "{}resetStream", "");
-            assertLog(c, "{}closeStream", "");
-        });
+        assertLog(
+                logLogger,
+                "INFO",
+                c -> {
+                    assertLog(c, "{}start record {}", "", "1");
+                    assertLog(c, "{}start entity {}", "", "entity");
+                    assertLog(c, "{}literal {}={}", "", "literal", "value");
+                    assertLog(c, "{}end entity", "");
+                    assertLog(c, "{}end record", "");
+                    assertLog(c, "{}resetStream", "");
+                    assertLog(c, "{}closeStream", "");
+                });
     }
 
     @Test
@@ -124,15 +126,18 @@ public final class StreamLoggerTest extends TestHelpers {
         logger.resetStream();
         logger.closeStream();
 
-        assertLog(logLogger, "INFO", c -> {
-            assertLog(c, "{}start record {}", prefix, "1");
-            assertLog(c, "{}start entity {}", prefix, "entity");
-            assertLog(c, "{}literal {}={}", prefix, "literal", "value");
-            assertLog(c, "{}end entity", prefix);
-            assertLog(c, "{}end record", prefix);
-            assertLog(c, "{}resetStream", prefix);
-            assertLog(c, "{}closeStream", prefix);
-        });
+        assertLog(
+                logLogger,
+                "INFO",
+                c -> {
+                    assertLog(c, "{}start record {}", prefix, "1");
+                    assertLog(c, "{}start entity {}", prefix, "entity");
+                    assertLog(c, "{}literal {}={}", prefix, "literal", "value");
+                    assertLog(c, "{}end entity", prefix);
+                    assertLog(c, "{}end record", prefix);
+                    assertLog(c, "{}resetStream", prefix);
+                    assertLog(c, "{}closeStream", prefix);
+                });
     }
 
     @Test
@@ -147,15 +152,17 @@ public final class StreamLoggerTest extends TestHelpers {
         logger.resetStream();
         logger.closeStream();
 
-        assertLog(logLogger, "WARN", c -> {
-            assertLog(c, "{}start record {}", "", "1");
-            assertLog(c, "{}start entity {}", "", "entity");
-            assertLog(c, "{}literal {}={}", "", "literal", "value");
-            assertLog(c, "{}end entity", "");
-            assertLog(c, "{}end record", "");
-            assertLog(c, "{}resetStream", "");
-            assertLog(c, "{}closeStream", "");
-        });
+        assertLog(
+                logLogger,
+                "WARN",
+                c -> {
+                    assertLog(c, "{}start record {}", "", "1");
+                    assertLog(c, "{}start entity {}", "", "entity");
+                    assertLog(c, "{}literal {}={}", "", "literal", "value");
+                    assertLog(c, "{}end entity", "");
+                    assertLog(c, "{}end record", "");
+                    assertLog(c, "{}resetStream", "");
+                    assertLog(c, "{}closeStream", "");
+                });
     }
-
 }

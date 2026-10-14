@@ -19,22 +19,20 @@ package org.metafacture.metamorph;
 import org.metafacture.metamorph.api.MorphErrorHandler;
 
 /**
- * Default error handler used by {@link Metamorph}. It simply throw a
- * {@link MetamorphException}.
+ * Default error handler used by {@link Metamorph}. It simply throw a {@link MetamorphException}.
  *
  * @author Markus Michael Geipel
  */
 public final class DefaultErrorHandler implements MorphErrorHandler {
 
-    /**
-     * Creates an instance of {@link DefaultErrorHandler}.
-     */
-    public DefaultErrorHandler() {
-    }
+    /** Creates an instance of {@link DefaultErrorHandler}. */
+    public DefaultErrorHandler() {}
 
     @Override
     public void error(final Exception exception) {
-        throw new MetamorphException("Error while executing the Metamorph transformation pipeline: " + exception.getMessage(), exception);
+        throw new MetamorphException(
+                "Error while executing the Metamorph transformation pipeline: "
+                        + exception.getMessage(),
+                exception);
     }
-
 }

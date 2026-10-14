@@ -16,22 +16,23 @@
 
 package org.metafacture.monitoring;
 
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.stream.IntStream;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.stream.IntStream;
-
 public class TestHelpers { // checkstyle-disable-line HideUtilityClassConstructor
 
-    private static final Object[] NO_ARGS = new Object[]{};
+    private static final Object[] NO_ARGS = new Object[] {};
 
-    /*package-private*/ TestHelpers() {
-    }
+    /*package-private*/ TestHelpers() {}
 
-    public static void assertLog(final Logger logger, final String level, final Consumer<BiConsumer<String, Object[]>> consumer) {
+    public static void assertLog(
+            final Logger logger,
+            final String level,
+            final Consumer<BiConsumer<String, Object[]>> consumer) {
         final InOrder ordered = Mockito.inOrder(logger);
 
         switch (level) {
@@ -55,19 +56,40 @@ public class TestHelpers { // checkstyle-disable-line HideUtilityClassConstructo
         Mockito.verifyNoMoreInteractions(logger);
     }
 
-    public static void assertLog(final BiConsumer<String, Object[]> consumer, final String format, final Object... arguments) {
+    public static void assertLog(
+            final BiConsumer<String, Object[]> consumer,
+            final String format,
+            final Object... arguments) {
         consumer.accept(format, arguments);
     }
 
     public static void assertLog(final Logger logger, final String prefix, final int executions) {
         final InOrder ordered = Mockito.inOrder(logger);
 
-        IntStream.range(0, executions).forEach(i -> ordered.verify(logger).info(Mockito.matches(prefix + "Execution " + (i + 1) + ": \\d+.+s"), NO_ARGS));
-        ordered.verify(logger).info(Mockito.matches(prefix + "Executions: " + executions + "; Cumulative duration: \\d+.*s; Average duration: \\d+.*s"), NO_ARGS);
-        ordered.verify(logger).info(Mockito.matches(prefix + "Time to close stream:  \\d+.+s"), NO_ARGS);
+        IntStream.range(0, executions)
+                .forEach(
+                        i ->
+                                ordered.verify(logger)
+                                        .info(
+                                                Mockito.matches(
+                                                        prefix
+                                                                + "Execution "
+                                                                + (i + 1)
+                                                                + ": \\d+.+s"),
+                                                NO_ARGS));
+        ordered.verify(logger)
+                .info(
+                        Mockito.matches(
+                                prefix
+                                        + "Executions: "
+                                        + executions
+                                        + "; Cumulative duration: \\d+.*s; Average duration:"
+                                        + " \\d+.*s"),
+                        NO_ARGS);
+        ordered.verify(logger)
+                .info(Mockito.matches(prefix + "Time to close stream:  \\d+.+s"), NO_ARGS);
 
         ordered.verifyNoMoreInteractions();
         Mockito.verifyNoMoreInteractions(logger);
     }
-
 }

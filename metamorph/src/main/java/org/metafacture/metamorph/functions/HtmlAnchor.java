@@ -20,17 +20,13 @@ package org.metafacture.metamorph.functions;
  * Creates a html link based on the received value.
  *
  * @author Markus Michael Geipel
- *
  */
 public final class HtmlAnchor extends AbstractCompose {
 
     private String title;
 
-    /**
-     * Creates an instance of {@link HtmlAnchor}.
-     */
-    public HtmlAnchor() {
-    }
+    /** Creates an instance of {@link HtmlAnchor}. */
+    public HtmlAnchor() {}
 
     /**
      * Sets the title.
@@ -46,5 +42,4 @@ public final class HtmlAnchor extends AbstractCompose {
         final String text = title == null ? value : title;
         return "<a href=\"" + getPrefix() + value + getPostfix() + "\">" + text + "</a>";
     }
-
 }

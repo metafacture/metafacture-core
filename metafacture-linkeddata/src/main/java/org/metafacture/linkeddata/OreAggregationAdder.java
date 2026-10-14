@@ -16,6 +16,13 @@
 
 package org.metafacture.linkeddata;
 
+import java.io.IOException;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.regex.Pattern;
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.commons.types.ListMap;
 import org.metafacture.framework.FluxCommand;
@@ -26,29 +33,23 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
-import java.io.IOException;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.regex.Pattern;
-
 /**
- * Adds ore:Aggregation to an Europeana Data Model stream. The aggregation id is
- * set by emitting literal('aggregation_id', id).
+ * Adds ore:Aggregation to an Europeana Data Model stream. The aggregation id is set by emitting
+ * literal('aggregation_id', id).
  *
  * @author Markus Michael Geipel
- *
  */
-@Description("adds ore:Aggregation to an Europeana Data Model stream. The aggregation id is set by emitting literal('aggregation_id', id)")
+@Description(
+        "adds ore:Aggregation to an Europeana Data Model stream. The aggregation id is set by"
+                + " emitting literal('aggregation_id', id)")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("add-oreaggregation")
 public final class OreAggregationAdder extends DefaultStreamPipe<StreamReceiver> {
 
     private static final String RDF_ABOUT = "~rdf:about";
-    private static final ListMap<String, String> AGGREGATED_ENTITIES = new ListMap<String, String>();
+    private static final ListMap<String, String> AGGREGATED_ENTITIES =
+            new ListMap<String, String>();
     private static final String ORE_AGGREGATION_PROPERTIES = "ore-aggregation.properties";
     private static final String ORE_AGGREGATION = "ore:Aggregation";
     private static final String AGGREGATION_ID = "aggregation_id";
@@ -62,8 +63,7 @@ public final class OreAggregationAdder extends DefaultStreamPipe<StreamReceiver>
         final Properties properties;
         try {
             properties = ResourceUtil.loadProperties(ORE_AGGREGATION_PROPERTIES);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException("Failed to load properties", e);
         }
         for (final Entry<Object, Object> entry : properties.entrySet()) {
@@ -75,11 +75,8 @@ public final class OreAggregationAdder extends DefaultStreamPipe<StreamReceiver>
         }
     }
 
-    /**
-     * Creates an instance of {@link OreAggregationAdder}.
-     */
-    public OreAggregationAdder() {
-    }
+    /** Creates an instance of {@link OreAggregationAdder}. */
+    public OreAggregationAdder() {}
 
     @Override
     public void startRecord(final String identifier) {
@@ -111,8 +108,7 @@ public final class OreAggregationAdder extends DefaultStreamPipe<StreamReceiver>
                             receiver.endEntity();
                         }
                     }
-                }
-                else {
+                } else {
                     for (final String value : entry.getValue()) {
                         receiver.literal(key, value);
                     }
@@ -139,17 +135,17 @@ public final class OreAggregationAdder extends DefaultStreamPipe<StreamReceiver>
         if (entityStack.isEmpty()) {
             if (AGGREGATION_ID.equals(name)) {
                 aggregationId = value;
-            }
-            else {
+            } else {
                 aggregation.add(name, value);
             }
             return;
         }
 
-        if (entityStack.size() == 1 && RDF_ABOUT.equals(name) && AGGREGATED_ENTITIES.containsKey(entityStack.peek())) {
+        if (entityStack.size() == 1
+                && RDF_ABOUT.equals(name)
+                && AGGREGATED_ENTITIES.containsKey(entityStack.peek())) {
             aggregation.add(entityStack.peek(), value);
         }
         getReceiver().literal(name, value);
     }
-
 }

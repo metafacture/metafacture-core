@@ -16,19 +16,17 @@
 
 package org.metafacture.metamorph.collectors;
 
-import org.metafacture.commons.types.ListMap;
-import org.metafacture.metamorph.api.NamedValueSource;
-import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.metafacture.commons.types.ListMap;
+import org.metafacture.metamorph.api.NamedValueSource;
+import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
 
 /**
  * Builds the cross product of the data sources.
  *
  * @author Markus Michael Geipel
- *
  */
 public final class Tuples extends AbstractFlushingCollect {
 
@@ -38,11 +36,8 @@ public final class Tuples extends AbstractFlushingCollect {
     private int minN = MIN_N;
     private String separator = "";
 
-    /**
-     * Creates an instance of {@link Tuples}.
-     */
-    public Tuples() {
-    }
+    /** Creates an instance of {@link Tuples}. */
+    public Tuples() {}
 
     /**
      * Sets min N. <strong>Default value: {@value #MIN_N}</strong>
@@ -63,8 +58,7 @@ public final class Tuples extends AbstractFlushingCollect {
     }
 
     @Override
-    protected void receive(final String name, final String value,
-            final NamedValueSource source) {
+    protected void receive(final String name, final String value, final NamedValueSource source) {
         listMap.add(name, value);
     }
 
@@ -76,7 +70,6 @@ public final class Tuples extends AbstractFlushingCollect {
     @Override
     protected void clear() {
         listMap.clear();
-
     }
 
     @Override
@@ -105,11 +98,14 @@ public final class Tuples extends AbstractFlushingCollect {
         }
 
         for (final String string : temp) {
-            getNamedValueReceiver().receive(getName(),
-                    string.substring(separator.length()), this,
-                    getRecordCount(), getEntityCount());
+            getNamedValueReceiver()
+                    .receive(
+                            getName(),
+                            string.substring(separator.length()),
+                            this,
+                            getRecordCount(),
+                            getEntityCount());
         }
         clear();
     }
-
 }

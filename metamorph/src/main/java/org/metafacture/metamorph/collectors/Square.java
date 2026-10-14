@@ -16,12 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
-import org.metafacture.metamorph.api.NamedValueSource;
-import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.metafacture.metamorph.api.NamedValueSource;
+import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
 
 /**
  * Corresponds to the <code>&lt;collect-literal&gt;</code> tag.
@@ -36,11 +35,8 @@ public final class Square extends AbstractFlushingCollect {
     private String postfix = "";
     private String delimiter = "";
 
-    /**
-     * Creates an instance of {@link Square}.
-     */
-    public Square() {
-    }
+    /** Creates an instance of {@link Square}. */
+    public Square() {}
 
     /**
      * Sets the prefix.
@@ -76,9 +72,13 @@ public final class Square extends AbstractFlushingCollect {
         for (int i = 0; i < size; ++i) {
             final String last = values.remove(values.size() - 1);
             for (final String value : values) {
-                getNamedValueReceiver().receive(getName(),
-                        prefix + value + delimiter + last + postfix, this,
-                        getRecordCount(), getEntityCount());
+                getNamedValueReceiver()
+                        .receive(
+                                getName(),
+                                prefix + value + delimiter + last + postfix,
+                                this,
+                                getRecordCount(),
+                                getEntityCount());
             }
         }
     }
@@ -97,5 +97,4 @@ public final class Square extends AbstractFlushingCollect {
     protected void clear() {
         values.clear();
     }
-
 }

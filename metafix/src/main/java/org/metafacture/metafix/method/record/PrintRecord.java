@@ -16,33 +16,31 @@
 
 package org.metafacture.metafix.method.record;
 
-import org.metafacture.metafix.FixCommand;
-import org.metafacture.metafix.Metafix;
-import org.metafacture.metafix.Record;
-import org.metafacture.metafix.api.FixFunction;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.LongAdder;
+import org.metafacture.metafix.FixCommand;
+import org.metafacture.metafix.Metafix;
+import org.metafacture.metafix.Record;
+import org.metafacture.metafix.api.FixFunction;
 
-/**
- * Prints the current record as JSON either to standard output or to a file.
- */
+/** Prints the current record as JSON either to standard output or to a file. */
 @FixCommand("print_record")
 public class PrintRecord implements FixFunction {
 
     private static final Map<Metafix, LongAdder> SCOPED_COUNTER = new HashMap<>();
 
-    /**
-     * Creates an instance of {@link PrintRecord}.
-     */
-    public PrintRecord() {
-    }
+    /** Creates an instance of {@link PrintRecord}. */
+    public PrintRecord() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final boolean internal = getBoolean(options, "internal");
         final boolean pretty = getBoolean(options, "pretty");
 
@@ -50,24 +48,25 @@ public class PrintRecord implements FixFunction {
             options.put("prefix", params.get(0));
         }
 
-        withWriter(metafix, record, options, SCOPED_COUNTER, c -> {
-            if (internal) {
-                if (pretty) {
-                    record.forEach((f, v) -> c.accept(f + "=" + v));
-                }
-                else {
-                    c.accept(record.toString());
-                }
-            }
-            else {
-                try {
-                    c.accept(record.toJson(pretty));
-                }
-                catch (final IOException e) {
-                    // Log a warning? Print string representation instead?
-                }
-            }
-        });
+        withWriter(
+                metafix,
+                record,
+                options,
+                SCOPED_COUNTER,
+                c -> {
+                    if (internal) {
+                        if (pretty) {
+                            record.forEach((f, v) -> c.accept(f + "=" + v));
+                        } else {
+                            c.accept(record.toString());
+                        }
+                    } else {
+                        try {
+                            c.accept(record.toJson(pretty));
+                        } catch (final IOException e) {
+                            // Log a warning? Print string representation instead?
+                        }
+                    }
+                });
     }
-
 }

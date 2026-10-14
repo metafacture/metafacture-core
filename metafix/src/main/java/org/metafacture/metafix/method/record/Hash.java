@@ -16,36 +16,39 @@
 
 package org.metafacture.metafix.method.record;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Converts an array into a hash/object.
- */
+/** Converts an array into a hash/object. */
 @FixCommand("hash")
 public class Hash implements FixFunction {
 
-    /**
-     * Creates an instance of {@link Hash}.
-     */
-    public Hash() {
-    }
+    /** Creates an instance of {@link Hash}. */
+    public Hash() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final String field = params.get(0);
 
-        record.getList(field, a -> record.put(field, Value.newHash(h -> {
-            for (int i = 1; i < a.size(); i = i + 2) {
-                h.put(a.get(i - 1).asString(), a.get(i));
-            }
-        })));
+        record.getList(
+                field,
+                a ->
+                        record.put(
+                                field,
+                                Value.newHash(
+                                        h -> {
+                                            for (int i = 1; i < a.size(); i = i + 2) {
+                                                h.put(a.get(i - 1).asString(), a.get(i));
+                                            }
+                                        })));
     }
-
 }

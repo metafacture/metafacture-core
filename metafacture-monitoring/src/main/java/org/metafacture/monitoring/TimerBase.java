@@ -23,9 +23,7 @@ import org.metafacture.framework.Sender;
 
 /**
  * @author Christoph Böhme
- *
- * @param <R>
- *            receiver type.
+ * @param <R> receiver type.
  */
 public class TimerBase<R extends Receiver> implements Sender<R> {
 
@@ -72,12 +70,16 @@ public class TimerBase<R extends Receiver> implements Sender<R> {
         final long averageDuration;
         if (count > 0) {
             averageDuration = cumulativeDuration / count;
-        }
-        else {
+        } else {
             averageDuration = 0;
         }
-        LOG.externalInfo(logPrefix + String.format("Executions: %d; Cumulative duration: %s; Average duration: %s",
-                    Long.valueOf(count), TimeUtil.formatDuration(cumulativeDuration), TimeUtil.formatDuration(averageDuration)));
+        LOG.externalInfo(
+                logPrefix
+                        + String.format(
+                                "Executions: %d; Cumulative duration: %s; Average duration: %s",
+                                Long.valueOf(count),
+                                TimeUtil.formatDuration(cumulativeDuration),
+                                TimeUtil.formatDuration(averageDuration)));
         startMeasurement();
         if (receiver != null) {
             receiver.closeStream();
@@ -99,7 +101,11 @@ public class TimerBase<R extends Receiver> implements Sender<R> {
         count += 1;
         cumulativeDuration += duration;
 
-        LOG.externalInfo(logPrefix + String.format(prefix + " %2$s", Long.valueOf(count), TimeUtil.formatDuration(duration)));
+        LOG.externalInfo(
+                logPrefix
+                        + String.format(
+                                prefix + " %2$s",
+                                Long.valueOf(count),
+                                TimeUtil.formatDuration(duration)));
     }
-
 }

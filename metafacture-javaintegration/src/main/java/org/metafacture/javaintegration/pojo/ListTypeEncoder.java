@@ -52,5 +52,4 @@ class ListTypeEncoder implements TypeEncoder {
     public Object getInstance() {
         return objects;
     }
-
 }

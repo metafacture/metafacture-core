@@ -17,29 +17,26 @@
 package org.metafacture.metamorph.api;
 
 /**
- * Metamorph elements which know about their location in the morph definition
- * file should implement this interface to make the information about their
- * location available in a standardised way.
+ * Metamorph elements which know about their location in the morph definition file should implement
+ * this interface to make the information about their location available in a standardised way.
  *
  * @author Christoph Böhme
- *
  */
 public interface KnowsSourceLocation {
 
     /**
-     * Sets the {@link SourceLocation} object which describes where in the morph
-     * definition file the implementing object is defined.
+     * Sets the {@link SourceLocation} object which describes where in the morph definition file the
+     * implementing object is defined.
      *
      * @param sourceLocation a source location
      */
     void setSourceLocation(SourceLocation sourceLocation);
 
     /**
-     * Gets the location object for the location in the morph definition file
-     * where the implementing object instance is defined.
+     * Gets the location object for the location in the morph definition file where the implementing
+     * object instance is defined.
      *
      * @return a source location
      */
     SourceLocation getSourceLocation();
-
 }

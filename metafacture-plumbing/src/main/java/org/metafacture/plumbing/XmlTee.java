@@ -16,6 +16,7 @@
 
 package org.metafacture.plumbing;
 
+import java.io.IOException;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.XmlPipe;
 import org.metafacture.framework.XmlReceiver;
@@ -23,20 +24,16 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultTee;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import java.io.IOException;
-
 /**
  * Sends one {@link XmlReceiver} to two {@link XmlReceiver}s.
  *
  * @author Pascal Christoph (dr0i)
- *
  */
 @Description("Sends an object to more than one receiver.")
 @In(XmlReceiver.class)
@@ -44,11 +41,8 @@ import java.io.IOException;
 @FluxCommand("xml-tee")
 public final class XmlTee extends DefaultTee<XmlReceiver> implements XmlPipe<XmlReceiver> {
 
-    /**
-     * Creates an instance of {@link XmlTee}.
-     */
-    public XmlTee() {
-    }
+    /** Creates an instance of {@link XmlTee}. */
+    public XmlTee() {}
 
     @Override
     public void characters(final char[] ch, final int start, final int length) throws SAXException {
@@ -163,8 +157,9 @@ public final class XmlTee extends DefaultTee<XmlReceiver> implements XmlPipe<Xml
     }
 
     @Override
-    public void startElement(final String uri, final String localName, final String qName,
-            final Attributes atts) throws SAXException {
+    public void startElement(
+            final String uri, final String localName, final String qName, final Attributes atts)
+            throws SAXException {
         for (final XmlReceiver receiver : getReceivers()) {
             receiver.startElement(uri, localName, qName, atts);
         }
@@ -185,8 +180,12 @@ public final class XmlTee extends DefaultTee<XmlReceiver> implements XmlPipe<Xml
     }
 
     @Override
-    public void unparsedEntityDecl(final String name, final String publicId, final String systemId,
-            final String notationName) throws SAXException {
+    public void unparsedEntityDecl(
+            final String name,
+            final String publicId,
+            final String systemId,
+            final String notationName)
+            throws SAXException {
         // unused
     }
 
@@ -194,5 +193,4 @@ public final class XmlTee extends DefaultTee<XmlReceiver> implements XmlPipe<Xml
     public void warning(final SAXParseException exception) throws SAXException {
         // unused
     }
-
 }

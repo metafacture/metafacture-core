@@ -16,9 +16,6 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.metafix.FixPath.InsertMode;
-import org.metafacture.metafix.Value.TypeMatcher;
-
 import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedHashMap;
@@ -27,22 +24,18 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
+import org.metafacture.metafix.FixPath.InsertMode;
+import org.metafacture.metafix.Value.TypeMatcher;
 
-/**
- * Represents a metadata record, i.e., a {@link Value.Hash Hash} of fields
- * and values.
- */
+/** Represents a metadata record, i.e., a {@link Value.Hash Hash} of fields and values. */
 public class Record extends Value.Hash {
 
     private final Map<String, Value> virtualFields = new LinkedHashMap<>();
 
     private boolean reject;
 
-    /**
-     * Creates an empty instance of {@link Record}.
-     */
-    public Record() {
-    }
+    /** Creates an empty instance of {@link Record}. */
+    public Record() {}
 
     /**
      * Returns a shallow clone of this record.
@@ -81,7 +74,6 @@ public class Record extends Value.Hash {
      * Checks whether this record contains the <i>virtual</i> field.
      *
      * @param field the field name
-     *
      * @return true if this record contains the <i>virtual</i> field, otherwise false
      */
     public boolean containsVirtualField(final String field) {
@@ -89,14 +81,12 @@ public class Record extends Value.Hash {
     }
 
     /**
-     * Adds a <i>virtual</i> field/value pair to this record, provided it's not
-     * {@link Value#isNull(Value) null}. Virtual fields can be
-     * {@link #get(String) accessed} like regular metadata fields, but aren't
-     * {@link #forEach(BiConsumer) emitted} by default.
+     * Adds a <i>virtual</i> field/value pair to this record, provided it's not {@link
+     * Value#isNull(Value) null}. Virtual fields can be {@link #get(String) accessed} like regular
+     * metadata fields, but aren't {@link #forEach(BiConsumer) emitted} by default.
      *
      * @param field the field name
      * @param value the metadata value
-     *
      * @see #retainFields(Collection)
      */
     public void putVirtualField(final String field, final Value value) {
@@ -112,12 +102,10 @@ public class Record extends Value.Hash {
     }
 
     /**
-     * Retrieves the field value from this record. Falls back to retrieving the
-     * <i>virtual</i> field if the field name is not already
-     * {@link #containsField(String) present}.
+     * Retrieves the field value from this record. Falls back to retrieving the <i>virtual</i> field
+     * if the field name is not already {@link #containsField(String) present}.
      *
      * @param field the field name
-     *
      * @return the metadata value
      */
     @Override
@@ -125,13 +113,11 @@ public class Record extends Value.Hash {
         final Value result;
         if (containsField(field)) {
             result = super.get(field);
-        }
-        else {
+        } else {
             final FixPath fixPath = new FixPath(field);
             if (fixPath.size() > 1) {
                 result = fixPath.findIn(this);
-            }
-            else {
+            } else {
                 result = virtualFields.get(field);
             }
         }
@@ -139,19 +125,18 @@ public class Record extends Value.Hash {
     }
 
     /**
-     * {@link #put(String, Value) Adds} a field/value pair to this record. Turns
-     * <i>virtual</i> fields into regular metadata fields if they're not already
-     * {@link #containsField(String) present}.
+     * {@link #put(String, Value) Adds} a field/value pair to this record. Turns <i>virtual</i>
+     * fields into regular metadata fields if they're not already {@link #containsField(String)
+     * present}.
      *
-     * @param field    the field name
+     * @param field the field name
      * @param newValue the new metadata value
      */
     @Override
     public void add(final String field, final Value newValue) {
         if (containsField(field)) {
             super.add(field, newValue);
-        }
-        else {
+        } else {
             put(field, newValue);
         }
     }
@@ -159,7 +144,7 @@ public class Record extends Value.Hash {
     /**
      * Adds a nested field/value pair to this record.
      *
-     * @param field    the field name
+     * @param field the field name
      * @param newValue the new metadata value
      */
     public void addNested(final String field, final Value newValue) {
@@ -167,10 +152,10 @@ public class Record extends Value.Hash {
     }
 
     /**
-     * Sets a field/value pair to this record, replacing
-     * any previous association of the field with a value.
+     * Sets a field/value pair to this record, replacing any previous association of the field with
+     * a value.
      *
-     * @param field    the field name
+     * @param field the field name
      * @param newValue the new metadata value
      */
     public void set(final String field, final Value newValue) {
@@ -179,9 +164,8 @@ public class Record extends Value.Hash {
     }
 
     /**
-     * Retains only the given field/value pairs in this record. Turns
-     * <i>virtual</i> fields into regular metadata fields if they're not already
-     * {@link #containsField(String) present}.
+     * Retains only the given field/value pairs in this record. Turns <i>virtual</i> fields into
+     * regular metadata fields if they're not already {@link #containsField(String) present}.
      *
      * @param fields the field names
      */
@@ -189,48 +173,53 @@ public class Record extends Value.Hash {
     public void retainFields(final Collection<String> fields) {
         virtualFields.keySet().retainAll(fields);
 
-        virtualFields.forEach((f, v) -> {
-            if (!containsField(f)) {
-                put(f, v);
-            }
-        });
+        virtualFields.forEach(
+                (f, v) -> {
+                    if (!containsField(f)) {
+                        put(f, v);
+                    }
+                });
 
         super.retainFields(fields);
     }
 
     /**
-     * Transform this record by applying the given operator to all matching values for the given field.
+     * Transform this record by applying the given operator to all matching values for the given
+     * field.
      *
-     * @param field    the field
+     * @param field the field
      * @param operator the operator
      */
     public void transform(final String field, final UnaryOperator<String> operator) {
         final FixPath findPath = new FixPath(field);
         final Value found = findPath.findIn(this, true);
-        Value.asList(found, results -> {
-            final Deque<FixPath> toDelete = new LinkedList<>();
-            for (int i = 0; i < results.size(); ++i) {
-                final Value oldValue = results.get(i);
-                final FixPath insertPath = findPath.to(oldValue, i);
-                final String newString = operator.apply(oldValue.asString());
-                if (newString == null) {
-                    toDelete.addFirst(insertPath);
-                }
-                else {
-                    insertPath.insertInto(this, InsertMode.REPLACE, new Value(newString));
-                }
-            }
-            toDelete.forEach(path -> path.removeNestedFrom(this));
-        });
+        Value.asList(
+                found,
+                results -> {
+                    final Deque<FixPath> toDelete = new LinkedList<>();
+                    for (int i = 0; i < results.size(); ++i) {
+                        final Value oldValue = results.get(i);
+                        final FixPath insertPath = findPath.to(oldValue, i);
+                        final String newString = operator.apply(oldValue.asString());
+                        if (newString == null) {
+                            toDelete.addFirst(insertPath);
+                        } else {
+                            insertPath.insertInto(this, InsertMode.REPLACE, new Value(newString));
+                        }
+                    }
+                    toDelete.forEach(path -> path.removeNestedFrom(this));
+                });
     }
 
     /**
-     * Transform this record by consuming all matching values for the given field with the given consumer.
+     * Transform this record by consuming all matching values for the given field with the given
+     * consumer.
      *
-     * @param field    the field
+     * @param field the field
      * @param consumer the consumer
      */
-    public void transform(final String field, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
+    public void transform(
+            final String field, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
         final FixPath path = new FixPath(field);
         final Value oldValue = path.findIn(this);
 
@@ -242,5 +231,4 @@ public class Record extends Value.Hash {
             }
         }
     }
-
 }

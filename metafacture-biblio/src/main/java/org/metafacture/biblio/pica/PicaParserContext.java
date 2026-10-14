@@ -16,18 +16,15 @@
 
 package org.metafacture.biblio.pica;
 
-import org.metafacture.framework.StreamReceiver;
-
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
+import org.metafacture.framework.StreamReceiver;
 
 /**
- * Parser context for the PICA+ parser.The context implements
- * support for normalising the UTF8 encoding of values into NFC
- * on the fly and for skipping fields without any subfields.
+ * Parser context for the PICA+ parser.The context implements support for normalising the UTF8
+ * encoding of values into NFC on the fly and for skipping fields without any subfields.
  *
  * @author Christoph Böhme
- *
  */
 final class PicaParserContext {
 
@@ -44,8 +41,7 @@ final class PicaParserContext {
 
     private String subfieldName;
 
-    PicaParserContext() {
-    }
+    PicaParserContext() {}
 
     public void setNormalizeUTF8(final boolean normalizeUTF8) {
         this.normalizeUTF8 = normalizeUTF8;
@@ -136,5 +132,4 @@ final class PicaParserContext {
         builder.setLength(0);
         return text;
     }
-
 }

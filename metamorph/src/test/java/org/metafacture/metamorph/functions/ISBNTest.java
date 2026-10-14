@@ -24,7 +24,6 @@ import org.junit.Test;
  *
  * @author Markus Michael Geipel
  */
-
 public final class ISBNTest {
 
     private static final String ISBN13A = "9781933988313";
@@ -33,7 +32,8 @@ public final class ISBNTest {
 
     private static final String ISBN10A_DIRTY = "ISBN: 1-.93.3-988-31-2 EUro 17.70";
     private static final String ISBN10C_DIRTY = "ISBN 3-7691-3150-9 1. Aufl. 2006";
-    private static final String ISBN13D_DIRTY = "ISBN 978-3-608-91086-5 (Klett-Cotta) ab der 7. Aufl.";
+    private static final String ISBN13D_DIRTY =
+            "ISBN 978-3-608-91086-5 (Klett-Cotta) ab der 7. Aufl.";
     private static final String ISBN10F_DIRTY = "ISBN 88-7336-210-9 35.00 EUR";
 
     private static final String ISBN_INCORRECT_CHECK13 = "9781933988314";
@@ -44,8 +44,7 @@ public final class ISBNTest {
     private static final String ISBN_INCORRECT_SIZE3 = "123456789";
     private static final String ERROR = "invalid";
 
-    public ISBNTest() {
-    }
+    public ISBNTest() {}
 
     @Test
     public void testProcess() {
@@ -56,7 +55,6 @@ public final class ISBNTest {
         Assert.assertEquals(ISBN10A, isbn.process(ISBN13A));
         isbn.setTo("cleanse");
         Assert.assertEquals(ISBN10A, isbn.process(ISBN10A_DIRTY));
-
     }
 
     @Test
@@ -111,5 +109,4 @@ public final class ISBNTest {
         isbn.setErrorString(ERROR);
         Assert.assertTrue(isbn.process(ISBN_INCORRECT_SIZE1).startsWith(ERROR));
     }
-
 }

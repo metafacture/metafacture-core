@@ -16,30 +16,26 @@
 
 package org.metafacture.metafix.conditional;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixPredicate;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Executes the functions if/unless the field value equals {@code true}
- * or {@code 1}.
- */
+/** Executes the functions if/unless the field value equals {@code true} or {@code 1}. */
 @FixCommand("is_true")
 public class IsTrue implements FixPredicate {
 
-    /**
-     * Creates an instance of {@link IsTrue}.
-     */
-    public IsTrue() {
-    }
+    /** Creates an instance of {@link IsTrue}. */
+    public IsTrue() {}
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public boolean test(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         return testStringConditional(record, params, IS_TRUE); // TODO: strict=false
     }
-
 }

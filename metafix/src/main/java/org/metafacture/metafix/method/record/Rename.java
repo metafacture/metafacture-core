@@ -16,41 +16,42 @@
 
 package org.metafacture.metafix.method.record;
 
+import java.util.List;
+import java.util.Map;
+import java.util.function.UnaryOperator;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.UnaryOperator;
-
 /**
- * Replaces a regular expression pattern in subfield names of a field. Does
- * not change the name of the source field itself.
+ * Replaces a regular expression pattern in subfield names of a field. Does not change the name of
+ * the source field itself.
  */
 @FixCommand("rename")
 public class Rename implements FixFunction {
 
-    /**
-     * Creates an instance of {@link Rename}.
-     */
-    public Rename() {
-    }
+    /** Creates an instance of {@link Rename}. */
+    public Rename() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final String search = params.get(1);
         final String replace = params.get(2);
 
         final UnaryOperator<String> operator = s -> s.replaceAll(search, replace);
 
-        record.transform(params.get(0), (m, c) -> m
-                .ifArray(a -> c.accept(renameArray(a, operator)))
-                .ifHash(h -> c.accept(renameHash(h, operator)))
-                .orElseThrow()
-        );
+        record.transform(
+                params.get(0),
+                (m, c) ->
+                        m.ifArray(a -> c.accept(renameArray(a, operator)))
+                                .ifHash(h -> c.accept(renameHash(h, operator)))
+                                .orElseThrow());
     }
 
     private Value renameArray(final Value.Array array, final UnaryOperator<String> operator) {
@@ -58,15 +59,15 @@ public class Rename implements FixFunction {
     }
 
     private Value renameHash(final Value.Hash hash, final UnaryOperator<String> operator) {
-        return Value.newHash(h -> hash.forEach((f, v) -> h.put(operator.apply(f), renameValue(v, operator))));
+        return Value.newHash(
+                h -> hash.forEach((f, v) -> h.put(operator.apply(f), renameValue(v, operator))));
     }
 
     private Value renameValue(final Value value, final UnaryOperator<String> operator) {
-        return value.extractType((m, c) -> m
-                .ifArray(a -> c.accept(renameArray(a, operator)))
-                .ifHash(h -> c.accept(renameHash(h, operator)))
-                .orElse(c)
-        );
+        return value.extractType(
+                (m, c) ->
+                        m.ifArray(a -> c.accept(renameArray(a, operator)))
+                                .ifHash(h -> c.accept(renameHash(h, operator)))
+                                .orElse(c));
     }
-
 }

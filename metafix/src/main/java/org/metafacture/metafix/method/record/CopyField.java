@@ -16,41 +16,39 @@
 
 package org.metafacture.metafix.method.record;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Copies a field from an existing field.
- */
+/** Copies a field from an existing field. */
 @FixCommand("copy_field")
 public class CopyField implements FixFunction {
 
-    /**
-     * Creates an instance of {@link CopyField}.
-     */
-    public CopyField() {
-    }
+    /** Creates an instance of {@link CopyField}. */
+    public CopyField() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final String oldName = params.get(0);
         final String newName = params.get(1);
 
         final Value oldValue = record.get(oldName);
         if (!Value.isNull(oldValue)) {
             oldValue.matchType()
-                .ifArray(a -> {
-                    record.remove(newName);
-                    a.forEach(v -> record.addNested(newName, v.withPathSet(null)));
-                })
-                .orElse(v -> record.set(newName, v.withPathSet(null)));
+                    .ifArray(
+                            a -> {
+                                record.remove(newName);
+                                a.forEach(v -> record.addNested(newName, v.withPathSet(null)));
+                            })
+                    .orElse(v -> record.set(newName, v.withPathSet(null)));
         }
     }
-
 }

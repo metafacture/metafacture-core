@@ -16,12 +16,11 @@
 
 package org.metafacture.biblio.marc21;
 
-import org.metafacture.framework.FormatException;
-import org.metafacture.framework.StreamReceiver;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.FormatException;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -31,7 +30,6 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link Marc21Decoder}.
  *
  * @author Christoph Böhme
- *
  */
 public final class Marc21DecoderTest {
 
@@ -42,27 +40,30 @@ public final class Marc21DecoderTest {
     private static final String RECORD_ID = "identifier";
     private static final String CONTROLFIELD_VALUE = "controlfield";
 
-    private static final String FIELD1 = "AB" + SUBFIELD_MARKER + "1" +
-            "value1";
-    private static final String FIELD2 = "CD" + SUBFIELD_MARKER + "2" +
-            "value2" + SUBFIELD_MARKER + "3" + "value3";
+    private static final String FIELD1 = "AB" + SUBFIELD_MARKER + "1" + "value1";
+    private static final String FIELD2 =
+            "CD" + SUBFIELD_MARKER + "2" + "value2" + SUBFIELD_MARKER + "3" + "value3";
 
     private static final String RECORD_LABEL = "00128noa a2200073zu 4500";
-    private static final String DIRECTORY = "001001100000" + "002001300011" +
-            "100001100024" + "200003100035";
-    private static final String DATA = RECORD_ID + FIELD_SEPARATOR +
-            CONTROLFIELD_VALUE + FIELD_SEPARATOR + FIELD1 + FIELD_SEPARATOR +
-            FIELD2 + FIELD_SEPARATOR;
-    private static final String RECORD = RECORD_LABEL + DIRECTORY +
-            FIELD_SEPARATOR + DATA + RECORD_SEPARATOR;
+    private static final String DIRECTORY =
+            "001001100000" + "002001300011" + "100001100024" + "200003100035";
+    private static final String DATA =
+            RECORD_ID
+                    + FIELD_SEPARATOR
+                    + CONTROLFIELD_VALUE
+                    + FIELD_SEPARATOR
+                    + FIELD1
+                    + FIELD_SEPARATOR
+                    + FIELD2
+                    + FIELD_SEPARATOR;
+    private static final String RECORD =
+            RECORD_LABEL + DIRECTORY + FIELD_SEPARATOR + DATA + RECORD_SEPARATOR;
 
     private Marc21Decoder marc21Decoder;
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public Marc21DecoderTest() {
-    }
+    public Marc21DecoderTest() {}
 
     @Before
     public void setup() {
@@ -112,13 +113,11 @@ public final class Marc21DecoderTest {
 
     @Test(expected = FormatException.class)
     public void shouldThrowFormatExceptionIfRecordIsNotMarc21() {
-        marc21Decoder.process("00026RIMPL1100024SYS3330" + FIELD_SEPARATOR +
-                RECORD_SEPARATOR);
+        marc21Decoder.process("00026RIMPL1100024SYS3330" + FIELD_SEPARATOR + RECORD_SEPARATOR);
     }
 
     @Test(expected = FormatException.class)
     public void shouldThrowFormatExceptionIfRecordIsTooShort() {
         marc21Decoder.process("00005");
     }
-
 }

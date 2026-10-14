@@ -16,12 +16,11 @@
 
 package org.metafacture.mangling;
 
-import org.metafacture.framework.StandardEventNames;
-import org.metafacture.framework.StreamReceiver;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.StandardEventNames;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -31,7 +30,6 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link RecordIdChanger}.
  *
  * @author Christoph Böhme
- *
  */
 public final class RecordIdChangerTest {
 
@@ -45,11 +43,9 @@ public final class RecordIdChangerTest {
 
     private RecordIdChanger recordIdChanger;
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public RecordIdChangerTest() {
-    }
+    public RecordIdChangerTest() {}
 
     @Before
     public void setup() {
@@ -188,5 +184,4 @@ public final class RecordIdChangerTest {
         ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
         ordered.verify(receiver).endRecord();
     }
-
 }

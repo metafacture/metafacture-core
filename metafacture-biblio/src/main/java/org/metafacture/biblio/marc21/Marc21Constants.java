@@ -16,10 +16,9 @@
 
 package org.metafacture.biblio.marc21;
 
-import org.metafacture.biblio.iso2709.RecordFormat;
-
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import org.metafacture.biblio.iso2709.RecordFormat;
 
 /**
  * Useful constants for the MARC 21 format.
@@ -28,13 +27,14 @@ import java.nio.charset.StandardCharsets;
  */
 final class Marc21Constants {
 
-    static final RecordFormat MARC21_FORMAT = RecordFormat.create()
-        .withIndicatorLength(2)
-        .withIdentifierLength(2)
-        .withFieldLengthLength(4) // checkstyle-disable-line MagicNumber
-        .withFieldStartLength(5) // checkstyle-disable-line MagicNumber
-        .withImplDefinedPartLength(0)
-        .build();
+    static final RecordFormat MARC21_FORMAT =
+            RecordFormat.create()
+                    .withIndicatorLength(2)
+                    .withIdentifierLength(2)
+                    .withFieldLengthLength(4) // checkstyle-disable-line MagicNumber
+                    .withFieldStartLength(5) // checkstyle-disable-line MagicNumber
+                    .withImplDefinedPartLength(0)
+                    .build();
 
     static final Charset MARC21_CHARSET = StandardCharsets.UTF_8;
 
@@ -50,14 +50,10 @@ final class Marc21Constants {
     static final char[] RECORD_TYPE_CODES = {
         'a', 'c', 'd', 'e', 'f', 'g', 'i', 'j', 'k', 'm', 'o', 'p', 'r', 't'
     };
-    static final char[] BIBLIOGRAPHIC_LEVEL_CODES = {
-        'a', 'b', 'c', 'd', 'i', 'm', 's'
-    };
+    static final char[] BIBLIOGRAPHIC_LEVEL_CODES = {'a', 'b', 'c', 'd', 'i', 'm', 's'};
     static final char[] TYPE_OF_CONTROL_CODES = {' ', 'a'};
     static final char[] CHARACTER_CODING_CODES = {'a'};
-    static final char[] ENCODING_LEVEL_CODES = {
-        ' ', '1', '2', '3', '4', '5', '7', '8', 'u', 'z'
-    };
+    static final char[] ENCODING_LEVEL_CODES = {' ', '1', '2', '3', '4', '5', '7', '8', 'u', 'z'};
     static final char[] CATALOGING_FORM_CODES = {' ', 'a', 'c', 'i', 'u'};
     static final char[] MULTIPART_LEVEL_CODES = {' ', 'a', 'b', 'c'};
 
@@ -66,5 +62,4 @@ final class Marc21Constants {
     private Marc21Constants() {
         throw new AssertionError("class should not be instantiated");
     }
-
 }

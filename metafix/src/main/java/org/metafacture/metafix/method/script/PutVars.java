@@ -16,30 +16,26 @@
 
 package org.metafacture.metafix.method.script;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Defines multiple global variables that can be referenced with
- * {@code $[<variableName>]}.
- */
+/** Defines multiple global variables that can be referenced with {@code $[<variableName>]}. */
 @FixCommand("put_vars")
 public class PutVars implements FixFunction {
 
-    /**
-     * Creates an instance of {@link PutVars}.
-     */
-    public PutVars() {
-    }
+    /** Creates an instance of {@link PutVars}. */
+    public PutVars() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         metafix.getVars().putAll(options);
     }
-
 }

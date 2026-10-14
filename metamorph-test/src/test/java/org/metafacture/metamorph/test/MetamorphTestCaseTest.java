@@ -16,21 +16,19 @@
 
 package org.metafacture.metamorph.test;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runners.model.InitializationError;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 /**
  * Test cases for class {@link MetamorphTestCase}.
  *
  * @author Christoph Böhme
- *
  */
 public final class MetamorphTestCaseTest {
 
@@ -41,18 +39,15 @@ public final class MetamorphTestCaseTest {
 
     private Document document;
 
-    public MetamorphTestCaseTest() {
-    }
+    public MetamorphTestCaseTest() {}
 
     @Before
     public void createXmlDocument() {
-        final DocumentBuilderFactory docBuilderFactory =
-                DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
         final DocumentBuilder docBuilder;
         try {
             docBuilder = docBuilderFactory.newDocumentBuilder();
-        }
-        catch (final ParserConfigurationException e) {
+        } catch (final ParserConfigurationException e) {
             throw new AssertionError(
                     "No error expected when creating a standard document builder", e);
         }
@@ -61,8 +56,7 @@ public final class MetamorphTestCaseTest {
     }
 
     @Test
-    public void shouldSupportFormetaAsInputAndResultFormat()
-            throws InitializationError {
+    public void shouldSupportFormetaAsInputAndResultFormat() throws InitializationError {
         final Element inputElement = createFormetaRecord(INPUT_TAG);
         final Element resultElement = createFormetaRecord(RESULT_TAG);
 
@@ -70,8 +64,7 @@ public final class MetamorphTestCaseTest {
         testCaseElement.appendChild(inputElement);
         testCaseElement.appendChild(resultElement);
 
-        final MetamorphTestCase metamorphTestCase =
-                new MetamorphTestCase(testCaseElement);
+        final MetamorphTestCase metamorphTestCase = new MetamorphTestCase(testCaseElement);
         metamorphTestCase.evaluate();
 
         // The test was successful if run does not throw
@@ -79,8 +72,7 @@ public final class MetamorphTestCaseTest {
     }
 
     @Test
-    public void shouldSupportCGXmlAsInputAndResultFormat()
-            throws InitializationError {
+    public void shouldSupportCGXmlAsInputAndResultFormat() throws InitializationError {
         final Element inputElement = createCGXmlRecord(INPUT_TAG);
         final Element resultElement = createCGXmlRecord(RESULT_TAG);
 
@@ -88,8 +80,7 @@ public final class MetamorphTestCaseTest {
         testCaseElement.appendChild(inputElement);
         testCaseElement.appendChild(resultElement);
 
-        final MetamorphTestCase metamorphTestCase =
-                new MetamorphTestCase(testCaseElement);
+        final MetamorphTestCase metamorphTestCase = new MetamorphTestCase(testCaseElement);
         metamorphTestCase.evaluate();
 
         // The test was successful if run does not throw
@@ -97,8 +88,7 @@ public final class MetamorphTestCaseTest {
     }
 
     @Test
-    public void issue229ShouldSupportMarcXmlAsInputAndResultFormat()
-            throws InitializationError {
+    public void issue229ShouldSupportMarcXmlAsInputAndResultFormat() throws InitializationError {
         final Element inputElement = createMarcXmlRecord(INPUT_TAG);
         final Element resultElement = createMarcXmlRecord(RESULT_TAG);
 
@@ -106,8 +96,7 @@ public final class MetamorphTestCaseTest {
         testCaseElement.appendChild(inputElement);
         testCaseElement.appendChild(resultElement);
 
-        final MetamorphTestCase metamorphTestCase =
-                new MetamorphTestCase(testCaseElement);
+        final MetamorphTestCase metamorphTestCase = new MetamorphTestCase(testCaseElement);
         metamorphTestCase.evaluate();
 
         // The test was successful if run does not throw
@@ -115,15 +104,14 @@ public final class MetamorphTestCaseTest {
     }
 
     @Test
-    public void issue219ShouldResolveXIncludesInMetamorphResources()
-            throws InitializationError {
+    public void issue219ShouldResolveXIncludesInMetamorphResources() throws InitializationError {
         final Element inputElement = createFormetaRecord(INPUT_TAG);
         final Element resultElement = createFormetaRecord(RESULT_TAG);
 
-        final Element transformationElement =
-                document.createElement(TRANSFORMATION_TAG);
+        final Element transformationElement = document.createElement(TRANSFORMATION_TAG);
         transformationElement.setAttribute("type", "text/x-metamorph+xml");
-        transformationElement.setAttribute("src",
+        transformationElement.setAttribute(
+                "src",
                 "org/metafacture/metamorph/test/issue219-should-resolve-xincludes-in-metamorph-resources1.xml");
 
         final Element testCaseElement = document.createElement(TEST_CASE_TAG);
@@ -131,8 +119,7 @@ public final class MetamorphTestCaseTest {
         testCaseElement.appendChild(transformationElement);
         testCaseElement.appendChild(resultElement);
 
-        final MetamorphTestCase metamorphTestCase =
-                new MetamorphTestCase(testCaseElement);
+        final MetamorphTestCase metamorphTestCase = new MetamorphTestCase(testCaseElement);
         metamorphTestCase.evaluate();
 
         // The test was successful if run does not throw
@@ -161,13 +148,12 @@ public final class MetamorphTestCaseTest {
         fieldElement.setTextContent("123");
         final Element recordElement = document.createElement("record");
         recordElement.appendChild(fieldElement);
-        final Element collectionElement = document.createElementNS(
-                "http://www.loc.gov/MARC21/slim", "collection");
+        final Element collectionElement =
+                document.createElementNS("http://www.loc.gov/MARC21/slim", "collection");
         collectionElement.appendChild(recordElement);
         final Element element = document.createElement(elementName);
         element.setAttribute("type", "application/marcxml+xml");
         element.appendChild(collectionElement);
         return element;
     }
-
 }

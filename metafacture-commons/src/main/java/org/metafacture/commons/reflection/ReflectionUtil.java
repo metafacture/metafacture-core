@@ -17,8 +17,7 @@
 package org.metafacture.commons.reflection;
 
 /**
- * Utility functions for dynamically loading classes and calling setters on
- * them.
+ * Utility functions for dynamically loading classes and calling setters on them.
  *
  * @author Christoph Böhme
  */
@@ -29,8 +28,8 @@ public final class ReflectionUtil {
     }
 
     /**
-     * @return the context ClassLoader for this thread, or null indicating the
-     *         system class loader (or, failing that, the bootstrap class loader)
+     * @return the context ClassLoader for this thread, or null indicating the system class loader
+     *     (or, failing that, the bootstrap class loader)
      */
     public static ClassLoader getContextClassLoader() {
         final ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -43,38 +42,39 @@ public final class ReflectionUtil {
     /**
      * Loads a Class.
      *
-     * @param <T>       the object type
+     * @param <T> the object type
      * @param className the name of the class
-     * @param baseType  the object type of the class to be wrapped
+     * @param baseType the object type of the class to be wrapped
      * @return the ConfigurableClass
      */
-    public static <T> ConfigurableClass<? extends T> loadClass(final String className, final Class<T> baseType) {
+    public static <T> ConfigurableClass<? extends T> loadClass(
+            final String className, final Class<T> baseType) {
         return loadClass(getContextClassLoader(), className, baseType);
     }
 
     /**
      * Wraps a Class in a ConfigurableClass.
      *
-     * @param <T>       the object type of the ConfigurableClass
-     * @param loader    the ClassLoader
+     * @param <T> the object type of the ConfigurableClass
+     * @param loader the ClassLoader
      * @param className the name of the class
-     * @param baseType  the object type of the class to be wrapped
+     * @param baseType the object type of the class to be wrapped
      * @return the ConfigurableClass
      */
-    public static <T> ConfigurableClass<? extends T> loadClass(final ClassLoader loader, final String className, final Class<T> baseType) {
+    public static <T> ConfigurableClass<? extends T> loadClass(
+            final ClassLoader loader, final String className, final Class<T> baseType) {
         final Class<?> clazz;
         try {
             clazz = loader.loadClass(className);
-        }
-        catch (final ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             throw new ReflectionException("Class not found: " + className, e);
         }
         if (!baseType.isAssignableFrom(clazz)) {
-            throw new ReflectionException(className + " must extend or implement " + baseType.getName());
+            throw new ReflectionException(
+                    className + " must extend or implement " + baseType.getName());
         }
-        @SuppressWarnings("unchecked")  // protected by isAssignableFrom check
+        @SuppressWarnings("unchecked") // protected by isAssignableFrom check
         final Class<? extends T> castedClass = (Class<? extends T>) clazz;
         return new ConfigurableClass<>(castedClass);
     }
-
 }

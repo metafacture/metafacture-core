@@ -23,7 +23,6 @@ import java.util.Map;
  * Provides access to the maps defined in a Metamorph script.
  *
  * @author Markus Michael Geipel
- *
  */
 public interface Maps {
 
@@ -48,7 +47,7 @@ public interface Maps {
      * Gets a value from the map.
      *
      * @param mapName the name of the map
-     * @param key     the key of the map
+     * @param key the key of the map
      * @return the value
      */
     String getValue(String mapName, String key);
@@ -57,7 +56,7 @@ public interface Maps {
      * Returns a Map with a map name.
      *
      * @param mapName the name of the map
-     * @param map     the map
+     * @param map the map
      * @return the Map
      */
     Map<String, String> putMap(String mapName, Map<String, String> map);
@@ -66,10 +65,9 @@ public interface Maps {
      * Puts a value into a map.
      *
      * @param mapName the name of the map
-     * @param key     the key
-     * @param value   the value
+     * @param key the key
+     * @param value the value
      * @return the value
      */
     String putValue(String mapName, String key, String value);
-
 }

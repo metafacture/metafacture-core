@@ -28,7 +28,6 @@ import org.metafacture.framework.objects.Triple;
  * Shifts subjectTo predicateTo and objectTo around.
  *
  * @author Christoph Böhme
- *
  */
 @Description("Shifts subjectTo predicateTo and objectTo around")
 @In(Triple.class)
@@ -36,22 +35,22 @@ import org.metafacture.framework.objects.Triple;
 @FluxCommand("reorder-triple")
 public final class TripleReorder extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
 
-    /**
-     * Names of the elements in the triple
-     */
-    public enum TripleElement { SUBJECT, PREDICATE, OBJECT }
+    /** Names of the elements in the triple */
+    public enum TripleElement {
+        SUBJECT,
+        PREDICATE,
+        OBJECT
+    }
+
     // Do not change the item order because the process method
     // uses ordinal().
 
     private TripleElement subjectFrom = TripleElement.SUBJECT;
     private TripleElement predicateFrom = TripleElement.PREDICATE;
-    private TripleElement objectFrom =  TripleElement.OBJECT;
+    private TripleElement objectFrom = TripleElement.OBJECT;
 
-    /**
-     * Creates an instance of {@link TripleReorder}.
-     */
-    public TripleReorder() {
-    }
+    /** Creates an instance of {@link TripleReorder}. */
+    public TripleReorder() {}
 
     /**
      * Gets the TripleElement to shift the subject to.
@@ -109,17 +108,13 @@ public final class TripleReorder extends DefaultObjectPipe<Triple, ObjectReceive
 
     @Override
     public void process(final Triple triple) {
-        final String[] elements = {
-                triple.getSubject(),
-                triple.getPredicate(),
-                triple.getObject()
-        };
+        final String[] elements = {triple.getSubject(), triple.getPredicate(), triple.getObject()};
 
-        getReceiver().process(new Triple(
-                elements[subjectFrom.ordinal()],
-                elements[predicateFrom.ordinal()],
-                elements[objectFrom.ordinal()]
-        ));
+        getReceiver()
+                .process(
+                        new Triple(
+                                elements[subjectFrom.ordinal()],
+                                elements[predicateFrom.ordinal()],
+                                elements[objectFrom.ordinal()]));
     }
-
 }

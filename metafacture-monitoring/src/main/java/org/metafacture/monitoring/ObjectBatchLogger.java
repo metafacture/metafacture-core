@@ -16,6 +16,8 @@
 
 package org.metafacture.monitoring;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.metafacture.commons.StringUtil;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureLogger;
@@ -25,17 +27,11 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Writes log info for every BATCHSIZE records.
  *
- * @param <T>
- *            object type
- *
+ * @param <T> object type
  * @author Markus Geipel
- *
  */
 @Description("Writes log info for every BATCHSIZE records.")
 @In(Object.class)
@@ -62,8 +58,8 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
     private long batchCount;
 
     /**
-     * Creates an instance of {@link ObjectBatchLogger} with the default format of
-     * {@value #DEFAULT_FORMAT}.
+     * Creates an instance of {@link ObjectBatchLogger} with the default format of {@value
+     * #DEFAULT_FORMAT}.
      */
     public ObjectBatchLogger() {
         this.format = DEFAULT_FORMAT;
@@ -82,7 +78,7 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
      * Constructs an ObjectBatchLogger with a format and a map of variables.
      *
      * @param format a format
-     * @param vars   a map of variables
+     * @param vars a map of variables
      */
     ObjectBatchLogger(final String format, final Map<String, String> vars) {
         this.format = format;
@@ -134,5 +130,4 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
             writeLog();
         }
     }
-
 }

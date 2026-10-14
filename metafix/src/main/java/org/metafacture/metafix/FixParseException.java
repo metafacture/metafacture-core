@@ -18,9 +18,7 @@ package org.metafacture.metafix;
 
 import org.metafacture.framework.MetafactureException;
 
-/**
- * Error while parsing Fix resource.
- */
+/** Error while parsing Fix resource. */
 public class FixParseException extends MetafactureException {
 
     /**
@@ -36,10 +34,9 @@ public class FixParseException extends MetafactureException {
      * Creates an instance of {@link FixParseException}.
      *
      * @param message the exception message
-     * @param cause   the exception cause
+     * @param cause the exception cause
      */
     public FixParseException(final String message, final Throwable cause) {
         super(message, cause);
     }
-
 }

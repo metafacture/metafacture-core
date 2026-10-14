@@ -16,33 +16,28 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.metafix.api.FixFunction;
-import org.metafacture.metafix.api.FixRegistry;
-import org.metafacture.metafix.bind.ListAs;
-import org.metafacture.metafix.bind.Once;
-import org.metafacture.metamorph.api.Maps;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.metafacture.metafix.api.FixFunction;
+import org.metafacture.metafix.api.FixRegistry;
+import org.metafacture.metafix.bind.ListAs;
+import org.metafacture.metafix.bind.Once;
+import org.metafacture.metamorph.api.Maps;
 
-/**
- * Tests Metafix API methods.
- */
+/** Tests Metafix API methods. */
 public class MetafixTest {
 
     private static final String MAP_NAME = "testMap";
     private static final String KEY = "outName";
     private static final String VALUE = "testValue";
 
-    public MetafixTest() {
-    }
+    public MetafixTest() {}
 
     @Test
     public void shouldPutVar() {
@@ -166,7 +161,10 @@ public class MetafixTest {
     // See issue metafacture-fix#79
     public void shouldThrowExceptionForInvalidFixFile() {
         final String fixFile = "src/test/resources/org/metafacture/metafix/fixes/invalid.fix";
-        MetafixTestHelpers.assertThrows(FixParseException.class, "Invalid FixStandaloneSetup resource: " + fixFile, () -> new Metafix(fixFile));
+        MetafixTestHelpers.assertThrows(
+                FixParseException.class,
+                "Invalid FixStandaloneSetup resource: " + fixFile,
+                () -> new Metafix(fixFile));
 
         // TODO: Test logging statements
     }
@@ -219,7 +217,8 @@ public class MetafixTest {
         final FixRegistry registry = new Metafix().getRegistry();
         final Class<?> clazz = TestCommand2.class;
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> registry.registerCommand(clazz));
+        Assertions.assertThrows(
+                IllegalArgumentException.class, () -> registry.registerCommand(clazz));
     }
 
     @Test
@@ -228,7 +227,8 @@ public class MetafixTest {
         final String name = "bla";
         final Class<?> clazz = MetafixTest.class;
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> registry.registerCommand(name, clazz));
+        Assertions.assertThrows(
+                IllegalArgumentException.class, () -> registry.registerCommand(name, clazz));
     }
 
     @Test
@@ -282,7 +282,8 @@ public class MetafixTest {
         final Class<?> clazz2 = ListAs.class;
 
         Assertions.assertTrue(registry.registerCommand(name, clazz1));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> registry.registerCommand(name, clazz2));
+        Assertions.assertThrows(
+                IllegalArgumentException.class, () -> registry.registerCommand(name, clazz2));
     }
 
     @Test
@@ -303,7 +304,8 @@ public class MetafixTest {
         final String name = null;
         final Class<?> clazz = Once.class;
 
-        Assertions.assertThrows(NullPointerException.class, () -> registry.registerCommand(name, clazz));
+        Assertions.assertThrows(
+                NullPointerException.class, () -> registry.registerCommand(name, clazz));
     }
 
     @Test
@@ -312,7 +314,8 @@ public class MetafixTest {
         final String name = "bla";
         final Class<?> clazz = null;
 
-        Assertions.assertThrows(NullPointerException.class, () -> registry.registerCommand(name, clazz));
+        Assertions.assertThrows(
+                NullPointerException.class, () -> registry.registerCommand(name, clazz));
     }
 
     @Test
@@ -320,14 +323,16 @@ public class MetafixTest {
         final String name = "bla";
         final Class<?> clazz = Once.class;
 
-        final Metafix metafix = new Metafix(m -> {
-            final FixRegistry registry = m.getRegistry();
+        final Metafix metafix =
+                new Metafix(
+                        m -> {
+                            final FixRegistry registry = m.getRegistry();
 
-            Assertions.assertFalse(registry.isRegisteredCommand(name));
-            Assertions.assertTrue(registry.registerCommand(name, clazz));
+                            Assertions.assertFalse(registry.isRegisteredCommand(name));
+                            Assertions.assertTrue(registry.registerCommand(name, clazz));
 
-            return null;
-        });
+                            return null;
+                        });
 
         final FixRegistry registry = metafix.getRegistry();
         Assertions.assertTrue(registry.isRegisteredCommand(name));
@@ -336,21 +341,20 @@ public class MetafixTest {
     @FixCommand("test_command")
     private static class TestCommand1 implements FixFunction {
 
-        private TestCommand1() {
-        }
+        private TestCommand1() {}
 
         @Override
-        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+        public void apply(
+                final Metafix metafix,
+                final Record record,
+                final List<String> params,
+                final Map<String, String> options) {
             // nothing to do
         }
-
     }
 
     private static class TestCommand2 extends TestCommand1 {
 
-        private TestCommand2() {
-        }
-
+        private TestCommand2() {}
     }
-
 }

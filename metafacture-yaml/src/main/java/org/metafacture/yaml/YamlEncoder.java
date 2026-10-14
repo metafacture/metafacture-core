@@ -16,6 +16,15 @@
 
 package org.metafacture.yaml;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonStreamContext;
+import com.fasterxml.jackson.core.SerializableString;
+import com.fasterxml.jackson.core.io.CharacterEscapes;
+import com.fasterxml.jackson.core.io.SerializedString;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
+import java.io.IOException;
+import java.io.StringWriter;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -25,26 +34,13 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonStreamContext;
-import com.fasterxml.jackson.core.SerializableString;
-import com.fasterxml.jackson.core.io.CharacterEscapes;
-import com.fasterxml.jackson.core.io.SerializedString;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
-
-import java.io.IOException;
-import java.io.StringWriter;
-
 /**
- * Serialises an object as YAML. Records and entities are represented
- * as objects unless their name ends with []. If the name ends with [],
- * an array is created.
+ * Serialises an object as YAML. Records and entities are represented as objects unless their name
+ * ends with []. If the name ends with [], an array is created.
  *
  * @author Christoph Böhme
  * @author Michael Büchner
  * @author Jens Wille
- *
  */
 @Description("Serialises an object as YAML.")
 @In(StreamReceiver.class)
@@ -62,14 +58,11 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     private String arrayMarker = ARRAY_MARKER;
 
-    /**
-     * Creates an instance of {@link YamlEncoder} if no IOException occurs.
-     */
+    /** Creates an instance of {@link YamlEncoder} if no IOException occurs. */
     public YamlEncoder() {
         try {
             yamlGenerator = new YAMLFactory().createGenerator(writer);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -94,22 +87,17 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     /**
      * Flags whether the data should be pretty printed.
-     * @deprecated
-     * Jackson's YAMLGenerator ignores any PrettyPrinter. It's always
-     * pretty printed.
      *
+     * @deprecated Jackson's YAMLGenerator ignores any PrettyPrinter. It's always pretty printed.
      * @param prettyPrinting true if the data should be pretty printed
      */
     @Deprecated
-    public void setPrettyPrinting(final boolean prettyPrinting) {
-    }
+    public void setPrettyPrinting(final boolean prettyPrinting) {}
 
     /**
      * Checks whether to pretty print.
-     * @deprecated
-     * Jackson's YAMLGenerator ignores any PrettyPrinter. It's always
-     * pretty printed.
      *
+     * @deprecated Jackson's YAMLGenerator ignores any PrettyPrinter. It's always pretty printed.
      * @return true if the data should be pretty printed
      */
     @Deprecated
@@ -118,36 +106,37 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
     }
 
     /**
-     * By default YAML output does only have escaping where it is strictly
-     * necessary. This is recommended in the most cases. Nevertheless it can
-     * be sometimes useful to have some more escaping.
+     * By default YAML output does only have escaping where it is strictly necessary. This is
+     * recommended in the most cases. Nevertheless it can be sometimes useful to have some more
+     * escaping.
      *
-     * @param escapeCharacters an array which defines which characters should be
-     *                         escaped and how it will be done. See
-     *                         {@link CharacterEscapes}. In most cases this should
-     *                         be null. Use like this:
-     *                         <pre>{@code int[] esc = CharacterEscapes.standardAsciiEscapesForJSON();
+     * @param escapeCharacters an array which defines which characters should be escaped and how it
+     *     will be done. See {@link CharacterEscapes}. In most cases this should be null. Use like
+     *     this:
+     *     <pre>{@code int[] esc = CharacterEscapes.standardAsciiEscapesForJSON();
      *                         // and force escaping of a few others:
      *                         esc['\''] = CharacterEscapes.ESCAPE_STANDARD;
      *                         yamlEncoder.setJavaScriptEscapeChars(esc);
      *                         }</pre>
      */
     public void setJavaScriptEscapeChars(final int[] escapeCharacters) {
-        final CharacterEscapes ce = new CharacterEscapes() {
+        final CharacterEscapes ce =
+                new CharacterEscapes() {
 
-            private static final long serialVersionUID = 1L;
+                    private static final long serialVersionUID = 1L;
 
-            @Override
-            public int[] getEscapeCodesForAscii() {
-                return escapeCharacters != null ? escapeCharacters : CharacterEscapes.standardAsciiEscapesForJSON();
-            }
+                    @Override
+                    public int[] getEscapeCodesForAscii() {
+                        return escapeCharacters != null
+                                ? escapeCharacters
+                                : CharacterEscapes.standardAsciiEscapesForJSON();
+                    }
 
-            @Override
-            public SerializableString getEscapeSequence(final int ch) {
-                return new SerializedString(escapeChar((char) ch));
-            }
-
-        };
+                    @Override
+                    public SerializableString getEscapeSequence(final int ch) {
+                        return new SerializedString(escapeChar((char) ch));
+                    }
+                };
 
         yamlGenerator.setCharacterEscapes(ce);
     }
@@ -165,8 +154,7 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
         try {
             yamlGenerator.flush();
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
 
@@ -194,15 +182,12 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
             if (value == null) {
                 yamlGenerator.writeNull();
-            }
-            else {
+            } else {
                 yamlGenerator.writeString(value);
             }
-        }
-        catch (final JsonGenerationException e) {
+        } catch (final JsonGenerationException e) {
             throw new MetafactureException(e);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -213,23 +198,21 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
             if (name.endsWith(arrayMarker)) {
                 if (ctx.inObject()) {
-                    yamlGenerator.writeFieldName(name.substring(0, name.length() - arrayMarker.length()));
+                    yamlGenerator.writeFieldName(
+                            name.substring(0, name.length() - arrayMarker.length()));
                 }
 
                 yamlGenerator.writeStartArray();
-            }
-            else {
+            } else {
                 if (ctx.inObject()) {
                     yamlGenerator.writeFieldName(name);
                 }
 
                 yamlGenerator.writeStartObject();
             }
-        }
-        catch (final JsonGenerationException e) {
+        } catch (final JsonGenerationException e) {
             throw new MetafactureException(e);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -240,22 +223,23 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
             if (ctx.inObject()) {
                 yamlGenerator.writeEndObject();
-            }
-            else if (ctx.inArray()) {
+            } else if (ctx.inArray()) {
                 yamlGenerator.writeEndArray();
             }
-        }
-        catch (final JsonGenerationException e) {
+        } catch (final JsonGenerationException e) {
             throw new MetafactureException(e);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
 
     private String escapeChar(final char ch) {
         final String namedEscape = namedEscape(ch);
-        return namedEscape != null ? namedEscape : (ch < ESCAPE_CHAR_LOW || ESCAPE_CHAR_HIGH < ch) ? unicodeEscape(ch) : Character.toString(ch);
+        return namedEscape != null
+                ? namedEscape
+                : (ch < ESCAPE_CHAR_LOW || ESCAPE_CHAR_HIGH < ch)
+                        ? unicodeEscape(ch)
+                        : Character.toString(ch);
     }
 
     private String namedEscape(final char ch) {
@@ -299,5 +283,4 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
     private String unicodeEscape(final char ch) {
         return String.format("\\u%4H", ch).replace(' ', '0');
     }
-
 }

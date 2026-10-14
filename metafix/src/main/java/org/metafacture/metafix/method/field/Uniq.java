@@ -16,31 +16,27 @@
 
 package org.metafacture.metafix.method.field;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Deletes duplicate values in an array.
- */
+/** Deletes duplicate values in an array. */
 @FixCommand("uniq")
 public class Uniq implements FixFunction {
 
-    /**
-     * Creates an instance of {@link Uniq}.
-     */
-    public Uniq() {
-    }
+    /** Creates an instance of {@link Uniq}. */
+    public Uniq() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-        record.transform(params.get(0), (m, c) -> m
-                .ifArray(a -> c.accept(newArray(unique(a.stream()))))
-        );
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
+        record.transform(
+                params.get(0), (m, c) -> m.ifArray(a -> c.accept(newArray(unique(a.stream())))));
     }
-
 }

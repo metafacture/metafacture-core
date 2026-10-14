@@ -16,6 +16,9 @@
 
 package org.metafacture.io;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -24,15 +27,10 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-
 /**
  * Processes input from a reader line by line.
  *
  * @author Christoph Böhme
- *
  */
 @Description("Processes input from a reader line by line.")
 @In(Reader.class)
@@ -42,11 +40,8 @@ public final class LineReader extends DefaultObjectPipe<Reader, ObjectReceiver<S
 
     private static final int BUFFER_SIZE = 1024 * 1024 * 16;
 
-    /**
-     * Creates an instance of {@link LineReader}.
-     */
-    public LineReader() {
-    }
+    /** Creates an instance of {@link LineReader}. */
+    public LineReader() {}
 
     @Override
     public void process(final Reader reader) {
@@ -58,7 +53,7 @@ public final class LineReader extends DefaultObjectPipe<Reader, ObjectReceiver<S
     /**
      * Processes input from a reader and passes it line by line to a receiver.
      *
-     * @param reader   the Reader
+     * @param reader the Reader
      * @param receiver the ObjectReceiver
      */
     public static void process(final Reader reader, final ObjectReceiver<String> receiver) {
@@ -69,10 +64,8 @@ public final class LineReader extends DefaultObjectPipe<Reader, ObjectReceiver<S
                 receiver.process(line);
                 line = lineReader.readLine();
             }
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
-
 }

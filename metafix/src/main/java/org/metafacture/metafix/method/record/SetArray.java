@@ -16,33 +16,32 @@
 
 package org.metafacture.metafix.method.record;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-
 /**
- * Creates a new array (with optional values), provided that the intermediate
- * structures (i.e. parent fields) exist. To create any missing intermediate
- * structures, use {@link AddArray} instead.
+ * Creates a new array (with optional values), provided that the intermediate structures (i.e.
+ * parent fields) exist. To create any missing intermediate structures, use {@link AddArray}
+ * instead.
  */
 @FixCommand("set_array")
 public class SetArray implements FixFunction {
 
-    /**
-     * Creates an instance of {@link SetArray}.
-     */
-    public SetArray() {
-    }
+    /** Creates an instance of {@link SetArray}. */
+    public SetArray() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         if (parentFieldExists(record, params.get(0))) {
             new AddArray().apply(metafix, record, params, options);
         }
     }
-
 }

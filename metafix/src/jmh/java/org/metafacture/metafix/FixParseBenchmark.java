@@ -19,9 +19,7 @@ package org.metafacture.metafix;
 import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Setup;
 
-/**
- * Fix parsing benchmark.
- */
+/** Fix parsing benchmark. */
 public class FixParseBenchmark extends AbstractBenchmark {
 
     protected static final String BASE = "src/jmh/resources/org/metafacture/metafix";
@@ -31,20 +29,14 @@ public class FixParseBenchmark extends AbstractBenchmark {
     private String fixFile;
 
     @Param({ // checkstyle-disable-line AnnotationUseStyle
-        "nothing",
-        "alma"
+        "nothing", "alma"
     })
     private String fixDef;
 
-    /**
-     * Creates an instance of {@link FixParseBenchmark}.
-     */
-    public FixParseBenchmark() {
-    }
+    /** Creates an instance of {@link FixParseBenchmark}. */
+    public FixParseBenchmark() {}
 
-    /**
-     * Performs the setup.
-     */
+    /** Performs the setup. */
     @Setup
     public void setup() {
         fixFile = String.format(FIXES, fixDef);
@@ -58,5 +50,4 @@ public class FixParseBenchmark extends AbstractBenchmark {
     protected String getFixFile() {
         return fixFile;
     }
-
 }

@@ -28,21 +28,17 @@ import org.metafacture.framework.helpers.DefaultTee;
  * Sends an object to more than one receiver.
  *
  * @param <T> Object type
- *
  * @author Christoph Böhme
- *
  */
 @Description("Sends an object to more than one receiver.")
 @In(Object.class)
 @Out(Object.class)
 @FluxCommand("object-tee")
-public final class ObjectTee<T> extends DefaultTee<ObjectReceiver<T>> implements ObjectPipe<T, ObjectReceiver<T>> {
+public final class ObjectTee<T> extends DefaultTee<ObjectReceiver<T>>
+        implements ObjectPipe<T, ObjectReceiver<T>> {
 
-    /**
-     * Creates an instance of {@link ObjectTee}.
-     */
-    public ObjectTee() {
-    }
+    /** Creates an instance of {@link ObjectTee}. */
+    public ObjectTee() {}
 
     @Override
     public void process(final T obj) {
@@ -50,5 +46,4 @@ public final class ObjectTee<T> extends DefaultTee<ObjectReceiver<T>> implements
             receiver.process(obj);
         }
     }
-
 }

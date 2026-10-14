@@ -44,14 +44,12 @@ public class MetafactureException extends RuntimeException {
     }
 
     /**
-     * Creates an instance of {@link MetafactureException} by given message and
-     * cause.
+     * Creates an instance of {@link MetafactureException} by given message and cause.
      *
      * @param message the message
-     * @param cause   the {@link Throwable}
+     * @param cause the {@link Throwable}
      */
     public MetafactureException(final String message, final Throwable cause) {
         super(message, cause);
     }
-
 }

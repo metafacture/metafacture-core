@@ -16,19 +16,17 @@
 
 package org.metafacture.csv;
 
-import org.metafacture.framework.ObjectReceiver;
-
+import java.util.Arrays;
+import java.util.function.Consumer;
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-
-import java.util.Arrays;
-import java.util.function.Consumer;
 
 /**
  * Tests for {@link CsvEncoder}.
@@ -51,123 +49,143 @@ public final class CsvEncoderTest {
     private static final String VALUE5 = "e";
     private static final String VALUE6 = "f";
 
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
+    @Rule public MockitoRule rule = MockitoJUnit.rule();
 
-    @Mock
-    private ObjectReceiver<String> receiver;
+    @Mock private ObjectReceiver<String> receiver;
 
-    public CsvEncoderTest() {
-    }
+    public CsvEncoderTest() {}
 
     @Test
     public void shouldReceiveSingleRecord() {
-        assertEncode(i -> {
-            i.startRecord(RECORD_ID1);
-            i.literal(LITERAL1, VALUE1);
-            i.literal(LITERAL2, VALUE2);
-            i.endRecord();
-        }, "\"a\",\"b\"");
+        assertEncode(
+                i -> {
+                    i.startRecord(RECORD_ID1);
+                    i.literal(LITERAL1, VALUE1);
+                    i.literal(LITERAL2, VALUE2);
+                    i.endRecord();
+                },
+                "\"a\",\"b\"");
     }
 
     @Test
     public void shouldHaveNoQuotes() {
-        assertEncode(i -> {
-            i.setNoQuotes(true);
-            i.startRecord(RECORD_ID1);
-            i.literal(LITERAL1, VALUE1);
-            i.literal(LITERAL2, VALUE2);
-            i.endRecord();
-        }, "a,b");
+        assertEncode(
+                i -> {
+                    i.setNoQuotes(true);
+                    i.startRecord(RECORD_ID1);
+                    i.literal(LITERAL1, VALUE1);
+                    i.literal(LITERAL2, VALUE2);
+                    i.endRecord();
+                },
+                "a,b");
     }
 
     @Test
     public void shouldReceiveSingleRecordWithHeader() {
-        assertEncode(i -> {
-            i.setIncludeHeader(true);
-            i.startRecord(RECORD_ID1);
-            i.literal(LITERAL1, VALUE1);
-            i.literal(LITERAL2, VALUE2);
-            i.endRecord();
-        }, "\"column 1\",\"column 2\"", "\"a\",\"b\"");
+        assertEncode(
+                i -> {
+                    i.setIncludeHeader(true);
+                    i.startRecord(RECORD_ID1);
+                    i.literal(LITERAL1, VALUE1);
+                    i.literal(LITERAL2, VALUE2);
+                    i.endRecord();
+                },
+                "\"column 1\",\"column 2\"",
+                "\"a\",\"b\"");
     }
 
     @Test
     public void shouldReceiveSingleRecordWithRecordId() {
-        assertEncode(i -> {
-            i.setIncludeRecordId(true);
-            i.startRecord(RECORD_ID1);
-            i.literal(LITERAL1, VALUE1);
-            i.literal(LITERAL2, VALUE2);
-            i.endRecord();
-        }, "\"1\",\"a\",\"b\"");
+        assertEncode(
+                i -> {
+                    i.setIncludeRecordId(true);
+                    i.startRecord(RECORD_ID1);
+                    i.literal(LITERAL1, VALUE1);
+                    i.literal(LITERAL2, VALUE2);
+                    i.endRecord();
+                },
+                "\"1\",\"a\",\"b\"");
     }
 
     @Test
     public void shouldReceiveSingleRecordWithRecordIdAndHeader() {
-        assertEncode(i -> {
-            i.setIncludeRecordId(true);
-            i.setIncludeHeader(true);
-            i.startRecord(RECORD_ID1);
-            i.literal(LITERAL1, VALUE1);
-            i.literal(LITERAL2, VALUE2);
-            i.endRecord();
-        }, "\"record id\",\"column 1\",\"column 2\"", "\"1\",\"a\",\"b\"");
+        assertEncode(
+                i -> {
+                    i.setIncludeRecordId(true);
+                    i.setIncludeHeader(true);
+                    i.startRecord(RECORD_ID1);
+                    i.literal(LITERAL1, VALUE1);
+                    i.literal(LITERAL2, VALUE2);
+                    i.endRecord();
+                },
+                "\"record id\",\"column 1\",\"column 2\"",
+                "\"1\",\"a\",\"b\"");
     }
 
     @Test
     public void shouldReceiveThreeRows() {
-        assertEncode(i -> {
-            i.startRecord(RECORD_ID1);
-            i.literal(LITERAL1, VALUE1);
-            i.literal(LITERAL2, VALUE2);
-            i.endRecord();
-            i.startRecord(RECORD_ID2);
-            i.literal(LITERAL1, VALUE3);
-            i.literal(LITERAL2, VALUE4);
-            i.endRecord();
-            i.startRecord(RECORD_ID3);
-            i.literal(LITERAL1, VALUE5);
-            i.literal(LITERAL2, VALUE6);
-            i.endRecord();
-        }, "\"a\",\"b\"", "\"c\",\"d\"", "\"e\",\"f\"");
+        assertEncode(
+                i -> {
+                    i.startRecord(RECORD_ID1);
+                    i.literal(LITERAL1, VALUE1);
+                    i.literal(LITERAL2, VALUE2);
+                    i.endRecord();
+                    i.startRecord(RECORD_ID2);
+                    i.literal(LITERAL1, VALUE3);
+                    i.literal(LITERAL2, VALUE4);
+                    i.endRecord();
+                    i.startRecord(RECORD_ID3);
+                    i.literal(LITERAL1, VALUE5);
+                    i.literal(LITERAL2, VALUE6);
+                    i.endRecord();
+                },
+                "\"a\",\"b\"",
+                "\"c\",\"d\"",
+                "\"e\",\"f\"");
     }
 
     @Test
     public void shouldUseTabulatorAsSeparator() {
-        assertEncode(i -> {
-            i.setSeparator('\t');
-            i.startRecord(RECORD_ID1);
-            i.literal(LITERAL1, VALUE1);
-            i.literal(LITERAL2, VALUE2);
-            i.endRecord();
-        }, "\"a\"\t\"b\"");
+        assertEncode(
+                i -> {
+                    i.setSeparator('\t');
+                    i.startRecord(RECORD_ID1);
+                    i.literal(LITERAL1, VALUE1);
+                    i.literal(LITERAL2, VALUE2);
+                    i.endRecord();
+                },
+                "\"a\"\t\"b\"");
     }
 
     @Test
     public void shouldNotCreateNestedCsvInColumn() {
-        assertEncode(i -> {
-            i.startRecord(RECORD_ID1);
-            i.literal(LITERAL1, VALUE1);
-            i.literal(LITERAL2, VALUE2);
-            i.literal(LITERAL2, VALUE3);
-            i.literal(LITERAL2, VALUE4);
-            i.endRecord();
-        }, "\"a\",\"b\",\"c\",\"d\"");
+        assertEncode(
+                i -> {
+                    i.startRecord(RECORD_ID1);
+                    i.literal(LITERAL1, VALUE1);
+                    i.literal(LITERAL2, VALUE2);
+                    i.literal(LITERAL2, VALUE3);
+                    i.literal(LITERAL2, VALUE4);
+                    i.endRecord();
+                },
+                "\"a\",\"b\",\"c\",\"d\"");
     }
 
     @Test
     public void shouldRepeatHeaderForRepeatedColumns() {
-        assertEncode(i -> {
-            i.setIncludeHeader(true);
-            i.startRecord(RECORD_ID1);
-            i.literal(LITERAL1, VALUE1);
-            i.literal(LITERAL2, VALUE2);
-            i.literal(LITERAL2, VALUE3);
-            i.literal(LITERAL1, VALUE4);
-            i.literal(LITERAL2, VALUE5);
-            i.endRecord();
-        }, "\"column 1\",\"column 2\",\"column 2\",\"column 1\",\"column 2\"", "\"a\",\"b\",\"c\",\"d\",\"e\"");
+        assertEncode(
+                i -> {
+                    i.setIncludeHeader(true);
+                    i.startRecord(RECORD_ID1);
+                    i.literal(LITERAL1, VALUE1);
+                    i.literal(LITERAL2, VALUE2);
+                    i.literal(LITERAL2, VALUE3);
+                    i.literal(LITERAL1, VALUE4);
+                    i.literal(LITERAL2, VALUE5);
+                    i.endRecord();
+                },
+                "\"column 1\",\"column 2\",\"column 2\",\"column 1\",\"column 2\"",
+                "\"a\",\"b\",\"c\",\"d\",\"e\"");
     }
 
     private void assertEncode(final Consumer<CsvEncoder> in, final String... out) {
@@ -182,12 +200,9 @@ public final class CsvEncoderTest {
 
             ordered.verifyNoMoreInteractions();
             Mockito.verifyNoMoreInteractions(receiver);
-        }
-        catch (final MockitoAssertionError e) {
+        } catch (final MockitoAssertionError e) {
             System.out.println(Mockito.mockingDetails(receiver).printInvocations());
             throw e;
         }
-
     }
-
 }

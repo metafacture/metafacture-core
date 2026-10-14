@@ -16,11 +16,10 @@
 
 package org.metafacture.plumbing;
 
-import org.metafacture.framework.StreamReceiver;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -30,7 +29,6 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link IdentityStreamPipe}.
  *
  * @author Christoph Böhme
- *
  */
 public final class IdentityStreamPipeTest {
 
@@ -44,11 +42,9 @@ public final class IdentityStreamPipeTest {
 
     private IdentityStreamPipe identityPipe;
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public IdentityStreamPipeTest() {
-    }
+    public IdentityStreamPipeTest() {}
 
     @Before
     public void setup() {
@@ -86,5 +82,4 @@ public final class IdentityStreamPipeTest {
         ordered.verify(receiver, Mockito.times(2)).literal(LITERAL_NAME1, LITERAL_VALUE1);
         ordered.verify(receiver).endRecord();
     }
-
 }

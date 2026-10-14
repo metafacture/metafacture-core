@@ -24,20 +24,21 @@ import org.metafacture.framework.objects.Triple;
 
 /**
  * Sorts triples
- * @author markus geipel
  *
+ * @author markus geipel
  */
-@Description("Sorts triples. Several options can be combined, e.g. `by=\"object\",numeric=\"true\",order=\"decreasing\"` will numerically sort the Object of the triples in decreasing order (given that all Objects are indeed of numeric type).")
+@Description(
+        "Sorts triples. Several options can be combined, e.g."
+                + " `by=\"object\",numeric=\"true\",order=\"decreasing\"` will numerically sort the"
+                + " Object of the triples in decreasing order (given that all Objects are indeed of"
+                + " numeric type).")
 @In(Triple.class)
 @Out(Triple.class)
 @FluxCommand("sort-triples")
 public final class TripleSort extends AbstractTripleSort {
 
-    /**
-     * Creates an instance of {@link TripleSort}.
-     */
-    public TripleSort() {
-    }
+    /** Creates an instance of {@link TripleSort}. */
+    public TripleSort() {}
 
     @Override
     protected void sortedTriple(final Triple triple) {
@@ -70,5 +71,4 @@ public final class TripleSort extends AbstractTripleSort {
     public void setNumeric(final boolean numeric) {
         setSortNumeric(numeric);
     }
-
 }

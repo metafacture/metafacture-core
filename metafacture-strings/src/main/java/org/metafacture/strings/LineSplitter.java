@@ -16,6 +16,7 @@
 
 package org.metafacture.strings;
 
+import java.util.regex.Pattern;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
@@ -23,13 +24,10 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-import java.util.regex.Pattern;
-
 /**
  * Splits a string at new lines and sends each line to the receiver.
  *
  * @author Christoph Böhme
- *
  */
 @Description("Splits a string at new lines and sends each line to the receiver.")
 @In(String.class)
@@ -38,13 +36,11 @@ import java.util.regex.Pattern;
 public final class LineSplitter extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
     private static final char NEWLINE = '\n';
-    private static final Pattern LINE_PATTERN = Pattern.compile(String.valueOf(NEWLINE), Pattern.LITERAL);
+    private static final Pattern LINE_PATTERN =
+            Pattern.compile(String.valueOf(NEWLINE), Pattern.LITERAL);
 
-    /**
-     * Creates an instance of {@link LineSplitter}.
-     */
-    public LineSplitter() {
-    }
+    /** Creates an instance of {@link LineSplitter}. */
+    public LineSplitter() {}
 
     @Override
     public void process(final String lines) {
@@ -53,5 +49,4 @@ public final class LineSplitter extends DefaultObjectPipe<String, ObjectReceiver
             getReceiver().process(record);
         }
     }
-
 }

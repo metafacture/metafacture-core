@@ -16,12 +16,11 @@
 
 package org.metafacture.javaintegration.pojo;
 
-import org.metafacture.framework.MetafactureException;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import org.metafacture.framework.MetafactureException;
 
 /**
  * Encodes a Metafacture event stream to a POJO.
@@ -44,8 +43,7 @@ class ComplexTypeEncoder implements TypeEncoder {
     private static Object createInstance(final Class<?> clazz) {
         try {
             return clazz.getDeclaredConstructor().newInstance();
-        }
-        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
+        } catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             throw new MetafactureException("Can't instantiate object of class: " + clazz, e);
         }
     }
@@ -71,9 +69,10 @@ class ComplexTypeEncoder implements TypeEncoder {
     }
 
     static boolean supportsType(final Class<?> clazz) {
-        return !clazz.isPrimitive() && !clazz.equals(String.class) &&
-            !MapTypeEncoder.supportsType(clazz) &&
-            !ListTypeEncoder.supportsType(clazz);
+        return !clazz.isPrimitive()
+                && !clazz.equals(String.class)
+                && !MapTypeEncoder.supportsType(clazz)
+                && !ListTypeEncoder.supportsType(clazz);
     }
 
     @Override
@@ -95,5 +94,4 @@ class ComplexTypeEncoder implements TypeEncoder {
     public Object getInstance() {
         return instance;
     }
-
 }

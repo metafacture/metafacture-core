@@ -16,30 +16,29 @@
 
 package org.metafacture.metafix.conditional;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixPredicate;
 
-import java.util.List;
-import java.util.Map;
-
 /**
- * Executes the functions if/unless the field value does not equal the string.
- * If it is an array or a hash, none of the field values may equal the string.
+ * Executes the functions if/unless the field value does not equal the string. If it is an array or
+ * a hash, none of the field values may equal the string.
  */
 @FixCommand("none_equal")
 public class NoneEqual implements FixPredicate {
 
-    /**
-     * Creates an instance of {@link NoneEqual}.
-     */
-    public NoneEqual() {
-    }
+    /** Creates an instance of {@link NoneEqual}. */
+    public NoneEqual() {}
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public boolean test(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         return !new AnyEqual().test(metafix, record, params, options);
     }
-
 }

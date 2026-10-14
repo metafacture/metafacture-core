@@ -16,6 +16,10 @@
 
 package org.metafacture.metamorph.test;
 
+import java.io.FileNotFoundException;
+import java.io.StringReader;
+import org.junit.runners.model.InitializationError;
+import org.junit.runners.model.Statement;
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.commons.XmlUtil;
 import org.metafacture.commons.reflection.ReflectionUtil;
@@ -26,25 +30,20 @@ import org.metafacture.metamorph.Metamorph;
 import org.metafacture.metamorph.test.reader.MultiFormatReader;
 import org.metafacture.metamorph.test.reader.Reader;
 import org.metafacture.metamorph.test.validators.StreamValidator;
-
-import org.junit.runners.model.InitializationError;
-import org.junit.runners.model.Statement;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-
-import java.io.FileNotFoundException;
-import java.io.StringReader;
 
 /**
  * Runs a test defined in a Metamorph-Test definition.
  *
  * @author Christoph Böhme
- *
  */
-final class MetamorphTestCase extends Statement { // checkstyle-disable-line ClassDataAbstractionCoupling
+final class MetamorphTestCase
+        extends Statement { // checkstyle-disable-line ClassDataAbstractionCoupling
 
-    private static final String NO_DATA_FOUND = "Please specify either element content or a src attribute";
+    private static final String NO_DATA_FOUND =
+            "Please specify either element content or a src attribute";
 
     private static final String NAME_ATTR = "name";
     private static final String IGNORE_ATTR = "ignore";
@@ -83,8 +82,7 @@ final class MetamorphTestCase extends Statement { // checkstyle-disable-line Cla
 
         if (transformation == null) {
             inputReader.setReceiver(resultStream);
-        }
-        else {
+        } else {
             inputReader.setReceiver(transformation).setReceiver(resultStream);
         }
 
@@ -92,17 +90,18 @@ final class MetamorphTestCase extends Statement { // checkstyle-disable-line Cla
         inputReader.closeStream();
 
         final StreamValidator validator = new StreamValidator(resultStream.getEvents());
-        validator.setErrorHandler(msg -> {
-            throw new AssertionError(msg);
-        });
+        validator.setErrorHandler(
+                msg -> {
+                    throw new AssertionError(msg);
+                });
 
         final Element result = (Element) config.getElementsByTagName(RESULT_TAG).item(0);
-        validator.setStrictRecordOrder(Boolean.parseBoolean(
-                result.getAttribute(STRICT_RECORD_ORDER_ATTR)));
-        validator.setStrictKeyOrder(Boolean.parseBoolean(
-                result.getAttribute(STRICT_KEY_ORDER_ATTR)));
-        validator.setStrictValueOrder(Boolean.parseBoolean(
-                result.getAttribute(STRICT_VALUE_ORDER_ATTR)));
+        validator.setStrictRecordOrder(
+                Boolean.parseBoolean(result.getAttribute(STRICT_RECORD_ORDER_ATTR)));
+        validator.setStrictKeyOrder(
+                Boolean.parseBoolean(result.getAttribute(STRICT_KEY_ORDER_ATTR)));
+        validator.setStrictValueOrder(
+                Boolean.parseBoolean(result.getAttribute(STRICT_VALUE_ORDER_ATTR)));
 
         final Reader resultReader = getReader(RESULT_TAG);
         resultReader.setReceiver(validator);
@@ -117,7 +116,8 @@ final class MetamorphTestCase extends Statement { // checkstyle-disable-line Cla
         return new MultiFormatReader(mimeType);
     }
 
-    private StreamPipe getTransformation() throws InitializationError { // checkstyle-disable-line ReturnCount
+    private StreamPipe getTransformation()
+            throws InitializationError { // checkstyle-disable-line ReturnCount
         final NodeList nodes = config.getElementsByTagName(TRANSFORMATION_TAG);
         if (nodes.getLength() == 0) {
             return null;
@@ -136,16 +136,13 @@ final class MetamorphTestCase extends Statement { // checkstyle-disable-line Cla
             }
             return new Metamorph(src);
 
-        }
-        else if (MIME_JAVACLASS.equals(type)) {
+        } else if (MIME_JAVACLASS.equals(type)) {
             if (src.isEmpty()) {
-                throw new InitializationError(
-                        "class defining transformation not specified");
+                throw new InitializationError("class defining transformation not specified");
             }
             return ReflectionUtil.loadClass(src, StreamPipe.class).newInstance();
         }
-        throw new InitializationError("transformation of type " + type +
-                " is not supperted");
+        throw new InitializationError("transformation of type " + type + " is not supperted");
     }
 
     private java.io.Reader getInputData() throws InitializationError {
@@ -165,19 +162,16 @@ final class MetamorphTestCase extends Statement { // checkstyle-disable-line Cla
         return getDataEmbedded(result);
     }
 
-    private java.io.Reader getDataFromSource(final String src)
-            throws InitializationError {
+    private java.io.Reader getDataFromSource(final String src) throws InitializationError {
         try {
             return ResourceUtil.getReader(src);
-        }
-        catch (final FileNotFoundException e) {
-            throw new InitializationError("Could not find input file '" + src +
-                    "': " + e.getMessage());
+        } catch (final FileNotFoundException e) {
+            throw new InitializationError(
+                    "Could not find input file '" + src + "': " + e.getMessage());
         }
     }
 
-    private java.io.Reader getDataEmbedded(final Element input)
-            throws InitializationError {
+    private java.io.Reader getDataEmbedded(final Element input) throws InitializationError {
         final String inputType = input.getAttribute(TYPE_ATTR);
         if (input.hasChildNodes()) {
             if (XmlUtil.isXmlMimeType(inputType)) {
@@ -187,5 +181,4 @@ final class MetamorphTestCase extends Statement { // checkstyle-disable-line Cla
         }
         throw new InitializationError(NO_DATA_FOUND);
     }
-
 }

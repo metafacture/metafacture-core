@@ -23,14 +23,14 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 /**
- * Collects strings and emits them as records when a line matches the pattern.
- * Appends to every incoming line a line feed so that the original structure is
- * preserved.
+ * Collects strings and emits them as records when a line matches the pattern. Appends to every
+ * incoming line a line feed so that the original structure is preserved.
  *
  * @author Pascal Christoph (dr0i).
- *
  */
-@Description("Collects strings and emits them as records when a line matches the pattern or the stream is closed.")
+@Description(
+        "Collects strings and emits them as records when a line matches the pattern or the stream"
+                + " is closed.")
 @In(String.class)
 @Out(String.class)
 @FluxCommand("lines-to-records")
@@ -43,11 +43,8 @@ public final class LineRecorder extends DefaultObjectPipe<String, ObjectReceiver
     private ObjectReceiver<String> receiver;
     private boolean isClosed;
 
-    /**
-     * Creates an instance of {@link LineRecorder}.
-     */
-    public LineRecorder() {
-    }
+    /** Creates an instance of {@link LineRecorder}. */
+    public LineRecorder() {}
 
     /**
      * Sets the record marker regexp.
@@ -64,8 +61,7 @@ public final class LineRecorder extends DefaultObjectPipe<String, ObjectReceiver
         if (line.matches(recordMarkerRegexp)) {
             getReceiver().process(record.toString());
             record = new StringBuilder(SB_CAPACITY);
-        }
-        else {
+        } else {
             record.append(line + "\n");
         }
     }
@@ -81,5 +77,4 @@ public final class LineRecorder extends DefaultObjectPipe<String, ObjectReceiver
     protected void onResetStream() {
         record = new StringBuilder(SB_CAPACITY);
     }
-
 }

@@ -25,16 +25,15 @@ import org.metafacture.framework.StreamReceiver;
  */
 class SimpleTypeDecoder implements TypeDecoder {
 
-    SimpleTypeDecoder() {
-    }
+    SimpleTypeDecoder() {}
 
     static boolean supportsType(final Class<?> clazz) {
         return clazz.isPrimitive() || clazz.equals(String.class);
     }
 
     @Override
-    public void decodeToStream(final StreamReceiver streamReceiver, final String name, final Object object) {
+    public void decodeToStream(
+            final StreamReceiver streamReceiver, final String name, final Object object) {
         streamReceiver.literal(name, object.toString());
     }
-
 }

@@ -16,6 +16,7 @@
 
 package org.metafacture.biblio.pica;
 
+import java.text.Normalizer;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.XmlReceiver;
@@ -23,21 +24,20 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import java.text.Normalizer;
-
-
 /**
- * A Pica XML reader. To read marc data without namespace specification set option `namespace=""` or to null when using JAVA code.
- * The handler reuses some code from M. Geipels MarcXmlHandler
+ * A Pica XML reader. To read marc data without namespace specification set option `namespace=""` or
+ * to null when using JAVA code. The handler reuses some code from M. Geipels MarcXmlHandler
+ *
  * @author Tobias Bülte
  * @author Markus Michael Geipel
- *
  */
-@Description("A Pica XML reader. To read pica data without namespace specification set option `namespace=\"\"`. To ignore namespace specification set option `ignorenamespace=\"true\". For PPXML see `handle-ppxml`")
+@Description(
+        "A Pica XML reader. To read pica data without namespace specification set option"
+                + " `namespace=\"\"`. To ignore namespace specification set option"
+                + " `ignorenamespace=\"true\". For PPXML see `handle-ppxml`")
 @In(XmlReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("handle-picaxml")
@@ -55,19 +55,16 @@ public final class PicaXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private StringBuilder builder = new StringBuilder();
     private boolean ignoreNamespace;
 
-    /**
-     * Creates an instance of {@link PicaXmlHandler}.
-     */
-    public PicaXmlHandler() {
-    }
+    /** Creates an instance of {@link PicaXmlHandler}. */
+    public PicaXmlHandler() {}
 
     /**
      * Sets the namespace.
      *
-     * <strong>Default value: {@value #NAMESPACE}</strong>
+     * <p><strong>Default value: {@value #NAMESPACE}</strong>
      *
-     * @param namespace the namespace. Set to null if namespace shouldn't be checked. Set to empty string
-     *        if the namespace is missing in the data.
+     * @param namespace the namespace. Set to null if namespace shouldn't be checked. Set to empty
+     *     string if the namespace is missing in the data.
      */
     public void setNamespace(final String namespace) {
         this.namespace = namespace;
@@ -76,7 +73,7 @@ public final class PicaXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     /**
      * Sets whether to ignore the namespace.
      *
-     * <strong>Default value: false</strong>
+     * <p><strong>Default value: false</strong>
      *
      * @param ignoreNamespace true if the namespace should be ignored
      */
@@ -91,8 +88,8 @@ public final class PicaXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     /**
      * Sets the attribute marker.
      *
-     * <strong>Default value:
-     * {@value org.metafacture.framework.helpers.DefaultXmlPipe#DEFAULT_ATTRIBUTE_MARKER}</strong>
+     * <p><strong>Default value: {@value
+     * org.metafacture.framework.helpers.DefaultXmlPipe#DEFAULT_ATTRIBUTE_MARKER}</strong>
      *
      * @param attributeMarker the attribute marker
      */
@@ -110,42 +107,46 @@ public final class PicaXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) throws SAXException {
+    public void startElement(
+            final String uri,
+            final String localName,
+            final String qName,
+            final Attributes attributes)
+            throws SAXException {
         if (SUBFIELD.equals(localName)) {
             builder = new StringBuilder();
             currentTag = attributes.getValue("code");
-        }
-        else if (DATAFIELD.equals(localName)) {
+        } else if (DATAFIELD.equals(localName)) {
             final String tag = attributes.getValue("tag");
             final String occurence = attributes.getValue("occurrence");
             if (occurence != null) {
                 getReceiver().startEntity(tag + "/" + occurence);
-            }
-            else {
+            } else {
                 getReceiver().startEntity(tag);
             }
-        }
-        else if (RECORD.equals(localName) && checkNamespace(uri)) {
+        } else if (RECORD.equals(localName) && checkNamespace(uri)) {
             getReceiver().startRecord("");
         }
     }
 
     @Override
-    public void endElement(final String uri, final String localName, final String qName) throws SAXException {
+    public void endElement(final String uri, final String localName, final String qName)
+            throws SAXException {
         if (SUBFIELD.equals(localName)) {
-            getReceiver().literal(currentTag, Normalizer.normalize(builder.toString().trim(), Normalizer.Form.NFC));
-        }
-        else if (DATAFIELD.equals(localName)) {
+            getReceiver()
+                    .literal(
+                            currentTag,
+                            Normalizer.normalize(builder.toString().trim(), Normalizer.Form.NFC));
+        } else if (DATAFIELD.equals(localName)) {
             getReceiver().endEntity();
-        }
-        else if (RECORD.equals(localName) && checkNamespace(uri)) {
+        } else if (RECORD.equals(localName) && checkNamespace(uri)) {
             getReceiver().endRecord();
         }
     }
 
     @Override
-    public void characters(final char[] chars, final int start, final int length) throws SAXException {
+    public void characters(final char[] chars, final int start, final int length)
+            throws SAXException {
         builder.append(chars, start, length);
     }
-
 }

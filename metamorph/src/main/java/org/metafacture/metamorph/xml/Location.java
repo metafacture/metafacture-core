@@ -22,40 +22,41 @@ import org.xml.sax.Locator;
 import org.xml.sax.helpers.LocatorImpl;
 
 /**
- * Stores location information about element start and element
- * end positions in a document.
+ * Stores location information about element start and element end positions in a document.
  *
  * @author Christoph Böhme
- *
  */
 public final class Location {
 
     public static final String USER_DATA_ID = "http://culturegraph.org/mf/user_data/location";
 
-    public static final UserDataHandler USER_DATA_HANDLER = new UserDataHandler() {
+    public static final UserDataHandler USER_DATA_HANDLER =
+            new UserDataHandler() {
 
-        @Override
-        public void handle(final short operation, final String key, final Object data,
-                final Node src, final Node dst) {
+                @Override
+                public void handle(
+                        final short operation,
+                        final String key,
+                        final Object data,
+                        final Node src,
+                        final Node dst) {
 
-            if (operation == NODE_IMPORTED || operation == NODE_CLONED) {
-                if (dst != null) {
-                    dst.setUserData(key, data, this);
+                    if (operation == NODE_IMPORTED || operation == NODE_CLONED) {
+                        if (dst != null) {
+                            dst.setUserData(key, data, this);
+                        }
+                    }
                 }
-            }
-        }
-
-    };
+            };
 
     private final Locator elementStart;
     private final Locator elementEnd;
 
     /**
-     * Constructs a Location from a Locator as start element and a Locator as end
-     * element.
+     * Constructs a Location from a Locator as start element and a Locator as end element.
      *
      * @param elementStart the Locator as start element
-     * @param elementEnd   the Locator as end element
+     * @param elementEnd the Locator as end element
      */
     public Location(final Locator elementStart, final Locator elementEnd) {
         this.elementStart = new LocatorImpl(elementStart);
@@ -123,5 +124,4 @@ public final class Location {
 
         return builder.toString();
     }
-
 }

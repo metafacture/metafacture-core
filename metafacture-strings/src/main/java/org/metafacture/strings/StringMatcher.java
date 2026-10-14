@@ -16,6 +16,8 @@
 
 package org.metafacture.strings;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
@@ -23,16 +25,14 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
- * Matches the incoming strings against a regular expression and replaces
- * the matching parts.
+ * Matches the incoming strings against a regular expression and replaces the matching parts.
  *
  * @author Christoph Böhme
  */
-@Description("Matches the incoming strings against a regular expression and replaces the matching parts.")
+@Description(
+        "Matches the incoming strings against a regular expression and replaces the matching"
+                + " parts.")
 @In(String.class)
 @Out(String.class)
 @FluxCommand("match")
@@ -41,11 +41,8 @@ public final class StringMatcher extends DefaultObjectPipe<String, ObjectReceive
     private Matcher matcher;
     private String replacement;
 
-    /**
-     * Creates an instance of {@link StringMatcher}.
-     */
-    public StringMatcher() {
-    }
+    /** Creates an instance of {@link StringMatcher}. */
+    public StringMatcher() {}
 
     /**
      * Gets the pattern.
@@ -90,5 +87,4 @@ public final class StringMatcher extends DefaultObjectPipe<String, ObjectReceive
         matcher.reset(obj);
         getReceiver().process(matcher.replaceAll(replacement));
     }
-
 }

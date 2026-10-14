@@ -16,10 +16,9 @@
 
 package org.metafacture.flowcontrol;
 
-import org.metafacture.framework.StreamReceiver;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -30,17 +29,14 @@ import org.mockito.MockitoAnnotations;
  *
  * @author Markus Michael Geipel
  * @author Christoph Böhme (refactored to Mockito)
- *
  */
 public final class StreamBufferTest {
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
     private StreamBuffer streamBuffer;
 
-    public StreamBufferTest() {
-    }
+    public StreamBufferTest() {}
 
     @Before
     public void setup() {
@@ -106,5 +102,4 @@ public final class StreamBufferTest {
         Mockito.verify(receiver).resetStream();
         Mockito.verifyNoMoreInteractions(receiver);
     }
-
 }

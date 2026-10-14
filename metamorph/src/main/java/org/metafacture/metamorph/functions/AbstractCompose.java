@@ -20,8 +20,7 @@ import org.metafacture.metamorph.api.Function;
 import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
- * Baseclass for {@link Function}s which compose results based on prefix and
- * postfix.
+ * Baseclass for {@link Function}s which compose results based on prefix and postfix.
  *
  * @author Markus Michael Geipel
  */
@@ -65,5 +64,4 @@ abstract class AbstractCompose extends AbstractSimpleStatelessFunction {
     public void setPostfix(final String postfix) {
         this.postfix = postfix;
     }
-
 }

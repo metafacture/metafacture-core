@@ -27,11 +27,8 @@ public final class Constant extends AbstractSimpleStatelessFunction {
 
     private String constValue;
 
-    /**
-     * Creates an instance of {@link Constant}.
-     */
-    public Constant() {
-    }
+    /** Creates an instance of {@link Constant}. */
+    public Constant() {}
 
     @Override
     public String process(final String value) {
@@ -46,5 +43,4 @@ public final class Constant extends AbstractSimpleStatelessFunction {
     public void setValue(final String string) {
         this.constValue = string;
     }
-
 }

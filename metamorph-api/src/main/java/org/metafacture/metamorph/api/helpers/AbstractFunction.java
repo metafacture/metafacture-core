@@ -16,19 +16,17 @@
 
 package org.metafacture.metamorph.api.helpers;
 
-import org.metafacture.metamorph.api.Function;
-import org.metafacture.metamorph.api.Maps;
-
 import java.util.HashMap;
 import java.util.Map;
+import org.metafacture.metamorph.api.Function;
+import org.metafacture.metamorph.api.Maps;
 
 /**
  * Base class for functions.
  *
  * @author Markus Michael Geipel
  */
-public abstract class AbstractFunction extends AbstractNamedValuePipe
-        implements Function {
+public abstract class AbstractFunction extends AbstractNamedValuePipe implements Function {
 
     private Maps maps;
     private Map<String, String> localMap;
@@ -55,8 +53,7 @@ public abstract class AbstractFunction extends AbstractNamedValuePipe
     }
 
     /**
-     * Gets the {@link #localMap} or, if unset, a Map with the name of {@link
-     * #mapName}.
+     * Gets the {@link #localMap} or, if unset, a Map with the name of {@link #mapName}.
      *
      * @return the Map
      */
@@ -94,5 +91,4 @@ public abstract class AbstractFunction extends AbstractNamedValuePipe
     public void flush(final int recordCount, final int entityCount) {
         // Does nothing by default
     }
-
 }

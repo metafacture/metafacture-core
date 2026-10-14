@@ -33,11 +33,8 @@ public final class None extends AbstractCollect {
     private boolean receivedInput;
     private boolean emittedResult;
 
-    /**
-     * Creates an instance of {@link None}.
-     */
-    public None() {
-    }
+    /** Creates an instance of {@link None}. */
+    public None() {}
 
     @Override
     protected void receive(final String name, final String value, final NamedValueSource source) {
@@ -73,5 +70,4 @@ public final class None extends AbstractCollect {
             clear();
         }
     }
-
 }

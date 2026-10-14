@@ -24,40 +24,38 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 
 /**
- * Blocks {@link #closeStream()} events until {@code n} <i>close-stream</i>
- * events have been received.
+ * Blocks {@link #closeStream()} events until {@code n} <i>close-stream</i> events have been
+ * received.
  *
- * @param <T>
- *            object type
- *
+ * @param <T> object type
  * @author Markus Geipel
- *
  */
-@Description("Blocks close-stream events until a given number of close-stream events have been received.")
+@Description(
+        "Blocks close-stream events until a given number of close-stream events have been"
+                + " received.")
 @In(Object.class)
 @Out(Object.class)
 @FluxCommand("wait-for-inputs")
-public final class CloseSuppressor<T>
-        implements ObjectPipe<T, ObjectReceiver<T>> {
+public final class CloseSuppressor<T> implements ObjectPipe<T, ObjectReceiver<T>> {
 
     private ObjectReceiver<T> receiver;
     private final int numCloses;
     private int count;
 
     /**
-     * Creates an instance of {@link CloseSuppressor} with a number defining the
-     * number of events to block before closing the stream.
+     * Creates an instance of {@link CloseSuppressor} with a number defining the number of events to
+     * block before closing the stream.
      *
-     * @param numCloses the number of events to block before closing the stream. The
-     *                  String is parsed to an integer.
+     * @param numCloses the number of events to block before closing the stream. The String is
+     *     parsed to an integer.
      */
     public CloseSuppressor(final String numCloses) {
         this(Integer.parseInt(numCloses));
     }
 
     /**
-     * Creates an instance of {@link CloseSuppressor} with a number defining the
-     * number of events to block before closing the stream.
+     * Creates an instance of {@link CloseSuppressor} with a number defining the number of events to
+     * block before closing the stream.
      *
      * @param numCloses the number of events to block before closing the stream
      */
@@ -93,5 +91,4 @@ public final class CloseSuppressor<T>
             receiver.closeStream();
         }
     }
-
 }

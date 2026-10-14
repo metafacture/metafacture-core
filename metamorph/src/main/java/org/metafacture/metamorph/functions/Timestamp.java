@@ -16,9 +16,6 @@
 
 package org.metafacture.metamorph.functions;
 
-import org.metafacture.metamorph.api.MorphBuildException;
-import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -27,17 +24,19 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
+import org.metafacture.metamorph.api.MorphBuildException;
+import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
- * This function creates a timestamp. By default it returns a unix
- * timestamp. Other formats are and different
- * timezones can be specified.
+ * This function creates a timestamp. By default it returns a unix timestamp. Other formats are and
+ * different timezones can be specified.
  *
- * Examples for using the function in Metamorph:
+ * <p>Examples for using the function in Metamorph:
+ *
  * <ul>
- *     <li>Generate a default unix timestamp: <code>&lt;timestamp /&gt;</code></li>
- *     <li>Generate a nicely formatted timestamp using central european time:
- *     <code>&lt;timestamp format="yyyy-MM-dd'T'HH:mmZ" timezone="Europe/Berlin" /&gt;</code></li>
+ *   <li>Generate a default unix timestamp: <code>&lt;timestamp /&gt;</code>
+ *   <li>Generate a nicely formatted timestamp using central european time: <code>
+ *       &lt;timestamp format="yyyy-MM-dd'T'HH:mmZ" timezone="Europe/Berlin" /&gt;</code>
  * </ul>
  *
  * @author Michael Büchner
@@ -62,11 +61,8 @@ public final class Timestamp extends AbstractSimpleStatelessFunction {
         SUPPORTED_LANGUAGES = Collections.unmodifiableSet(set);
     }
 
-    /**
-     * Creates an instance of {@link Timestamp}.
-     */
-    public Timestamp() {
-    }
+    /** Creates an instance of {@link Timestamp}. */
+    public Timestamp() {}
 
     @Override
     public String process(final String value) {
@@ -76,9 +72,9 @@ public final class Timestamp extends AbstractSimpleStatelessFunction {
         final DateFormat dateFormat;
         try {
             dateFormat = new SimpleDateFormat(format, locale);
-        }
-        catch (final IllegalArgumentException e) {
-            throw new MorphBuildException("The date/time format '" + format + "' is not supported. ", e);
+        } catch (final IllegalArgumentException e) {
+            throw new MorphBuildException(
+                    "The date/time format '" + format + "' is not supported. ", e);
         }
         dateFormat.setTimeZone(TimeZone.getTimeZone(timezone));
         return dateFormat.format(new Date());
@@ -113,5 +109,4 @@ public final class Timestamp extends AbstractSimpleStatelessFunction {
         }
         this.locale = Locale.forLanguageTag(language);
     }
-
 }

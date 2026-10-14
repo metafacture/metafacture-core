@@ -16,25 +16,20 @@
 
 package org.metafacture.framework.helpers;
 
+import java.io.IOException;
 import org.metafacture.framework.Receiver;
 import org.metafacture.framework.XmlPipe;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import java.io.IOException;
-
 /**
- * Default implementation for {@link XmlPipe}s which simply
- * does nothing.
+ * Default implementation for {@link XmlPipe}s which simply does nothing.
  *
  * @param <R> receiver type of the downstream module
- *
  * @author Christoph Böhme
- *
  */
 public class DefaultXmlPipe<R extends Receiver> extends DefaultSender<R> implements XmlPipe<R> {
 
@@ -43,11 +38,8 @@ public class DefaultXmlPipe<R extends Receiver> extends DefaultSender<R> impleme
     public static final String DEFAULT_ROOT_TAG = "records";
     public static final String DEFAULT_VALUE_TAG = "value";
 
-    /**
-     * Creates an instance of {@link DefaultXmlPipe}.
-     */
-    public DefaultXmlPipe() {
-    }
+    /** Creates an instance of {@link DefaultXmlPipe}. */
+    public DefaultXmlPipe() {}
 
     @Override
     public void setDocumentLocator(final Locator locator) {
@@ -65,8 +57,7 @@ public class DefaultXmlPipe<R extends Receiver> extends DefaultSender<R> impleme
     }
 
     @Override
-    public void startPrefixMapping(final String prefix, final String uri)
-            throws SAXException {
+    public void startPrefixMapping(final String prefix, final String uri) throws SAXException {
         // Default implementation does nothing
     }
 
@@ -76,8 +67,9 @@ public class DefaultXmlPipe<R extends Receiver> extends DefaultSender<R> impleme
     }
 
     @Override
-    public void startElement(final String uri, final String localName, final String qName,
-            final Attributes atts) throws SAXException {
+    public void startElement(
+            final String uri, final String localName, final String qName, final Attributes atts)
+            throws SAXException {
         // Default implementation does nothing
     }
 
@@ -88,8 +80,7 @@ public class DefaultXmlPipe<R extends Receiver> extends DefaultSender<R> impleme
     }
 
     @Override
-    public void characters(final char[] ch, final int start, final int length)
-            throws SAXException {
+    public void characters(final char[] ch, final int start, final int length) throws SAXException {
         // Default implementation does nothing
     }
 
@@ -100,8 +91,7 @@ public class DefaultXmlPipe<R extends Receiver> extends DefaultSender<R> impleme
     }
 
     @Override
-    public void processingInstruction(final String target, final String data)
-            throws SAXException {
+    public void processingInstruction(final String target, final String data) throws SAXException {
         // Default implementation does nothing
     }
 
@@ -117,8 +107,12 @@ public class DefaultXmlPipe<R extends Receiver> extends DefaultSender<R> impleme
     }
 
     @Override
-    public void unparsedEntityDecl(final String name, final String publicId,
-            final String systemId, final String notationName) throws SAXException {
+    public void unparsedEntityDecl(
+            final String name,
+            final String publicId,
+            final String systemId,
+            final String notationName)
+            throws SAXException {
         // Default implementation does nothing
     }
 
@@ -175,9 +169,7 @@ public class DefaultXmlPipe<R extends Receiver> extends DefaultSender<R> impleme
     }
 
     @Override
-    public void comment(final char[] chars, final int start, final int length)
-            throws SAXException {
+    public void comment(final char[] chars, final int start, final int length) throws SAXException {
         // Default implementation does nothing
     }
-
 }

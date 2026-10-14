@@ -26,15 +26,16 @@ import org.metafacture.metamorph.api.helpers.AbstractFunction;
  */
 public final class SwitchNameValue extends AbstractFunction {
 
-    /**
-     * Creates an instance of {@link SwitchNameValue}.
-     */
-    public SwitchNameValue() {
-    }
+    /** Creates an instance of {@link SwitchNameValue}. */
+    public SwitchNameValue() {}
 
     @Override
-    public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
+    public void receive(
+            final String name,
+            final String value,
+            final NamedValueSource source,
+            final int recordCount,
+            final int entityCount) {
         getNamedValueReceiver().receive(value, name, this, recordCount, entityCount);
     }
-
 }

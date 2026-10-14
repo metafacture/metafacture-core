@@ -16,10 +16,9 @@
 
 package org.metafacture.strings;
 
-import org.metafacture.framework.ObjectReceiver;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -29,7 +28,6 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link LineRecorder}.
  *
  * @author Pascal Christoph (dr0i)
- *
  */
 public final class LineRecorderTest {
 
@@ -49,11 +47,9 @@ public final class LineRecorderTest {
 
     private LineRecorder lineRecorder;
 
-    @Mock
-    private ObjectReceiver<String> receiver;
+    @Mock private ObjectReceiver<String> receiver;
 
-    public LineRecorderTest() {
-    }
+    public LineRecorderTest() {}
 
     @Before
     public void setup() {
@@ -69,21 +65,15 @@ public final class LineRecorderTest {
         lineRecorder.process(RECORD1_ENDMARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
-        ordered.verify(receiver).process(
-                RECORD1_PART1 +
-                LINE_SEPARATOR +
-                RECORD1_PART2 +
-                LINE_SEPARATOR);
+        ordered.verify(receiver)
+                .process(RECORD1_PART1 + LINE_SEPARATOR + RECORD1_PART2 + LINE_SEPARATOR);
 
         lineRecorder.process(RECORD2_PART1);
         lineRecorder.process(RECORD2_PART2);
         lineRecorder.process(RECORD2_ENDMARKER);
 
-        ordered.verify(receiver).process(
-                RECORD2_PART1 +
-                LINE_SEPARATOR +
-                RECORD2_PART2 +
-                LINE_SEPARATOR);
+        ordered.verify(receiver)
+                .process(RECORD2_PART1 + LINE_SEPARATOR + RECORD2_PART2 + LINE_SEPARATOR);
         ordered.verifyNoMoreInteractions();
     }
 
@@ -95,11 +85,8 @@ public final class LineRecorderTest {
         lineRecorder.process(RECORD3_ENDMARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
-        ordered.verify(receiver).process(
-                RECORD3_PART1 +
-                LINE_SEPARATOR +
-                RECORD3_PART2 +
-                LINE_SEPARATOR);
+        ordered.verify(receiver)
+                .process(RECORD3_PART1 + LINE_SEPARATOR + RECORD3_PART2 + LINE_SEPARATOR);
         ordered.verifyNoMoreInteractions();
     }
 
@@ -109,11 +96,8 @@ public final class LineRecorderTest {
         lineRecorder.process(RECORD3_PART2);
         lineRecorder.closeStream();
         final InOrder ordered = Mockito.inOrder(receiver);
-        ordered.verify(receiver).process(
-                RECORD3_PART1 +
-                LINE_SEPARATOR +
-                RECORD3_PART2 +
-                LINE_SEPARATOR);
+        ordered.verify(receiver)
+                .process(RECORD3_PART1 + LINE_SEPARATOR + RECORD3_PART2 + LINE_SEPARATOR);
         ordered.verify(receiver).closeStream();
         ordered.verifyNoMoreInteractions();
     }
@@ -123,5 +107,4 @@ public final class LineRecorderTest {
         lineRecorder.closeStream();
         lineRecorder.process("");
     }
-
 }

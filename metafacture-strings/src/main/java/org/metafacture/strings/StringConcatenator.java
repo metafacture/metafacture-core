@@ -28,11 +28,8 @@ public final class StringConcatenator implements ObjectReceiver<String> {
     private StringBuilder builder = new StringBuilder();
     private String separator = "";
 
-    /**
-     * Creates an instance of {@link StringConcatenator}.
-     */
-    public StringConcatenator() {
-    }
+    /** Creates an instance of {@link StringConcatenator}. */
+    public StringConcatenator() {}
 
     @Override
     public void resetStream() {
@@ -59,9 +56,7 @@ public final class StringConcatenator implements ObjectReceiver<String> {
         builder.append(obj);
     }
 
-    /**
-     * Resets the content.
-     */
+    /** Resets the content. */
     public void reset() {
         builder = new StringBuilder();
     }
@@ -74,5 +69,4 @@ public final class StringConcatenator implements ObjectReceiver<String> {
     public String getString() {
         return builder.toString();
     }
-
 }

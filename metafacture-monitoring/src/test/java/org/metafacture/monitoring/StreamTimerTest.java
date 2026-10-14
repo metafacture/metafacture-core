@@ -16,11 +16,10 @@
 
 package org.metafacture.monitoring;
 
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
@@ -29,7 +28,6 @@ import org.slf4j.Logger;
  * Tests for class {@link ObjectTimer}.
  *
  * @author Christoph Böhme
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public final class StreamTimerTest extends TestHelpers {
@@ -40,8 +38,7 @@ public final class StreamTimerTest extends TestHelpers {
     private StreamTimer streamTimer;
     private BenchmarkedModule benchmarkedModule;
 
-    public StreamTimerTest() {
-    }
+    public StreamTimerTest() {}
 
     @Before
     public void setup() {
@@ -92,24 +89,20 @@ public final class StreamTimerTest extends TestHelpers {
         assertLog(logger, prefix, 4);
     }
 
-    /**
-     * A module with a slow process method.
-     */
+    /** A module with a slow process method. */
     private static final class BenchmarkedModule extends DefaultStreamReceiver {
 
         private static final long[] DURATIONS = {150L, 20L, 30L, 202L};
 
         private int i;
 
-        private BenchmarkedModule() {
-        }
+        private BenchmarkedModule() {}
 
         @Override
         public void startRecord(final String id) {
             try {
                 Thread.sleep(getDuration());
-            }
-            catch (final InterruptedException e) {
+            } catch (final InterruptedException e) {
                 return;
             }
         }
@@ -122,7 +115,5 @@ public final class StreamTimerTest extends TestHelpers {
             }
             return duration;
         }
-
     }
-
 }

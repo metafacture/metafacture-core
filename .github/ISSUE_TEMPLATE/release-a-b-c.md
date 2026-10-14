@@ -1,4 +1,5 @@
 ---
+
 name: Release A.B.C
 about: Steps for each release
 title: 'Release A.B.C'
@@ -8,7 +9,6 @@ assignees: '@TobiasNx'
 ---
 
 The release is based on commit [specify commit hash that is going to be released so that the exact version will be tested]
-
 
 This release follows release A.B.C + LINK TO RELEASE ISSUE
 
@@ -30,3 +30,4 @@ Following [maintaining guidelines](https://github.com/metafacture/metafacture-co
 - [ ] write [blog post](https://github.com/metafacture/metafacture-blog/issues/39)
 - [ ] [toot](https://openbiblio.social/@metafacture/)
 - [ ] announce at [metadaten.community](https://metadaten.community/c/software-und-tools/metafacture/8)
+

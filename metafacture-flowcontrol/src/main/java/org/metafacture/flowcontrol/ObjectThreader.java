@@ -15,6 +15,8 @@
 
 package org.metafacture.flowcontrol;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.ObjectPipe;
@@ -24,24 +26,19 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Divides incoming objects and distributes them to added receivers. These
- * receivers are coupled with an
- * {@link org.metafacture.flowcontrol.ObjectPipeDecoupler}, so each added
- * receiver runs in its own thread.
+ * Divides incoming objects and distributes them to added receivers. These receivers are coupled
+ * with an {@link org.metafacture.flowcontrol.ObjectPipeDecoupler}, so each added receiver runs in
+ * its own thread.
  *
  * @param <T> Object type
- *
  * @author Pascal Christoph (dr0i)
  * @author Fabian Steeg (fsteeg)
- *
  */
 @In(Object.class)
 @Out(Object.class)
-@Description("Incoming objects are distributed to the added receivers, running in their own threads.")
+@Description(
+        "Incoming objects are distributed to the added receivers, running in their own threads.")
 @FluxCommand("thread-object-tee")
 public class ObjectThreader<T> implements Tee<ObjectReceiver<T>>, ObjectPipe<T, ObjectReceiver<T>> {
 
@@ -49,19 +46,15 @@ public class ObjectThreader<T> implements Tee<ObjectReceiver<T>>, ObjectPipe<T, 
     private final List<ObjectReceiver<T>> receivers = new ArrayList<ObjectReceiver<T>>();
     private int objectNumber;
 
-    /**
-     * Creates an instance of {@link ObjectThreader}.
-     */
-    public ObjectThreader() {
-    }
+    /** Creates an instance of {@link ObjectThreader}. */
+    public ObjectThreader() {}
 
     @Override
     public void process(final T obj) {
         receivers.get(objectNumber).process(obj);
         if (objectNumber == receivers.size() - 1) {
             objectNumber = 0;
-        }
-        else {
+        } else {
             ++objectNumber;
         }
     }
@@ -83,7 +76,8 @@ public class ObjectThreader<T> implements Tee<ObjectReceiver<T>>, ObjectPipe<T, 
     }
 
     @Override
-    public <R extends ObjectReceiver<T>> R setReceivers(final R receiver, final ObjectReceiver<T> lateralReceiver) {
+    public <R extends ObjectReceiver<T>> R setReceivers(
+            final R receiver, final ObjectReceiver<T> lateralReceiver) {
         receivers.clear();
         addReceiver(receiver);
         addReceiver(lateralReceiver);
@@ -111,5 +105,4 @@ public class ObjectThreader<T> implements Tee<ObjectReceiver<T>>, ObjectPipe<T, 
         receivers.clear();
         return this;
     }
-
 }

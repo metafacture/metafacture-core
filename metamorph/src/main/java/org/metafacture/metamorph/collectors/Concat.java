@@ -34,11 +34,8 @@ public final class Concat extends AbstractFlushingCollect {
     private String currentDelimiter = "";
     private boolean reverse;
 
-    /**
-     * Creates an instance of {@link Concat}.
-     */
-    public Concat() {
-    }
+    /** Creates an instance of {@link Concat}. */
+    public Concat() {}
 
     /**
      * Sets the prefix.
@@ -80,8 +77,8 @@ public final class Concat extends AbstractFlushingCollect {
     protected void emit() {
         if (builder.length() != 0) {
             final String value = prefix + builder.toString() + postfix;
-            getNamedValueReceiver().receive(getName(), value, this,
-                    getRecordCount(), getEntityCount());
+            getNamedValueReceiver()
+                    .receive(getName(), value, this, getRecordCount(), getEntityCount());
         }
     }
 
@@ -91,14 +88,12 @@ public final class Concat extends AbstractFlushingCollect {
     }
 
     @Override
-    protected void receive(final String name, final String value,
-            final NamedValueSource source) {
+    protected void receive(final String name, final String value, final NamedValueSource source) {
 
         if (reverse) {
             builder.insert(0, currentDelimiter);
             builder.insert(0, value);
-        }
-        else {
+        } else {
             builder.append(currentDelimiter);
             builder.append(value);
         }
@@ -110,5 +105,4 @@ public final class Concat extends AbstractFlushingCollect {
         builder.delete(0, builder.length());
         currentDelimiter = "";
     }
-
 }

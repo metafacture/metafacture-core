@@ -16,24 +16,21 @@
 
 package org.metafacture.commons.tries;
 
+import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.Locale;
 
 /**
  * tests {@link SimpleTrie}
  *
  * @author Markus Michael Geipel
- *
  */
 public final class SimpleTrieTest {
 
     private static final String KEY = "key";
     private static final String VALUE = "value";
 
-    public SimpleTrieTest() {
-    }
+    public SimpleTrieTest() {}
 
     @Test
     public void testAdd() {
@@ -47,7 +44,17 @@ public final class SimpleTrieTest {
     public void testMultiAdd() {
         final SimpleTrie<String> trie = new SimpleTrie<String>();
 
-        final String[] megacities =  {"Brisbane", "Sydney", "Melbourne", "Adelaide", "Perth", "Berlin", "Berlin Center", "Bremen", "Petersburg"};
+        final String[] megacities = {
+            "Brisbane",
+            "Sydney",
+            "Melbourne",
+            "Adelaide",
+            "Perth",
+            "Berlin",
+            "Berlin Center",
+            "Bremen",
+            "Petersburg"
+        };
 
         for (int i = 0; i < megacities.length; ++i) {
             final String city = megacities[i];
@@ -59,5 +66,4 @@ public final class SimpleTrieTest {
             Assert.assertEquals(city.toUpperCase(Locale.US), trie.get(city));
         }
     }
-
 }

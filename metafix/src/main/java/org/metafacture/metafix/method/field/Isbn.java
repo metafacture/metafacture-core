@@ -16,30 +16,30 @@
 
 package org.metafacture.metafix.method.field;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
 import org.metafacture.metamorph.functions.ISBN;
 
-import java.util.List;
-import java.util.Map;
-
 /**
- * Extracts an ISBN and replaces the field value with the normalized ISBN;
- * optionally converts and/or validates the ISBN.
+ * Extracts an ISBN and replaces the field value with the normalized ISBN; optionally converts
+ * and/or validates the ISBN.
  */
 @FixCommand("isbn")
 public class Isbn implements FixFunction {
 
-    /**
-     * Creates an instance of {@link Isbn}.
-     */
-    public Isbn() {
-    }
+    /** Creates an instance of {@link Isbn}. */
+    public Isbn() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final ISBN isbn = new ISBN();
 
         withOption(options, ERROR_STRING_OPTION, isbn::setErrorString);
@@ -48,5 +48,4 @@ public class Isbn implements FixFunction {
 
         record.transform(params.get(0), isbn::process);
     }
-
 }

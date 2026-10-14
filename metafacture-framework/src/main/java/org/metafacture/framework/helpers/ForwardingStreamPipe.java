@@ -20,20 +20,16 @@ import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
 
 /**
- * Default implementation of {@link StreamPipe} that forwards all received
- * events. It can be used as a base class for modules that only need to handle
- * some event types.
+ * Default implementation of {@link StreamPipe} that forwards all received events. It can be used as
+ * a base class for modules that only need to handle some event types.
  *
  * @author Christoph Böhme
  * @see DefaultStreamPipe
  */
 public class ForwardingStreamPipe extends DefaultStreamPipe<StreamReceiver> {
 
-    /**
-     * Creates an instance of {@link ForwardingStreamPipe}.
-     */
-    public ForwardingStreamPipe() {
-    }
+    /** Creates an instance of {@link ForwardingStreamPipe}. */
+    public ForwardingStreamPipe() {}
 
     @Override
     public void startRecord(final String identifier) {
@@ -59,5 +55,4 @@ public class ForwardingStreamPipe extends DefaultStreamPipe<StreamReceiver> {
     public void literal(final String name, final String value) {
         getReceiver().literal(name, value);
     }
-
 }

@@ -3,15 +3,13 @@ package org.metafacture.metafix;
 import org.metafacture.metafix.interpreter.FixInterpreter;
 
 /**
- * Use this class to register components to be used at runtime / without the Equinox extension registry.
+ * Use this class to register components to be used at runtime / without the Equinox extension
+ * registry.
  */
 public class FixRuntimeModule extends AbstractFixRuntimeModule {
 
-    /**
-     * Creates an instance of {@link FixRuntimeModule}.
-     */
-    public FixRuntimeModule() {
-    }
+    /** Creates an instance of {@link FixRuntimeModule}. */
+    public FixRuntimeModule() {}
 
     /**
      * Returns the class to bind to.
@@ -21,5 +19,4 @@ public class FixRuntimeModule extends AbstractFixRuntimeModule {
     public Class<FixInterpreter> bindFixInterpreter() {
         return FixInterpreter.class;
     }
-
 }

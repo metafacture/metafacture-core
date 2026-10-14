@@ -16,28 +16,24 @@
 
 package org.metafacture.metamorph;
 
+import java.io.IOException;
+import java.util.Map;
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.commons.reflection.ObjectFactory;
 import org.metafacture.framework.MetafactureException;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * Creates the maps available in Metamorph.
  *
  * @author Markus Michael Geipel
- *
  */
 final class MapFactory extends ObjectFactory<Map> {
 
     MapFactory() {
         try {
             loadClassesFromMap(ResourceUtil.loadProperties("morph-maps.properties"), Map.class);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException("Failed to load maps list", e);
         }
     }
-
 }

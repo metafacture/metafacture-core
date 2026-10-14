@@ -16,10 +16,9 @@
 
 package org.metafacture.metamorph;
 
-import org.metafacture.framework.StreamReceiver;
-
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -31,27 +30,25 @@ import org.mockito.junit.MockitoRule;
  */
 public class TestMetamorphMacros {
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public TestMetamorphMacros() {
-    }
+    public TestMetamorphMacros() {}
 
     @Test
     public void shouldReplaceCallMacroWithMacro() {
-        TestHelpers.assertMorph(receiver,
-                "<macros>" +
-                "  <macro name='simple-macro'>" +
-                "    <data source='$[in]' name='$[out]' />" +
-                "  </macro>" +
-                "</macros>" +
-                "<rules>" +
-                "  <call-macro name='simple-macro' in='in1' out='out1' />" +
-                "  <call-macro name='simple-macro' in='in2' out='out2' />" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<macros>"
+                        + "  <macro name='simple-macro'>"
+                        + "    <data source='$[in]' name='$[out]' />"
+                        + "  </macro>"
+                        + "</macros>"
+                        + "<rules>"
+                        + "  <call-macro name='simple-macro' in='in1' out='out1' />"
+                        + "  <call-macro name='simple-macro' in='in2' out='out2' />"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("in1", "Hawaii");
@@ -63,108 +60,109 @@ public class TestMetamorphMacros {
                     o.get().literal("out1", "Hawaii");
                     o.get().literal("out2", "Maui");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldAllowCallMacroInEntities() {
-        testSingleLiteral(true,
-                "<macros>" +
-                "  <macro name='simple-macro'>" +
-                "    <data source='Honolulu' name='Honolulu' />" +
-                "  </macro>" +
-                "</macros>" +
-                "<rules>" +
-                "  <entity name='Hawaii'>" +
-                "    <call-macro name='simple-macro' />" +
-                "  </entity>" +
-                "</rules>"
-        );
+        testSingleLiteral(
+                true,
+                "<macros>"
+                        + "  <macro name='simple-macro'>"
+                        + "    <data source='Honolulu' name='Honolulu' />"
+                        + "  </macro>"
+                        + "</macros>"
+                        + "<rules>"
+                        + "  <entity name='Hawaii'>"
+                        + "    <call-macro name='simple-macro' />"
+                        + "  </entity>"
+                        + "</rules>");
     }
 
     @Test
     public void shouldAllowNestedMacros() {
-        testSingleLiteral(true,
-                "<macros>" +
-                "  <macro name='inner-macro'>" +
-                "    <data source='$[literal]' />" +
-                "  </macro>" +
-                "  <macro name='outer-macro'>" +
-                "    <entity name='$[entity]'>" +
-                "      <call-macro name='inner-macro' literal='Honolulu' />" +
-                "    </entity>" +
-                "  </macro>" +
-                "</macros>" +
-                "<rules>" +
-                "  <call-macro name='outer-macro' entity='Hawaii' />" +
-                "</rules>"
-        );
+        testSingleLiteral(
+                true,
+                "<macros>"
+                        + "  <macro name='inner-macro'>"
+                        + "    <data source='$[literal]' />"
+                        + "  </macro>"
+                        + "  <macro name='outer-macro'>"
+                        + "    <entity name='$[entity]'>"
+                        + "      <call-macro name='inner-macro' literal='Honolulu' />"
+                        + "    </entity>"
+                        + "  </macro>"
+                        + "</macros>"
+                        + "<rules>"
+                        + "  <call-macro name='outer-macro' entity='Hawaii' />"
+                        + "</rules>");
     }
 
     @Test
     public void shouldAllowoForwardReferencingMacros() {
-        testSingleLiteral(true,
-                "<macros>" +
-                "  <macro name='referencing'>" +
-                "    <entity name='Hawaii'>" +
-                "      <call-macro name='forward-referenced' />" +
-                "    </entity>" +
-                "  </macro>" +
-                "  <macro name='forward-referenced'>" +
-                "    <data source='Honolulu' />" +
-                "  </macro>" +
-                "</macros>" +
-                "<rules>" +
-                "  <call-macro name='referencing' />" +
-                "</rules>"
-        );
+        testSingleLiteral(
+                true,
+                "<macros>"
+                        + "  <macro name='referencing'>"
+                        + "    <entity name='Hawaii'>"
+                        + "      <call-macro name='forward-referenced' />"
+                        + "    </entity>"
+                        + "  </macro>"
+                        + "  <macro name='forward-referenced'>"
+                        + "    <data source='Honolulu' />"
+                        + "  </macro>"
+                        + "</macros>"
+                        + "<rules>"
+                        + "  <call-macro name='referencing' />"
+                        + "</rules>");
     }
 
     @Test
     public void shouldSupportVariablesInMacroParameters() {
-        testSingleLiteral(true,
-                "<macros>" +
-                "  <macro name='inner-macro'>" +
-                "    <data source='$[source]' />" +
-                "  </macro>" +
-                "  <macro name='outer-macro'>" +
-                "    <entity name='Hawaii'>" +
-                "      <call-macro name='inner-macro' source='$[literal]' />" +
-                "    </entity>" +
-                "  </macro>" +
-                "</macros>" +
-                "<rules>" +
-                "  <call-macro name='outer-macro' literal='Honolulu' />" +
-                "</rules>"
-        );
+        testSingleLiteral(
+                true,
+                "<macros>"
+                        + "  <macro name='inner-macro'>"
+                        + "    <data source='$[source]' />"
+                        + "  </macro>"
+                        + "  <macro name='outer-macro'>"
+                        + "    <entity name='Hawaii'>"
+                        + "      <call-macro name='inner-macro' source='$[literal]' />"
+                        + "    </entity>"
+                        + "  </macro>"
+                        + "</macros>"
+                        + "<rules>"
+                        + "  <call-macro name='outer-macro' literal='Honolulu' />"
+                        + "</rules>");
     }
 
     @Test
     public void issue227_shouldSupportXincludeForMacros() {
-        testSingleLiteral(false,
-                "<include href='issue227_should-support-xinclude-for-macros.xml'" +
-                "    xmlns='http://www.w3.org/2001/XInclude' />" +
-                "<rules>" +
-                "  <call-macro name='included-macro' />" +
-                "</rules>"
-        );
+        testSingleLiteral(
+                false,
+                "<include href='issue227_should-support-xinclude-for-macros.xml'"
+                        + "    xmlns='http://www.w3.org/2001/XInclude' />"
+                        + "<rules>"
+                        + "  <call-macro name='included-macro' />"
+                        + "</rules>");
     }
 
     @Test
     public void shouldSupportXPointer() {
-        testSingleLiteral(false,
-                "<include href='should-support-xpointer.xml'" +
-                "    xmlns='http://www.w3.org/2001/XInclude'" +
-                "    xpointer='element(/1/1)' />" +
-                "<rules>" +
-                "  <call-macro name='included-macro' />" +
-                "</rules>"
-        );
+        testSingleLiteral(
+                false,
+                "<include href='should-support-xpointer.xml'"
+                        + "    xmlns='http://www.w3.org/2001/XInclude'"
+                        + "    xpointer='element(/1/1)' />"
+                        + "<rules>"
+                        + "  <call-macro name='included-macro' />"
+                        + "</rules>");
     }
 
     private void testSingleLiteral(final boolean withEntity, final String morphDef) {
-        TestHelpers.assertMorph(receiver, morphDef,
+        TestHelpers.assertMorph(
+                receiver,
+                morphDef,
                 i -> {
                     i.startRecord("1");
                     i.literal("Honolulu", "Aloha");
@@ -184,8 +182,6 @@ public class TestMetamorphMacros {
                     }
 
                     o.get().endRecord();
-                }
-        );
+                });
     }
-
 }

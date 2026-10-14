@@ -16,16 +16,6 @@
 
 package org.metafacture.flux;
 
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.commons.reflection.ConfigurableClass;
-import org.metafacture.commons.reflection.ObjectFactory;
-import org.metafacture.flux.parser.FluxProgramm;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.annotations.Description;
-import org.metafacture.framework.annotations.In;
-import org.metafacture.framework.annotations.Out;
-import org.metafacture.framework.annotations.ReturnsAvailableArguments;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -42,16 +32,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.commons.reflection.ConfigurableClass;
+import org.metafacture.commons.reflection.ObjectFactory;
+import org.metafacture.flux.parser.FluxProgramm;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.annotations.Description;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
+import org.metafacture.framework.annotations.ReturnsAvailableArguments;
 
 /**
- * Prints Flux help for a given {@link ObjectFactory}.
- * If the file at {@value #PATH_TO_EXAMPLES} exists it's taken to insert links to examples and to the source code.
+ * Prints Flux help for a given {@link ObjectFactory}. If the file at {@value #PATH_TO_EXAMPLES}
+ * exists it's taken to insert links to examples and to the source code.
  *
  * @author Markus Michael Geipel
  */
 public final class HelpPrinter {
 
-    public static final String PATH_TO_EXAMPLES = "../metafacture-documentation/linksAndExamples.tsv";
+    public static final String PATH_TO_EXAMPLES =
+            "../metafacture-documentation/linksAndExamples.tsv";
 
     private static final Map<String, String[]> EXAMPLES_MAP = new HashMap<>();
 
@@ -63,7 +63,6 @@ public final class HelpPrinter {
      * Prints Flux help to the standard output.
      *
      * @param args unused
-     *
      * @see #print
      * @throws IOException when an I/O error occurs
      */
@@ -72,28 +71,30 @@ public final class HelpPrinter {
     }
 
     /**
-     * Prints Flux help for a given ObjectFactory. Excerpts setters and their
-     * arguments, {@code @in} annotations and {@code @out} annotations.
+     * Prints Flux help for a given ObjectFactory. Excerpts setters and their arguments, {@code @in}
+     * annotations and {@code @out} annotations.
      *
      * @param factory the ObjectFactory
-     * @param out     the PrintStream to print to
+     * @param out the PrintStream to print to
      * @throws IOException when an I/O error occurs
      */
-    public static void print(final ObjectFactory<?> factory, final PrintStream out) throws IOException {
+    public static void print(final ObjectFactory<?> factory, final PrintStream out)
+            throws IOException {
         try (PrintWriter pw = new PrintWriter(out)) {
             print(factory, pw);
         }
     }
 
     /**
-     * Prints Flux help for a given ObjectFactory. Excerpts setters and their
-     * arguments, {@code @in} annotations and {@code @out} annotations.
+     * Prints Flux help for a given ObjectFactory. Excerpts setters and their arguments, {@code @in}
+     * annotations and {@code @out} annotations.
      *
      * @param factory the ObjectFactory
-     * @param out     the PrintWriter to print to
+     * @param out the PrintWriter to print to
      * @throws IOException when an I/O error occurs
      */
-    public static void print(final ObjectFactory<?> factory, final PrintWriter out) throws IOException {
+    public static void print(final ObjectFactory<?> factory, final PrintWriter out)
+            throws IOException {
         out.println("Welcome to Metafacture");
         out.println("======================");
         out.println();
@@ -113,13 +114,15 @@ public final class HelpPrinter {
     private static String getVersionInfo() {
         try {
             return ResourceUtil.loadProperties("build.properties").toString();
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException("Failed to load build infos", e);
         }
     }
 
-    private static <T> void describe(final String name, final ObjectFactory<T> factory, final PrintWriter out) { // checkstyle-disable-line ExecutableStatementCount
+    private static <T> void describe(
+            final String name,
+            final ObjectFactory<T> factory,
+            final PrintWriter out) { // checkstyle-disable-line ExecutableStatementCount
         final ConfigurableClass<? extends T> configurableClass = factory.get(name);
         final Class<? extends T> moduleClass = configurableClass.getPlainClass();
         final Description desc = moduleClass.getAnnotation(Description.class);
@@ -144,22 +147,26 @@ public final class HelpPrinter {
             final StringBuilder builder = new StringBuilder("example");
             if (examplesEntry[2].contains("github.com")) {
                 builder.append(" for Metafacture Runner");
-            }
-            else if (examplesEntry[2].contains("/playground/")) {
+            } else if (examplesEntry[2].contains("/playground/")) {
                 builder.append(" in Playground");
             }
             out.println("- [" + builder + "]" + "(" + examplesEntry[2] + ")");
         }
         if (examplesEntry != null && examplesEntry.length > 1) {
-            out.println("- java class:\t[" + moduleClass.getCanonicalName() + "](" + examplesEntry[1] + ")");
-        }
-        else {
+            out.println(
+                    "- java class:\t["
+                            + moduleClass.getCanonicalName()
+                            + "]("
+                            + examplesEntry[1]
+                            + ")");
+        } else {
             out.println("- java class:\t" + moduleClass.getCanonicalName());
         }
         out.println();
     }
 
-    private static <T> void printSignature(final PrintWriter out, final Class<? extends T> moduleClass) {
+    private static <T> void printSignature(
+            final PrintWriter out, final Class<? extends T> moduleClass) {
         String inString = "<unknown>";
         String outString = "";
         final In inClass = moduleClass.getAnnotation(In.class);
@@ -173,7 +180,10 @@ public final class HelpPrinter {
         out.println("- signature:\t" + inString + " -> " + outString);
     }
 
-    private static <T> void printAttributes(final PrintWriter out, final ConfigurableClass<? extends T> configurableClass, final Map<String, Method> attributes) {
+    private static <T> void printAttributes(
+            final PrintWriter out,
+            final ConfigurableClass<? extends T> configurableClass,
+            final Map<String, Method> attributes) {
         if (!attributes.isEmpty()) {
             out.print("- options:\t");
             final StringBuilder builder = new StringBuilder();
@@ -190,14 +200,12 @@ public final class HelpPrinter {
                             .append(" ")
                             .append(Arrays.asList(type.getEnumConstants()))
                             .append(", ");
-                }
-                else {
+                } else {
                     builder.append(entry.getKey())
                             .append(" (")
                             .append(type.getSimpleName())
                             .append("), ");
                 }
-
             }
             out.println(builder.substring(0, builder.length() - 2));
         }
@@ -209,8 +217,9 @@ public final class HelpPrinter {
             if (method.getAnnotation(ReturnsAvailableArguments.class) != null) {
                 try {
                     return (Collection<String>) method.invoke(moduleClass);
-                }
-                catch (final IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
+                } catch (final IllegalAccessException
+                        | InvocationTargetException
+                        | IllegalArgumentException e) {
                     // silently ignore
                 }
             }
@@ -233,5 +242,4 @@ public final class HelpPrinter {
             }
         }
     }
-
 }

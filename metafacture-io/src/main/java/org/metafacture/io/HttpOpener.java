@@ -16,15 +16,6 @@
 
 package org.metafacture.io;
 
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.framework.FluxCommand;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.annotations.Description;
-import org.metafacture.framework.annotations.In;
-import org.metafacture.framework.annotations.Out;
-import org.metafacture.framework.helpers.DefaultObjectPipe;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,6 +31,14 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.annotations.Description;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
+import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 /**
  * Opens an {@link HttpURLConnection} and passes a reader to the receiver.
@@ -49,7 +48,14 @@ import java.util.zip.GZIPInputStream;
  * @author Jens Wille
  * @author Pascal Christoph (dr0i)
  */
-@Description("Opens an HTTP resource. Supports setting HTTP header fields `Accept`, `Accept-Charset`, `Accept-Encoding`, `Content-Encoding` and `Content-Type`, as well as generic headers (separated by `\\n`). Defaults: request `method` = `GET`, request `url` = `@-` (input data), request `body` = `@-` (input data) if request method supports body and input data not already used, `Accept` header (`accept`) = `*/*`, `Accept-Charset` header (`acceptcharset`) = `UTF-8`, `errorprefix` = `ERROR: `.")
+@Description(
+        "Opens an HTTP resource. Supports setting HTTP header fields `Accept`, `Accept-Charset`,"
+            + " `Accept-Encoding`, `Content-Encoding` and `Content-Type`, as well as generic"
+            + " headers (separated by `\\n"
+            + "`). Defaults: request `method` = `GET`, request `url` = `@-` (input data), request"
+            + " `body` = `@-` (input data) if request method supports body and input data not"
+            + " already used, `Accept` header (`accept`) = `*/*`, `Accept-Charset` header"
+            + " (`acceptcharset`) = `UTF-8`, `errorprefix` = `ERROR: `.")
 @In(String.class)
 @Out(Reader.class)
 @FluxCommand("open-http")
@@ -74,9 +80,12 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     public static final String DEFAULT_METHOD_NAME = "GET";
     public static final Method DEFAULT_METHOD = Method.valueOf(DEFAULT_METHOD_NAME);
 
-    private static final Pattern HEADER_FIELD_SEPARATOR_PATTERN = Pattern.compile(HEADER_FIELD_SEPARATOR);
-    private static final Pattern HEADER_VALUE_SEPARATOR_PATTERN = Pattern.compile(HEADER_VALUE_SEPARATOR);
-    private static final Pattern MIME_PARAMETER_SEPARATOR_PATTERN = Pattern.compile(MIME_PARAMETER_SEPARATOR);
+    private static final Pattern HEADER_FIELD_SEPARATOR_PATTERN =
+            Pattern.compile(HEADER_FIELD_SEPARATOR);
+    private static final Pattern HEADER_VALUE_SEPARATOR_PATTERN =
+            Pattern.compile(HEADER_VALUE_SEPARATOR);
+    private static final Pattern MIME_PARAMETER_SEPARATOR_PATTERN =
+            Pattern.compile(MIME_PARAMETER_SEPARATOR);
 
     private static final int ALLOWED_REDIRECTIONS = 3;
     private static final int CONNECTION_TIMEOUT = 11000;
@@ -90,11 +99,8 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     private boolean inputUsed;
     private boolean successful;
 
-    /**
-     * HTTP methods.
-     */
+    /** HTTP methods. */
     public enum Method {
-
         DELETE(false, true),
         GET(false, true),
         HEAD(false, false),
@@ -128,12 +134,9 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         public boolean getResponseHasBody() {
             return responseHasBody;
         }
-
     }
 
-    /**
-     * Creates an instance of {@link HttpOpener}.
-     */
+    /** Creates an instance of {@link HttpOpener}. */
     public HttpOpener() {
         setAccept(ACCEPT_DEFAULT);
         setAcceptCharset(CHARSET_DEFAULT);
@@ -143,10 +146,9 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets the HTTP {@value ACCEPT_HEADER} header value. This is a MIME type
-     * such as {@code text/plain} or {@code application/json}. The default
-     * value for the accept header is {@value ACCEPT_DEFAULT} which means
-     * any MIME type.
+     * Sets the HTTP {@value ACCEPT_HEADER} header value. This is a MIME type such as {@code
+     * text/plain} or {@code application/json}. The default value for the accept header is {@value
+     * ACCEPT_DEFAULT} which means any MIME type.
      *
      * @param accept MIME type to use for the HTTP accept header
      */
@@ -155,8 +157,8 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets the HTTP {@value CONTENT_TYPE_HEADER} header value. This is a
-     * MIME type such as {@code text/plain} or {@code application/json}.
+     * Sets the HTTP {@value CONTENT_TYPE_HEADER} header value. This is a MIME type such as {@code
+     * text/plain} or {@code application/json}.
      *
      * @param contentType MIME type to use for the HTTP content-type header
      */
@@ -165,9 +167,8 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets the HTTP {@value ACCEPT_CHARSET_HEADER} header value. This is the
-     * preferred charset for the HTTP response.
-     * The default charset is {@value CHARSET_DEFAULT}.
+     * Sets the HTTP {@value ACCEPT_CHARSET_HEADER} header value. This is the preferred charset for
+     * the HTTP response. The default charset is {@value CHARSET_DEFAULT}.
      *
      * @param charset name of the charset used for the accept-charset HTTP header
      */
@@ -185,34 +186,29 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets the HTTP {@value ACCEPT_ENCODING_HEADER} header value. This is the
-     * preferred content encoding for the HTTP response. It accepts HTTP compression.
-     * Allowed values are i.a. "gzip" and "Brotli".
-     * The default for the content encoding is null, which means "no compression".
+     * Sets the HTTP {@value ACCEPT_ENCODING_HEADER} header value. This is the preferred content
+     * encoding for the HTTP response. It accepts HTTP compression. Allowed values are i.a. "gzip"
+     * and "Brotli". The default for the content encoding is null, which means "no compression".
      *
-     * @param acceptEncoding name of content encoding used for the accept-encoding HTTP
-     *                 header
+     * @param acceptEncoding name of content encoding used for the accept-encoding HTTP header
      */
     public void setAcceptEncoding(final String acceptEncoding) {
         setHeader(ACCEPT_ENCODING_HEADER, acceptEncoding);
     }
 
     /**
-     * Sets the HTTP {@value CONTENT_ENCODING_HEADER} header value. This is the
-     * content encoding for the HTTP request. It enables HTTP compression.
-     * Allowed values are "gzip".
-     * The default for the content encoding is null, which means "no compression".
+     * Sets the HTTP {@value CONTENT_ENCODING_HEADER} header value. This is the content encoding for
+     * the HTTP request. It enables HTTP compression. Allowed values are "gzip". The default for the
+     * content encoding is null, which means "no compression".
      *
-     * @param contentEncoding name of content encoding used for the content-encoding HTTP
-     *                 header
+     * @param contentEncoding name of content encoding used for the content-encoding HTTP header
      */
     public void setContentEncoding(final String contentEncoding) {
         setHeader(CONTENT_ENCODING_HEADER, contentEncoding);
     }
 
     /**
-     * Sets the error prefix. The default error prefix is
-     * {@value DEFAULT_PREFIX}.
+     * Sets the error prefix. The default error prefix is {@value DEFAULT_PREFIX}.
      *
      * @param errorPrefix the error prefix
      */
@@ -221,25 +217,24 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets a request property (header), or multiple request properties
-     * separated by {@value HEADER_FIELD_SEPARATOR}. Header name and value
-     * are separated by {@value HEADER_VALUE_SEPARATOR}. The header name is
-     * case-insensitive.
+     * Sets a request property (header), or multiple request properties separated by {@value
+     * HEADER_FIELD_SEPARATOR}. Header name and value are separated by {@value
+     * HEADER_VALUE_SEPARATOR}. The header name is case-insensitive.
      *
      * @param header request property line
-     *
      * @see #setHeader(String, String)
      */
     public void setHeader(final String header) {
-        Arrays.stream(HEADER_FIELD_SEPARATOR_PATTERN.split(header)).forEach(h -> {
-            final String[] parts = HEADER_VALUE_SEPARATOR_PATTERN.split(h, 2);
-            if (parts.length == 2) {
-                setHeader(parts[0], parts[1].trim());
-            }
-            else {
-                throw new IllegalArgumentException("Invalid header: " + h);
-            }
-        });
+        Arrays.stream(HEADER_FIELD_SEPARATOR_PATTERN.split(header))
+                .forEach(
+                        h -> {
+                            final String[] parts = HEADER_VALUE_SEPARATOR_PATTERN.split(h, 2);
+                            if (parts.length == 2) {
+                                setHeader(parts[0], parts[1].trim());
+                            } else {
+                                throw new IllegalArgumentException("Invalid header: " + h);
+                            }
+                        });
     }
 
     /**
@@ -253,8 +248,7 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets the HTTP request method. The default request method is
-     * {@value DEFAULT_METHOD_NAME}.
+     * Sets the HTTP request method. The default request method is {@value DEFAULT_METHOD_NAME}.
      *
      * @param method the request method
      */
@@ -263,9 +257,9 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets the HTTP request URL. The default value for the request URL is
-     * {@value INPUT_DESIGNATOR}, which means it will use the {@link
-     * #process(String) input data} as request URL.
+     * Sets the HTTP request URL. The default value for the request URL is {@value
+     * INPUT_DESIGNATOR}, which means it will use the {@link #process(String) input data} as request
+     * URL.
      *
      * @param url the request URL
      */
@@ -274,15 +268,14 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets the HTTP request body. The default value for the request body is
-     * {@value INPUT_DESIGNATOR} <i>if the {@link #setMethod(Method) request
-     * method} accepts a request body</i>, which means it will use the {@link
-     * #process(String) input data} data as request body <i>if the input has
-     * not already been used</i>; otherwise, no request body will be set by
+     * Sets the HTTP request body. The default value for the request body is {@value
+     * INPUT_DESIGNATOR} <i>if the {@link #setMethod(Method) request method} accepts a request
+     * body</i>, which means it will use the {@link #process(String) input data} data as request
+     * body <i>if the input has not already been used</i>; otherwise, no request body will be set by
      * default.
      *
-     * <p>If a request body has been set, but the request method does not
-     * accept a body, the method <i>may</i> be changed to {@code POST}.
+     * <p>If a request body has been set, but the request method does not accept a body, the method
+     * <i>may</i> be changed to {@code POST}.
      *
      * @param body the request body
      */
@@ -291,39 +284,39 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Opens the HTTP connection with the given input (URL or body) and makes
-     * the response body available to the consumer.
+     * Opens the HTTP connection with the given input (URL or body) and makes the response body
+     * available to the consumer.
      *
      * @param input the request URL or request body
      * @param consumer the response body consumer
-     *
      * @return true if the request succeeded
      */
     public boolean open(final String input, final Consumer<Reader> consumer) {
         try {
             final String requestUrl = getInput(input, url);
-            final String requestBody = getInput(input,
-                body == null && method.getRequestHasBody() ? INPUT_DESIGNATOR : body);
+            final String requestBody =
+                    getInput(
+                            input,
+                            body == null && method.getRequestHasBody() ? INPUT_DESIGNATOR : body);
 
             final URL urlToOpen = ResourceUtil.toURL(requestUrl);
-            final HttpURLConnection connection = requestBody != null ?
-                doOutput(urlToOpen, requestBody) : doRedirects(urlToOpen);
+            final HttpURLConnection connection =
+                    requestBody != null ? doOutput(urlToOpen, requestBody) : doRedirects(urlToOpen);
 
             final String charset = getContentCharset(connection);
 
-            try (
-                    InputStream inputStream = getInputStream(connection);
-                    Reader reader = new InputStreamReader(
-                        "gzip".equalsIgnoreCase(connection.getContentEncoding()) ?
-                        new GZIPInputStream(inputStream) : inputStream, charset)
-            ) {
+            try (InputStream inputStream = getInputStream(connection);
+                    Reader reader =
+                            new InputStreamReader(
+                                    "gzip".equalsIgnoreCase(connection.getContentEncoding())
+                                            ? new GZIPInputStream(inputStream)
+                                            : inputStream,
+                                    charset)) {
                 consumer.accept(reader);
             }
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
-        }
-        finally {
+        } finally {
             inputUsed = false;
         }
 
@@ -340,11 +333,9 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 
         if (!INPUT_DESIGNATOR.equals(value)) {
             result = value;
-        }
-        else if (inputUsed) {
+        } else if (inputUsed) {
             result = null;
-        }
-        else {
+        } else {
             inputUsed = true;
             result = input;
         }
@@ -352,7 +343,8 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         return result;
     }
 
-    private HttpURLConnection doOutput(final URL urlToOpen, final String requestBody) throws IOException {
+    private HttpURLConnection doOutput(final URL urlToOpen, final String requestBody)
+            throws IOException {
         final HttpURLConnection connection = openConnection(urlToOpen);
 
         connection.setDoOutput(true);
@@ -366,13 +358,16 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 
         for (int i = 0; i < ALLOWED_REDIRECTIONS; ++i) {
             final HttpURLConnection connection = openConnection(urlToFollow);
-            connection.setInstanceFollowRedirects(false); // Make the logic below easier to detect redirections
+            connection.setInstanceFollowRedirects(
+                    false); // Make the logic below easier to detect redirections
 
             switch (connection.getResponseCode()) {
                 case HttpURLConnection.HTTP_MOVED_PERM:
                 case HttpURLConnection.HTTP_MOVED_TEMP:
-                    final String location = URLDecoder.decode(connection.getHeaderField("Location"), "UTF-8");
-                    urlToFollow = ResourceUtil.toURL(urlToFollow, location); // Deal with relative URLs
+                    final String location =
+                            URLDecoder.decode(connection.getHeaderField("Location"), "UTF-8");
+                    urlToFollow =
+                            ResourceUtil.toURL(urlToFollow, location); // Deal with relative URLs
                     break;
                 default:
                     return connection;
@@ -396,15 +391,13 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         try {
             successful = true;
             return connection.getInputStream();
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             successful = false;
 
             final InputStream errorStream = connection.getErrorStream();
             if (errorStream != null) {
                 return getErrorStream(errorStream);
-            }
-            else {
+            } else {
                 throw e;
             }
         }
@@ -414,8 +407,7 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         if (errorPrefix != null) {
             final InputStream errorPrefixStream = new ByteArrayInputStream(errorPrefix.getBytes());
             return new SequenceInputStream(errorPrefixStream, errorStream);
-        }
-        else {
+        } else {
             return errorStream;
         }
     }
@@ -430,7 +422,8 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
                 final String parameter = parts[i].trim();
                 final int index = parameter.indexOf(MIME_PARAMETER_VALUE_SEPARATOR);
 
-                if (index != -1 && MIME_PARAMETER_CHARSET.equalsIgnoreCase(parameter.substring(0, index))) {
+                if (index != -1
+                        && MIME_PARAMETER_CHARSET.equalsIgnoreCase(parameter.substring(0, index))) {
                     return parameter.substring(index + 1);
                 }
             }
@@ -438,5 +431,4 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 
         return CHARSET_DEFAULT;
     }
-
 }

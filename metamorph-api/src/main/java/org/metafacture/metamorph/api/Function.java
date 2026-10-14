@@ -20,14 +20,13 @@ package org.metafacture.metamorph.api;
  * Interface for functions used in Metamorph.
  *
  * @author Markus Michael Geipel
- *
  */
 public interface Function extends NamedValuePipe, FlushListener {
 
     /**
      * Puts a value into the map
      *
-     * @param key   the key
+     * @param key the key
      * @param value the value
      */
     void putValue(String key, String value);
@@ -38,5 +37,4 @@ public interface Function extends NamedValuePipe, FlushListener {
      * @param maps the {@link Maps}
      */
     void setMaps(Maps maps);
-
 }

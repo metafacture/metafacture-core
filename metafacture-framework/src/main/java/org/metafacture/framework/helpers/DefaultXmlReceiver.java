@@ -16,35 +16,27 @@
 
 package org.metafacture.framework.helpers;
 
+import java.io.IOException;
 import org.metafacture.framework.XmlPipe;
 import org.metafacture.framework.XmlReceiver;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import java.io.IOException;
-
 /**
- * Default implementation of {@link XmlReceiver} which
- * simply does nothing. Do not use this class as a base class
- * for modules which are implement {@link XmlPipe}; use
- * {@link DefaultXmlPipe} for that.
+ * Default implementation of {@link XmlReceiver} which simply does nothing. Do not use this class as
+ * a base class for modules which are implement {@link XmlPipe}; use {@link DefaultXmlPipe} for
+ * that.
  *
  * @see DefaultStreamPipe
-
  * @author Christoph Böhme
- *
  */
 public class DefaultXmlReceiver extends DefaultLifeCycle implements XmlReceiver {
 
-    /**
-     * Creates an instance of {@link DefaultXmlReceiver}.
-     */
-    public DefaultXmlReceiver() {
-    }
+    /** Creates an instance of {@link DefaultXmlReceiver}. */
+    public DefaultXmlReceiver() {}
 
     @Override
     public void setDocumentLocator(final Locator locator) {
@@ -62,8 +54,7 @@ public class DefaultXmlReceiver extends DefaultLifeCycle implements XmlReceiver 
     }
 
     @Override
-    public void startPrefixMapping(final String prefix, final String uri)
-            throws SAXException {
+    public void startPrefixMapping(final String prefix, final String uri) throws SAXException {
         // Default implementation does nothing
     }
 
@@ -73,14 +64,15 @@ public class DefaultXmlReceiver extends DefaultLifeCycle implements XmlReceiver 
     }
 
     @Override
-    public void startElement(final String uri, final String localName,
-            final String qName, final Attributes atts) throws SAXException {
+    public void startElement(
+            final String uri, final String localName, final String qName, final Attributes atts)
+            throws SAXException {
         // Default implementation does nothing
     }
 
     @Override
-    public void endElement(final String uri, final String localName,
-            final String qName) throws SAXException {
+    public void endElement(final String uri, final String localName, final String qName)
+            throws SAXException {
         // Default implementation does nothing
     }
 
@@ -91,14 +83,13 @@ public class DefaultXmlReceiver extends DefaultLifeCycle implements XmlReceiver 
     }
 
     @Override
-    public void ignorableWhitespace(final char[] chars, final int start,
-            final int length) throws SAXException {
+    public void ignorableWhitespace(final char[] chars, final int start, final int length)
+            throws SAXException {
         // Default implementation does nothing
     }
 
     @Override
-    public void processingInstruction(final String target, final String data)
-            throws SAXException {
+    public void processingInstruction(final String target, final String data) throws SAXException {
         // Default implementation does nothing
     }
 
@@ -114,8 +105,12 @@ public class DefaultXmlReceiver extends DefaultLifeCycle implements XmlReceiver 
     }
 
     @Override
-    public void unparsedEntityDecl(final String name, final String publicId,
-            final String systemId, final String notationName) throws SAXException {
+    public void unparsedEntityDecl(
+            final String name,
+            final String publicId,
+            final String systemId,
+            final String notationName)
+            throws SAXException {
         // Default implementation does nothing
     }
 
@@ -172,9 +167,7 @@ public class DefaultXmlReceiver extends DefaultLifeCycle implements XmlReceiver 
     }
 
     @Override
-    public void comment(final char[] chars, final int start, final int length)
-            throws SAXException {
+    public void comment(final char[] chars, final int start, final int length) throws SAXException {
         // Default implementation does nothing
     }
-
 }

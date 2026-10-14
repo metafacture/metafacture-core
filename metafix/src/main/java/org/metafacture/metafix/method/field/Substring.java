@@ -16,37 +16,39 @@
 
 package org.metafacture.metafix.method.field;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Replaces a string with its substring as defined by the start position
- * (offset) and length.
- */
+/** Replaces a string with its substring as defined by the start position (offset) and length. */
 @FixCommand("substring")
 public class Substring implements FixFunction {
 
-    /**
-     * Creates an instance of {@link Substring}.
-     */
-    public Substring() {
-    }
+    /** Creates an instance of {@link Substring}. */
+    public Substring() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final int offset = getInteger(params, 1);
         final Integer end = params.size() > 2 ? offset + getInteger(params, 2) : null;
         // TODO: final String replacement = params.size() > 3 ? params.get(3) : null;
 
-        record.transform(params.get(0), s -> {
-            final int length = s.length();
-            return offset > length ? s : end == null || end > length ? s.substring(offset) : s.substring(offset, end);
-        });
+        record.transform(
+                params.get(0),
+                s -> {
+                    final int length = s.length();
+                    return offset > length
+                            ? s
+                            : end == null || end > length
+                                    ? s.substring(offset)
+                                    : s.substring(offset, end);
+                });
     }
-
 }

@@ -16,44 +16,35 @@
 
 package org.metafacture.metamorph.maps;
 
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.TestHelpers;
-
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 /**
- * Tests for looking up values in arbitrary {@link java.util.Map}
- * implementations.
+ * Tests for looking up values in arbitrary {@link java.util.Map} implementations.
  *
  * @author Markus Geipel (metamorph-test xml)
  * @author Christoph Böhme (conversion to Java)
  */
 public final class JavaMapTest {
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public JavaMapTest() {
-    }
+    public JavaMapTest() {}
 
     @Test
     public void shouldLookupValuesInJavaBackedMap() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <data source='1'>" +
-                "    <lookup in='map1' />" +
-                "  </data>" +
-                "</rules>" +
-                "<maps>" +
-                "  <javamap name='map1' class='org.metafacture.metamorph.maps.FileMap' files='org/metafacture/metamorph/maps/java-map-test.txt' />" +
-                "</maps>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>  <data source='1'>    <lookup in='map1' />  </data></rules><maps> "
+                        + " <javamap name='map1' class='org.metafacture.metamorph.maps.FileMap'"
+                        + " files='org/metafacture/metamorph/maps/java-map-test.txt' /></maps>",
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -65,8 +56,6 @@ public final class JavaMapTest {
                     o.get().literal("1", "Germany");
                     o.get().literal("1", "Fiji");
                     o.get().endRecord();
-                }
-        );
+                });
     }
-
 }

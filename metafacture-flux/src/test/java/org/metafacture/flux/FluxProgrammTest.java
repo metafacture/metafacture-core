@@ -16,24 +16,20 @@
 
 package org.metafacture.flux;
 
-import org.metafacture.flux.parser.FluxProgramm;
-
-import org.junit.Test;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import org.junit.Test;
+import org.metafacture.flux.parser.FluxProgramm;
 
 /**
  * Tests {@link FluxProgramm}
  *
  * @author markus geipel
- *
  */
 public final class FluxProgrammTest {
 
-    public FluxProgrammTest() {
-    }
+    public FluxProgrammTest() {}
 
     @Test
     public void testCommandRegistration() throws IOException {
@@ -42,12 +38,12 @@ public final class FluxProgrammTest {
     }
 
     private PrintStream discardOutput() {
-        return new PrintStream(new OutputStream() {
-            @Override
-            public void write(final int b) throws IOException {
-                // Do not write any output.
-            }
-        });
+        return new PrintStream(
+                new OutputStream() {
+                    @Override
+                    public void write(final int b) throws IOException {
+                        // Do not write any output.
+                    }
+                });
     }
-
 }

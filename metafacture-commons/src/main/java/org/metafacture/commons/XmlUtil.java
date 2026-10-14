@@ -16,9 +16,6 @@
 
 package org.metafacture.commons;
 
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import java.io.StringWriter;
 import java.util.stream.Collectors;
 import javax.xml.transform.OutputKeys;
@@ -27,6 +24,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Utility functions for working with XML data as strings.
@@ -58,35 +57,29 @@ public final class XmlUtil {
     /**
      * Converts a Node to a String, with or without an XML declaration
      *
-     * @param node        the Node
+     * @param node the Node
      * @param omitXMLDecl boolean if an XML declaration is omitted or not
      * @return a String representation of the Node
      */
-    public static String nodeToString(final Node node,
-            final boolean omitXMLDecl) {
+    public static String nodeToString(final Node node, final boolean omitXMLDecl) {
         final StringWriter writer = new StringWriter();
         final Transformer transformer;
         try {
             transformer = TransformerFactory.newInstance().newTransformer();
-        }
-        catch (final TransformerException e) {
-            throw new AssertionError(
-                    "No errors expected when creating an identity transformer", e);
+        } catch (final TransformerException e) {
+            throw new AssertionError("No errors expected when creating an identity transformer", e);
         }
 
         if (omitXMLDecl) {
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        }
-        else {
+        } else {
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
         }
 
         try {
             transformer.transform(new DOMSource(node), new StreamResult(writer));
-        }
-        catch (final TransformerException e) {
-            throw new AssertionError(
-                    "No errors expected during identity transformation", e);
+        } catch (final TransformerException e) {
+            throw new AssertionError("No errors expected during identity transformation", e);
         }
 
         return writer.toString();
@@ -118,9 +111,9 @@ public final class XmlUtil {
         if (mimeType == null) {
             return false;
         }
-        return APPLICATION_XML_MIME_TYPE.equals(mimeType) ||
-                TEXT_XML_MIME_TYPE.equals(mimeType) ||
-                mimeType.endsWith(XML_BASE_MIME_TYPE);
+        return APPLICATION_XML_MIME_TYPE.equals(mimeType)
+                || TEXT_XML_MIME_TYPE.equals(mimeType)
+                || mimeType.endsWith(XML_BASE_MIME_TYPE);
     }
 
     /**
@@ -134,15 +127,15 @@ public final class XmlUtil {
     }
 
     /**
-     * Escapes XML special characters. May also escape non-ASCII characters (aka
-     * Unicode).
+     * Escapes XML special characters. May also escape non-ASCII characters (aka Unicode).
      *
-     * @param unescaped     the String to be unescaped
+     * @param unescaped the String to be unescaped
      * @param escapeUnicode boolean if Unicode should be also escaped
      * @return the escaped String
      */
     public static String escape(final String unescaped, final boolean escapeUnicode) {
-        return unescaped.codePoints()
+        return unescaped
+                .codePoints()
                 .mapToObj(value -> escapeCodePoint(value, escapeUnicode))
                 .collect(Collectors.joining());
     }
@@ -152,8 +145,9 @@ public final class XmlUtil {
         if (entity != null) {
             return entity;
         }
-        return escapeUnicode && codePoint > ESCAPE_CODE_POINT_THRESHOLD ?
-            "&#" + Integer.toString(codePoint) + ";" : Character.toString((char) codePoint);
+        return escapeUnicode && codePoint > ESCAPE_CODE_POINT_THRESHOLD
+                ? "&#" + Integer.toString(codePoint) + ";"
+                : Character.toString((char) codePoint);
     }
 
     private static String entityFor(final int ch) {
@@ -181,5 +175,4 @@ public final class XmlUtil {
 
         return entity;
     }
-
 }

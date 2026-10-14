@@ -19,15 +19,11 @@ package org.metafacture.framework;
 import org.metafacture.framework.helpers.DefaultTee;
 
 /**
- * Interface for {@code Sender}s which are connected to more
- * than one downstream module.
+ * Interface for {@code Sender}s which are connected to more than one downstream module.
  *
  * @param <T> receiver type
- *
  * @see DefaultTee
- *
  * @author Markus Michael Geipel, Christoph Böhme
- *
  */
 public interface Tee<T extends Receiver> extends Sender<T> {
 
@@ -42,13 +38,12 @@ public interface Tee<T extends Receiver> extends Sender<T> {
     <R extends T> R setReceiver(R receiver);
 
     /**
-     * Sets two receivers and returns the first. All other
-     * receivers attached to the module are removed.
+     * Sets two receivers and returns the first. All other receivers attached to the module are
+     * removed.
      *
      * @param <R> type of the receiver of the downstream module
      * @param receiver the main downstream module to which the tee should connect
-     * @param lateralReceiver the second downstream module to which the tee should
-     *                        connect
+     * @param lateralReceiver the second downstream module to which the tee should connect
      * @return reference to the main downstream receiver for method chaining
      */
     <R extends T> R setReceivers(R receiver, T lateralReceiver);
@@ -64,8 +59,7 @@ public interface Tee<T extends Receiver> extends Sender<T> {
     /**
      * Removes a receiver from the list of receivers.
      *
-     * @param receiver the downstream receiver to remove from the list of
-     *                 connected receivers.
+     * @param receiver the downstream receiver to remove from the list of connected receivers.
      * @return reference to the tee for method chaining
      */
     Tee<T> removeReceiver(T receiver);
@@ -76,5 +70,4 @@ public interface Tee<T extends Receiver> extends Sender<T> {
      * @return reference to the tee for method chaining
      */
     Tee<T> clearReceivers();
-
 }

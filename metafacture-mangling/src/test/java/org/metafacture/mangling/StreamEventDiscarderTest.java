@@ -16,33 +16,28 @@
 
 package org.metafacture.mangling;
 
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.mangling.StreamEventDiscarder.EventType;
-
+import java.util.EnumSet;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.mangling.StreamEventDiscarder.EventType;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.EnumSet;
-
 /**
  * Tests for class {@link StreamEventDiscarder}.
  *
  * @author Christoph Böhme
- *
  */
 public class StreamEventDiscarderTest {
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
     private StreamEventDiscarder discarder;
 
-    public StreamEventDiscarderTest() {
-    }
+    public StreamEventDiscarderTest() {}
 
     @Before
     public void init() {
@@ -187,5 +182,4 @@ public class StreamEventDiscarderTest {
 
         Mockito.verify(receiver).startRecord("1");
     }
-
 }

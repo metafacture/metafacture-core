@@ -16,6 +16,10 @@
 
 package org.metafacture.strings;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.Description;
@@ -23,46 +27,45 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Decodes a string based on a regular expression using named capture groups.
- * <p>
- * Named capture groups are denoted by {@literal (?<name>X)}. The name of a
- * matched group (&quot; name&quot;) is used as the literal name, the
- * captured content (&quot; X&quot;) as the literal value. Group names are
- * composed of the following characters:
+ *
+ * <p>Named capture groups are denoted by {@literal (?<name>X)}. The name of a matched group (&quot;
+ * name&quot;) is used as the literal name, the captured content (&quot; X&quot;) as the literal
+ * value. Group names are composed of the following characters:
+ *
  * <ul>
  *   <li>The uppercase letters 'A' through 'Z',
  *   <li>The lowercase letters 'a' through 'z',
  *   <li>The digits '0' through '9'.
  * </ul>
+ *
  * The first character of a group name must be a letter.
- * <p>
- * The pattern is matched repeatedly to the input string. On each match the
- * captured content of all named capture groups in the pattern is emitted as
- * literals. Non-matching parts of the input are ignored.
- * <p>
- * The regular expression may contain unnamed capture groups. These are
- * ignored.
- * <p>
- * If the pattern contains a capture group named {@value #ID_CAPTURE_GROUP},
- * the first match of this group will be used as record identifier. If there
- * is no such capture group or if it does not match, the empty string is used
- * as record identifier.
- * <p>
- * Example: The regex
+ *
+ * <p>The pattern is matched repeatedly to the input string. On each match the captured content of
+ * all named capture groups in the pattern is emitted as literals. Non-matching parts of the input
+ * are ignored.
+ *
+ * <p>The regular expression may contain unnamed capture groups. These are ignored.
+ *
+ * <p>If the pattern contains a capture group named {@value #ID_CAPTURE_GROUP}, the first match of
+ * this group will be used as record identifier. If there is no such capture group or if it does not
+ * match, the empty string is used as record identifier.
+ *
+ * <p>Example: The regex
+ *
  * <pre>{@literal
  * a=(?<foo>[0-9]+),b=(?<bar>[x-z]+)
  * }</pre>
+ *
  * matched against the input
+ *
  * <pre>{@literal
  * a=42,b=xyzzy,c=ignored,a=23,b=xyz,d=ignored
  * }</pre>
+ *
  * will produce the sequence of events:
+ *
  * <pre>{@literal
  * start-record ""
  * literal "foo": 42
@@ -74,7 +77,6 @@ import java.util.regex.Pattern;
  *
  * @author Thomas Seidel
  * @author Christoph Böhme
- *
  */
 @Description("Decodes a string based on a regular expression using named capture groups")
 @In(String.class)
@@ -114,18 +116,17 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
     }
 
     /**
-     * Sets the name of a literal containing the unmodified input received by
-     * {@link RegexDecoder}. If not set, no raw input literals are emitted.
-     * <p>
-     * The raw input <i>literal</i> event is always the first event emitted
-     * after the <i>start-record</i> event.
-     * <p>
-     * This parameter can be changed at any time during processing. It becomes
-     * effective with the next record being processed.
+     * Sets the name of a literal containing the unmodified input received by {@link RegexDecoder}.
+     * If not set, no raw input literals are emitted.
      *
-     * @param rawInputLiteral name of the literal which contains the umodified
-     *                        input string. If null, raw input literals will be
-     *                        disabled.
+     * <p>The raw input <i>literal</i> event is always the first event emitted after the
+     * <i>start-record</i> event.
+     *
+     * <p>This parameter can be changed at any time during processing. It becomes effective with the
+     * next record being processed.
+     *
+     * @param rawInputLiteral name of the literal which contains the umodified input string. If
+     *     null, raw input literals will be disabled.
      */
     public void setRawInputLiteral(final String rawInputLiteral) {
         this.rawInputLiteral = rawInputLiteral;
@@ -172,5 +173,4 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
             getReceiver().literal(rawInputLiteral, input);
         }
     }
-
 }

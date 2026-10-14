@@ -16,38 +16,33 @@
 
 package org.metafacture.javaintegration.pojo;
 
-import org.metafacture.framework.StreamReceiver;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InOrder;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 /**
  * Tests for class {@link PojoDecoder}.
  *
  * @author Thomas Seidel
  * @author Christoph Böhme (refactored to Mockito)
- *
  */
 public class PojoDecoderTest { // checkstyle-disable-line ClassDataAbstractionCoupling
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public PojoDecoderTest() {
-    }
+    public PojoDecoderTest() {}
 
     @Before
     public void setup() {
@@ -171,8 +166,7 @@ public class PojoDecoderTest { // checkstyle-disable-line ClassDataAbstractionCo
         final PojoDecoder<SimpleSetPojo> pojoDecoder = new PojoDecoder<>();
         pojoDecoder.setReceiver(receiver);
 
-        final Set<String> valueSet = new HashSet<>(Arrays.asList(
-                "set-value1", "set-value2"));
+        final Set<String> valueSet = new HashSet<>(Arrays.asList("set-value1", "set-value2"));
         final SimpleSetPojo simpleSetPojo = new SimpleSetPojo();
         simpleSetPojo.setSetField(valueSet);
         pojoDecoder.process(simpleSetPojo);
@@ -196,28 +190,24 @@ public class PojoDecoderTest { // checkstyle-disable-line ClassDataAbstractionCo
         simpleMapPojo.setMapField(mapField);
         pojoDecoder.process(simpleMapPojo);
 
-        final ArgumentCaptor<String> nameCaptor =
-                ArgumentCaptor.forClass(String.class);
-        final ArgumentCaptor<String> valueCaptor =
-                ArgumentCaptor.forClass(String.class);
+        final ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
+        final ArgumentCaptor<String> valueCaptor = ArgumentCaptor.forClass(String.class);
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("mapField");
-        ordered.verify(receiver, Mockito.times(2)).literal(
-                nameCaptor.capture(), valueCaptor.capture());
-        Assert.assertEquals(mapField.get(nameCaptor.getAllValues().get(0)),
-                valueCaptor.getAllValues().get(0));
-        Assert.assertEquals(mapField.get(nameCaptor.getAllValues().get(1)),
-                valueCaptor.getAllValues().get(1));
+        ordered.verify(receiver, Mockito.times(2))
+                .literal(nameCaptor.capture(), valueCaptor.capture());
+        Assert.assertEquals(
+                mapField.get(nameCaptor.getAllValues().get(0)), valueCaptor.getAllValues().get(0));
+        Assert.assertEquals(
+                mapField.get(nameCaptor.getAllValues().get(1)), valueCaptor.getAllValues().get(1));
         ordered.verify(receiver).endEntity();
         ordered.verify(receiver).endRecord();
     }
 
     private static class EmptyPojo {
 
-        private EmptyPojo() {
-        }
-
+        private EmptyPojo() {}
     }
 
     private static class SimplePojo {
@@ -226,8 +216,7 @@ public class PojoDecoderTest { // checkstyle-disable-line ClassDataAbstractionCo
 
         private String firstField;
 
-        private SimplePojo() {
-        }
+        private SimplePojo() {}
 
         public String getFirstField() {
             return firstField;
@@ -236,15 +225,13 @@ public class PojoDecoderTest { // checkstyle-disable-line ClassDataAbstractionCo
         public void setFirstField(final String firstField) {
             this.firstField = firstField;
         }
-
     }
 
     private static class NestedPojo {
 
         private SimplePojo innerPojo;
 
-        private NestedPojo() {
-        }
+        private NestedPojo() {}
 
         public SimplePojo getInnerPojo() {
             return innerPojo;
@@ -259,26 +246,22 @@ public class PojoDecoderTest { // checkstyle-disable-line ClassDataAbstractionCo
 
         private MetafactureSource metafactureSourceField;
 
-        private MetafactureSourcePojo() {
-        }
+        private MetafactureSourcePojo() {}
 
         public MetafactureSource getMetafactureSourceField() {
             return metafactureSourceField;
         }
 
-        public void setMetafactureSourceField(
-                final MetafactureSource metafactureSourceField) {
+        public void setMetafactureSourceField(final MetafactureSource metafactureSourceField) {
             this.metafactureSourceField = metafactureSourceField;
         }
-
     }
 
     private static class SimpleArrayPojo {
 
         private String[] arrayField;
 
-        private SimpleArrayPojo() {
-        }
+        private SimpleArrayPojo() {}
 
         public String[] getArrayField() {
             return arrayField;
@@ -287,15 +270,13 @@ public class PojoDecoderTest { // checkstyle-disable-line ClassDataAbstractionCo
         public void setArrayField(final String[] arrayField) {
             this.arrayField = arrayField;
         }
-
     }
 
     private static class SimpleListPojo {
 
         private List<String> listField;
 
-        private SimpleListPojo() {
-        }
+        private SimpleListPojo() {}
 
         public List<String> getListField() {
             return listField;
@@ -304,15 +285,13 @@ public class PojoDecoderTest { // checkstyle-disable-line ClassDataAbstractionCo
         public void setListField(final List<String> listField) {
             this.listField = listField;
         }
-
     }
 
     private static class SimpleSetPojo {
 
         private Set<String> setField;
 
-        private SimpleSetPojo() {
-        }
+        private SimpleSetPojo() {}
 
         public Set<String> getSetField() {
             return setField;
@@ -321,15 +300,13 @@ public class PojoDecoderTest { // checkstyle-disable-line ClassDataAbstractionCo
         public void setSetField(final Set<String> setField) {
             this.setField = setField;
         }
-
     }
 
     private static class SimpleMapPojo {
 
         private Map<String, String> mapField;
 
-        private SimpleMapPojo() {
-        }
+        private SimpleMapPojo() {}
 
         public Map<String, String> getMapField() {
             return mapField;
@@ -338,7 +315,5 @@ public class PojoDecoderTest { // checkstyle-disable-line ClassDataAbstractionCo
         public void setMapField(final Map<String, String> mapField) {
             this.mapField = mapField;
         }
-
     }
-
 }

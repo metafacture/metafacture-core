@@ -16,14 +16,6 @@
 
 package org.metafacture.runner;
 
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.MatcherAssert;
-import org.junit.Assert;
-import org.junit.Test;
-import org.mockito.AdditionalAnswers;
-import org.mockito.Mockito;
-import picocli.CommandLine;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -33,6 +25,13 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
+import org.junit.Assert;
+import org.junit.Test;
+import org.mockito.AdditionalAnswers;
+import org.mockito.Mockito;
+import picocli.CommandLine;
 
 /**
  * Tests for class {@link Flux}.
@@ -47,12 +46,12 @@ public class FluxTest {
     private static final String MISSING_PARAMETER = "Missing required parameter for option '%s'";
     private static final String UNMATCHED_ARGUMENT = "Unmatched argument at index";
 
-    public FluxTest() {
-    }
+    public FluxTest() {}
 
     @Test
     public void shouldAcceptFluxFileOption() {
-        Stream.of("-f", "--file").forEach(o -> assertCommand(0, true, (String) null, null, o, getTempFile()));
+        Stream.of("-f", "--file")
+                .forEach(o -> assertCommand(0, true, (String) null, null, o, getTempFile()));
     }
 
     @Test
@@ -68,7 +67,8 @@ public class FluxTest {
 
     @Test
     public void shouldAcceptFluxScriptOption() {
-        Stream.of("-e", "--script").forEach(o -> assertCommand(0, true, (String) null, null, o, "..."));
+        Stream.of("-e", "--script")
+                .forEach(o -> assertCommand(0, true, (String) null, null, o, "..."));
     }
 
     @Test
@@ -78,32 +78,79 @@ public class FluxTest {
 
     @Test
     public void shouldRejectSimultaneousFluxFileAndFluxScriptOption() {
-        assertCommand(2, false, null, "Error: --file=<fluxFile>, --script=<fluxScript> are mutually exclusive (specify only one)", "-f", "some-file", "-e", "...");
+        assertCommand(
+                2,
+                false,
+                null,
+                "Error: --file=<fluxFile>, --script=<fluxScript> are mutually exclusive (specify"
+                        + " only one)",
+                "-f",
+                "some-file",
+                "-e",
+                "...");
     }
 
     @Test
     public void shouldAcceptVarOption() {
-        Stream.of("-v", "--var").forEach(o -> assertCommand(0, true, (String) null, null, "-e", "...", o, "var1=value1"));
+        Stream.of("-v", "--var")
+                .forEach(
+                        o ->
+                                assertCommand(
+                                        0,
+                                        true,
+                                        (String) null,
+                                        null,
+                                        "-e",
+                                        "...",
+                                        o,
+                                        "var1=value1"));
     }
 
     @Test
     public void shouldAcceptMultipleVarOptions() {
-        assertCommand(0, true, (String) null, null, "-f", getTempFile(), "-v", "var1=value1", "-v", "var2=value2");
+        assertCommand(
+                0,
+                true,
+                (String) null,
+                null,
+                "-f",
+                getTempFile(),
+                "-v",
+                "var1=value1",
+                "-v",
+                "var2=value2");
     }
 
     @Test
     public void shouldRejectInvalidVarOption() {
-        assertCommand(2, false, null, "Value for option option '--var' (<name>=<value>) should be in KEY=VALUE format but was var-without-value", "-e", "...", "-v", "var-without-value");
+        assertCommand(
+                2,
+                false,
+                null,
+                "Value for option option '--var' (<name>=<value>) should be in KEY=VALUE format but"
+                        + " was var-without-value",
+                "-e",
+                "...",
+                "-v",
+                "var-without-value");
     }
 
     @Test
     public void shouldRejectVarOptionWithoutFluxInput() {
-        assertCommand(2, false, null, "Error: Missing required argument (specify one of these): [-f=<fluxFile> | -e=<fluxScript>]", "-v", "var1=value1");
+        assertCommand(
+                2,
+                false,
+                null,
+                "Error: Missing required argument (specify one of these): [-f=<fluxFile> |"
+                        + " -e=<fluxScript>]",
+                "-v",
+                "var1=value1");
     }
 
     @Test
     public void shouldAcceptListCommandsOption() {
-        Stream.of("-l", "--list-commands").forEach(o -> assertCommand(0, false, LIST_COMMANDS_OUTPUT, null, o));
+        Stream.of("-l", "--list-commands")
+                .forEach(o -> assertCommand(0, false, LIST_COMMANDS_OUTPUT, null, o));
     }
 
     @Test
@@ -123,7 +170,13 @@ public class FluxTest {
 
     @Test
     public void shouldThrowException() {
-        assertCommand(new CommandLine(new Flux()), 1, null, List.of("mismatched input '<EOF>' expecting '|'"), "-e", "invalid");
+        assertCommand(
+                new CommandLine(new Flux()),
+                1,
+                null,
+                List.of("mismatched input '<EOF>' expecting '|'"),
+                "-e",
+                "invalid");
     }
 
     @Test
@@ -149,26 +202,49 @@ public class FluxTest {
 
     @Test
     public void shouldAcceptLegacyFluxFileAndVarsArguments() {
-        assertCommand(0, true, null, DEPRECATION_NOTICE, getTempFile(), "var1=value1", "var2=value2");
+        assertCommand(
+                0, true, null, DEPRECATION_NOTICE, getTempFile(), "var1=value1", "var2=value2");
     }
 
     @Test
     public void shouldRejectLegacyFluxFileAndInvalidVarsArgument() {
-        assertCommand(2, false, null, List.of(DEPRECATION_NOTICE, LIST_COMMANDS_OUTPUT), getTempFile(), "var-without-value");
+        assertCommand(
+                2,
+                false,
+                null,
+                List.of(DEPRECATION_NOTICE, LIST_COMMANDS_OUTPUT),
+                getTempFile(),
+                "var-without-value");
     }
 
-    private void assertCommand(final int expectedExitCode, final boolean expectedRanFlux, final String expectedOut, final String expectedErr, final String... args) {
-        assertCommand(expectedExitCode, expectedRanFlux, expectedOut != null ? List.of(expectedOut) : null, expectedErr != null ? List.of(expectedErr) : null, args);
+    private void assertCommand(
+            final int expectedExitCode,
+            final boolean expectedRanFlux,
+            final String expectedOut,
+            final String expectedErr,
+            final String... args) {
+        assertCommand(
+                expectedExitCode,
+                expectedRanFlux,
+                expectedOut != null ? List.of(expectedOut) : null,
+                expectedErr != null ? List.of(expectedErr) : null,
+                args);
     }
 
-    private void assertCommand(final int expectedExitCode, final boolean expectedRanFlux, final List<String> expectedOut, final List<String> expectedErr, final String... args) {
+    private void assertCommand(
+            final int expectedExitCode,
+            final boolean expectedRanFlux,
+            final List<String> expectedOut,
+            final List<String> expectedErr,
+            final String... args) {
         final AtomicBoolean ranFlux = new AtomicBoolean(false);
         final Flux flux = Mockito.spy(Flux.class);
 
         try {
-            Mockito.doAnswer(AdditionalAnswers.answerVoid((s, i) -> ranFlux.set(true))).when(flux).runFlux(Mockito.any(), Mockito.any());
-        }
-        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
+            Mockito.doAnswer(AdditionalAnswers.answerVoid((s, i) -> ranFlux.set(true)))
+                    .when(flux)
+                    .runFlux(Mockito.any(), Mockito.any());
+        } catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             throw new RuntimeException(e);
         }
 
@@ -176,7 +252,12 @@ public class FluxTest {
         Assert.assertEquals(expectedRanFlux, ranFlux.get());
     }
 
-    private void assertCommand(final CommandLine commandLine, final int expectedExitCode, final List<String> expectedOut, final List<String> expectedErr, final String... args) {
+    private void assertCommand(
+            final CommandLine commandLine,
+            final int expectedExitCode,
+            final List<String> expectedOut,
+            final List<String> expectedErr,
+            final String... args) {
         final StringWriter out = new StringWriter();
         final StringWriter err = new StringWriter();
         commandLine.setOut(new PrintWriter(out));
@@ -193,9 +274,13 @@ public class FluxTest {
 
     private void assertStrings(final String actual, final List<String> expected) {
         if (expected != null) {
-            MatcherAssert.assertThat(actual, CoreMatchers.allOf(expected.stream().map(CoreMatchers::containsString).collect(Collectors.toList())));
-        }
-        else {
+            MatcherAssert.assertThat(
+                    actual,
+                    CoreMatchers.allOf(
+                            expected.stream()
+                                    .map(CoreMatchers::containsString)
+                                    .collect(Collectors.toList())));
+        } else {
             Assert.assertEquals(actual, "");
         }
     }
@@ -205,10 +290,8 @@ public class FluxTest {
             final File tempFile = File.createTempFile("FluxTest", "");
             tempFile.deleteOnExit();
             return tempFile.getPath();
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new UncheckedIOException(e);
         }
     }
-
 }

@@ -17,7 +17,6 @@
 package org.metafacture.framework;
 
 import org.metafacture.framework.helpers.DefaultXmlReceiver;
-
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
 import org.xml.sax.EntityResolver;
@@ -25,16 +24,14 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.ext.LexicalHandler;
 
 /**
- * Interface for objects which receive XML events.
- * This is just a combination of the SAX handler interfaces
- * and the metastream {@link LifeCycle} interface.
+ * Interface for objects which receive XML events. This is just a combination of the SAX handler
+ * interfaces and the metastream {@link LifeCycle} interface.
  *
  * @see DefaultXmlReceiver
  * @see XmlPipe
-
  * @author Christoph Böhme
- *
  */
-public interface XmlReceiver extends Receiver, ContentHandler, DTDHandler, EntityResolver, ErrorHandler, LexicalHandler {
+public interface XmlReceiver
+        extends Receiver, ContentHandler, DTDHandler, EntityResolver, ErrorHandler, LexicalHandler {
     // Just a combination of LifeCycle and the SAX handler interfaces
 }

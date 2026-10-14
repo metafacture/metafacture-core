@@ -16,30 +16,26 @@
 
 package org.metafacture.metafix.conditional;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixPredicate;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Executes the functions if/unless the string matches the regular
- * expression pattern.
- */
+/** Executes the functions if/unless the string matches the regular expression pattern. */
 @FixCommand("str_match")
 public class StrMatch implements FixPredicate {
 
-    /**
-     * Creates an instance of {@link StrMatch}.
-     */
-    public StrMatch() {
-    }
+    /** Creates an instance of {@link StrMatch}. */
+    public StrMatch() {}
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public boolean test(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         return testConditional(params, MATCHES);
     }
-
 }

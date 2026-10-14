@@ -16,10 +16,9 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.framework.ObjectReceiver;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -30,67 +29,43 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * Tests for class {@link ListFixPaths}.
  *
  * @author Fabian Steeg
- *
  */
 @ExtendWith(MockitoExtension.class)
 public final class ListFixPathsTest {
 
     private final ListFixPaths lister = new ListFixPaths();
 
-    @Mock
-    private ObjectReceiver<String> receiver;
+    @Mock private ObjectReceiver<String> receiver;
 
-    public ListFixPathsTest() {
-    }
+    public ListFixPathsTest() {}
 
     @Test
     public void testShouldListPaths() {
-        verify(
-            "3\t|\tb.*",
-            "2\t|\tc.*",
-            "1\t|\ta");
+        verify("3\t|\tb.*", "2\t|\tc.*", "1\t|\ta");
     }
 
     @Test
     public void testShouldListPathsNoCount() {
         lister.setCount(false);
-        verify(
-            "a",
-            "b.*",
-            "c.*");
+        verify("a", "b.*", "c.*");
     }
 
     @Test
     public void testShouldListPathsUseIndex() {
         lister.setIndex(true);
-        verify(
-            "1\t|\ta",
-            "1\t|\tb.1",
-            "1\t|\tb.2",
-            "1\t|\tb.3",
-            "1\t|\tc.1",
-            "1\t|\tc.2");
+        verify("1\t|\ta", "1\t|\tb.1", "1\t|\tb.2", "1\t|\tb.3", "1\t|\tc.1", "1\t|\tc.2");
     }
 
     @Test
     public void testShouldListPathsNoCountUseIndex() {
         lister.setCount(false);
         lister.setIndex(true);
-        verify(
-            "a",
-            "b.1",
-            "b.2",
-            "b.3",
-            "c.1",
-            "c.2");
+        verify("a", "b.1", "b.2", "b.3", "c.1", "c.2");
     }
 
     @Test
     public void testShouldListPathsSortedByFrequency() {
-        verify(
-            "3\t|\tb.*",
-            "2\t|\tc.*",
-            "1\t|\ta");
+        verify("3\t|\tb.*", "2\t|\tc.*", "1\t|\ta");
     }
 
     private void processRecord() {
@@ -116,11 +91,9 @@ public final class ListFixPathsTest {
             ordered.verify(receiver, Mockito.times(2)).closeStream();
             ordered.verifyNoMoreInteractions();
             Mockito.verifyNoMoreInteractions(receiver);
-        }
-        catch (final MockitoAssertionError e) {
+        } catch (final MockitoAssertionError e) {
             System.out.println(Mockito.mockingDetails(receiver).printInvocations());
             throw e;
         }
     }
-
 }

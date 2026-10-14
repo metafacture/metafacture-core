@@ -38,25 +38,27 @@ public final class Triple implements Comparable<Triple> {
     /**
      * Creates an instance of {@link Triple}.
      *
-     * @param subject   the subject
+     * @param subject the subject
      * @param predicate the predicate
-     * @param object    the object
+     * @param object the object
      */
-    public Triple(final String subject, final String predicate,
-            final String object) {
+    public Triple(final String subject, final String predicate, final String object) {
         this(subject, predicate, object, ObjectType.STRING);
     }
 
     /**
      * Constructs a Triple.
      *
-     * @param subject    the subject
-     * @param predicate  the predicate
-     * @param object     the object
+     * @param subject the subject
+     * @param predicate the predicate
+     * @param object the object
      * @param objectType the ObjectType
      */
-    public Triple(final String subject, final String predicate,
-            final String object, final ObjectType objectType) {
+    public Triple(
+            final String subject,
+            final String predicate,
+            final String object,
+            final ObjectType objectType) {
         this.subject = subject;
         this.predicate = predicate;
         this.object = object;
@@ -113,10 +115,9 @@ public final class Triple implements Comparable<Triple> {
      */
     public static Triple read(final ObjectInputStream in) throws IOException {
         try {
-            return new Triple(in.readUTF(), in.readUTF(), in.readUTF(),
-                    (ObjectType) in.readObject());
-        }
-        catch (final ClassNotFoundException e) {
+            return new Triple(
+                    in.readUTF(), in.readUTF(), in.readUTF(), (ObjectType) in.readObject());
+        } catch (final ClassNotFoundException e) {
             throw new IOException("Cannot read triple", e);
         }
     }
@@ -148,11 +149,11 @@ public final class Triple implements Comparable<Triple> {
             return false;
         }
         final Triple other = (Triple) obj;
-        return other.preCompHashCode == preCompHashCode &&
-                other.predicate.equals(predicate) &&
-                other.object.equals(object) &&
-                other.subject.equals(subject) &&
-                other.objectType == objectType;
+        return other.preCompHashCode == preCompHashCode
+                && other.predicate.equals(predicate)
+                && other.object.equals(object)
+                && other.subject.equals(subject)
+                && other.objectType == objectType;
     }
 
     @Override
@@ -175,11 +176,9 @@ public final class Triple implements Comparable<Triple> {
         return subject + ":" + predicate + "=" + object + " (" + objectType + ")";
     }
 
-    /**
-     * Content type of triple object.
-     */
+    /** Content type of triple object. */
     public enum ObjectType {
-        STRING, ENTITY
+        STRING,
+        ENTITY
     }
-
 }

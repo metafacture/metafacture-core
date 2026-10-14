@@ -30,7 +30,6 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
  * Encodes streams in formeta format.
  *
  * @author Christoph Böhme
- *
  */
 @Description("Encodes streams in formeta format.")
 @In(StreamReceiver.class)
@@ -41,11 +40,8 @@ public final class FormetaEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     private FormatterStyle style = FormatterStyle.CONCISE;
     private Formatter formatter = style.createFormatter();
 
-    /**
-     * Creates an instance of {@link FormetaEncoder}.
-     */
-    public FormetaEncoder() {
-    }
+    /** Creates an instance of {@link FormetaEncoder}. */
+    public FormetaEncoder() {}
 
     /**
      * Gets the style.
@@ -92,5 +88,4 @@ public final class FormetaEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     public void literal(final String name, final String value) {
         formatter.literal(name, value);
     }
-
 }

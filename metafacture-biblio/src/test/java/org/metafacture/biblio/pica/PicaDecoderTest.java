@@ -16,12 +16,11 @@
 
 package org.metafacture.biblio.pica;
 
-import org.metafacture.framework.MissingIdException;
-import org.metafacture.framework.StreamReceiver;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.MissingIdException;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -32,7 +31,6 @@ import org.mockito.MockitoAnnotations;
  *
  * @author Christoph Böhme
  * @author Pascal Christoph (dr0i)
- *
  */
 public final class PicaDecoderTest {
 
@@ -42,8 +40,8 @@ public final class PicaDecoderTest {
     private static final String NAME_D = "d";
     private static final String VALUE_A = "Eco";
     private static final String VALUE_D = "Umberto";
-    private static final String COMPOSED_UTF8 = "Über";  // 'Ü' constructed from U and diacritics
-    private static final String STANDARD_UTF8 = "Über";  // 'Ü' is a single character
+    private static final String COMPOSED_UTF8 = "Über"; // 'Ü' constructed from U and diacritics
+    private static final String STANDARD_UTF8 = "Über"; // 'Ü' is a single character
 
     private static final String RECORD_MARKER = "\u001d";
     private static final String FIELD_MARKER = "\u001e";
@@ -58,21 +56,24 @@ public final class PicaDecoderTest {
     private static final String FIELD_003AT_0_ID = "003@ " + SUBFIELD_MARKER + "0" + RECORD_ID;
     private static final String FIELD_107F_0_ID = "107F " + SUBFIELD_MARKER + "0" + RECORD_ID;
     private static final String FIELD_203AT_0_ID = "203@ " + SUBFIELD_MARKER + "0" + RECORD_ID;
-    private static final String FIELD_203AT_01_0_ID = "203@/01 " + SUBFIELD_MARKER + "0" + RECORD_ID;
-    private static final String FIELD_203AT_100_0_ID = "203@/100 " + SUBFIELD_MARKER + "0" + RECORD_ID;
-    private static final String FIELD_021A_A_UEBER = "021A " + SUBFIELD_MARKER + "a" + COMPOSED_UTF8;
+    private static final String FIELD_203AT_01_0_ID =
+            "203@/01 " + SUBFIELD_MARKER + "0" + RECORD_ID;
+    private static final String FIELD_203AT_100_0_ID =
+            "203@/100 " + SUBFIELD_MARKER + "0" + RECORD_ID;
+    private static final String FIELD_021A_A_UEBER =
+            "021A " + SUBFIELD_MARKER + "a" + COMPOSED_UTF8;
     private static final String FIELD_028A = ENTITY_028A + " ";
 
-    private static final String NONNORMALIZED_FIELD_001AT_0_TEST = "001@ " + NONNORMALIZED_SUBFIELD_MARKER + "0test";
-    private static final String NONNORMALIZED_FIELD_003AT_0_ID = "003@ " + NONNORMALIZED_SUBFIELD_MARKER + "0" + RECORD_ID;
+    private static final String NONNORMALIZED_FIELD_001AT_0_TEST =
+            "001@ " + NONNORMALIZED_SUBFIELD_MARKER + "0test";
+    private static final String NONNORMALIZED_FIELD_003AT_0_ID =
+            "003@ " + NONNORMALIZED_SUBFIELD_MARKER + "0" + RECORD_ID;
 
     private PicaDecoder picaDecoder;
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public PicaDecoderTest() {
-    }
+    public PicaDecoderTest() {}
 
     @Before
     public void setup() {
@@ -88,9 +89,7 @@ public final class PicaDecoderTest {
 
     @Test
     public void shouldParseRecordStartingWithRecordMarker() {
-        picaDecoder.process(
-                RECORD_MARKER + FIELD_001AT_0_TEST +
-                FIELD_MARKER + FIELD_003AT_0_ID);
+        picaDecoder.process(RECORD_MARKER + FIELD_001AT_0_TEST + FIELD_MARKER + FIELD_003AT_0_ID);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -101,9 +100,7 @@ public final class PicaDecoderTest {
 
     @Test
     public void shouldParseRecordStartingWithFieldMarker() {
-        picaDecoder.process(
-                FIELD_MARKER + FIELD_001AT_0_TEST +
-                FIELD_MARKER + FIELD_003AT_0_ID);
+        picaDecoder.process(FIELD_MARKER + FIELD_001AT_0_TEST + FIELD_MARKER + FIELD_003AT_0_ID);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -114,9 +111,7 @@ public final class PicaDecoderTest {
 
     @Test
     public void shouldParseRecordStartingWithSubfieldMarker() {
-        picaDecoder.process(
-                SUBFIELD_MARKER + NAME_A + VALUE_A +
-                FIELD_MARKER + FIELD_003AT_0_ID);
+        picaDecoder.process(SUBFIELD_MARKER + NAME_A + VALUE_A + FIELD_MARKER + FIELD_003AT_0_ID);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -129,9 +124,7 @@ public final class PicaDecoderTest {
 
     @Test
     public void shouldParseRecordStartingWithEmptySubfield() {
-        picaDecoder.process(
-                SUBFIELD_MARKER +
-                FIELD_MARKER + FIELD_003AT_0_ID);
+        picaDecoder.process(SUBFIELD_MARKER + FIELD_MARKER + FIELD_003AT_0_ID);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -142,8 +135,7 @@ public final class PicaDecoderTest {
     @Test
     public void shouldParseRecordStartingWithFieldEndMarker() {
         picaDecoder.process(
-                FIELD_END_MARKER + FIELD_001AT_0_TEST +
-                FIELD_MARKER + FIELD_003AT_0_ID);
+                FIELD_END_MARKER + FIELD_001AT_0_TEST + FIELD_MARKER + FIELD_003AT_0_ID);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -154,9 +146,7 @@ public final class PicaDecoderTest {
 
     @Test
     public void shouldParseRecordStartingWithFieldName() {
-        picaDecoder.process(
-                FIELD_001AT_0_TEST +
-                FIELD_MARKER + FIELD_003AT_0_ID);
+        picaDecoder.process(FIELD_001AT_0_TEST + FIELD_MARKER + FIELD_003AT_0_ID);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -167,9 +157,7 @@ public final class PicaDecoderTest {
 
     @Test
     public void shouldParseRecordEndingWithRecordMarker() {
-        picaDecoder.process(
-                FIELD_003AT_0_ID + FIELD_MARKER +
-                FIELD_001AT_0_TEST + RECORD_MARKER);
+        picaDecoder.process(FIELD_003AT_0_ID + FIELD_MARKER + FIELD_001AT_0_TEST + RECORD_MARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -180,9 +168,7 @@ public final class PicaDecoderTest {
 
     @Test
     public void shouldParseRecordEndingWithFieldMarker() {
-        picaDecoder.process(
-                FIELD_003AT_0_ID + FIELD_MARKER +
-                FIELD_001AT_0_TEST + FIELD_MARKER);
+        picaDecoder.process(FIELD_003AT_0_ID + FIELD_MARKER + FIELD_001AT_0_TEST + FIELD_MARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -194,11 +180,16 @@ public final class PicaDecoderTest {
     @Test
     public void shouldParseRecordEndingWithSubfieldMarker() {
         picaDecoder.process(
-                FIELD_003AT_0_ID + FIELD_MARKER +
-                FIELD_028A +
-                SUBFIELD_MARKER + NAME_A + VALUE_A +
-                SUBFIELD_MARKER + NAME_D + VALUE_D +
-                SUBFIELD_MARKER);
+                FIELD_003AT_0_ID
+                        + FIELD_MARKER
+                        + FIELD_028A
+                        + SUBFIELD_MARKER
+                        + NAME_A
+                        + VALUE_A
+                        + SUBFIELD_MARKER
+                        + NAME_D
+                        + VALUE_D
+                        + SUBFIELD_MARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -213,10 +204,14 @@ public final class PicaDecoderTest {
     @Test
     public void shouldParseRecordEndingWithSubfieldName() {
         picaDecoder.process(
-                FIELD_003AT_0_ID + FIELD_MARKER +
-                FIELD_028A +
-                SUBFIELD_MARKER + NAME_A + VALUE_A +
-                SUBFIELD_MARKER + NAME_D);
+                FIELD_003AT_0_ID
+                        + FIELD_MARKER
+                        + FIELD_028A
+                        + SUBFIELD_MARKER
+                        + NAME_A
+                        + VALUE_A
+                        + SUBFIELD_MARKER
+                        + NAME_D);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -234,9 +229,7 @@ public final class PicaDecoderTest {
         // sub fields:
         picaDecoder.setSkipEmptyFields(false);
 
-        picaDecoder.process(
-                FIELD_003AT_0_ID + FIELD_MARKER +
-                FIELD_028A);
+        picaDecoder.process(FIELD_003AT_0_ID + FIELD_MARKER + FIELD_028A);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -249,9 +242,14 @@ public final class PicaDecoderTest {
     @Test
     public void shouldParseMultiLineRecordFormat() {
         picaDecoder.process(
-                RECORD_MARKER + FIELD_END_MARKER +
-                FIELD_MARKER + FIELD_001AT_0_TEST + FIELD_END_MARKER +
-                FIELD_MARKER + FIELD_003AT_0_ID + FIELD_END_MARKER);
+                RECORD_MARKER
+                        + FIELD_END_MARKER
+                        + FIELD_MARKER
+                        + FIELD_001AT_0_TEST
+                        + FIELD_END_MARKER
+                        + FIELD_MARKER
+                        + FIELD_003AT_0_ID
+                        + FIELD_END_MARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -375,9 +373,7 @@ public final class PicaDecoderTest {
         // fields:
         picaDecoder.setSkipEmptyFields(false);
 
-        picaDecoder.process(
-                FIELD_003AT_0_ID + FIELD_MARKER +
-                FIELD_MARKER);
+        picaDecoder.process(FIELD_003AT_0_ID + FIELD_MARKER + FIELD_MARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -393,9 +389,7 @@ public final class PicaDecoderTest {
         // sub fields:
         picaDecoder.setSkipEmptyFields(false);
 
-        picaDecoder.process(
-                FIELD_003AT_0_ID + FIELD_MARKER +
-                SUBFIELD_MARKER + FIELD_MARKER);
+        picaDecoder.process(FIELD_003AT_0_ID + FIELD_MARKER + SUBFIELD_MARKER + FIELD_MARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -407,9 +401,12 @@ public final class PicaDecoderTest {
     @Test
     public void shouldNotSkipUnnamedFieldsWithSubFields() {
         picaDecoder.process(
-                FIELD_003AT_0_ID + FIELD_MARKER +
-                SUBFIELD_MARKER + NAME_A + VALUE_A +
-                FIELD_MARKER);
+                FIELD_003AT_0_ID
+                        + FIELD_MARKER
+                        + SUBFIELD_MARKER
+                        + NAME_A
+                        + VALUE_A
+                        + FIELD_MARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -423,11 +420,14 @@ public final class PicaDecoderTest {
     @Test
     public void shouldSkipUnnamedSubfields() {
         picaDecoder.process(
-                FIELD_003AT_0_ID + FIELD_MARKER +
-                FIELD_028A +
-                SUBFIELD_MARKER +
-                SUBFIELD_MARKER + NAME_A + VALUE_A +
-                FIELD_MARKER);
+                FIELD_003AT_0_ID
+                        + FIELD_MARKER
+                        + FIELD_028A
+                        + SUBFIELD_MARKER
+                        + SUBFIELD_MARKER
+                        + NAME_A
+                        + VALUE_A
+                        + FIELD_MARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -441,9 +441,7 @@ public final class PicaDecoderTest {
 
     @Test
     public void shouldSkipEmptyFieldsByDefault() {
-        picaDecoder.process(
-                FIELD_003AT_0_ID + FIELD_MARKER +
-                FIELD_028A + FIELD_MARKER);
+        picaDecoder.process(FIELD_003AT_0_ID + FIELD_MARKER + FIELD_028A + FIELD_MARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -455,10 +453,7 @@ public final class PicaDecoderTest {
     @Test
     public void shouldSkipFieldsWithOnlyUnnamedSubfieldsByDefault() {
         picaDecoder.process(
-                FIELD_003AT_0_ID + FIELD_MARKER +
-                FIELD_028A +
-                SUBFIELD_MARKER +
-                FIELD_MARKER);
+                FIELD_003AT_0_ID + FIELD_MARKER + FIELD_028A + SUBFIELD_MARKER + FIELD_MARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -471,9 +466,7 @@ public final class PicaDecoderTest {
     public void shouldNotSkipEmptyFieldsIfConfigured() {
         picaDecoder.setSkipEmptyFields(false);
 
-        picaDecoder.process(
-                FIELD_003AT_0_ID + FIELD_MARKER +
-                FIELD_028A + FIELD_MARKER);
+        picaDecoder.process(FIELD_003AT_0_ID + FIELD_MARKER + FIELD_028A + FIELD_MARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -488,10 +481,7 @@ public final class PicaDecoderTest {
         picaDecoder.setSkipEmptyFields(false);
 
         picaDecoder.process(
-                FIELD_003AT_0_ID + FIELD_MARKER +
-                FIELD_028A +
-                SUBFIELD_MARKER +
-                FIELD_MARKER);
+                FIELD_003AT_0_ID + FIELD_MARKER + FIELD_028A + SUBFIELD_MARKER + FIELD_MARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -503,16 +493,14 @@ public final class PicaDecoderTest {
 
     @Test(expected = MissingIdException.class)
     public void shouldFailIfIdIsMissingByDefault() {
-        picaDecoder.process(
-                FIELD_001AT_0_TEST + FIELD_MARKER);
+        picaDecoder.process(FIELD_001AT_0_TEST + FIELD_MARKER);
     }
 
     @Test
     public void shouldIgnoreMissingIdIfConfigured() {
         picaDecoder.setIgnoreMissingIdn(true);
 
-        picaDecoder.process(
-                FIELD_001AT_0_TEST + FIELD_MARKER);
+        picaDecoder.process(FIELD_001AT_0_TEST + FIELD_MARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
@@ -522,9 +510,7 @@ public final class PicaDecoderTest {
 
     @Test
     public void shouldNotNormalizeUTF8ByDefault() {
-        picaDecoder.process(
-                FIELD_003AT_0_ID + FIELD_MARKER +
-                FIELD_021A_A_UEBER + FIELD_MARKER);
+        picaDecoder.process(FIELD_003AT_0_ID + FIELD_MARKER + FIELD_021A_A_UEBER + FIELD_MARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -537,9 +523,7 @@ public final class PicaDecoderTest {
     public void shouldNormalizeUTF8IfConfigured() {
         picaDecoder.setNormalizeUTF8(true);
 
-        picaDecoder.process(
-                FIELD_003AT_0_ID + FIELD_MARKER +
-                FIELD_021A_A_UEBER + FIELD_MARKER);
+        picaDecoder.process(FIELD_003AT_0_ID + FIELD_MARKER + FIELD_021A_A_UEBER + FIELD_MARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
@@ -551,8 +535,7 @@ public final class PicaDecoderTest {
     @Test
     public void shouldTrimWhitespaceInFieldNamesByDefault() {
         picaDecoder.process(
-                "  fieldname  " + SUBFIELD_MARKER + "0subfield" +
-                        FIELD_MARKER + FIELD_003AT_0_ID);
+                "  fieldname  " + SUBFIELD_MARKER + "0subfield" + FIELD_MARKER + FIELD_003AT_0_ID);
 
         Mockito.verify(receiver).startEntity("fieldname");
     }
@@ -562,8 +545,7 @@ public final class PicaDecoderTest {
         picaDecoder.setTrimFieldNames(false);
 
         picaDecoder.process(
-                "  fieldname  " + SUBFIELD_MARKER + "0subfield" +
-                FIELD_MARKER + FIELD_003AT_0_ID);
+                "  fieldname  " + SUBFIELD_MARKER + "0subfield" + FIELD_MARKER + FIELD_003AT_0_ID);
 
         Mockito.verify(receiver).startEntity("  fieldname  ");
     }
@@ -572,17 +554,16 @@ public final class PicaDecoderTest {
     public void nonNormalizedPica() {
         picaDecoder.setNormalizedSerialization(false);
         picaDecoder.process(
-            NONNORMALIZED_FIELD_001AT_0_TEST  +
-            NONNORMALIZED_FIELD_END_MARKER +
-            NONNORMALIZED_FIELD_003AT_0_ID +
-            NONNORMALIZED_RECORD_MARKER);
+                NONNORMALIZED_FIELD_001AT_0_TEST
+                        + NONNORMALIZED_FIELD_END_MARKER
+                        + NONNORMALIZED_FIELD_003AT_0_ID
+                        + NONNORMALIZED_RECORD_MARKER);
         try {
             Mockito.verify(receiver).startEntity("001@");
             Mockito.verify(receiver).literal("0", "test");
             Mockito.verify(receiver).startEntity("003@");
             Mockito.verify(receiver).literal("0", "2809");
-        }
-        finally { // ensure reset to the default used by the other tests
+        } finally { // ensure reset to the default used by the other tests
             picaDecoder.setNormalizedSerialization(true);
         }
     }
@@ -604,5 +585,4 @@ public final class PicaDecoderTest {
         ordered.verify(receiver).literal("a", value);
         ordered.verify(receiver).endEntity();
     }
-
 }

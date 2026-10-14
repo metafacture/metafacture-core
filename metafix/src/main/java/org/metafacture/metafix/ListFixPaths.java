@@ -24,22 +24,24 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.triples.AbstractTripleSort.Compare;
 
 /**
- * Provide a user-friendly way to list all paths available for processing in fix (see also {@link ListFixValues}).
+ * Provide a user-friendly way to list all paths available for processing in fix (see also {@link
+ * ListFixValues}).
  *
  * @author Fabian Steeg
  */
-@Description("Lists all paths found in the input records. These paths can be used in a Fix to address fields. Options: " +
-        "`count` (output occurence frequency of each path, sorted by highest frequency first; default: `true`), " +
-        "`template` (for formatting the internal triple structure; default: `${o}\t|\t${s}` if count is true, else `${s}`)" +
-        "`index` (output individual repeated subfields and array elements with index numbers instead of '*'; default: `false`)")
+@Description(
+        "Lists all paths found in the input records. These paths can be used in a Fix to address"
+            + " fields. Options: `count` (output occurence frequency of each path, sorted by"
+            + " highest frequency first; default: `true`), `template` (for formatting the internal"
+            + " triple structure; default: `${o}\t|\t${s}` if count is true, else `${s}`)`index`"
+            + " (output individual repeated subfields and array elements with index numbers instead"
+            + " of '*'; default: `false`)")
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("list-fix-paths")
 public class ListFixPaths extends MetafixStreamAnalyzer {
 
-    /**
-     * Creates an instance of {@link ListFixPaths}.
-     */
+    /** Creates an instance of {@link ListFixPaths}. */
     @SuppressWarnings("this-escape")
     public ListFixPaths() {
         super("nothing()", Compare.PREDICATE);
@@ -47,8 +49,7 @@ public class ListFixPaths extends MetafixStreamAnalyzer {
     }
 
     /**
-     * Flags whether to output individual repeated subfields and array elements
-     * with index numbers.
+     * Flags whether to output individual repeated subfields and array elements with index numbers.
      *
      * @param index true if index numbers should be output
      */
@@ -57,13 +58,11 @@ public class ListFixPaths extends MetafixStreamAnalyzer {
     }
 
     /**
-     * Checks whether to output individual repeated subfields and array elements
-     * with index numbers.
+     * Checks whether to output individual repeated subfields and array elements with index numbers.
      *
      * @return true if index numbers should be output
      */
     public boolean getIndex() {
         return getFix().getEntityMemberName().equals(Metafix.DEFAULT_ENTITY_MEMBER_NAME);
     }
-
 }

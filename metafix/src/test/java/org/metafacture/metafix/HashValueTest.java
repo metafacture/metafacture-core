@@ -16,15 +16,13 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.commons.tries.SimpleRegexTrie;
-
-import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.metafacture.commons.tries.SimpleRegexTrie;
 
 public class HashValueTest {
 
@@ -41,17 +39,19 @@ public class HashValueTest {
 
     private static final Pattern PATTERN = Pattern.compile("");
 
-    public HashValueTest() {
-    }
+    public HashValueTest() {}
 
     @Test
     public void shouldSatisfyEqualsContract() {
         EqualsVerifier.forClass(Value.Hash.class)
-            .withPrefabValues(Value.class, Value.newArray(), Value.newHash())
-            .withPrefabValues(Matcher.class, PATTERN.matcher("a"), PATTERN.matcher("b"))
-            .withPrefabValues(SimpleRegexTrie.class, new SimpleRegexTrie<String>(), new SimpleRegexTrie<String>())
-            .withIgnoredFields("patternMatcher", "prefixCache", "trie", "trieCache")
-            .verify();
+                .withPrefabValues(Value.class, Value.newArray(), Value.newHash())
+                .withPrefabValues(Matcher.class, PATTERN.matcher("a"), PATTERN.matcher("b"))
+                .withPrefabValues(
+                        SimpleRegexTrie.class,
+                        new SimpleRegexTrie<String>(),
+                        new SimpleRegexTrie<String>())
+                .withIgnoredFields("patternMatcher", "prefixCache", "trie", "trieCache")
+                .verify();
     }
 
     @Test
@@ -382,10 +382,10 @@ public class HashValueTest {
         hash.put("empty field", emptyValue);
         hash.put("_special field", specialValue);
 
-        MetafixTestHelpers.assertEmittedFields(hash,
+        MetafixTestHelpers.assertEmittedFields(
+                hash,
                 Arrays.asList(FIELD, OTHER_FIELD, "empty field", "_special field"),
-                Arrays.asList(VALUE, OTHER_VALUE, emptyValue, specialValue)
-        );
+                Arrays.asList(VALUE, OTHER_VALUE, emptyValue, specialValue));
     }
 
     private void shouldFindArray(final String field) {
@@ -407,9 +407,12 @@ public class HashValueTest {
 
     private void shouldFindArraySubfield(final String field) {
         final Value.Hash hash = newHash();
-        hash.put(FIELD, Value.newArray(a -> a.add(Value.newHash(h -> h.put(OTHER_FIELD, OTHER_VALUE)))));
+        hash.put(
+                FIELD,
+                Value.newArray(a -> a.add(Value.newHash(h -> h.put(OTHER_FIELD, OTHER_VALUE)))));
 
-        Assertions.assertEquals(OTHER_VALUE, new FixPath(String.join(".", FIELD, field, OTHER_FIELD)).findIn(hash));
+        Assertions.assertEquals(
+                OTHER_VALUE, new FixPath(String.join(".", FIELD, field, OTHER_FIELD)).findIn(hash));
     }
 
     @Test
@@ -434,5 +437,4 @@ public class HashValueTest {
         Assertions.assertEquals(VALUE, array.get(0));
         Assertions.assertEquals(OTHER_VALUE, array.get(1));
     }
-
 }

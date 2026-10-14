@@ -16,6 +16,12 @@
 
 package org.metafacture.scripting;
 
+import java.io.IOException;
+import java.io.Reader;
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -25,18 +31,10 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-import java.io.IOException;
-import java.io.Reader;
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
 /**
  * Executes the function process(obj) in a given jscript.
  *
  * @author Markus Geipel
- *
  */
 @Description("executes the function process(obj) in a given jscript")
 @In(Object.class)
@@ -58,8 +56,8 @@ public final class JScriptObjectPipe extends DefaultObjectPipe<Object, ObjectRec
     }
 
     /**
-     * Sets the name of the procedure or function to call by
-     * {@code javax.script.Invocable#invokeFunction(String, Object...)}
+     * Sets the name of the procedure or function to call by {@code
+     * javax.script.Invocable#invokeFunction(String, Object...)}
      *
      * @param invoke the name of the procedure or function to call
      */
@@ -74,11 +72,9 @@ public final class JScriptObjectPipe extends DefaultObjectPipe<Object, ObjectRec
         try (Reader reader = ResourceUtil.getReader(file)) {
             // LOG.info("loading code from '" + file + "'");
             engine.eval(reader);
-        }
-        catch (final ScriptException e) {
+        } catch (final ScriptException e) {
             throw new MetafactureException("Error in script", e);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException("Error loading script '" + file + "'", e);
         }
         invocable = (Invocable) engine;
@@ -95,13 +91,10 @@ public final class JScriptObjectPipe extends DefaultObjectPipe<Object, ObjectRec
 
             getReceiver().process(retObj);
 
-        }
-        catch (final ScriptException e) {
+        } catch (final ScriptException e) {
             throw new MetafactureException("Error in script while evaluating 'process' method", e);
-        }
-        catch (final NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             throw new MetafactureException("'process' method is missing in script", e);
         }
     }
-
 }

@@ -16,11 +16,10 @@
 
 package org.metafacture.metamorph.collectors;
 
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.TestHelpers;
-
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -33,24 +32,22 @@ import org.mockito.junit.MockitoRule;
  */
 public final class ChooseTest {
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public ChooseTest() {
-    }
+    public ChooseTest() {}
 
     @Test
     public void shouldChooseValueOfTopMostFiringStatement() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <choose>" +
-                "    <data source='data1' />" +
-                "    <data source='data2' />" +
-                "  </choose>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <choose>"
+                        + "    <data source='data1' />"
+                        + "    <data source='data2' />"
+                        + "  </choose>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "A");
@@ -74,19 +71,19 @@ public final class ChooseTest {
                     o.get().startRecord("3");
                     o.get().literal("data2", "C");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldMakeChooseDecisionOnFlushEvent() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <choose flushWith='entity'>" +
-                "    <data source='entity.data1' />" +
-                "    <data source='entity.data2' />" +
-                "  </choose>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <choose flushWith='entity'>"
+                        + "    <data source='entity.data1' />"
+                        + "    <data source='entity.data2' />"
+                        + "  </choose>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -111,19 +108,19 @@ public final class ChooseTest {
                     o.get().literal("entity.data1", "B");
                     o.get().literal("entity.data2", "C");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void issue110_shouldOutputFallBackIfFlushedWithEntity() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <choose name='chosen' flushWith='record|entity'>" +
-                "    <data source='entity.data1' />" +
-                "    <data source='L' />" +
-                "  </choose>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <choose name='chosen' flushWith='record|entity'>"
+                        + "    <data source='entity.data1' />"
+                        + "    <data source='L' />"
+                        + "  </choose>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("L", "V");
@@ -133,18 +130,18 @@ public final class ChooseTest {
                     o.get().startRecord("1");
                     o.get().literal("chosen", "V");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void issue210_issue49_shouldRepeatedlyEmitNamedValueIfResetIsFalse() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <choose flushWith='flush' reset='false'>" +
-                "    <data source='lit1' />" +
-                "  </choose>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <choose flushWith='flush' reset='false'>"
+                        + "    <data source='lit1' />"
+                        + "  </choose>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("lit1", "data1");
@@ -156,18 +153,18 @@ public final class ChooseTest {
                     o.get().startRecord("1");
                     f.apply(2).literal("lit1", "data1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void issue210_shouldResetAfterEmittingNamedValueIfResetIsTrue() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <choose flushWith='flush' reset='true'>" +
-                "    <data source='lit1' />" +
-                "  </choose>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <choose flushWith='flush' reset='true'>"
+                        + "    <data source='lit1' />"
+                        + "  </choose>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("lit1", "data1");
@@ -179,18 +176,18 @@ public final class ChooseTest {
                     o.get().startRecord("1");
                     f.apply(1).literal("lit1", "data1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void issue210_shouldResetAfterEmittingNamedValueByDefault() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <choose flushWith='flush'>" +
-                "    <data source='lit1' />" +
-                "  </choose>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <choose flushWith='flush'>"
+                        + "    <data source='lit1' />"
+                        + "  </choose>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("lit1", "data1");
@@ -202,19 +199,19 @@ public final class ChooseTest {
                     o.get().startRecord("1");
                     f.apply(1).literal("lit1", "data1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void issue250_shouldResetOnEntityChangeIfSameEntityIsTrue() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <choose sameEntity='true'>" +
-                "    <data source='entity.lit1' />" +
-                "    <data source='entity.lit2' />" +
-                "  </choose>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <choose sameEntity='true'>"
+                        + "    <data source='entity.lit1' />"
+                        + "    <data source='entity.lit2' />"
+                        + "  </choose>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -229,19 +226,19 @@ public final class ChooseTest {
                     o.get().startRecord("1");
                     o.get().literal("entity.lit2", "data2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void issue250_shouldNotResetOnEntityChangeIfSameEntityIsFalse() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <choose sameEntity='false'>" +
-                "    <data source='entity.lit1' />" +
-                "    <data source='entity.lit2' />" +
-                "  </choose>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <choose sameEntity='false'>"
+                        + "    <data source='entity.lit1' />"
+                        + "    <data source='entity.lit2' />"
+                        + "  </choose>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -256,19 +253,19 @@ public final class ChooseTest {
                     o.get().startRecord("1");
                     o.get().literal("entity.lit1", "data1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void issue250_shouldNotResetOnEntityChangeByDefault() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <choose>" +
-                "    <data source='entity.lit1' />" +
-                "    <data source='entity.lit2' />" +
-                "  </choose>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <choose>"
+                        + "    <data source='entity.lit1' />"
+                        + "    <data source='entity.lit2' />"
+                        + "  </choose>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -283,8 +280,6 @@ public final class ChooseTest {
                     o.get().startRecord("1");
                     o.get().literal("entity.lit1", "data1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
-
 }

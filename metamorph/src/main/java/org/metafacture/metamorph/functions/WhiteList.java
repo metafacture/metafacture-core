@@ -23,16 +23,12 @@ package org.metafacture.metamorph.functions;
  */
 public final class WhiteList extends AbstractLookup {
 
-    /**
-     * Creates an instance of {@link WhiteList}.
-     */
-    public WhiteList() {
-    }
+    /** Creates an instance of {@link WhiteList}. */
+    public WhiteList() {}
 
     @Override
     public String process(final String key) {
         final String returnValue = lookup(key);
         return returnValue != null ? key : null;
     }
-
 }

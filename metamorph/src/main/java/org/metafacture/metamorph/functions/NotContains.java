@@ -19,22 +19,17 @@ package org.metafacture.metamorph.functions;
 import org.metafacture.metamorph.api.helpers.AbstractFilter;
 
 /**
- * Checks whether the received value does not contain a
- * given value.
+ * Checks whether the received value does not contain a given value.
  *
  * @author Hans-Georg Becker
  */
 public final class NotContains extends AbstractFilter {
 
-    /**
-     * Creates an instance of {@link NotContains}.
-     */
-    public NotContains() {
-    }
+    /** Creates an instance of {@link NotContains}. */
+    public NotContains() {}
 
     @Override
     protected boolean accept(final String value) {
         return !value.contains(getString());
     }
-
 }

@@ -19,12 +19,11 @@ package org.metafacture.javaintegration.pojo;
 import org.metafacture.framework.StreamReceiver;
 
 /**
- * Use this interfaces to include a metafacture event stream to the pojo
- * decoder. If the {@link PojoDecoder} detects a type implementing this
- * interface, it will call the {@link #sendToStream} method.
+ * Use this interfaces to include a metafacture event stream to the pojo decoder. If the {@link
+ * PojoDecoder} detects a type implementing this interface, it will call the {@link #sendToStream}
+ * method.
  *
  * @author Thomas Seidel
- *
  */
 public interface MetafactureSource {
 
@@ -34,5 +33,4 @@ public interface MetafactureSource {
      * @param streamReceiver the {@link StreamReceiver}
      */
     void sendToStream(StreamReceiver streamReceiver);
-
 }

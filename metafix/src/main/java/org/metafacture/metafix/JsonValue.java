@@ -16,22 +16,18 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.json.JsonEncoder;
-
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UncheckedIOException;
+import org.metafacture.json.JsonEncoder;
 
 // TODO: Utilize JsonDecoder/JsonEncoder instead?
 
-/**
- * Serializer for JSON values.
- */
+/** Serializer for JSON values. */
 @FunctionalInterface
 public interface JsonValue {
 
@@ -46,7 +42,6 @@ public interface JsonValue {
      * Converts the value to JSON without pretty printing.
      *
      * @return the JSON serialization
-     *
      * @throws IOException if an I/O error occurs
      */
     default String toJson() throws IOException {
@@ -57,9 +52,7 @@ public interface JsonValue {
      * Converts the value to JSON with optional pretty printing.
      *
      * @param prettyPrinting true if pretty printing should be used
-     *
      * @return the JSON serialization
-     *
      * @throws IOException if an I/O error occurs
      */
     default String toJson(final boolean prettyPrinting) throws IOException {
@@ -69,8 +62,7 @@ public interface JsonValue {
 
         try {
             toJson(jsonGenerator);
-        }
-        catch (final UncheckedIOException e) {
+        } catch (final UncheckedIOException e) {
             throw e.getCause();
         }
 
@@ -79,26 +71,19 @@ public interface JsonValue {
         return writer.toString();
     }
 
-    /**
-     * Parser for JSON values.
-     */
+    /** Parser for JSON values. */
     class Parser {
 
         private static final ObjectMapper MAPPER = new ObjectMapper();
 
-        /**
-         * Creates an instance of {@link Parser}.
-         */
-        public Parser() {
-        }
+        /** Creates an instance of {@link Parser}. */
+        public Parser() {}
 
         /**
          * Parses the JSON serialization.
          *
          * @param source the JSON serialization
-         *
          * @return the deserialized value
-         *
          * @throws IOException if an I/O error occurs
          */
         public Value parse(final String source) throws IOException {
@@ -109,18 +94,22 @@ public interface JsonValue {
             final Value value;
 
             if (node.isObject()) {
-                value = Value.newHash(h -> node.properties().forEach(e -> h.put(e.getKey(), parse(e.getValue()))));
-            }
-            else if (node.isArray()) {
+                value =
+                        Value.newHash(
+                                h ->
+                                        node.properties()
+                                                .forEach(
+                                                        e ->
+                                                                h.put(
+                                                                        e.getKey(),
+                                                                        parse(e.getValue()))));
+            } else if (node.isArray()) {
                 value = Value.newArray(a -> node.elements().forEachRemaining(v -> a.add(parse(v))));
-            }
-            else {
+            } else {
                 value = new Value(node.textValue());
             }
 
             return value;
         }
-
     }
-
 }

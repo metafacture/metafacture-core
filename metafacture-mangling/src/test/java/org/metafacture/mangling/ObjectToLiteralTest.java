@@ -16,11 +16,10 @@
 
 package org.metafacture.mangling;
 
-import org.metafacture.framework.StreamReceiver;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -30,7 +29,6 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link ObjectToLiteral}.
  *
  * @author Christoph Böhme
- *
  */
 public final class ObjectToLiteralTest {
 
@@ -39,11 +37,9 @@ public final class ObjectToLiteralTest {
 
     private ObjectToLiteral<String> objectToLiteral;
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public ObjectToLiteralTest() {
-    }
+    public ObjectToLiteralTest() {}
 
     @Before
     public void setup() {
@@ -95,5 +91,4 @@ public final class ObjectToLiteralTest {
         ordered.verify(receiver).literal(ObjectToLiteral.DEFAULT_LITERAL_NAME, OBJ_DATA);
         ordered.verify(receiver).endRecord();
     }
-
 }

@@ -16,11 +16,10 @@
 
 package org.metafacture.metamorph.collectors;
 
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.TestHelpers;
-
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -32,24 +31,22 @@ import org.mockito.junit.MockitoRule;
  */
 public final class AllTest {
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public AllTest() {
-    }
+    public AllTest() {}
 
     @Test
     public void shouldFireOnlyIfAllElementsFire() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <all>" +
-                "    <data source='data1' />" +
-                "    <data source='data2' />" +
-                "  </all>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <all>"
+                        + "    <data source='data1' />"
+                        + "    <data source='data2' />"
+                        + "  </all>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "A");
@@ -65,19 +62,19 @@ public final class AllTest {
                     o.get().endRecord();
                     o.get().startRecord("2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldSupportUserdefinedNameAndValue() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <all name='ALL' value='found all'>" +
-                "    <data source='data1' />" +
-                "    <data source='data2' />" +
-                "  </all>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <all name='ALL' value='found all'>"
+                        + "    <data source='data1' />"
+                        + "    <data source='data2' />"
+                        + "  </all>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "A");
@@ -88,19 +85,19 @@ public final class AllTest {
                     o.get().startRecord("1");
                     o.get().literal("ALL", "found all");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldFireAgainIfValueChangesAndResetIsFalse() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <all>" +
-                "    <data source='entity.data1' />" +
-                "    <data source='entity.data2' />" +
-                "  </all>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <all>"
+                        + "    <data source='entity.data1' />"
+                        + "    <data source='entity.data2' />"
+                        + "  </all>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -116,19 +113,19 @@ public final class AllTest {
                     o.get().startRecord("1");
                     f.apply(2).literal("", "true");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldNotFireAgainIfOnlyOneValueChangesAndResetIsTrue() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <all reset='true'>" +
-                "    <data source='entity.data1' />" +
-                "    <data source='entity.data2' />" +
-                "  </all>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <all reset='true'>"
+                        + "    <data source='entity.data1' />"
+                        + "    <data source='entity.data2' />"
+                        + "  </all>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -144,19 +141,19 @@ public final class AllTest {
                     o.get().startRecord("1");
                     o.get().literal("", "true");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldNotFireIfFlushingAnIncompleteCollection() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <all flushWith='entity'>" +
-                "    <data source='entity.data1' />" +
-                "    <data source='entity.data2' />" +
-                "  </all>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <all flushWith='entity'>"
+                        + "    <data source='entity.data1' />"
+                        + "    <data source='entity.data2' />"
+                        + "  </all>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -167,19 +164,19 @@ public final class AllTest {
                 o -> {
                     o.get().startRecord("1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldResetWhenEntityChangesIfSameEntity() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <all sameEntity='true'>" +
-                "    <data source='entity.data2' />" +
-                "    <data source='entity.data1' />" +
-                "  </all>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <all sameEntity='true'>"
+                        + "    <data source='entity.data2' />"
+                        + "    <data source='entity.data1' />"
+                        + "  </all>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -193,8 +190,6 @@ public final class AllTest {
                 o -> {
                     o.get().startRecord("1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
-
 }

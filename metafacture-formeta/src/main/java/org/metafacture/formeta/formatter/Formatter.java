@@ -20,13 +20,10 @@ package org.metafacture.formeta.formatter;
  * Interface for formatters.
  *
  * @author Christoph Böhme
- *
  */
 public interface Formatter {
 
-    /**
-     * The reset event.
-     */
+    /** The reset event. */
     void reset();
 
     /**
@@ -36,17 +33,14 @@ public interface Formatter {
      */
     void startGroup(String name);
 
-    /**
-     * The literal endGroup event.
-     */
+    /** The literal endGroup event. */
     void endGroup();
 
     /**
      * The literal event.
      *
-     * @param name  the name of the literal
+     * @param name the name of the literal
      * @param value the value of the literal
      */
     void literal(String name, String value);
-
 }

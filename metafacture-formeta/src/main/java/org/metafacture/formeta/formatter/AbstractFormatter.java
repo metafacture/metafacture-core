@@ -23,19 +23,18 @@ import org.metafacture.formeta.Formeta;
  * Base class for formatters.
  *
  * @author Christoph Böhme.
- *
  */
 public abstract class AbstractFormatter implements Formatter {
 
-    public static final String CHARS_TO_ESCAPE_QUOTED = "\n\r" +
-            Formeta.QUOT_CHAR +
-            Formeta.ESCAPE_CHAR;
+    public static final String CHARS_TO_ESCAPE_QUOTED =
+            "\n\r" + Formeta.QUOT_CHAR + Formeta.ESCAPE_CHAR;
 
-    public static final String CHARS_TO_ESCAPE = CHARS_TO_ESCAPE_QUOTED +
-            Formeta.GROUP_START +
-            Formeta.GROUP_END +
-            Formeta.ITEM_SEPARATOR +
-            Formeta.NAME_VALUE_SEPARATOR;
+    public static final String CHARS_TO_ESCAPE =
+            CHARS_TO_ESCAPE_QUOTED
+                    + Formeta.GROUP_START
+                    + Formeta.GROUP_END
+                    + Formeta.ITEM_SEPARATOR
+                    + Formeta.NAME_VALUE_SEPARATOR;
 
     protected static final int BUFFER_SIZE = 1024;
 
@@ -74,18 +73,15 @@ public abstract class AbstractFormatter implements Formatter {
                 escapeAndAppendChar(buffer[i], CHARS_TO_ESCAPE_QUOTED);
             }
             builder.append(Formeta.QUOT_CHAR);
-        }
-        else {
+        } else {
             if (bufferLen > 0) {
-                escapeAndAppendChar(buffer[0],
-                        CHARS_TO_ESCAPE + Formeta.WHITESPACE);
+                escapeAndAppendChar(buffer[0], CHARS_TO_ESCAPE + Formeta.WHITESPACE);
             }
             for (int i = 1; i < bufferLen - 1; ++i) {
                 escapeAndAppendChar(buffer[i], CHARS_TO_ESCAPE);
             }
             if (bufferLen > 1) {
-                escapeAndAppendChar(buffer[bufferLen - 1],
-                        CHARS_TO_ESCAPE + Formeta.WHITESPACE);
+                escapeAndAppendChar(buffer[bufferLen - 1], CHARS_TO_ESCAPE + Formeta.WHITESPACE);
             }
         }
     }
@@ -99,8 +95,7 @@ public abstract class AbstractFormatter implements Formatter {
     private void escapeAndAppendChar(final char ch, final String charsToEscape) {
         if (charsToEscape.indexOf(ch) > -1) {
             appendEscapedChar(ch);
-        }
-        else {
+        } else {
             builder.append(ch);
         }
     }
@@ -118,5 +113,4 @@ public abstract class AbstractFormatter implements Formatter {
                 builder.append(ch);
         }
     }
-
 }

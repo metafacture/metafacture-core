@@ -16,9 +16,6 @@
 
 package org.metafacture.metamorph.maps;
 
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,10 +24,11 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
 
 /**
- * A map which resolves its keys by doing a REST request and returning the
- * response as value.
+ * A map which resolves its keys by doing a REST request and returning the response as value.
  *
  * @author Markus Michael Geipel
  * @author Philipp v. Böselager
@@ -43,11 +41,8 @@ public final class RestMap extends AbstractReadOnlyMap<String, String> {
     private String charsetName = CHARSET_NAME;
     private String url;
 
-    /**
-     * Creates an instance of {@link RestMap}.
-     */
-    public RestMap() {
-    }
+    /** Creates an instance of {@link RestMap}. */
+    public RestMap() {}
 
     /**
      * Creates an instance of {@link RestMap} by the given URL.
@@ -64,26 +59,26 @@ public final class RestMap extends AbstractReadOnlyMap<String, String> {
         try {
             final String urlString = matcher.replaceAll(key.toString());
             return readFromUrl(urlString);
-        }
-        catch (final IOException | URISyntaxException e) {
+        } catch (final IOException | URISyntaxException e) {
             // There was no data result for the given URL
             return null;
         }
     }
 
     private String readFromUrl(final String targetUrl) throws IOException, URISyntaxException {
-        final InputStream inputStream = ResourceUtil.toURL(targetUrl.replace(" ", "%20")).openConnection()
-                .getInputStream();
+        final InputStream inputStream =
+                ResourceUtil.toURL(targetUrl.replace(" ", "%20")).openConnection().getInputStream();
         try {
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName(charsetName)));
+            final BufferedReader reader =
+                    new BufferedReader(
+                            new InputStreamReader(inputStream, Charset.forName(charsetName)));
             final StringBuilder stringBuffer = new StringBuilder();
             int value;
             while ((value = reader.read()) != -1) {
                 stringBuffer.append((char) value);
             }
             return stringBuffer.toString();
-        }
-        finally {
+        } finally {
             inputStream.close();
         }
     }
@@ -105,5 +100,4 @@ public final class RestMap extends AbstractReadOnlyMap<String, String> {
     public void setCharsetName(final String name) {
         charsetName = name;
     }
-
 }

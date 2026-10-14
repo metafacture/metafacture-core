@@ -20,7 +20,6 @@ package org.metafacture.metamorph.api;
  * Interface for statements that can be made conditional.
  *
  * @author Christoph Böhme
- *
  */
 public interface ConditionAware {
 
@@ -30,5 +29,4 @@ public interface ConditionAware {
      * @param receiver the {@link NamedValueSource}
      */
     void setConditionSource(NamedValueSource receiver);
-
 }

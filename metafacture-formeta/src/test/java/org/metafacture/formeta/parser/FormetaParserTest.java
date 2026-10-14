@@ -16,11 +16,10 @@
 
 package org.metafacture.formeta.parser;
 
-import org.metafacture.formeta.FormetaDecoder;
-import org.metafacture.framework.FormatException;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.formeta.FormetaDecoder;
+import org.metafacture.framework.FormatException;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -30,7 +29,6 @@ import org.mockito.MockitoAnnotations;
  * Tests for {@link FormetaDecoder}.
  *
  * @author Christoph Böhme
- *
  */
 public final class FormetaParserTest {
 
@@ -38,43 +36,40 @@ public final class FormetaParserTest {
             "1{lit1:value 1,' ent1'{lit2:value \\{x\\},lit\\\\3:'value 2 '}lit4:value \\'3\\'}";
 
     private static final String VERBOSE_RECORD =
-            "1{ lit1: 'value 1', ' ent1'{ lit2: 'value {x}', 'lit\\\\3': 'value 2 ' }, lit4: 'value \\'3\\'' }";
+            "1{ lit1: 'value 1', ' ent1'{ lit2: 'value {x}', 'lit\\\\3': 'value 2 ' }, lit4: 'value"
+                    + " \\'3\\'' }";
 
     private static final String MULTILINE_RECORD =
-            "1{\n" +
-            "  lit1: 'value 1',\n" +
-            "  ' ent1'{\n" +
-            "    lit2: 'value {x}',\n" +
-            "    'lit\\\\3': 'value 2 '\n" +
-            "  },\n" +
-            "  lit4: 'value \\'3\\''\n" +
-            "}";
+            "1{\n"
+                    + "  lit1: 'value 1',\n"
+                    + "  ' ent1'{\n"
+                    + "    lit2: 'value {x}',\n"
+                    + "    'lit\\\\3': 'value 2 '\n"
+                    + "  },\n"
+                    + "  lit4: 'value \\'3\\''\n"
+                    + "}";
 
-    private static final String BROKEN_RECORD =
-            "1 { lit1: 'value 1',";
+    private static final String BROKEN_RECORD = "1 { lit1: 'value 1',";
 
     private static final String INNER_RECORD =
             "inner{ lit1: value 1, ent1{ lit2: 'hello worlds\\'s end!' } }";
 
     private static final String OUTER_RECORD =
-            "outer{" +
-            "nested:inner\\{ lit1\\: value 1\\, ent1\\{ lit2\\: \\'hello worlds\\\\\\'s end!\\' \\} \\}," +
-            "note:I can has nezted records" +
-            "}";
+            "outer{nested:inner\\{ lit1\\: value 1\\, ent1\\{ lit2\\: \\'hello worlds\\\\\\'s"
+                    + " end!\\' \\} \\},note:I can has nezted records}";
 
     private static final String PARTIAL_RECORD =
-            "lit1: 'value 1', ' ent1'{ lit2: 'value {x}', 'lit\\\\3': 'value 2 ' }, lit4: 'value \\'3\\'' ";
+            "lit1: 'value 1', ' ent1'{ lit2: 'value {x}', 'lit\\\\3': 'value 2 ' }, lit4: 'value"
+                    + " \\'3\\'' ";
 
     private static final String BROKEN_PARTIAL_RECORD =
             "lit1: 'value 1', ' ent1'{ lit2: 'value {x}'";
 
     private FormetaParser parser;
 
-    @Mock
-    private Emitter emitter;
+    @Mock private Emitter emitter;
 
-    public FormetaParserTest() {
-    }
+    public FormetaParserTest() {}
 
     @Before
     public void setup() {
@@ -144,8 +139,7 @@ public final class FormetaParserTest {
         // Try processing an incomplete record:
         try {
             parser.parse(BROKEN_RECORD);
-        }
-        catch (final FormatException e) {
+        } catch (final FormatException e) {
             // The decoder should recover automatically
         }
 
@@ -195,5 +189,4 @@ public final class FormetaParserTest {
         ordered.verify(emitter).endGroup(nestingLevel);
         ordered.verify(emitter).literal("lit4", "value '3'", nestingLevel);
     }
-
 }

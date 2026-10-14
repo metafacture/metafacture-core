@@ -16,6 +16,8 @@
 
 package org.metafacture.xml;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.metafacture.commons.XmlUtil;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
@@ -24,19 +26,17 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * An XML Element splitter.
  *
  * @author Pascal Christoph (dr0i)
  */
-@Description("Splits elements (e.g. defining single records) residing in one XML document into multiple single XML documents.")
+@Description(
+        "Splits elements (e.g. defining single records) residing in one XML document into multiple"
+                + " single XML documents.")
 @In(XmlReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("split-xml-elements")
@@ -53,11 +53,8 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     private String xmlDeclaration = "<?xml version = \"1.0\" encoding = \"UTF-8\"?>";
     private int elementDepth;
 
-    /**
-     * Default constructor
-     */
-    public XmlElementSplitter() {
-    }
+    /** Default constructor */
+    public XmlElementSplitter() {}
 
     /**
      * Enriched constructor setting the top level element and the Element name
@@ -71,8 +68,8 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     }
 
     /**
-     * Sets the name of the Element. All these elements in the XML stream will
-     * be XML documents on their own.
+     * Sets the name of the Element. All these elements in the XML stream will be XML documents on
+     * their own.
      *
      * @param name Identifies the elements
      */
@@ -83,8 +80,7 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     /**
      * Sets the top-level XML document element.
      *
-     * @param newRoot the top level element. Leave at default to omit the
-     *                top-level element.
+     * @param newRoot the top level element. Leave at default to omit the top-level element.
      */
     public void setTopLevelElement(final String newRoot) {
         root = newRoot;
@@ -93,9 +89,8 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     }
 
     /**
-     * Sets the XML declaration. The default is
-     * {@code <?xml version = "1.0" encoding = "UTF-8"?>}. If an empty value is
-     * given, the XML declaration is skipped.
+     * Sets the XML declaration. The default is {@code <?xml version = "1.0" encoding = "UTF-8"?>}.
+     * If an empty value is given, the XML declaration is skipped.
      *
      * @param xmlDeclaration the XML declaration
      */
@@ -112,7 +107,12 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) throws SAXException {
+    public void startElement(
+            final String uri,
+            final String localName,
+            final String qName,
+            final Attributes attributes)
+            throws SAXException {
         if (!inElement) {
             if (element.equals(localName)) {
                 builder = new StringBuilder();
@@ -122,8 +122,7 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
                 appendValuesToElement(qName, attributes);
                 ++elementDepth;
             }
-        }
-        else {
+        } else {
             if (element.equals(localName)) {
                 ++elementDepth;
             }
@@ -135,7 +134,12 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
         this.builder.append("<" + qName);
         if (attributes.getLength() > 0) {
             for (int i = 0; i < attributes.getLength(); ++i) {
-                builder.append(" " + attributes.getQName(i) + "=\"" + XmlUtil.escape(attributes.getValue(i)) + "\"");
+                builder.append(
+                        " "
+                                + attributes.getQName(i)
+                                + "=\""
+                                + XmlUtil.escape(attributes.getValue(i))
+                                + "\"");
             }
         }
 
@@ -143,7 +147,8 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void endElement(final String uri, final String localName, final String qName) throws SAXException {
+    public void endElement(final String uri, final String localName, final String qName)
+            throws SAXException {
         if (inElement) {
             builder.append("</" + qName + ">");
             if (element.equals(localName)) {
@@ -167,11 +172,11 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void characters(final char[] chars, final int start, final int length) throws SAXException {
+    public void characters(final char[] chars, final int start, final int length)
+            throws SAXException {
         try {
             builder.append(XmlUtil.escape(new String(chars, start, length)));
-        }
-        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
+        } catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             reset();
         }
     }
@@ -195,5 +200,4 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     protected void onResetStream() {
         reset();
     }
-
 }

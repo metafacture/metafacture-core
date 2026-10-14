@@ -16,15 +16,6 @@
 
 package org.metafacture.json;
 
-import org.metafacture.framework.FluxCommand;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.framework.annotations.Description;
-import org.metafacture.framework.annotations.In;
-import org.metafacture.framework.annotations.Out;
-import org.metafacture.framework.helpers.DefaultStreamPipe;
-
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -34,18 +25,23 @@ import com.fasterxml.jackson.core.SerializableString;
 import com.fasterxml.jackson.core.io.CharacterEscapes;
 import com.fasterxml.jackson.core.io.SerializedString;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-
 import java.io.IOException;
 import java.io.StringWriter;
+import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.framework.annotations.Description;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
+import org.metafacture.framework.helpers.DefaultStreamPipe;
 
 /**
- * Serialises an object as JSON. Records and entities are represented
- * as objects unless their name ends with []. If the name ends with [],
- * an array is created.
+ * Serialises an object as JSON. Records and entities are represented as objects unless their name
+ * ends with []. If the name ends with [], an array is created.
  *
  * @author Christoph Böhme
  * @author Michael Büchner
- *
  */
 @Description("Serialises an object as JSON")
 @In(StreamReceiver.class)
@@ -53,12 +49,13 @@ import java.io.StringWriter;
 @FluxCommand("encode-json")
 public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
-    public static final PrettyPrinter DEFAULT_PRETTY_PRINTER = new DefaultPrettyPrinter() {
-        @Override
-        public void writeRootValueSeparator(final JsonGenerator gen) {
-            // do nothing
-        }
-    };
+    public static final PrettyPrinter DEFAULT_PRETTY_PRINTER =
+            new DefaultPrettyPrinter() {
+                @Override
+                public void writeRootValueSeparator(final JsonGenerator gen) {
+                    // do nothing
+                }
+            };
 
     public static final String ARRAY_MARKER = "[]";
     public static final String BOOLEAN_MARKER = null;
@@ -75,15 +72,14 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
     private String numberMarker = NUMBER_MARKER;
 
     /**
-     * Constructs a JsonEncoder if no IOException occurs. The root value
-     * separator of the JsonGenerator is set to null.
+     * Constructs a JsonEncoder if no IOException occurs. The root value separator of the
+     * JsonGenerator is set to null.
      */
     public JsonEncoder() {
         try {
             jsonGenerator = new JsonFactory().createGenerator(writer);
             jsonGenerator.setRootValueSeparator(null);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -161,15 +157,14 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
     }
 
     /**
-     * By default JSON output does only have escaping where it is strictly
-     * necessary. This is recommended in the most cases. Nevertheless it can
-     * be sometimes useful to have some more escaping.
+     * By default JSON output does only have escaping where it is strictly necessary. This is
+     * recommended in the most cases. Nevertheless it can be sometimes useful to have some more
+     * escaping.
      *
-     * @param escapeCharacters an array which defines which characters should be
-     *                         escaped and how it will be done. See
-     *                         {@link CharacterEscapes}. In most cases this should
-     *                         be null. Use like this:
-     *                         <pre>{@code int[] esc = CharacterEscapes.standardAsciiEscapesForJSON();
+     * @param escapeCharacters an array which defines which characters should be escaped and how it
+     *     will be done. See {@link CharacterEscapes}. In most cases this should be null. Use like
+     *     this:
+     *     <pre>{@code int[] esc = CharacterEscapes.standardAsciiEscapesForJSON();
      *                            // and force escaping of a few others:
      *                            esc['\''] = CharacterEscapes.ESCAPE_STANDARD;
      *                         JsonEncoder.useEscapeJavaScript(esc);
@@ -177,25 +172,25 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
      */
     public void setJavaScriptEscapeChars(final int[] escapeCharacters) {
 
-        final CharacterEscapes ce = new CharacterEscapes() {
+        final CharacterEscapes ce =
+                new CharacterEscapes() {
 
-            private static final long serialVersionUID = 1L;
+                    private static final long serialVersionUID = 1L;
 
-            @Override
-            public int[] getEscapeCodesForAscii() {
-                if (escapeCharacters == null) {
-                    return CharacterEscapes.standardAsciiEscapesForJSON();
-                }
-                return escapeCharacters;
-            }
+                    @Override
+                    public int[] getEscapeCodesForAscii() {
+                        if (escapeCharacters == null) {
+                            return CharacterEscapes.standardAsciiEscapesForJSON();
+                        }
+                        return escapeCharacters;
+                    }
 
-            @Override
-            public SerializableString getEscapeSequence(final int ch) {
-                final String jsEscaped = escapeChar((char) ch);
-                return new SerializedString(jsEscaped);
-            }
-
-        };
+                    @Override
+                    public SerializableString getEscapeSequence(final int ch) {
+                        final String jsEscaped = escapeChar((char) ch);
+                        return new SerializedString(jsEscaped);
+                    }
+                };
 
         jsonGenerator.setCharacterEscapes(ce);
     }
@@ -212,8 +207,7 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         endGroup();
         try {
             jsonGenerator.flush();
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
         getReceiver().process(writer.toString());
@@ -239,21 +233,16 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
             if (value == null) {
                 jsonGenerator.writeNull();
-            }
-            else if (isMarkedName(name, booleanMarker)) {
+            } else if (isMarkedName(name, booleanMarker)) {
                 jsonGenerator.writeBoolean(Boolean.parseBoolean(value));
-            }
-            else if (isMarkedName(name, numberMarker)) {
+            } else if (isMarkedName(name, numberMarker)) {
                 jsonGenerator.writeNumber(value);
-            }
-            else {
+            } else {
                 jsonGenerator.writeString(value);
             }
-        }
-        catch (final JsonGenerationException e) {
+        } catch (final JsonGenerationException e) {
             throw new MetafactureException(e);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -266,18 +255,15 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
                     jsonGenerator.writeFieldName(getUnmarkedName(name, arrayMarker));
                 }
                 jsonGenerator.writeStartArray();
-            }
-            else {
+            } else {
                 if (ctx.inObject()) {
                     jsonGenerator.writeFieldName(name);
                 }
                 jsonGenerator.writeStartObject();
             }
-        }
-        catch (final JsonGenerationException e) {
+        } catch (final JsonGenerationException e) {
             throw new MetafactureException(e);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -287,15 +273,12 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
             final JsonStreamContext ctx = jsonGenerator.getOutputContext();
             if (ctx.inObject()) {
                 jsonGenerator.writeEndObject();
-            }
-            else if (ctx.inArray()) {
+            } else if (ctx.inArray()) {
                 jsonGenerator.writeEndArray();
             }
-        }
-        catch (final JsonGenerationException e) {
+        } catch (final JsonGenerationException e) {
             throw new MetafactureException(e);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -316,7 +299,11 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     private String escapeChar(final char ch) {
         final String namedEscape = namedEscape(ch);
-        return namedEscape != null ? namedEscape : (ch < ESCAPE_CHAR_LOW || ESCAPE_CHAR_HIGH < ch) ? unicodeEscape(ch) : Character.toString(ch);
+        return namedEscape != null
+                ? namedEscape
+                : (ch < ESCAPE_CHAR_LOW || ESCAPE_CHAR_HIGH < ch)
+                        ? unicodeEscape(ch)
+                        : Character.toString(ch);
     }
 
     private String namedEscape(final char ch) {
@@ -360,5 +347,4 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
     private String unicodeEscape(final char ch) {
         return String.format("\\u%4H", ch).replace(' ', '0');
     }
-
 }

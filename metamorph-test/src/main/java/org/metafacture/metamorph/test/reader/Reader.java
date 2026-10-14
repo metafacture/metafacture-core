@@ -20,12 +20,11 @@ import org.metafacture.framework.ObjectPipe;
 import org.metafacture.framework.StreamReceiver;
 
 /**
- * Interface for module implementations that can be instanciated by the
- * {@link MultiFormatReader}.
+ * Interface for module implementations that can be instanciated by the {@link MultiFormatReader}.
  *
  * @author Markus Michael Geipel
  */
-public interface Reader extends ObjectPipe<java.io.Reader, StreamReceiver>  {
+public interface Reader extends ObjectPipe<java.io.Reader, StreamReceiver> {
 
     // Marker interface
 

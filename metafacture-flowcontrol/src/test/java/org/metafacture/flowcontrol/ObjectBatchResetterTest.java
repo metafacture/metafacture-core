@@ -16,34 +16,28 @@
 
 package org.metafacture.flowcontrol;
 
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.helpers.DefaultObjectReceiver;
-
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.helpers.DefaultObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-/**
- * Tests for class {@link ObjectBatchResetter}.
- */
+/** Tests for class {@link ObjectBatchResetter}. */
 public class ObjectBatchResetterTest {
 
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private ObjectReceiver<String> receiver;
+    @Mock private ObjectReceiver<String> receiver;
 
     private ObjectBatchResetter<String> systemUnderTest;
 
-    public ObjectBatchResetterTest() {
-    }
+    public ObjectBatchResetterTest() {}
 
     @Before
     public void setupSystemUnderTest() {
@@ -74,8 +68,7 @@ public class ObjectBatchResetterTest {
         systemUnderTest.process("1");
         systemUnderTest.process("2");
 
-        Assertions.assertThat(systemUnderTest.getObjectCount())
-                .isEqualTo(2);
+        Assertions.assertThat(systemUnderTest.getObjectCount()).isEqualTo(2);
     }
 
     @Test
@@ -85,8 +78,7 @@ public class ObjectBatchResetterTest {
         systemUnderTest.process("1");
         systemUnderTest.process("2");
 
-        Assertions.assertThat(systemUnderTest.getObjectCount())
-                .isZero();
+        Assertions.assertThat(systemUnderTest.getObjectCount()).isZero();
     }
 
     @Test
@@ -98,8 +90,7 @@ public class ObjectBatchResetterTest {
         systemUnderTest.process("3");
         systemUnderTest.process("4");
 
-        Assertions.assertThat(systemUnderTest.getBatchCount())
-                .isEqualTo(2);
+        Assertions.assertThat(systemUnderTest.getBatchCount()).isEqualTo(2);
     }
 
     @Test
@@ -111,25 +102,23 @@ public class ObjectBatchResetterTest {
         systemUnderTest.process("3");
         systemUnderTest.resetStream();
 
-        Assertions.assertThat(systemUnderTest.getBatchCount())
-                .isZero();
-        Assertions.assertThat(systemUnderTest.getObjectCount())
-                .isZero();
+        Assertions.assertThat(systemUnderTest.getBatchCount()).isZero();
+        Assertions.assertThat(systemUnderTest.getObjectCount()).isZero();
     }
 
     @Test
     public void shouldEmitResetStreamEventAfterUpdatingCounts() {
         systemUnderTest.setBatchSize(2);
-        systemUnderTest.setReceiver(new DefaultObjectReceiver<String>() {
-            @Override
-            public void resetStream() {
-                Assertions.assertThat(systemUnderTest.getObjectCount()).isZero();
-                Assertions.assertThat(systemUnderTest.getBatchCount()).isEqualTo(1);
-            }
-        });
+        systemUnderTest.setReceiver(
+                new DefaultObjectReceiver<String>() {
+                    @Override
+                    public void resetStream() {
+                        Assertions.assertThat(systemUnderTest.getObjectCount()).isZero();
+                        Assertions.assertThat(systemUnderTest.getBatchCount()).isEqualTo(1);
+                    }
+                });
 
         systemUnderTest.process("1");
         systemUnderTest.process("2");
     }
-
 }

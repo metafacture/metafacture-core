@@ -19,12 +19,10 @@ package org.metafacture.biblio.iso2709;
 import org.metafacture.framework.FormatException;
 
 /**
- * Builds a directory in ISO2709:2008 format. For fields whose length is greater
- * than the maximum value that can be stored in field length multiple directory
- * entries are created automatically.
+ * Builds a directory in ISO2709:2008 format. For fields whose length is greater than the maximum
+ * value that can be stored in field length multiple directory entries are created automatically.
  *
  * @author Christoph Böhme
- *
  */
 final class DirectoryBuilder {
 
@@ -44,8 +42,11 @@ final class DirectoryBuilder {
         fieldStartLength = format.getFieldStartLength();
         fieldLengthLength = format.getFieldLengthLength();
         implDefinedPartLength = format.getImplDefinedPartLength();
-        entryLength = Iso2709Constants.TAG_LENGTH + fieldStartLength + fieldLengthLength +
-                implDefinedPartLength;
+        entryLength =
+                Iso2709Constants.TAG_LENGTH
+                        + fieldStartLength
+                        + fieldLengthLength
+                        + implDefinedPartLength;
         maxFieldStart = calculateMaxValue(fieldStartLength);
         maxFieldLength = calculateMaxValue(fieldLengthLength);
     }
@@ -59,8 +60,11 @@ final class DirectoryBuilder {
         return maxValue - 1;
     }
 
-    void addEntries(final char[] tag, final char[] implDefinedPart,
-            final int fieldStart, final int fieldEnd) {
+    void addEntries(
+            final char[] tag,
+            final char[] implDefinedPart,
+            final int fieldStart,
+            final int fieldEnd) {
         assert tag.length == Iso2709Constants.TAG_LENGTH;
         assert implDefinedPart.length == implDefinedPartLength;
         assert fieldStart >= 0;
@@ -70,19 +74,17 @@ final class DirectoryBuilder {
         writeEntries(tag, implDefinedPart, fieldStart, fieldEnd);
     }
 
-    private void checkDirectoryCapacity(final int fieldStart,
-            final int fieldEnd) {
+    private void checkDirectoryCapacity(final int fieldStart, final int fieldEnd) {
         final int fieldLength = fieldEnd - fieldStart;
-        final int numberOfEntries = fieldLength / maxFieldLength +
-                (fieldLength % maxFieldLength == 0 ? 0 : 1);
+        final int numberOfEntries =
+                fieldLength / maxFieldLength + (fieldLength % maxFieldLength == 0 ? 0 : 1);
         if (numberOfEntries * entryLength > buffer.getFreeSpace()) {
             throw new FormatException(
                     "directory does not have enough free space for directory entry");
         }
     }
 
-    private void checkFieldFitsInAddressSpace(final int fieldStart,
-            final int fieldEnd) {
+    private void checkFieldFitsInAddressSpace(final int fieldStart, final int fieldEnd) {
         final int fieldLength = fieldEnd - fieldStart;
         final int lastPartLength = fieldLength % maxFieldLength;
         final int lastPartStart = fieldEnd - lastPartLength;
@@ -91,8 +93,11 @@ final class DirectoryBuilder {
         }
     }
 
-    private void writeEntries(final char[] tag, final char[] implDefinedPart,
-            final int fieldStart, final int fieldEnd) {
+    private void writeEntries(
+            final char[] tag,
+            final char[] implDefinedPart,
+            final int fieldStart,
+            final int fieldEnd) {
         int remainingLength = fieldEnd - fieldStart;
         int partStart = fieldStart;
         while (remainingLength > maxFieldLength) {
@@ -103,8 +108,11 @@ final class DirectoryBuilder {
         writeEntry(tag, implDefinedPart, partStart, remainingLength);
     }
 
-    private void writeEntry(final char[] tag, final char[] implDefinedPart,
-            final int partStart, final int partLength) {
+    private void writeEntry(
+            final char[] tag,
+            final char[] implDefinedPart,
+            final int partStart,
+            final int partLength) {
         buffer.writeChars(tag);
         buffer.writeInt(partLength, fieldLengthLength);
         buffer.writeInt(partStart, fieldStartLength);
@@ -121,8 +129,7 @@ final class DirectoryBuilder {
 
     void copyToBuffer(final byte[] destBuffer, final int fromIndex) {
         final int directoryLength = buffer.getWritePosition();
-        System.arraycopy(buffer.getByteArray(), 0, destBuffer, fromIndex,
-                directoryLength);
+        System.arraycopy(buffer.getByteArray(), 0, destBuffer, fromIndex, directoryLength);
         final int directoryEnd = fromIndex + directoryLength;
         destBuffer[directoryEnd] = Iso2709Constants.FIELD_SEPARATOR;
     }
@@ -131,5 +138,4 @@ final class DirectoryBuilder {
     public String toString() {
         return buffer.stringAt(0, buffer.getWritePosition(), Iso646Constants.CHARSET);
     }
-
 }

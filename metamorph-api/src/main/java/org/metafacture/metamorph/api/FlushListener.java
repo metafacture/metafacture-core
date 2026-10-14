@@ -30,5 +30,4 @@ public interface FlushListener {
      * @param entityCount the entity count
      */
     void flush(int recordCount, int entityCount);
-
 }

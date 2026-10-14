@@ -16,6 +16,7 @@
 
 package org.metafacture.metamorph;
 
+import java.util.Map;
 import org.metafacture.flowcontrol.StreamBuffer;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
@@ -26,16 +27,15 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 import org.metafacture.javaintegration.SingleValue;
 import org.metafacture.metamorph.api.InterceptorFactory;
 
-import java.util.Map;
-
 /**
- * Filters a stream based on a morph definition. A record is accepted if the
- * morph returns at least one non empty value.
+ * Filters a stream based on a morph definition. A record is accepted if the morph returns at least
+ * one non empty value.
  *
  * @author Markus Michael Geipel
- *
  */
-@Description("Filters a stream based on a morph definition. A record is accepted if the morph returns at least one non empty value.")
+@Description(
+        "Filters a stream based on a morph definition. A record is accepted if the morph returns at"
+                + " least one non empty value.")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("filter")
@@ -66,11 +66,10 @@ public final class Filter extends DefaultStreamPipe<StreamReceiver> {
     }
 
     /**
-     * Constructs a Filter from the path to a Metamorph definition and a Map of
-     * Metamorph variables.
+     * Constructs a Filter from the path to a Metamorph definition and a Map of Metamorph variables.
      *
      * @param morphDef the path to the Metamorph definition
-     * @param vars     the Map of the Metamorph variables
+     * @param vars the Map of the Metamorph variables
      */
     public Filter(final String morphDef, final Map<String, String> vars) {
         metamorph = new Metamorph(morphDef, vars);
@@ -78,10 +77,9 @@ public final class Filter extends DefaultStreamPipe<StreamReceiver> {
     }
 
     /**
-     * Constructs a Filter from the path to a Metamorph definition and an
-     * InterceptorFactory.
+     * Constructs a Filter from the path to a Metamorph definition and an InterceptorFactory.
      *
-     * @param morphDef           the path to the Metamorph definition
+     * @param morphDef the path to the Metamorph definition
      * @param interceptorFactory the InterceptorFactory
      */
     public Filter(final String morphDef, final InterceptorFactory interceptorFactory) {
@@ -144,5 +142,4 @@ public final class Filter extends DefaultStreamPipe<StreamReceiver> {
         buffer.clear();
         metamorph.closeStream();
     }
-
 }

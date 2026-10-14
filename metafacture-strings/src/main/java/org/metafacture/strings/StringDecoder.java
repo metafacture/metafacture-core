@@ -16,6 +16,8 @@
 
 package org.metafacture.strings;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
@@ -23,27 +25,27 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
- * Splits a {@link String} into several {@link String}s, either by extracting
- * parts that match a regexp or by splitting by a regexp.
+ * Splits a {@link String} into several {@link String}s, either by extracting parts that match a
+ * regexp or by splitting by a regexp.
  *
  * @author Markus M Geipel
  */
-@Description("Splits a String into several Strings, either by extracting parts that match a regexp or by splitting by a regexp.")
+@Description(
+        "Splits a String into several Strings, either by extracting parts that match a regexp or by"
+                + " splitting by a regexp.")
 @In(String.class)
 @Out(String.class)
 @FluxCommand("decode-string")
 public final class StringDecoder extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
     /**
-     * Determines whether the string is split by the regexp or parts matching the
-     * regexp are extracted.
+     * Determines whether the string is split by the regexp or parts matching the regexp are
+     * extracted.
      */
     public enum Mode {
-        SPLIT, EXTRACT
+        SPLIT,
+        EXTRACT
     }
 
     private Mode mode = Mode.SPLIT;
@@ -78,13 +80,11 @@ public final class StringDecoder extends DefaultObjectPipe<String, ObjectReceive
             for (final String part : pattern.split(obj)) {
                 receiver.process(part);
             }
-        }
-        else {
+        } else {
             final Matcher matcher = pattern.matcher(obj);
             while (matcher.find()) {
                 receiver.process(matcher.group());
             }
         }
     }
-
 }

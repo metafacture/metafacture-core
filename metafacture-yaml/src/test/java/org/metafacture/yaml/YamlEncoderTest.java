@@ -16,10 +16,11 @@
 
 package org.metafacture.yaml;
 
-import org.metafacture.framework.ObjectReceiver;
-
+import java.util.Arrays;
+import java.util.function.Consumer;
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -27,14 +28,10 @@ import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.util.Arrays;
-import java.util.function.Consumer;
-
 /**
  * Tests for class {@link YamlEncoder}.
  *
  * @author Christoph Böhme
- *
  */
 public final class YamlEncoderTest {
 
@@ -55,14 +52,11 @@ public final class YamlEncoderTest {
     private static final String LIST2 = "Li2[]";
     private static final String LIST3 = "Li3[]";
 
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private ObjectReceiver<String> receiver;
+    @Mock private ObjectReceiver<String> receiver;
 
-    public YamlEncoderTest() {
-    }
+    public YamlEncoderTest() {}
 
     @Test
     public void testShouldEncodeLiterals() {
@@ -74,11 +68,7 @@ public final class YamlEncoderTest {
                     i.literal(LITERAL3, VALUE3);
                     i.endRecord();
                 },
-                "---\n" +
-                "L1: 'V1'\n" +
-                "L2: 'V2'\n" +
-                "L3: 'V3'"
-        );
+                "---\n" + "L1: 'V1'\n" + "L2: 'V2'\n" + "L3: 'V3'");
     }
 
     @Test
@@ -96,14 +86,13 @@ public final class YamlEncoderTest {
                     i.endEntity();
                     i.endRecord();
                 },
-                "---\n" +
-                "En1:\n" +
-                "  L1: 'V1'\n" +
-                "  L2: 'V2'\n" +
-                "En2:\n" +
-                "  L1: 'V1'\n" +
-                "  L2: 'V2'"
-        );
+                "---\n"
+                        + "En1:\n"
+                        + "  L1: 'V1'\n"
+                        + "  L2: 'V2'\n"
+                        + "En2:\n"
+                        + "  L1: 'V1'\n"
+                        + "  L2: 'V2'");
     }
 
     @Test
@@ -118,11 +107,7 @@ public final class YamlEncoderTest {
                     i.endEntity();
                     i.endRecord();
                 },
-                "---\n" +
-                "En1:\n" +
-                "  En2:\n" +
-                "    L1: 'V1'"
-        );
+                "---\n" + "En1:\n" + "  En2:\n" + "    L1: 'V1'");
     }
 
     @Test
@@ -137,12 +122,7 @@ public final class YamlEncoderTest {
                     i.endEntity();
                     i.endRecord();
                 },
-                "---\n" +
-                "Li1:\n" +
-                "- 'V1'\n" +
-                "- 'V2'\n" +
-                "- 'V3'"
-        );
+                "---\n" + "Li1:\n" + "- 'V1'\n" + "- 'V2'\n" + "- 'V3'");
     }
 
     @Test
@@ -162,13 +142,12 @@ public final class YamlEncoderTest {
                     i.endEntity();
                     i.endRecord();
                 },
-                "---\n" +
-                "Li1:\n" +
-                "- L1: 'V1'\n" +
-                "  L2: 'V2'\n" +
-                "- L3: 'V3'\n" +
-                "  L4: 'V4'"
-        );
+                "---\n"
+                        + "Li1:\n"
+                        + "- L1: 'V1'\n"
+                        + "  L2: 'V2'\n"
+                        + "- L3: 'V3'\n"
+                        + "  L4: 'V4'");
     }
 
     @Test
@@ -188,13 +167,7 @@ public final class YamlEncoderTest {
                     i.endEntity();
                     i.endRecord();
                 },
-                "---\n" +
-                "Li1:\n" +
-                "- - 'V1'\n" +
-                "  - 'V2'\n" +
-                "- - 'V3'\n" +
-                "  - 'V4'"
-        );
+                "---\n" + "Li1:\n" + "- - 'V1'\n" + "  - 'V2'\n" + "- - 'V3'\n" + "  - 'V4'");
     }
 
     @Test
@@ -211,12 +184,7 @@ public final class YamlEncoderTest {
                     i.endEntity();
                     i.endRecord();
                 },
-                "---\n" +
-                "Li1[]:\n" +
-                "  L1: 'V1'\n" +
-                "  L2: 'V2'\n" +
-                "  L3: 'V3'"
-        );
+                "---\n" + "Li1[]:\n" + "  L1: 'V1'\n" + "  L2: 'V2'\n" + "  L3: 'V3'");
     }
 
     @Test
@@ -234,12 +202,7 @@ public final class YamlEncoderTest {
                     i.endEntity();
                     i.endRecord();
                 },
-                "---\n" +
-                "Li1:\n" +
-                "- 'V1'\n" +
-                "- 'V2'\n" +
-                "- 'V3'"
-        );
+                "---\n" + "Li1:\n" + "- 'V1'\n" + "- 'V2'\n" + "- 'V3'");
     }
 
     @Test
@@ -251,10 +214,7 @@ public final class YamlEncoderTest {
                     i.literal(LITERAL1, VALUE2);
                     i.endRecord();
                 },
-                "---\n" +
-                "L1: 'V1'\n" +
-                "L1: 'V2'"
-        );
+                "---\n" + "L1: 'V1'\n" + "L1: 'V2'");
     }
 
     @Test
@@ -268,12 +228,8 @@ public final class YamlEncoderTest {
                     i.literal(LITERAL2, VALUE2);
                     i.endRecord();
                 },
-                "---\n" +
-                "L1: 'V1'",
-                "\n" +
-                "---\n" +
-                "L2: 'V2'"
-        );
+                "---\n" + "L1: 'V1'",
+                "\n" + "---\n" + "L2: 'V2'");
     }
 
     private void assertEncode(final Consumer<YamlEncoder> in, final String... out) {
@@ -284,12 +240,15 @@ public final class YamlEncoderTest {
         in.accept(yamlEncoder);
 
         try {
-            Arrays.stream(out).forEach(s -> ordered.verify(receiver).process(useSystemSpecificLineSeparator(fixQuotes(s))));
+            Arrays.stream(out)
+                    .forEach(
+                            s ->
+                                    ordered.verify(receiver)
+                                            .process(useSystemSpecificLineSeparator(fixQuotes(s))));
 
             ordered.verifyNoMoreInteractions();
             Mockito.verifyNoMoreInteractions(receiver);
-        }
-        catch (final MockitoAssertionError e) {
+        } catch (final MockitoAssertionError e) {
             System.out.println(Mockito.mockingDetails(receiver).printInvocations());
             throw e;
         }
@@ -312,5 +271,4 @@ public final class YamlEncoderTest {
     private String useSystemSpecificLineSeparator(final String str) {
         return str.replace("\n", System.lineSeparator());
     }
-
 }

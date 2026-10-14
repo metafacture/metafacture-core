@@ -27,11 +27,8 @@ public final class SetReplace extends AbstractSimpleStatelessFunction {
     private final SetReplacer setReplacer = new SetReplacer();
     private boolean prepared;
 
-    /**
-     * Creates an instance of {@link SetReplace}.
-     */
-    public SetReplace() {
-    }
+    /** Creates an instance of {@link SetReplace}. */
+    public SetReplace() {}
 
     @Override
     public String process(final String text) {
@@ -40,7 +37,5 @@ public final class SetReplace extends AbstractSimpleStatelessFunction {
             prepared = true;
         }
         return setReplacer.replaceIn(text);
-
     }
-
 }

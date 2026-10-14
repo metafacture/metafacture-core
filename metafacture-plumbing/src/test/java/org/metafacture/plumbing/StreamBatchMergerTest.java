@@ -16,10 +16,9 @@
 
 package org.metafacture.plumbing;
 
-import org.metafacture.framework.StreamReceiver;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -29,17 +28,14 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link StreamBatchMerger}.
  *
  * @author Christoph Böhme
- *
  */
 public final class StreamBatchMergerTest {
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
     private StreamBatchMerger batchMerger;
 
-    public StreamBatchMergerTest() {
-    }
+    public StreamBatchMergerTest() {}
 
     @Before
     public void setup() {
@@ -95,5 +91,4 @@ public final class StreamBatchMergerTest {
         ordered.verify(receiver).literal("lit4", "F");
         ordered.verify(receiver).endRecord();
     }
-
 }

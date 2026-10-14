@@ -42,11 +42,8 @@ public final class AseqDecoder extends DefaultObjectPipe<String, StreamReceiver>
     private static final int RECORD_IDENTIFIER_BEGIN = 0;
     private static final int RECORD_IDENTIFIER_END = 9;
 
-    /**
-     * Creates an instance of {@link AseqDecoder}.
-     */
-    public AseqDecoder() {
-    }
+    /** Creates an instance of {@link AseqDecoder}. */
+    public AseqDecoder() {}
 
     @Override
     public void process(final String record) {
@@ -59,14 +56,15 @@ public final class AseqDecoder extends DefaultObjectPipe<String, StreamReceiver>
         for (int i = 0; i < lines.length; ++i) {
             final String field = lines[i];
             if (i == 0) {
-                getReceiver().startRecord(field.substring(RECORD_IDENTIFIER_BEGIN, RECORD_IDENTIFIER_END));
+                getReceiver()
+                        .startRecord(
+                                field.substring(RECORD_IDENTIFIER_BEGIN, RECORD_IDENTIFIER_END));
             }
             final String category = field.substring(CATEGORY_BEGIN, CATEGORY_END).trim();
             final String fieldContent = field.substring(FIELD_CONTENT_BEGIN).trim();
             if (!fieldContent.startsWith("$$")) {
                 getReceiver().literal(category, fieldContent);
-            }
-            else {
+            } else {
                 getReceiver().startEntity(category);
                 final String[] subfields = fieldContent.split("\\$\\$");
                 for (final String subfield : subfields) {
@@ -79,5 +77,4 @@ public final class AseqDecoder extends DefaultObjectPipe<String, StreamReceiver>
         }
         getReceiver().endRecord();
     }
-
 }

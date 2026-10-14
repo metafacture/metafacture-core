@@ -24,36 +24,31 @@ import org.junit.Test;
  * Tests for class {@link AbstractFormatter}.
  *
  * @author Christoph Böhme
- *
  */
 public final class AbstractFormatterTest { // checkstyle-disable-line AbstractClassName
 
     private AbstractFormatter abstractFormatter;
 
-    public AbstractFormatterTest() {
-    }
+    public AbstractFormatterTest() {}
 
     @Before
     public void setup() {
-        abstractFormatter = new AbstractFormatter() {
-            @Override
-            public void startGroup(final String name) {
-            }
+        abstractFormatter =
+                new AbstractFormatter() {
+                    @Override
+                    public void startGroup(final String name) {}
 
-            @Override
-            public void endGroup() {
-            }
+                    @Override
+                    public void endGroup() {}
 
-            @Override
-            public void literal(final String name, final String value) {
+                    @Override
+                    public void literal(final String name, final String value) {}
 
-            }
-
-            @Override
-            protected boolean shouldQuoteText(final char[] buffer, final int len) {
-                return false;
-            }
-        };
+                    @Override
+                    protected boolean shouldQuoteText(final char[] buffer, final int len) {
+                        return false;
+                    }
+                };
     }
 
     @Test
@@ -64,5 +59,4 @@ public final class AbstractFormatterTest { // checkstyle-disable-line AbstractCl
 
         Assert.assertEquals(longValue, abstractFormatter.toString());
     }
-
 }

@@ -16,6 +16,8 @@
 
 package org.metafacture.javaintegration;
 
+import java.util.List;
+import java.util.Map.Entry;
 import org.metafacture.commons.types.ListMap;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
@@ -23,25 +25,19 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-import java.util.List;
-import java.util.Map.Entry;
-
 /**
  * Reads a {@link ListMap} and sends it to a {@link StreamReceiver}
  *
  * @author Markus Michael Geipel, Christoph Böhme
- *
  */
 @In(ListMap.class)
 @Out(StreamReceiver.class)
 @FluxCommand("string-list-map-to-stream")
-public final class StringListMapToStream extends DefaultObjectPipe<ListMap<String, String>, StreamReceiver> {
+public final class StringListMapToStream
+        extends DefaultObjectPipe<ListMap<String, String>, StreamReceiver> {
 
-    /**
-     * Creates an instance of {@link StringListMapToStream}.
-     */
-    public StringListMapToStream() {
-    }
+    /** Creates an instance of {@link StringListMapToStream}. */
+    public StringListMapToStream() {}
 
     @Override
     public void process(final ListMap<String, String> listMap) {
@@ -52,18 +48,18 @@ public final class StringListMapToStream extends DefaultObjectPipe<ListMap<Strin
     /**
      * Reads a {@link ListMap} and sends it to a {@link StreamReceiver}.
      *
-     * @param listMap  the ListMap to be read
+     * @param listMap the ListMap to be read
      * @param receiver the StreamReceiver to send to
      */
-    public static void process(final ListMap<String, String> listMap, final StreamReceiver receiver) {
+    public static void process(
+            final ListMap<String, String> listMap, final StreamReceiver receiver) {
         receiver.startRecord(listMap.getId());
-        for (final Entry<String, List<String>> entry: listMap.entrySet()) {
+        for (final Entry<String, List<String>> entry : listMap.entrySet()) {
             final String name = entry.getKey();
-            for (final String value:entry.getValue()) {
+            for (final String value : entry.getValue()) {
                 receiver.literal(name, value);
             }
         }
         receiver.endRecord();
     }
-
 }

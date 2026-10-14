@@ -28,30 +28,26 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
  * Passes streams events through and catches exceptions.
  *
  * @author schaeferd
- *
  */
 @Description("passes streams events through and catches exceptions.")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("catch-stream-exception")
-public final class StreamExceptionCatcher extends
-        DefaultStreamPipe<StreamReceiver> {
+public final class StreamExceptionCatcher extends DefaultStreamPipe<StreamReceiver> {
 
-    private static final MetafactureLogger LOG = new MetafactureLogger(StreamExceptionCatcher.class);
+    private static final MetafactureLogger LOG =
+            new MetafactureLogger(StreamExceptionCatcher.class);
     private static final String MSG_PATTERN = "{}{}";
 
     private final String logPrefix;
 
-    /**
-     * Creates an instance of {@link StreamExceptionCatcher}.
-     */
+    /** Creates an instance of {@link StreamExceptionCatcher}. */
     public StreamExceptionCatcher() {
         this("");
     }
 
     /**
-     * Creates an instance of {@link StreamExceptionCatcher} setting a prefix for
-     * the logs messages.
+     * Creates an instance of {@link StreamExceptionCatcher} setting a prefix for the logs messages.
      *
      * @param logPrefix the prefix of the log messages
      */
@@ -63,8 +59,7 @@ public final class StreamExceptionCatcher extends
     public void startRecord(final String identifier) {
         try {
             getReceiver().startRecord(identifier);
-        }
-        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
+        } catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             LOG.externalError(MSG_PATTERN, logPrefix, "StartRecord" + identifier);
             LOG.externalError(MSG_PATTERN, logPrefix, e);
         }
@@ -74,8 +69,7 @@ public final class StreamExceptionCatcher extends
     public void endRecord() {
         try {
             getReceiver().endRecord();
-        }
-        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
+        } catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             LOG.externalError(MSG_PATTERN, logPrefix, "endRecord");
             LOG.externalError(MSG_PATTERN, logPrefix, e);
         }
@@ -85,8 +79,7 @@ public final class StreamExceptionCatcher extends
     public void startEntity(final String name) {
         try {
             getReceiver().startEntity(name);
-        }
-        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
+        } catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             LOG.externalError(MSG_PATTERN, logPrefix, "startEntity" + name);
             LOG.externalError(MSG_PATTERN, logPrefix, e);
         }
@@ -96,8 +89,7 @@ public final class StreamExceptionCatcher extends
     public void endEntity() {
         try {
             getReceiver().endEntity();
-        }
-        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
+        } catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             LOG.externalError(MSG_PATTERN, logPrefix, "endEntity");
             LOG.externalError(MSG_PATTERN, logPrefix, e);
         }
@@ -107,11 +99,9 @@ public final class StreamExceptionCatcher extends
     public void literal(final String name, final String value) {
         try {
             getReceiver().literal(name, value);
-        }
-        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
+        } catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             LOG.externalError(MSG_PATTERN, logPrefix, "literal " + name + " " + value);
             LOG.externalError(MSG_PATTERN, logPrefix, e);
         }
     }
-
 }

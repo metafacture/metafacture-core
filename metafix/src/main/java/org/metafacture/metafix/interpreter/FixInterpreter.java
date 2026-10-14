@@ -1,5 +1,8 @@
 package org.metafacture.metafix.interpreter;
 
+import java.util.List;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.fix.Do;
@@ -10,31 +13,21 @@ import org.metafacture.metafix.fix.Fix;
 import org.metafacture.metafix.fix.If;
 import org.metafacture.metafix.fix.MethodCall;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
-
-import java.util.List;
-
-/**
- * Interpreter for Fix programs.
- */
+/** Interpreter for Fix programs. */
 public class FixInterpreter extends XbaseInterpreter {
 
     private static final MetafactureLogger LOG = new MetafactureLogger(FixInterpreter.class);
 
     private Metafix metafix;
 
-    /**
-     * Creates an instance of {@link FixInterpreter}.
-     */
-    public FixInterpreter() {
-    }
+    /** Creates an instance of {@link FixInterpreter}. */
+    public FixInterpreter() {}
 
     /**
      * Interprets the Fix program.
      *
      * @param metafixParam the Metafix instance
-     * @param program      the Fix instance
+     * @param program the Fix instance
      */
     public void run(final Metafix metafixParam, final EObject program) {
         if (metafixParam != null && program != null) {
@@ -48,7 +41,9 @@ public class FixInterpreter extends XbaseInterpreter {
         }
     }
 
-    private void process(final Expression expression) { // checkstyle-disable-line CyclomaticComplexity|NPathComplexity
+    private void process(
+            final Expression
+                    expression) { // checkstyle-disable-line CyclomaticComplexity|NPathComplexity
         metafix.getExpressions().add(expression);
 
         boolean matched = false;
@@ -103,5 +98,4 @@ public class FixInterpreter extends XbaseInterpreter {
             }
         }
     }
-
 }

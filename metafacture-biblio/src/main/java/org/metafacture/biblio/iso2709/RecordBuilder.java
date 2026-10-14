@@ -16,27 +16,24 @@
 
 package org.metafacture.biblio.iso2709;
 
-import org.metafacture.commons.Require;
-import org.metafacture.framework.FormatException;
-
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.regex.Pattern;
+import org.metafacture.commons.Require;
+import org.metafacture.framework.FormatException;
 
 /**
  * Builds records in ISO2709:2008 format.
  *
  * @author Christoph Böhme
- *
  */
 public final class RecordBuilder {
 
     private static final char[] EMPTY_IDENTIFIER = new char[0];
     private static final char[] ID_FIELD_TAG = {'0', '0', '1'};
-    private static final Pattern REFERENCE_FIELD_TAG_PATTERN = Pattern.compile(
-            "^00[1-9a-zA-Z]$");
-    private static final Pattern DATA_FIELD_TAG_PATTERN = Pattern.compile(
-            "^(0[1-9a-zA-Z][0-9a-zA-Z])|([1-9a-zA-Z][0-9a-zA-Z]{2})$");
+    private static final Pattern REFERENCE_FIELD_TAG_PATTERN = Pattern.compile("^00[1-9a-zA-Z]$");
+    private static final Pattern DATA_FIELD_TAG_PATTERN =
+            Pattern.compile("^(0[1-9a-zA-Z][0-9a-zA-Z])|([1-9a-zA-Z][0-9a-zA-Z]{2})$");
 
     private final LabelBuilder label;
     private final DirectoryBuilder directory;
@@ -74,8 +71,7 @@ public final class RecordBuilder {
         defaultIndicators = arrayOfNSpaceChars(indicatorLength);
         if (identifierLength > 1) {
             defaultIdentifier = arrayOfNSpaceChars(identifierLength - 1);
-        }
-        else {
+        } else {
             defaultIdentifier = EMPTY_IDENTIFIER;
         }
         implDefinedPart = new char[implDefinedPartLength];
@@ -137,7 +133,7 @@ public final class RecordBuilder {
     /**
      * Sets an impl code at a given position in the LabelBuilder.
      *
-     * @param index    index of the 7 bit impl code
+     * @param index index of the 7 bit impl code
      * @param implCode char of a 7 bit impl code
      * @see Iso2709Constants
      * @see LabelBuilder
@@ -166,7 +162,7 @@ public final class RecordBuilder {
      * Sets a system char at the given position in the LabelBuilder.
      *
      * @param systemChar 7-bit char to be set as the system char
-     * @param index      position of the system char
+     * @param index position of the system char
      * @see Iso2709Constants
      * @see LabelBuilder
      */
@@ -201,7 +197,7 @@ public final class RecordBuilder {
      * Appends an identifier field in dependency of the current impl defined part.
      *
      * @param currentImplDefinedPart char array of the current impl defined part
-     * @param value                  String that is appended as an identfier field
+     * @param value String that is appended as an identfier field
      */
     public void appendIdentifierField(final char[] currentImplDefinedPart, final String value) {
         requireNotInDataField();
@@ -214,25 +210,26 @@ public final class RecordBuilder {
     }
 
     /**
-     * Appends a reference field in dependency of the current tag and of the default
-     * impl defined part.
+     * Appends a reference field in dependency of the current tag and of the default impl defined
+     * part.
      *
      * @param currentTag char array of the current tag
-     * @param value      String that is appended as a reference field
+     * @param value String that is appended as a reference field
      */
     public void appendReferenceField(final char[] currentTag, final String value) {
         appendReferenceField(currentTag, defaultImplDefinedPart, value);
     }
 
     /**
-     * Appends a reference field in dependency of the current tag and of the
-     * current impl defined part.
+     * Appends a reference field in dependency of the current tag and of the current impl defined
+     * part.
      *
-     * @param currentTag             char array of the current tag
+     * @param currentTag char array of the current tag
      * @param currentImplDefinedPart char array of the current impl defined part
-     * @param value                  String that is appended as a reference field
+     * @param value String that is appended as a reference field
      */
-    public void appendReferenceField(final char[] currentTag, final char[] currentImplDefinedPart, final String value) {
+    public void appendReferenceField(
+            final char[] currentTag, final char[] currentImplDefinedPart, final String value) {
         requireNotInDataField();
         requireNotAppendingDataFields();
         Require.notNull(currentTag);
@@ -247,8 +244,7 @@ public final class RecordBuilder {
         final int fieldEnd = fields.endField();
         try {
             directory.addEntries(currentTag, currentImplDefinedPart, currentFieldStart, fieldEnd);
-        }
-        catch (final FormatException e) {
+        } catch (final FormatException e) {
             fields.undoLastField();
             throw e;
         }
@@ -271,8 +267,8 @@ public final class RecordBuilder {
     }
 
     /**
-     * Starts a data field in dependency of the current tag, indicators and of the
-     * default impl defined part.
+     * Starts a data field in dependency of the current tag, indicators and of the default impl
+     * defined part.
      *
      * @param currentTag char array of the current tag
      * @param indicators char array of the current indicators
@@ -282,14 +278,15 @@ public final class RecordBuilder {
     }
 
     /**
-     * Starts a data field in dependency of the current tag, indicators and of the
-     * current impl defined part.
+     * Starts a data field in dependency of the current tag, indicators and of the current impl
+     * defined part.
      *
-     * @param currentTag             char array of the current tag
-     * @param indicators             char array of the current indicators
+     * @param currentTag char array of the current tag
+     * @param indicators char array of the current indicators
      * @param currentImplDefinedPart char array of the current impl defined part
      */
-    public void startDataField(final char[] currentTag, final char[] indicators, final char[] currentImplDefinedPart) {
+    public void startDataField(
+            final char[] currentTag, final char[] indicators, final char[] currentImplDefinedPart) {
         requireNotInDataField();
         Require.notNull(currentTag);
         Require.notNull(indicators);
@@ -316,17 +313,14 @@ public final class RecordBuilder {
         System.arraycopy(source, 0, destination, 0, destination.length);
     }
 
-    /**
-     * Ends a data field.
-     */
+    /** Ends a data field. */
     public void endDataField() {
         requireInDataField();
         final int fieldEnd = fields.endField();
         appendState = AppendState.DATA_FIELD;
         try {
             directory.addEntries(tag, implDefinedPart, fieldStart, fieldEnd);
-        }
-        catch (final FormatException e) {
+        } catch (final FormatException e) {
             fields.undoLastField();
             throw e;
         }
@@ -347,7 +341,7 @@ public final class RecordBuilder {
      * Appends a subfield in dependency of an identifier.
      *
      * @param identifier char array of an identifier
-     * @param value      String of the subfield to be appended
+     * @param value String of the subfield to be appended
      */
     public void appendSubfield(final char[] identifier, final String value) {
         requireInDataField();
@@ -413,10 +407,7 @@ public final class RecordBuilder {
         Require.that(charCode != Iso646Constants.INFORMATION_SEPARATOR_3);
     }
 
-    /**
-     * Resets the label, directory and the fields. Sets the "append state" to "id
-     * field".
-     */
+    /** Resets the label, directory and the fields. Sets the "append state" to "id field". */
     public void reset() {
         label.reset();
         directory.reset();
@@ -426,9 +417,14 @@ public final class RecordBuilder {
 
     @Override
     public String toString() {
-        return "label: " + label.toString() + "\n" +
-            "directory: " + directory.toString() + "\n" +
-            "fields: " + fields.toString();
+        return "label: "
+                + label.toString()
+                + "\n"
+                + "directory: "
+                + directory.toString()
+                + "\n"
+                + "fields: "
+                + fields.toString();
     }
 
     private enum AppendState {
@@ -437,5 +433,4 @@ public final class RecordBuilder {
         DATA_FIELD,
         IN_DATA_FIELD
     }
-
 }

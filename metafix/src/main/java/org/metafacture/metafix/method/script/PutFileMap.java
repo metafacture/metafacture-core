@@ -16,19 +16,18 @@
 
 package org.metafacture.metafix.method.script;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
 import org.metafacture.metamorph.maps.FileMap;
 
-import java.util.List;
-import java.util.Map;
-
 /**
- * Defines an external map for {@link org.metafacture.metafix.method.field.Lookup}
- * from a file or a URL. Maps with more than 2 columns are supported but are
- * reduced to a defined key and a value column.
+ * Defines an external map for {@link org.metafacture.metafix.method.field.Lookup} from a file or a
+ * URL. Maps with more than 2 columns are supported but are reduced to a defined key and a value
+ * column.
  */
 @FixCommand("put_filemap")
 public class PutFileMap implements FixFunction {
@@ -36,23 +35,29 @@ public class PutFileMap implements FixFunction {
     private static final String FILEMAP_SEPARATOR_OPTION = "sep_char";
     private static final String FILEMAP_DEFAULT_SEPARATOR = ",";
 
-    /**
-     * Creates an instance of {@link PutFileMap}.
-     */
-    public PutFileMap() {
-    }
+    /** Creates an instance of {@link PutFileMap}. */
+    public PutFileMap() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final String fileName = params.get(0);
         final FileMap fileMap = new FileMap();
 
-        fileMap.setSeparator(options.getOrDefault(FILEMAP_SEPARATOR_OPTION, FILEMAP_DEFAULT_SEPARATOR));
+        fileMap.setSeparator(
+                options.getOrDefault(FILEMAP_SEPARATOR_OPTION, FILEMAP_DEFAULT_SEPARATOR));
         fileMap.setFile(metafix.resolvePath(fileName));
 
         withOption(options, "allow_empty_values", fileMap::setAllowEmptyValues, this::getBoolean);
         withOption(options, "compression", fileMap::setCompression);
-        withOption(options, "decompress_concatenated", fileMap::setDecompressConcatenated, this::getBoolean);
+        withOption(
+                options,
+                "decompress_concatenated",
+                fileMap::setDecompressConcatenated,
+                this::getBoolean);
         withOption(options, "encoding", fileMap::setEncoding);
         withOption(options, "expected_columns", fileMap::setExpectedColumns, this::getInteger);
         withOption(options, "ignore_pattern", fileMap::setIgnorePattern);
@@ -61,5 +66,4 @@ public class PutFileMap implements FixFunction {
 
         metafix.putMap(params.size() > 1 ? params.get(1) : fileName, fileMap);
     }
-
 }

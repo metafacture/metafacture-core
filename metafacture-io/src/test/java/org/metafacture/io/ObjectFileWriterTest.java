@@ -16,15 +16,6 @@
 
 package org.metafacture.io;
 
-import org.metafacture.commons.ResourceUtil;
-
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -32,26 +23,29 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.metafacture.commons.ResourceUtil;
 
 /**
  * Tests for class {@link ObjectFileWriter}.
  *
  * @author Christoph Böhme
- *
  */
-public final class ObjectFileWriterTest
-        extends AbstractConfigurableObjectWriterTest {
+public final class ObjectFileWriterTest extends AbstractConfigurableObjectWriterTest {
 
     private static final String DATA = "Überfacture";
 
-    @Rule
-    public final TemporaryFolder tempFolder = new TemporaryFolder();
+    @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
 
     private File file;
     private ObjectFileWriter<String> writer;
 
-    public ObjectFileWriterTest() {
-    }
+    public ObjectFileWriterTest() {}
 
     @Before
     public void setup() throws IOException {
@@ -61,8 +55,9 @@ public final class ObjectFileWriterTest
 
     @Test
     public void shouldWriteUTF8EncodedOutput() throws IOException {
-        Assume.assumeFalse("Default encoding is UTF-8: It is not possible to test whether " +
-                "ObjectFileWriter sets the encoding to UTF-8 correctly.",
+        Assume.assumeFalse(
+                "Default encoding is UTF-8: It is not possible to test whether "
+                        + "ObjectFileWriter sets the encoding to UTF-8 correctly.",
                 StandardCharsets.UTF_8.equals(Charset.defaultCharset()));
 
         writer.process(DATA);
@@ -134,8 +129,8 @@ public final class ObjectFileWriterTest
 
     private void assertOutput(final String expected) throws IOException {
         final byte[] bytesWritten = Files.readAllBytes(file.toPath());
-        Assert.assertArrayEquals(expected.getBytes(StandardCharsets.UTF_8),
+        Assert.assertArrayEquals(
+                expected.getBytes(StandardCharsets.UTF_8),
                 bytesWritten); // FileObjectWriter appends new lines
     }
-
 }

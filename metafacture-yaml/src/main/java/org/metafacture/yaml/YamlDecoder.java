@@ -16,6 +16,15 @@
 
 package org.metafacture.yaml;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
@@ -24,22 +33,10 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
-
 /**
  * Decodes a record in YAML format.
  *
  * @author Jens Wille
- *
  */
 @Description("Decodes YAML to metadata events.")
 @In(String.class)
@@ -61,15 +58,11 @@ public final class YamlDecoder extends DefaultObjectPipe<String, StreamReceiver>
     private String recordId = DEFAULT_RECORD_ID;
     private int recordCount;
 
-    /**
-     * Creates an instance of {@link YamlDecoder}.
-     */
-    public YamlDecoder() {
-    }
+    /** Creates an instance of {@link YamlDecoder}. */
+    public YamlDecoder() {}
 
     /**
-     * Sets the array marker. <strong>Default value:
-     * {@value #DEFAULT_ARRAY_MARKER}</strong>
+     * Sets the array marker. <strong>Default value: {@value #DEFAULT_ARRAY_MARKER}</strong>
      *
      * @param arrayMarker the marker of the array
      */
@@ -87,8 +80,7 @@ public final class YamlDecoder extends DefaultObjectPipe<String, StreamReceiver>
     }
 
     /**
-     * Sets the name of the array. <strong>Default value:
-     * {@value #DEFAULT_ARRAY_NAME}</strong>
+     * Sets the name of the array. <strong>Default value: {@value #DEFAULT_ARRAY_NAME}</strong>
      *
      * @param arrayName the name of the array
      */
@@ -106,8 +98,7 @@ public final class YamlDecoder extends DefaultObjectPipe<String, StreamReceiver>
     }
 
     /**
-     * Sets the record ID. <strong>Default value:
-     * {@value #DEFAULT_RECORD_ID}</strong>
+     * Sets the record ID. <strong>Default value: {@value #DEFAULT_RECORD_ID}</strong>
      *
      * @param recordId the record ID
      */
@@ -142,9 +133,7 @@ public final class YamlDecoder extends DefaultObjectPipe<String, StreamReceiver>
         return recordCount;
     }
 
-    /**
-     * Resets the record count.
-     */
+    /** Resets the record count. */
     public void resetRecordCount() {
         setRecordCount(0);
     }
@@ -157,11 +146,9 @@ public final class YamlDecoder extends DefaultObjectPipe<String, StreamReceiver>
 
         try {
             decode();
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
-        }
-        finally {
+        } finally {
             closeParser();
         }
     }
@@ -169,15 +156,16 @@ public final class YamlDecoder extends DefaultObjectPipe<String, StreamReceiver>
     private Stream<String> matches(final Object obj) {
         final List<?> records = (obj instanceof List<?>) ? (List<?>) obj : Arrays.asList(obj);
 
-        return records.stream().map(doc -> {
-            try {
-                return new YAMLMapper(yamlFactory).writeValueAsString(doc);
-            }
-            catch (final JsonProcessingException e) {
-                e.printStackTrace();
-                return doc.toString();
-            }
-        });
+        return records.stream()
+                .map(
+                        doc -> {
+                            try {
+                                return new YAMLMapper(yamlFactory).writeValueAsString(doc);
+                            } catch (final JsonProcessingException e) {
+                                e.printStackTrace();
+                                return doc.toString();
+                            }
+                        });
     }
 
     @Override
@@ -188,8 +176,7 @@ public final class YamlDecoder extends DefaultObjectPipe<String, StreamReceiver>
     private void createParser(final String string) {
         try {
             yamlParser = yamlFactory.createParser(string);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -197,8 +184,7 @@ public final class YamlDecoder extends DefaultObjectPipe<String, StreamReceiver>
     private void closeParser() {
         try {
             yamlParser.close();
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -211,12 +197,13 @@ public final class YamlDecoder extends DefaultObjectPipe<String, StreamReceiver>
         }
 
         if (yamlParser.currentToken() != null) {
-            throw new MetafactureException(new StringBuilder()
-                    .append("Unexpected token '")
-                    .append(yamlParser.currentToken())
-                    .append("' at ")
-                    .append(yamlParser.currentLocation())
-                    .toString());
+            throw new MetafactureException(
+                    new StringBuilder()
+                            .append("Unexpected token '")
+                            .append(yamlParser.currentToken())
+                            .append("' at ")
+                            .append(yamlParser.currentLocation())
+                            .toString());
         }
     }
 
@@ -258,5 +245,4 @@ public final class YamlDecoder extends DefaultObjectPipe<String, StreamReceiver>
                 break;
         }
     }
-
 }

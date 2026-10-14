@@ -24,16 +24,14 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
 /**
- * Defers all stream events until an <i>end-record</i> is received. Once the
- * event is received {@code StreamDeferrer} forwards all events it has received
- * before the <i>end-record</i> event to the next downstream module. The
- * <i>end-record</i> event is forwarded immediately.
- * <p>
- * The {@code StreamDeferrer} is useful when merging two or more streams of
- * events into one. The module is intended to be added at the end of each flow.
- * There it ensures that the events for each record are forwarded consecutively
- * to the merged flow without them being mixed with events belonging to a record
- * from another stream.
+ * Defers all stream events until an <i>end-record</i> is received. Once the event is received
+ * {@code StreamDeferrer} forwards all events it has received before the <i>end-record</i> event to
+ * the next downstream module. The <i>end-record</i> event is forwarded immediately.
+ *
+ * <p>The {@code StreamDeferrer} is useful when merging two or more streams of events into one. The
+ * module is intended to be added at the end of each flow. There it ensures that the events for each
+ * record are forwarded consecutively to the merged flow without them being mixed with events
+ * belonging to a record from another stream.
  *
  * @author Christoph Böhme
  */
@@ -45,11 +43,8 @@ public class StreamDeferrer extends DefaultStreamPipe<StreamReceiver> {
 
     private final StreamBuffer buffer = new StreamBuffer();
 
-    /**
-     * Creates an instance of {@link StreamDeferrer}.
-     */
-    public StreamDeferrer() {
-    }
+    /** Creates an instance of {@link StreamDeferrer}. */
+    public StreamDeferrer() {}
 
     @Override
     public void startRecord(final String identifier) {
@@ -92,5 +87,4 @@ public class StreamDeferrer extends DefaultStreamPipe<StreamReceiver> {
     protected void onCloseStream() {
         buffer.clear();
     }
-
 }

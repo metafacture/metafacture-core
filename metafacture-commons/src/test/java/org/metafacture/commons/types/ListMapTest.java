@@ -23,7 +23,6 @@ import org.junit.Test;
  * Tests for class {@link ListMap}.
  *
  * @author Markus Michael Geipel
- *
  */
 public final class ListMapTest {
 
@@ -32,8 +31,7 @@ public final class ListMapTest {
     private static final String VALUE2 = "v2";
     private static final String NAME2 = "n2";
 
-    public ListMapTest() {
-    }
+    public ListMapTest() {}
 
     @Test
     public void test() {
@@ -64,5 +62,4 @@ public final class ListMapTest {
         listMap.clearAllKeys();
         Assert.assertNull(listMap.getFirst(NAME1));
     }
-
 }

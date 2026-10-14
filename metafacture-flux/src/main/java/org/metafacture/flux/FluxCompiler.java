@@ -16,19 +16,17 @@
 
 package org.metafacture.flux;
 
-import org.metafacture.flux.parser.FlowBuilder;
-import org.metafacture.flux.parser.FluxLexer;
-import org.metafacture.flux.parser.FluxParser;
-import org.metafacture.flux.parser.FluxProgramm;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 import org.antlr.runtime.ANTLRInputStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
+import org.metafacture.flux.parser.FlowBuilder;
+import org.metafacture.flux.parser.FluxLexer;
+import org.metafacture.flux.parser.FluxParser;
+import org.metafacture.flux.parser.FluxProgramm;
 
 /**
  * Creates a flow based on a flux script.
@@ -49,22 +47,25 @@ public final class FluxCompiler {
      * @param vars the variables of the flux
      * @return the flow
      * @throws RecognitionException if an ANTLR exception occurs
-     * @throws IOException          if an I/O error occurs
+     * @throws IOException if an I/O error occurs
      */
-    public static FluxProgramm compile(final InputStream flux, final Map<String, String> vars) throws RecognitionException, IOException {
+    public static FluxProgramm compile(final InputStream flux, final Map<String, String> vars)
+            throws RecognitionException, IOException {
         return compileFlow(compileAst(flux), vars);
     }
 
-    private static CommonTreeNodeStream compileAst(final InputStream flowDef) throws IOException, RecognitionException {
-        final FluxParser parser = new FluxParser(new CommonTokenStream(new FluxLexer(new ANTLRInputStream(flowDef))));
+    private static CommonTreeNodeStream compileAst(final InputStream flowDef)
+            throws IOException, RecognitionException {
+        final FluxParser parser =
+                new FluxParser(new CommonTokenStream(new FluxLexer(new ANTLRInputStream(flowDef))));
         return new CommonTreeNodeStream(parser.flux().getTree());
     }
 
-    private static FluxProgramm compileFlow(final CommonTreeNodeStream treeNodes, final Map<String, String> vars)
+    private static FluxProgramm compileFlow(
+            final CommonTreeNodeStream treeNodes, final Map<String, String> vars)
             throws RecognitionException {
         final FlowBuilder flowBuilder = new FlowBuilder(treeNodes);
         flowBuilder.addVaribleAssignements(vars);
         return flowBuilder.flux();
     }
-
 }

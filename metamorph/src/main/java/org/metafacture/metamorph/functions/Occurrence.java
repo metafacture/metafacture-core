@@ -16,19 +16,17 @@
 
 package org.metafacture.metamorph.functions;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.metafacture.commons.StringUtil;
 import org.metafacture.metamorph.api.MorphBuildException;
 import org.metafacture.metamorph.api.helpers.AbstractStatefulFunction;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Only outputs the received values in a certain range.
  *
  * @author Markus Michael Geipel
  * @author Christoph Böhme
- *
  */
 public final class Occurrence extends AbstractStatefulFunction {
 
@@ -38,21 +36,19 @@ public final class Occurrence extends AbstractStatefulFunction {
     private int count;
     private String format;
 
-    private IntFilter filter = new IntFilter() {
-        @Override
-        public boolean accept(final int value) {
-            return true;
-        }
-    };
+    private IntFilter filter =
+            new IntFilter() {
+                @Override
+                public boolean accept(final int value) {
+                    return true;
+                }
+            };
 
     private final Map<String, String> variables = new HashMap<>();
     private boolean sameEntity = SAME_ENTITY;
 
-    /**
-     * Creates an instance of {@link Occurrence}.
-     */
-    public Occurrence() {
-    }
+    /** Creates an instance of {@link Occurrence}. */
+    public Occurrence() {}
 
     @Override
     public String process(final String value) {
@@ -92,9 +88,8 @@ public final class Occurrence extends AbstractStatefulFunction {
     }
 
     /**
-     * Sets the inequality. Use values starting with {@value #LESS_THAN} or
-     * {@value #MORE_THAN}. If the value is an integer it an equal filter will be
-     * set.
+     * Sets the inequality. Use values starting with {@value #LESS_THAN} or {@value #MORE_THAN}. If
+     * the value is an integer it an equal filter will be set.
      *
      * @param only set the inequality, otherwise an equal filter will be used
      */
@@ -103,8 +98,8 @@ public final class Occurrence extends AbstractStatefulFunction {
     }
 
     /**
-     * Sets if the occurrence must be in the same entity. <strong>Default value:
-     * {@value #SAME_ENTITY}</strong>
+     * Sets if the occurrence must be in the same entity. <strong>Default value: {@value
+     * #SAME_ENTITY}</strong>
      *
      * @param sameEntity true if the occurrence must be in the same entity
      */
@@ -117,11 +112,9 @@ public final class Occurrence extends AbstractStatefulFunction {
 
         if (only.startsWith(LESS_THAN)) {
             filter = createLessThanFilter(extractNumberFrom(only));
-        }
-        else if (only.startsWith(MORE_THAN)) {
+        } else if (only.startsWith(MORE_THAN)) {
             filter = createGreaterThanFilter(extractNumberFrom(only));
-        }
-        else {
+        } else {
             final int number = Integer.parseInt(only);
             filter = createEqualsFilter(number);
         }
@@ -163,11 +156,8 @@ public final class Occurrence extends AbstractStatefulFunction {
         };
     }
 
-    /**
-     * Filter for integer values
-     */
+    /** Filter for integer values */
     private interface IntFilter {
         boolean accept(int value);
     }
-
 }

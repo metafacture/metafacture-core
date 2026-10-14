@@ -23,18 +23,25 @@ import org.junit.Test;
  * tests {@link SetMatcher}
  *
  * @author Markus Michael Geipel
- *
  */
 public final class SetMatchTest {
 
-    public SetMatchTest() {
-    }
+    public SetMatchTest() {}
 
     @Test
     public void testSetMatch() {
         final SetMatcher<String> setMatch = new SetMatcher<String>();
 
-        final String[] cities = {"Perth", "York", "York Town", "München", "New York City", "New York", "Petersburg", "ert"};
+        final String[] cities = {
+            "Perth",
+            "York",
+            "York Town",
+            "München",
+            "New York City",
+            "New York",
+            "Petersburg",
+            "ert"
+        };
         final int[] matches = {7, 0, 7, 5, 1, 4, 1, 1, 2, 3};
         final String text = "Pexrt Perth Peerth New York City York York Town München";
 
@@ -44,9 +51,9 @@ public final class SetMatchTest {
         }
         int index = 0;
 
-        //System.out.println(text);
+        // System.out.println(text);
         for (final SetMatcher.Match<String> match : setMatch.match(text)) {
-            //System.out.println(match.getValue() + " " + match.getStart());
+            // System.out.println(match.getValue() + " " + match.getStart());
             Assert.assertEquals(cities[matches[index]], match.getValue());
             ++index;
         }
@@ -54,5 +61,4 @@ public final class SetMatchTest {
 
         Assert.assertEquals("missing matches", matches.length, index);
     }
-
 }

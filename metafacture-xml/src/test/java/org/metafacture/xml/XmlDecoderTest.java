@@ -16,14 +16,12 @@
 
 package org.metafacture.xml;
 
-import org.metafacture.framework.MetafactureException;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import org.junit.Before;
+import org.junit.Test;
+import org.metafacture.framework.MetafactureException;
 
 /**
  * Tests for class {@link XmlDecoder}.
@@ -37,8 +35,7 @@ public final class XmlDecoderTest {
     private XmlDecoder xmlDecoder;
     private final Reader reader = new StringReader(TEST_XML_WITH_TWO_ENTITIES);
 
-    public XmlDecoderTest() {
-    }
+    public XmlDecoderTest() {}
 
     @Before
     public void initSystemUnderTest() {
@@ -66,10 +63,8 @@ public final class XmlDecoderTest {
         try {
             xmlDecoder.process(reader);
             reader.close();
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
     }
-
 }

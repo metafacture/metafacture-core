@@ -16,29 +16,28 @@
 
 package org.metafacture.metafix.method.field;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Upcases the first character in a field value.
- */
+/** Upcases the first character in a field value. */
 @FixCommand("capitalize")
 public class Capitalize implements FixFunction {
 
-    /**
-     * Creates an instance of {@link Capitalize}.
-     */
-    public Capitalize() {
-    }
+    /** Creates an instance of {@link Capitalize}. */
+    public Capitalize() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-        record.transform(params.get(0), s -> s.isEmpty() ? s : s.substring(0, 1).toUpperCase() + s.substring(1));
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
+        record.transform(
+                params.get(0),
+                s -> s.isEmpty() ? s : s.substring(0, 1).toUpperCase() + s.substring(1));
     }
-
 }

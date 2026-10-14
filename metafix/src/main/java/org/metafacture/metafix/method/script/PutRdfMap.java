@@ -16,6 +16,8 @@
 
 package org.metafacture.metafix.method.script;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
@@ -23,24 +25,22 @@ import org.metafacture.metafix.api.FixFunction;
 import org.metafacture.metafix.maps.RdfMap;
 import org.metafacture.metamorph.api.Maps;
 
-import java.util.List;
-import java.util.Map;
-
 /**
- * Defines an external RDF map for {@link org.metafacture.metafix.method.field.Lookup}
- * from a file or an HTTP(S) resource.
+ * Defines an external RDF map for {@link org.metafacture.metafix.method.field.Lookup} from a file
+ * or an HTTP(S) resource.
  */
 @FixCommand("put_rdfmap")
 public class PutRdfMap implements FixFunction {
 
-    /**
-     * Creates an instance of {@link PutRdfMap}.
-     */
-    public PutRdfMap() {
-    }
+    /** Creates an instance of {@link PutRdfMap}. */
+    public PutRdfMap() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final String fileName = params.get(0);
         final RdfMap rdfMap = new RdfMap();
 
@@ -53,5 +53,4 @@ public class PutRdfMap implements FixFunction {
 
         metafix.putMap(params.size() > 1 ? params.get(1) : fileName, rdfMap);
     }
-
 }

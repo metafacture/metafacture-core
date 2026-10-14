@@ -16,6 +16,10 @@
 
 package org.metafacture.triples;
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.annotations.Description;
@@ -24,14 +28,8 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectReceiver;
 import org.metafacture.framework.objects.Triple;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-
 /**
  * @author Christoph Böhme
- *
  */
 @Description("Writes triples into a file.")
 @In(Triple.class)
@@ -59,8 +57,7 @@ public final class TripleWriter extends DefaultObjectReceiver<Triple> {
     public void process(final Triple obj) {
         try {
             obj.write(outputStream);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -71,9 +68,10 @@ public final class TripleWriter extends DefaultObjectReceiver<Triple> {
             if (outputStream != null) {
                 outputStream.close();
             }
-            outputStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename), BUFFERSIZE));
-        }
-        catch (final IOException e) {
+            outputStream =
+                    new ObjectOutputStream(
+                            new BufferedOutputStream(new FileOutputStream(filename), BUFFERSIZE));
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -84,10 +82,8 @@ public final class TripleWriter extends DefaultObjectReceiver<Triple> {
             if (outputStream != null) {
                 outputStream.close();
             }
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
-
 }

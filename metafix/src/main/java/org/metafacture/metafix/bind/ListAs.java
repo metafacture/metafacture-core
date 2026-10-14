@@ -16,6 +16,9 @@
 
 package org.metafacture.metafix.bind;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
@@ -23,28 +26,25 @@ import org.metafacture.metafix.RecordTransformer;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixContext;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
- * Iterates over each <i>named</i> element of an array (like
- * {@link org.metafacture.metafix.bind.List} with a variable name). If
- * multiple arrays are given, iterates over the <i>corresponding</i>
- * elements from each array (i.e., all elements with the same array
+ * Iterates over each <i>named</i> element of an array (like {@link
+ * org.metafacture.metafix.bind.List} with a variable name). If multiple arrays are given, iterates
+ * over the <i>corresponding</i> elements from each array (i.e., all elements with the same array
  * index, skipping elements whose arrays have already been exhausted).
  */
 @FixCommand("list_as")
 public class ListAs implements FixContext {
 
-    /**
-     * Creates an instance of {@link ListAs}.
-     */
-    public ListAs() {
-    }
+    /** Creates an instance of {@link ListAs}. */
+    public ListAs() {}
 
     @Override
-    public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final RecordTransformer recordTransformer) {
+    public void execute(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options,
+            final RecordTransformer recordTransformer) {
         final Map<String, Value.Array> lists = new HashMap<>();
         options.forEach((k, v) -> Value.asList(record.get(v), a -> lists.put(k, a)));
 
@@ -52,21 +52,20 @@ public class ListAs implements FixContext {
         for (int i = 0; i < size; ++i) {
             final int index = i;
 
-            lists.forEach((k, v) -> {
-                final Value value = index < v.size() ? v.get(index) : null;
+            lists.forEach(
+                    (k, v) -> {
+                        final Value value = index < v.size() ? v.get(index) : null;
 
-                if (value != null) {
-                    record.put(k, value);
-                }
-                else {
-                    record.remove(k);
-                }
-            });
+                        if (value != null) {
+                            record.put(k, value);
+                        } else {
+                            record.remove(k);
+                        }
+                    });
 
             recordTransformer.transform(record);
         }
 
         lists.keySet().forEach(record::remove);
     }
-
 }

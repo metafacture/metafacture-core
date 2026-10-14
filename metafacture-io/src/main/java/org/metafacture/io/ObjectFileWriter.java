@@ -16,12 +16,6 @@
 
 package org.metafacture.io;
 
-import org.metafacture.framework.FluxCommand;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.annotations.Description;
-import org.metafacture.framework.annotations.In;
-import org.metafacture.framework.annotations.Out;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,20 +23,22 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.annotations.Description;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
 
 /**
- * @param <T>
- *            object type
- *
+ * @param <T> object type
  * @author Markus Geipel
  * @author Christoph Böhme
- *
  */
 @Description("Writes objects to one (or more) file(s)")
 @In(Object.class)
 @Out(Void.class)
 @FluxCommand("write-files")
-public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
+public final class ObjectFileWriter<T> extends AbstractObjectWriter<T> {
 
     private static final String VAR = "${i}";
     private static final Pattern VAR_PATTERN = Pattern.compile(VAR, Pattern.LITERAL);
@@ -100,13 +96,11 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
                 if (firstObject) {
                     getWriter().write(getHeader());
                     firstObject = false;
-                }
-                else {
+                } else {
                     getWriter().write(getSeparator());
                 }
                 getWriter().write(objStr);
-            }
-            catch (final IOException e) {
+            } catch (final IOException e) {
                 throw new MetafactureException(e);
             }
         }
@@ -127,11 +121,9 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
                     getWriter().write(getFooter());
                 }
                 getWriter().close();
-            }
-            catch (final IOException e) {
+            } catch (final IOException e) {
                 throw new MetafactureException(e);
-            }
-            finally {
+            } finally {
                 closed = true;
             }
         }
@@ -139,14 +131,14 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
 
     /**
      * Controls whether to open files in append mode if they exist.
-     * <p>
-     * The default value is {@code false}.
-     * <p>
-     * This property can be changed anytime during processing. It becomes
-     * effective the next time a new output file is opened.
      *
-     * @param appendIfFileExists true if new data should be appended,
-     *                           false to overwrite the existing file
+     * <p>The default value is {@code false}.
+     *
+     * <p>This property can be changed anytime during processing. It becomes effective the next time
+     * a new output file is opened.
+     *
+     * @param appendIfFileExists true if new data should be appended, false to overwrite the
+     *     existing file
      */
     public void setAppendIfFileExists(final boolean appendIfFileExists) {
         this.appendIfFileExists = appendIfFileExists;
@@ -163,18 +155,15 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
                     writer = new OutputStreamWriter(compressor, encoding);
                     firstObject = true;
                     closed = false;
-                }
-                catch (final IOException e) {
+                } catch (final IOException e) {
                     compressor.close();
                     throw e;
                 }
-            }
-            catch (final IOException e) {
+            } catch (final IOException e) {
                 file.close();
                 throw e;
             }
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException("Error creating file '" + currentPath + "'.", e);
         }
     }
@@ -191,5 +180,4 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
 
         return writer;
     }
-
 }

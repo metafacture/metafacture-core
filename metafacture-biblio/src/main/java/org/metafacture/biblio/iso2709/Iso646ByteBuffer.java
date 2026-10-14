@@ -16,17 +16,15 @@
 
 package org.metafacture.biblio.iso2709;
 
+import java.nio.charset.Charset;
 import org.metafacture.framework.FormatException;
 
-import java.nio.charset.Charset;
-
 /**
- * Provides methods for reading and writing strings and integers in a byte
- * array.
- * <p>
- * All methods except for the {#stringAt(int, int, Charset)} method assume
- * that the bytes in the buffer represent characters encoded with the
- * encoding defined by ISO 646 (which is mostly equivalent with 7-bit ASCII).
+ * Provides methods for reading and writing strings and integers in a byte array.
+ *
+ * <p>All methods except for the {#stringAt(int, int, Charset)} method assume that the bytes in the
+ * buffer represent characters encoded with the encoding defined by ISO 646 (which is mostly
+ * equivalent with 7-bit ASCII).
  *
  * @author Christoph Böhme
  */
@@ -69,16 +67,15 @@ final class Iso646ByteBuffer {
     }
 
     /**
-     * Returns the distance from {@code fromIndex} to the next occurrence of
-     * {@code byteValue}. If the byte at {@code fromIndex} is equal to {@code
-     * byteValue} zero is returned. If there are no matching bytes between
-     * {@code fromIndex} and the end of the buffer then the distance to the end
-     * of the buffer is returned.
+     * Returns the distance from {@code fromIndex} to the next occurrence of {@code byteValue}. If
+     * the byte at {@code fromIndex} is equal to {@code byteValue} zero is returned. If there are no
+     * matching bytes between {@code fromIndex} and the end of the buffer then the distance to the
+     * end of the buffer is returned.
      *
      * @param byteValue byte to search for.
      * @param fromIndex the position in the buffer from which to start searching.
-     * @return the distance in bytes to the next byte with the given value or if
-     * none is found to the end of the buffer.
+     * @return the distance in bytes to the next byte with the given value or if none is found to
+     *     the end of the buffer.
      */
     int distanceTo(final byte byteValue, final int fromIndex) {
         assert 0 <= fromIndex && fromIndex < byteArray.length;
@@ -92,16 +89,15 @@ final class Iso646ByteBuffer {
     }
 
     /**
-     * Returns the distance from {@code fromIndex} to the next occurrence of one
-     * of the bytes in {@code bytes}. If the byte at {@code fromIndex} is in
-     * {@code bytes} zero is returned. If there are no matching bytes between
-     * {@code fromIndex} and the end of the buffer then the distance to the
-     * end of the buffer is returned.
+     * Returns the distance from {@code fromIndex} to the next occurrence of one of the bytes in
+     * {@code bytes}. If the byte at {@code fromIndex} is in {@code bytes} zero is returned. If
+     * there are no matching bytes between {@code fromIndex} and the end of the buffer then the
+     * distance to the end of the buffer is returned.
      *
-     * @param bytes     bytes to search for.
+     * @param bytes bytes to search for.
      * @param fromIndex the position in the buffer from which to start searching.
-     * @return the distance in bytes to the next byte with the given value or if
-     * none is found to the end of the buffer.
+     * @return the distance in bytes to the next byte with the given value or if none is found to
+     *     the end of the buffer.
      */
     int distanceTo(final byte[] bytes, final int fromIndex) {
         assert 0 <= fromIndex && fromIndex < byteArray.length;
@@ -124,20 +120,16 @@ final class Iso646ByteBuffer {
     }
 
     /**
-     * Returns a string containing the characters in the specified part of the
-     * record.
+     * Returns a string containing the characters in the specified part of the record.
      *
      * @param fromIndex index of the first byte of the string.
-     * @param length number of bytes to include in the string. If zero an empty
-     *               string is returned.
-     * @param charset used for decoding the byte sequence into characters. It is
-     *                callers responsibility to make sure that the selected byte
-     *                range contains a valid byte sequence when working with
-     *                multi-byte encodings such as UTF-8.
+     * @param length number of bytes to include in the string. If zero an empty string is returned.
+     * @param charset used for decoding the byte sequence into characters. It is callers
+     *     responsibility to make sure that the selected byte range contains a valid byte sequence
+     *     when working with multi-byte encodings such as UTF-8.
      * @return the string represented by the bytes in the given range
      */
-    String stringAt(final int fromIndex, final int length,
-            final Charset charset) {
+    String stringAt(final int fromIndex, final int length, final Charset charset) {
         return new String(byteArray, fromIndex, length, charset);
     }
 
@@ -164,8 +156,7 @@ final class Iso646ByteBuffer {
     private char byteToChar(final int index) {
         final byte value = byteArray[index];
         if (value < 0) {
-            throw new FormatException("Invalid character code found at index " +
-                    index);
+            throw new FormatException("Invalid character code found at index " + index);
         }
         return (char) value;
     }
@@ -178,8 +169,7 @@ final class Iso646ByteBuffer {
      * Parses the character at {@code index} into an integer.
      *
      * @param index position of the byte to convert into an integer
-     * @return the integer value represented by the character at the given
-     * position.
+     * @return the integer value represented by the character at the given position.
      * @throws NumberFormatException if a non-digit character is encountered.
      */
     int parseIntAt(final int index) {
@@ -187,17 +177,15 @@ final class Iso646ByteBuffer {
     }
 
     /**
-     * Parses characters in the specified part of the byte buffer into an integer
-     * This is a simplified version of {@link Integer#parseInt(String)}. It
-     * operates directly on the byte data and works only for positive numbers and
-     * a radix of 10.
+     * Parses characters in the specified part of the byte buffer into an integer This is a
+     * simplified version of {@link Integer#parseInt(String)}. It operates directly on the byte data
+     * and works only for positive numbers and a radix of 10.
      *
      * @param fromIndex position fo the byte range to convert into an integer
      * @param length number of bytes to include in the range
-     * @return the integer value represented by the characters at the given
-     * range in the buffer.
-     * @throws NumberFormatException if a non-digit character was encountered or
-     *                               an overflow occurred.
+     * @return the integer value represented by the characters at the given range in the buffer.
+     * @throws NumberFormatException if a non-digit character was encountered or an overflow
+     *     occurred.
      */
     int parseIntAt(final int fromIndex, final int length) {
         assert length >= 0;
@@ -221,15 +209,17 @@ final class Iso646ByteBuffer {
     private int byteToDigit(final int index) {
         final byte digit = byteArray[index];
         if (digit < Iso646Constants.ZERO || Iso646Constants.NINE < digit) {
-            throw new NumberFormatException("digit expected at index " + index +
-                    " but got 0x" + Integer.toHexString(digit));
+            throw new NumberFormatException(
+                    "digit expected at index "
+                            + index
+                            + " but got 0x"
+                            + Integer.toHexString(digit));
         }
         return digit - Iso646Constants.ZERO;
     }
 
     private void throwNumberIsToLargeException(final int index) {
-        throw new NumberFormatException("number starting at index " + index +
-                " is too large");
+        throw new NumberFormatException("number starting at index " + index + " is too large");
     }
 
     void writeChar(final char charValue) {
@@ -278,5 +268,4 @@ final class Iso646ByteBuffer {
     public String toString() {
         return stringAt(0, byteArray.length, Iso646Constants.CHARSET);
     }
-
 }

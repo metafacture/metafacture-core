@@ -16,10 +16,9 @@
 
 package org.metafacture.metamorph;
 
-import org.metafacture.framework.StreamReceiver;
-
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -31,24 +30,22 @@ import org.mockito.junit.MockitoRule;
  */
 public final class TestMetamorphBasics {
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public TestMetamorphBasics() {
-    }
+    public TestMetamorphBasics() {}
 
     @Test
     public void shouldUseCustomEntityMarker() {
-        TestHelpers.assertMorph(receiver,
-                "<metamorph version='1' entityMarker='~'" +
-                "    xmlns='http://www.culturegraph.org/metamorph'>" +
-                "  <rules>" +
-                "    <data source='entity~literal' name='data' />" +
-                "  </rules>" +
-                "</metamorph>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<metamorph version='1' entityMarker='~'"
+                        + "    xmlns='http://www.culturegraph.org/metamorph'>"
+                        + "  <rules>"
+                        + "    <data source='entity~literal' name='data' />"
+                        + "  </rules>"
+                        + "</metamorph>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -60,17 +57,17 @@ public final class TestMetamorphBasics {
                     o.get().startRecord("1");
                     o.get().literal("data", "Aloha");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldHandleUnmatchedLiteralsInElseSource() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <data source='Sylt' name='Hawaii' />" +
-                "  <data source='_else' />" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <data source='Sylt' name='Hawaii' />"
+                        + "  <data source='_else' />"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("Langeoog", "Moin");
@@ -84,8 +81,7 @@ public final class TestMetamorphBasics {
                     o.get().literal("Hawaii", "Aloha");
                     o.get().literal("Baltrum", "Moin Moin");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -99,14 +95,17 @@ public final class TestMetamorphBasics {
     }
 
     private void testElseData(final String elseKeyword) {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <entity name='Germany'>" +
-                "    <data source='Germany.Sylt' name='Hawaii' />" +
-                "    <data source='Germany.Borkum' />" +
-                "  </entity>" +
-                "  <data source='" + elseKeyword + "'/>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <entity name='Germany'>"
+                        + "    <data source='Germany.Sylt' name='Hawaii' />"
+                        + "    <data source='Germany.Borkum' />"
+                        + "  </entity>"
+                        + "  <data source='"
+                        + elseKeyword
+                        + "'/>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("@id", "123");
@@ -134,16 +133,14 @@ public final class TestMetamorphBasics {
                     o.get().literal("Germany.@foo", "bar");
                     o.get().literal("Germany.Baltrum", "Moin Moin");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test // checkstyle-disable-line JavaNCSS
     public void issue338_shouldPreserveSameEntitiesInElseNestedSource() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <data source='_elseNested' />" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>" + "  <data source='_elseNested' />" + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("lit1", "val1");
@@ -215,16 +212,14 @@ public final class TestMetamorphBasics {
                     o.get().endEntity();
                     o.get().literal("lit9", "val9");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void issue374_shouldPropagateArrayMarkersInElseNestedSource() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <data source='_elseNested' />" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>" + "  <data source='_elseNested' />" + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("author[]");
@@ -267,16 +262,14 @@ public final class TestMetamorphBasics {
                     o.get().literal("name", "Claudia Vogeler");
                     f.apply(2).endEntity();
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test // checkstyle-disable-line JavaNCSS
     public void issue378_shouldOutputMoreThanTwoLevelsInElseNestedSource() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <data source='_elseNested' />" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>" + "  <data source='_elseNested' />" + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("mods");
@@ -349,20 +342,20 @@ public final class TestMetamorphBasics {
                     o.get().literal("value", "André");
                     f.apply(3).endEntity();
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test // checkstyle-disable-line JavaNCSS
     public void shouldOutputMoreThanTwoLevelsInElseNestedSourceWithModifications() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <entity name='name' flushWith='record'>" +
-                "    <data source='mods.name.displayForm.value' name='displayForm' />" +
-                "    <data source='mods.name.namePart.value' />" +
-                "  </entity>" +
-                "  <data source='_elseNested' />" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <entity name='name' flushWith='record'>"
+                        + "    <data source='mods.name.displayForm.value' name='displayForm' />"
+                        + "    <data source='mods.name.namePart.value' />"
+                        + "  </entity>"
+                        + "  <data source='_elseNested' />"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("mods");
@@ -435,19 +428,19 @@ public final class TestMetamorphBasics {
                     o.get().literal("mods.name.namePart.value", "André");
                     o.get().endEntity();
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldHandleUnmatchedLiteralsAndEntitiesInElseNestedSource() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <entity name='USA' >" +
-                "    <data source='USA.Sylt' name='Hawaii' />" +
-                "  </entity>" +
-                "  <data source='_elseNested' />" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <entity name='USA' >"
+                        + "    <data source='USA.Sylt' name='Hawaii' />"
+                        + "  </entity>"
+                        + "  <data source='_elseNested' />"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("@id", "123");
@@ -475,28 +468,28 @@ public final class TestMetamorphBasics {
                     o.get().literal("Hawaii", "Aloha");
                     o.get().endEntity();
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test // checkstyle-disable-line JavaNCSS
     public void shouldHandlePartiallyUnmatchedLiteralsAndEntitiesInElseNestedSource() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <entity name='USA1'>" +
-                "    <data source='USA1.Sylt' name='Hawaii' />" +
-                "  </entity>" +
-                "  <entity name='USA2'>" +
-                "    <data source='USA2.Sylt' name='Hawaii' />" +
-                "  </entity>" +
-                "  <entity name='USA3'>" +
-                "    <data source='USA3.Sylt' name='Hawaii' />" +
-                "  </entity>" +
-                "  <entity name='USA4'>" +
-                "    <data source='USA4.Sylt' name='Hawaii' />" +
-                "  </entity>" +
-                "  <data source='_elseNested' />" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <entity name='USA1'>"
+                        + "    <data source='USA1.Sylt' name='Hawaii' />"
+                        + "  </entity>"
+                        + "  <entity name='USA2'>"
+                        + "    <data source='USA2.Sylt' name='Hawaii' />"
+                        + "  </entity>"
+                        + "  <entity name='USA3'>"
+                        + "    <data source='USA3.Sylt' name='Hawaii' />"
+                        + "  </entity>"
+                        + "  <entity name='USA4'>"
+                        + "    <data source='USA4.Sylt' name='Hawaii' />"
+                        + "  </entity>"
+                        + "  <data source='_elseNested' />"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("Shikotan", "Aekap");
@@ -528,7 +521,8 @@ public final class TestMetamorphBasics {
                     // Pass-through coordinates with morph whether to start/end an entity
                     final boolean coordinatesWithEntity = false;
 
-                    // Pass-through and morph entities are separated (one ends when the other starts)
+                    // Pass-through and morph entities are separated (one ends when the other
+                    // starts)
                     final boolean separatesFromEntity = false;
 
                     o.get().startRecord("1");
@@ -553,16 +547,14 @@ public final class TestMetamorphBasics {
                     o.get().literal("Langeoog", "Moin");
                     if (!coordinatesWithEntity) {
                         o.get().startEntity("USA3");
-                    }
-                    else if (separatesFromEntity) {
+                    } else if (separatesFromEntity) {
                         o.get().endEntity();
                         o.get().startEntity("USA3");
                     }
                     o.get().literal("Hawaii", "Aloha");
                     if (!coordinatesWithEntity) {
                         o.get().endEntity();
-                    }
-                    else if (separatesFromEntity) {
+                    } else if (separatesFromEntity) {
                         o.get().endEntity();
                         o.get().startEntity("USA3");
                     }
@@ -573,39 +565,37 @@ public final class TestMetamorphBasics {
                     o.get().literal("Baltrum", "Moin Moin");
                     if (!coordinatesWithEntity) {
                         o.get().startEntity("USA4");
-                    }
-                    else if (separatesFromEntity) {
+                    } else if (separatesFromEntity) {
                         o.get().endEntity();
                         o.get().startEntity("USA4");
                     }
                     o.get().literal("Hawaii", "Aloha");
                     if (!coordinatesWithEntity) {
                         f.apply(2).endEntity();
-                    }
-                    else {
+                    } else {
                         o.get().endEntity();
                     }
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldNotHandleDataByElseNestedSourceIfDataBelongingToEntityIsRuledByMorph() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <entity name='USA1'>" +
-                "    <data source='USA1.Sylt' name='Hawaii' />" +
-                "  </entity>" +
-                "  <entity name='USA2' sameEntity='true' flushWith='USA2'>" +
-                "    <data source='USA2.Sylt' name='Hawaii' />" +
-                "    <data source='USA2.Langeoog' name='Langeoog' />" +
-                "  </entity>" +
-                "  <entity name='USA3' sameEntity='true' flushWith='USA3'>" +
-                "    <data source='USA3.Sylt' name='Hawaii' />" +
-                "  </entity>" +
-                "  <data source='_elseNested' />" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <entity name='USA1'>"
+                        + "    <data source='USA1.Sylt' name='Hawaii' />"
+                        + "  </entity>"
+                        + "  <entity name='USA2' sameEntity='true' flushWith='USA2'>"
+                        + "    <data source='USA2.Sylt' name='Hawaii' />"
+                        + "    <data source='USA2.Langeoog' name='Langeoog' />"
+                        + "  </entity>"
+                        + "  <entity name='USA3' sameEntity='true' flushWith='USA3'>"
+                        + "    <data source='USA3.Sylt' name='Hawaii' />"
+                        + "  </entity>"
+                        + "  <data source='_elseNested' />"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("Shikotan", "Aekap");
@@ -648,43 +638,43 @@ public final class TestMetamorphBasics {
                     o.get().literal("Langeoog", "Moin");
                     o.get().endEntity();
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     // https://github.com/hagbeck/metafacture-sandbox/tree/master/else-nested-entities
     @Test // checkstyle-disable-line JavaNCSS
     public void shouldHandleUseCaseSandboxElseNestedEntities() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                    "<entity name='85640' flushWith='85640.3' reset='true'>" +
-                        "<data source='85640.u' name='u'>" +
-                            "<contains string='hdl.handle.net/2003/' />" +
-                            "<replace pattern='http://' with='https://' />" +
-                        "</data>" +
-                        "<data source='85640.u' name='u'>" +
-                            "<contains string='doi.org/10.17877/' />" +
-                            "<replace pattern='http://' with='https://' />" +
-                            "<replace pattern='dx.doi.org' with='doi.org' />" +
-                        "</data>" +
-                        "<data source='85640.x' name='x' />" +
-                        "<data source='85640.3' name='3' />" +
-                    "</entity>" +
-                    "<entity name='8564 ' flushWith='8564 .3' reset='true'>" +
-                        "<data source='8564 .u' name='u'>" +
-                            "<contains string='hdl.handle.net/2003/' />" +
-                            "<replace pattern='http://' with='https://' />" +
-                        "</data>" +
-                        "<data source='8564 .u' name='u'>" +
-                            "<contains string='doi.org/10.17877/' />" +
-                            "<replace pattern='http://' with='https://' />" +
-                            "<replace pattern='dx.doi.org' with='doi.org' />" +
-                        "</data>" +
-                        "<data source='8564 .x' name='x' />" +
-                        "<data source='8564 .3' name='3' />" +
-                    "</entity>" +
-                    "<data source='_elseNested' />" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "<entity name='85640' flushWith='85640.3' reset='true'>"
+                        + "<data source='85640.u' name='u'>"
+                        + "<contains string='hdl.handle.net/2003/' />"
+                        + "<replace pattern='http://' with='https://' />"
+                        + "</data>"
+                        + "<data source='85640.u' name='u'>"
+                        + "<contains string='doi.org/10.17877/' />"
+                        + "<replace pattern='http://' with='https://' />"
+                        + "<replace pattern='dx.doi.org' with='doi.org' />"
+                        + "</data>"
+                        + "<data source='85640.x' name='x' />"
+                        + "<data source='85640.3' name='3' />"
+                        + "</entity>"
+                        + "<entity name='8564 ' flushWith='8564 .3' reset='true'>"
+                        + "<data source='8564 .u' name='u'>"
+                        + "<contains string='hdl.handle.net/2003/' />"
+                        + "<replace pattern='http://' with='https://' />"
+                        + "</data>"
+                        + "<data source='8564 .u' name='u'>"
+                        + "<contains string='doi.org/10.17877/' />"
+                        + "<replace pattern='http://' with='https://' />"
+                        + "<replace pattern='dx.doi.org' with='doi.org' />"
+                        + "</data>"
+                        + "<data source='8564 .x' name='x' />"
+                        + "<data source='8564 .3' name='3' />"
+                        + "</entity>"
+                        + "<data source='_elseNested' />"
+                        + "</rules>",
                 i -> {
                     i.startRecord("ID1687931");
                     i.literal("leader", "00564nam a2200024 c 4500");
@@ -756,16 +746,14 @@ public final class TestMetamorphBasics {
                     o.get().startEntity("9984 ");
                     o.get().literal("z", "Freie Internetressource");
                     o.get().endEntity();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldMatchCharacterWithQuestionMarkWildcard() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <data source='lit-?' />" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>" + "  <data source='lit-?' />" + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("lit", "Moin");
@@ -778,17 +766,15 @@ public final class TestMetamorphBasics {
                     o.get().literal("lit-A", "Aloha");
                     o.get().literal("lit-B", "Aloha 'oe");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldMatchCharactersInCharacterClass() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <data source='lit-[AB]' />" +
-                "</rules>",
-                i ->  {
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>" + "  <data source='lit-[AB]' />" + "</rules>",
+                i -> {
                     i.startRecord("1");
                     i.literal("lit-A", "Hawaii");
                     i.literal("lit-B", "Oahu");
@@ -800,20 +786,20 @@ public final class TestMetamorphBasics {
                     o.get().literal("lit-A", "Hawaii");
                     o.get().literal("lit-B", "Oahu");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldReplaceVariables() {
-        TestHelpers.assertMorph(receiver,
-                "<vars>" +
-                "  <var name='in' value='Honolulu' />" +
-                "  <var name='out' value='Hawaii' />" +
-                "</vars>" +
-                "<rules>" +
-                "  <data source='$[in]' name='$[out]' />" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<vars>"
+                        + "  <var name='in' value='Honolulu' />"
+                        + "  <var name='out' value='Hawaii' />"
+                        + "</vars>"
+                        + "<rules>"
+                        + "  <data source='$[in]' name='$[out]' />"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("Honolulu", "Aloha");
@@ -823,18 +809,18 @@ public final class TestMetamorphBasics {
                     o.get().startRecord("1");
                     o.get().literal("Hawaii", "Aloha");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldAllowTreatingEntityEndEventsAsLiterals() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <data source='e1' />" +
-                "  <data source='e1.e2' />" +
-                "  <data source='e1.e2.d' />" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <data source='e1' />"
+                        + "  <data source='e1.e2' />"
+                        + "  <data source='e1.e2.d' />"
+                        + "</rules>",
                 i -> {
                     i.startRecord("entity end info");
                     i.startEntity("e1");
@@ -850,42 +836,36 @@ public final class TestMetamorphBasics {
                     o.get().literal("e1.e2", "");
                     o.get().literal("e1", "");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldUrlencodeWithEscapeSpaceAsPlusAsDefault() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <data source='d' >" +
-                "    <urlencode />" +
-                "  </data>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>" + "  <data source='d' >" + "    <urlencode />" + "  </data>" + "</rules>",
                 i -> {
                     i.literal("d", "café ");
                 },
                 o -> {
                     o.get().literal("d", "caf%C3%A9+");
-                }
-        );
+                });
     }
 
     @Test
     public void shouldUrlencodeAndNotEscapingSpaceAsPlus() {
-        TestHelpers.assertMorph(receiver,
-            "<rules>" +
-                "  <data source='d' >" +
-                "    <urlencode plusforspace='false' />" +
-                "  </data>" +
-                "</rules>",
-            i -> {
-                i.literal("d", "café ");
-            },
-            o -> {
-                o.get().literal("d", "caf%C3%A9%20");
-            }
-        );
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <data source='d' >"
+                        + "    <urlencode plusforspace='false' />"
+                        + "  </data>"
+                        + "</rules>",
+                i -> {
+                    i.literal("d", "café ");
+                },
+                o -> {
+                    o.get().literal("d", "caf%C3%A9%20");
+                });
     }
-
 }

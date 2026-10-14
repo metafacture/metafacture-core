@@ -24,15 +24,13 @@ import org.junit.Test;
  *
  * @author Markus Michael Geipel
  */
-
 public final class StringOperationsTest {
 
     private static final String VALUE1 = "Franz";
     private static final String VALUE2 = "Kafka";
     private static final String VALUE3 = "Josef";
 
-    public StringOperationsTest() {
-    }
+    public StringOperationsTest() {}
 
     @Test
     public void testSubstring() {
@@ -50,7 +48,6 @@ public final class StringOperationsTest {
         substring.setStart(String.valueOf(VALUE1.length() + 1));
         substring.setEnd(String.valueOf(position));
         Assert.assertNull(substring.process(VALUE1));
-
     }
 
     // TODO: Can we remove this test?
@@ -79,5 +76,4 @@ public final class StringOperationsTest {
         replace.setWith(VALUE3);
         Assert.assertEquals(VALUE1 + VALUE3, replace.process(VALUE1 + VALUE2));
     }
-
 }

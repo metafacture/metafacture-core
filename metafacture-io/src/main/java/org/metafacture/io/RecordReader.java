@@ -16,6 +16,8 @@
 
 package org.metafacture.io;
 
+import java.io.IOException;
+import java.io.Reader;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -24,18 +26,13 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-import java.io.IOException;
-import java.io.Reader;
-
 /**
- * <p>Reads data from a {@code Reader} and splits it into individual
- * records.</p>
+ * Reads data from a {@code Reader} and splits it into individual records.
  *
- * <p>The default separator is the global separator character (0x001d).
- * Empty records are skipped by default.</p>
+ * <p>The default separator is the global separator character (0x001d). Empty records are skipped by
+ * default.
  *
  * @author Christoph Böhme
- *
  */
 @Description("Reads data from a Reader and splits it into individual records")
 @In(Reader.class)
@@ -53,11 +50,8 @@ public final class RecordReader extends DefaultObjectPipe<Reader, ObjectReceiver
     private char separator = DEFAULT_SEPARATOR;
     private boolean skipEmptyRecords = true;
 
-    /**
-     * Creates an instance of {@link RecordReader}.
-     */
-    public RecordReader() {
-    }
+    /** Creates an instance of {@link RecordReader}. */
+    public RecordReader() {}
 
     /**
      * Sets the separator. The default is the global separator character (0x001d).
@@ -67,8 +61,7 @@ public final class RecordReader extends DefaultObjectPipe<Reader, ObjectReceiver
     public void setSeparator(final String separator) {
         if (separator.length() >= 1) {
             this.separator = separator.charAt(0);
-        }
-        else {
+        } else {
             this.separator = DEFAULT_SEPARATOR;
         }
     }
@@ -132,8 +125,7 @@ public final class RecordReader extends DefaultObjectPipe<Reader, ObjectReceiver
                 emitRecord();
             }
 
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -145,5 +137,4 @@ public final class RecordReader extends DefaultObjectPipe<Reader, ObjectReceiver
             getReceiver().process(record);
         }
     }
-
 }

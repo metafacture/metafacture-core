@@ -16,11 +16,10 @@
 
 package org.metafacture.elasticsearch;
 
-import org.metafacture.framework.ObjectReceiver;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -29,7 +28,6 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link JsonToElasticsearchBulk}.
  *
  * @author Jens Wille
- *
  */
 public final class JsonToElasticsearchBulkTest {
 
@@ -42,7 +40,7 @@ public final class JsonToElasticsearchBulkTest {
     private static final String ENTITY2 = "En2";
     private static final String ENTITY3 = "En3";
 
-    private static final String TYPE1  = "T1";
+    private static final String TYPE1 = "T1";
     private static final String INDEX1 = "I1";
 
     private static final String METADATA = "{'index':{'_index':'I1','_type':'T1'%s}}";
@@ -52,11 +50,9 @@ public final class JsonToElasticsearchBulkTest {
 
     private JsonToElasticsearchBulk bulk;
 
-    @Mock
-    private ObjectReceiver<String> receiver;
+    @Mock private ObjectReceiver<String> receiver;
 
-    public JsonToElasticsearchBulkTest() {
-    }
+    public JsonToElasticsearchBulkTest() {}
 
     @Before
     public void setup() {
@@ -142,67 +138,67 @@ public final class JsonToElasticsearchBulkTest {
 
     @Test
     public void testShouldExtractIdPath() {
-        setBulk(new String[]{ENTITY1, LITERAL1});
+        setBulk(new String[] {ENTITY1, LITERAL1});
         shouldExtractId("{'En2':{'L1':'V1','L2':'V2'},'En1':{'L1':'V1','L2':'V2'}}");
     }
 
     @Test
     public void testShouldExtractJoinedIdPath() {
-        setBulk(new String[]{ENTITY1, LITERAL1}, ENTITY_SEPARATOR1);
+        setBulk(new String[] {ENTITY1, LITERAL1}, ENTITY_SEPARATOR1);
         shouldExtractId("{'En2':{'L1':'V1','L2':'V2'},'En1':{'L1':'V1','L2':'V2'}}");
     }
 
     @Test
     public void testShouldNotExtractJoinedIdPathWithDifferentSeparator() {
-        setBulk(new String[]{ENTITY1, LITERAL1}, ENTITY_SEPARATOR2);
+        setBulk(new String[] {ENTITY1, LITERAL1}, ENTITY_SEPARATOR2);
         shouldNotExtractId("{'En2':{'L1':'V1','L2':'V2'},'En1':{'L1':'V1','L2':'V2'}}");
     }
 
     @Test
     public void testShouldNotExtractMissingIdPath() {
-        setBulk(new String[]{ENTITY1, LITERAL4});
+        setBulk(new String[] {ENTITY1, LITERAL4});
         shouldNotExtractId("{'En2':{'L1':'V1','L2':'V2'},'En1':{'L1':'V1','L2':'V2'}}");
     }
 
     @Test
     public void testShouldNotExtractMissingEntityIdPath() {
-        setBulk(new String[]{ENTITY3, LITERAL1});
+        setBulk(new String[] {ENTITY3, LITERAL1});
         shouldNotExtractId("{'En2':{'L1':'V1','L2':'V2'},'En1':{'L1':'V1','L2':'V2'}}");
     }
 
     @Test
     public void testShouldExtractNestedIdPath() {
-        setBulk(new String[]{ENTITY1, ENTITY2, LITERAL1});
+        setBulk(new String[] {ENTITY1, ENTITY2, LITERAL1});
         shouldExtractId("{'En1':{'En2':{'L1':'V1'}}}");
     }
 
     @Test
     public void testShouldExtractJoinedNestedIdPath() {
-        setBulk(new String[]{ENTITY1, ENTITY2, LITERAL1}, ENTITY_SEPARATOR1);
+        setBulk(new String[] {ENTITY1, ENTITY2, LITERAL1}, ENTITY_SEPARATOR1);
         shouldExtractId("{'En1':{'En2':{'L1':'V1'}}}");
     }
 
     @Test
     public void testShouldNotExtractJoinedNestedIdPathWithDifferentSeparator() {
-        setBulk(new String[]{ENTITY1, ENTITY2, LITERAL1}, ENTITY_SEPARATOR2);
+        setBulk(new String[] {ENTITY1, ENTITY2, LITERAL1}, ENTITY_SEPARATOR2);
         shouldNotExtractId("{'En1':{'En2':{'L1':'V1'}}}");
     }
 
     @Test
     public void testShouldNotExtractMissingNestedIdPath() {
-        setBulk(new String[]{ENTITY1, ENTITY2, LITERAL4});
+        setBulk(new String[] {ENTITY1, ENTITY2, LITERAL4});
         shouldNotExtractId("{'En1':{'En2':{'L1':'V1'}}}");
     }
 
     @Test
     public void testShouldNotExtractMissingNestedEntityIdPath() {
-        setBulk(new String[]{ENTITY1, ENTITY3, LITERAL1});
+        setBulk(new String[] {ENTITY1, ENTITY3, LITERAL1});
         shouldNotExtractId("{'En1':{'En2':{'L1':'V1'}}}");
     }
 
     @Test
     public void testShouldNotExtractIntermediateEntityIdPath() {
-        setBulk(new String[]{ENTITY1, ENTITY1, LITERAL4});
+        setBulk(new String[] {ENTITY1, ENTITY1, LITERAL4});
         shouldNotExtractId("{'En1':{'L1':'V1'}}");
     }
 
@@ -255,5 +251,4 @@ public final class JsonToElasticsearchBulkTest {
     private String fixQuotes(final String str) {
         return str.replace('\'', '"');
     }
-
 }

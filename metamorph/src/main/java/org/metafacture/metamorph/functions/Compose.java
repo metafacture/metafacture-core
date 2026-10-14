@@ -23,15 +23,11 @@ package org.metafacture.metamorph.functions;
  */
 public final class Compose extends AbstractCompose {
 
-    /**
-     * Creates an instance of {@link Compose}.
-     */
-    public Compose() {
-    }
+    /** Creates an instance of {@link Compose}. */
+    public Compose() {}
 
     @Override
     public String process(final String value) {
         return getPrefix() + value + getPostfix();
     }
-
 }

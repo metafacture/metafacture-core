@@ -16,9 +16,8 @@
 
 package org.metafacture.javaintegration.pojo;
 
-import org.metafacture.framework.StreamReceiver;
-
 import java.util.Map;
+import org.metafacture.framework.StreamReceiver;
 
 /**
  * Decodes a {@link Map} to a Metafacture event stream.
@@ -38,7 +37,8 @@ class MapTypeDecoder implements TypeDecoder {
     }
 
     @Override
-    public void decodeToStream(final StreamReceiver streamReceiver, final String name, final Object object) {
+    public void decodeToStream(
+            final StreamReceiver streamReceiver, final String name, final Object object) {
         final Map<?, ?> map = (Map<?, ?>) object;
         if (name != null) {
             streamReceiver.startEntity(name);
@@ -53,5 +53,4 @@ class MapTypeDecoder implements TypeDecoder {
             streamReceiver.endEntity();
         }
     }
-
 }

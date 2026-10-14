@@ -16,35 +16,31 @@
 
 package org.metafacture.metafix.method.record;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Creates (or replaces) a field with a random number (less than the
- * specified maximum).
- */
+/** Creates (or replaces) a field with a random number (less than the specified maximum). */
 @FixCommand("random")
 public class Random implements FixFunction {
 
     private static final java.util.Random RANDOM = new java.util.Random();
 
-    /**
-     * Creates an instance of {@link Random}.
-     */
-    public Random() {
-    }
+    /** Creates an instance of {@link Random}. */
+    public Random() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final String field = params.get(0);
         final int max = getInteger(params, 1);
         record.set(field, new Value(String.valueOf(RANDOM.nextInt(max))));
     }
-
 }

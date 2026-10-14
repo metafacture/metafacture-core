@@ -22,7 +22,6 @@ import org.metafacture.formeta.Formeta;
  * A formatter for multiline output.
  *
  * @author Christoph Böhme
- *
  */
 public final class MultilineFormatter extends AbstractFormatter {
 
@@ -36,9 +35,7 @@ public final class MultilineFormatter extends AbstractFormatter {
     private boolean appendItemSeparator;
     private boolean firstItem;
 
-    /**
-     * Creates an instance of {@link MultilineFormatter}.
-     */
+    /** Creates an instance of {@link MultilineFormatter}. */
     public MultilineFormatter() {
         onReset();
     }
@@ -95,5 +92,4 @@ public final class MultilineFormatter extends AbstractFormatter {
     protected boolean shouldQuoteText(final char[] buffer, final int len) {
         return true;
     }
-
 }

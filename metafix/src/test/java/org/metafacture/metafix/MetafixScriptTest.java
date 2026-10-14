@@ -16,35 +16,33 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InOrder;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
 
-/**
- * Tests Metafix script level methods.
- */
+/** Tests Metafix script level methods. */
 @ExtendWith(MockitoExtension.class)
 public class MetafixScriptTest {
 
     private static final String MAP_NAME = "testMap";
 
-    private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
-    private static final String TSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.tsv";
+    private static final String CSV_MAP =
+            "src/test/resources/org/metafacture/metafix/maps/test.csv";
+    private static final String TSV_MAP =
+            "src/test/resources/org/metafacture/metafix/maps/test.tsv";
 
     @Mock(name = "org.metafacture.metafix.Metafix")
     private Logger metafixLogger;
@@ -52,83 +50,88 @@ public class MetafixScriptTest {
     @Mock(name = "external.org.metafacture.metafix.method.script.Log")
     private Logger fixMethodLogger;
 
-    @Mock
-    private StreamReceiver streamReceiver;
+    @Mock private StreamReceiver streamReceiver;
 
-    public MetafixScriptTest() {
-    }
+    public MetafixScriptTest() {}
 
     @Test
     public void shouldPutSingleVariable() {
-        assertVar("put_var('varName', 'value')",
-                null,
-                Map.of("varName", "value"));
+        assertVar("put_var('varName', 'value')", null, Map.of("varName", "value"));
     }
 
     @Test
     public void shouldPutMultipleVariables() {
-        assertVar("put_var('varName', 'value')\nput_var('varName2', 'value2')",
+        assertVar(
+                "put_var('varName', 'value')\nput_var('varName2', 'value2')",
                 null,
                 Map.of("varName", "value", "varName2", "value2"));
     }
 
     @Test
     public void shouldPutMultipleVariablesFromMap() {
-        assertVar("put_vars(varName: 'value', varName2: 'value2')",
+        assertVar(
+                "put_vars(varName: 'value', varName2: 'value2')",
                 null,
                 Map.of("varName", "value", "varName2", "value2"));
     }
 
     @Test
     public void shouldResolveVariablesInSingleVariable() {
-        assertVar("put_var('varName', 'value$[var]')",
+        assertVar(
+                "put_var('varName', 'value$[var]')",
                 Map.of("var", "1"),
                 Map.of("varName", "value1"));
     }
 
     @Test
     public void shouldResolveVariablesInMultipleVariables() {
-        assertVar("put_var('varName', 'value$[var]')\nput_var('$[varName]Var', 'value2')",
+        assertVar(
+                "put_var('varName', 'value$[var]')\nput_var('$[varName]Var', 'value2')",
                 Map.of("var", "1"),
                 Map.of("varName", "value1", "value1Var", "value2"));
     }
 
     @Test
     public void shouldResolveVariablesInOptionsKeys() {
-        assertVar("put_vars('varName$[var]': 'value')",
+        assertVar(
+                "put_vars('varName$[var]': 'value')",
                 Map.of("var", "1"),
                 Map.of("varName1", "value"));
     }
 
     @Test
     public void shouldResolveVariablesInOptionsValues() {
-        assertVar("put_vars('varName': 'value$[var]')",
+        assertVar(
+                "put_vars('varName': 'value$[var]')",
                 Map.of("var", "1"),
                 Map.of("varName", "value1"));
     }
 
     @Test
     public void shouldResolveVariablesInOptionsFromPreviousMap() {
-        assertVar("put_vars('varName': 'value$[var]')\nput_vars('$[varName]Var': 'value2')",
+        assertVar(
+                "put_vars('varName': 'value$[var]')\nput_vars('$[varName]Var': 'value2')",
                 Map.of("var", "1"),
                 Map.of("varName", "value1", "value1Var", "value2"));
     }
 
     @Test
     public void shouldNotResolveVariablesInOptionsFromCurrentMap() {
-        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Variable 'varName' was not assigned!\nAssigned variables:\n{var=1}", () ->
-            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "put_vars(varName: 'value$[var]', '$[varName]Var': 'value2')"
-                ),
-                Map.of("var", "1"),
-                i -> {
-                    i.startRecord("");
-                    i.endRecord();
-                },
-                o -> {
-                }
-            )
-        );
+        MetafixTestHelpers.assertProcessException(
+                IllegalArgumentException.class,
+                "Variable 'varName' was not assigned!\nAssigned variables:\n{var=1}",
+                () ->
+                        MetafixTestHelpers.assertFix(
+                                streamReceiver,
+                                Arrays.asList(
+                                        "put_vars(varName: 'value$[var]', '$[varName]Var':"
+                                                + " 'value2')"),
+                                Map.of("var", "1"),
+                                i -> {
+                                    i.startRecord("");
+                                    i.endRecord();
+                                },
+                                o -> {}));
     }
 
     @Test
@@ -138,10 +141,12 @@ public class MetafixScriptTest {
 
     @Test
     public void shouldPutMultipleInternalMaps() {
-        assertFix("put_map('" + MAP_NAME + "')\nput_map('" + MAP_NAME + "2')", f -> {
-            assertMap(f, MAP_NAME);
-            assertMap(f, MAP_NAME + "2");
-        });
+        assertFix(
+                "put_map('" + MAP_NAME + "')\nput_map('" + MAP_NAME + "2')",
+                f -> {
+                    assertMap(f, MAP_NAME);
+                    assertMap(f, MAP_NAME + "2");
+                });
     }
 
     @Test
@@ -158,18 +163,18 @@ public class MetafixScriptTest {
     public void shouldNotPutRelativeExternalFileMapFromInlineScript() {
         final String mapFile = "../maps/test.csv";
 
-        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Cannot resolve relative path: " + mapFile, () ->
-            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "put_filemap('" + mapFile + "')"
-                ),
-                i -> {
-                    i.startRecord("");
-                    i.endRecord();
-                },
-                o -> {
-                }
-            )
-        );
+        MetafixTestHelpers.assertProcessException(
+                IllegalArgumentException.class,
+                "Cannot resolve relative path: " + mapFile,
+                () ->
+                        MetafixTestHelpers.assertFix(
+                                streamReceiver,
+                                Arrays.asList("put_filemap('" + mapFile + "')"),
+                                i -> {
+                                    i.startRecord("");
+                                    i.endRecord();
+                                },
+                                o -> {}));
     }
 
     @Test
@@ -179,10 +184,12 @@ public class MetafixScriptTest {
 
     @Test
     public void shouldPutMultipleExternalFileMaps() {
-        assertFix("put_filemap('" + CSV_MAP + "')\nput_filemap('" + TSV_MAP + "')", f -> {
-            assertMap(f, CSV_MAP);
-            assertMap(f, TSV_MAP);
-        });
+        assertFix(
+                "put_filemap('" + CSV_MAP + "')\nput_filemap('" + TSV_MAP + "')",
+                f -> {
+                    assertMap(f, CSV_MAP);
+                    assertMap(f, TSV_MAP);
+                });
     }
 
     @Test
@@ -212,377 +219,408 @@ public class MetafixScriptTest {
 
     @Test
     public void shouldNotLogWithUnsupportedLevel() {
-        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Unsupported log level: FATAL", () ->
-            assertFix("log('test', level: 'FATAL')", f -> { })
-        );
+        MetafixTestHelpers.assertProcessException(
+                IllegalArgumentException.class,
+                "Unsupported log level: FATAL",
+                () -> assertFix("log('test', level: 'FATAL')", f -> {}));
     }
 
     @Test
     public void shouldDoNothing() {
-        assertFix("nothing()", f -> { });
+        assertFix("nothing()", f -> {});
     }
 
     @Test
     public void shouldIncludeFixFile() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('trace')",
-                "add_field('trace.$append', 'before include')",
-                "include('src/test/resources/org/metafacture/metafix/fixes/base.fix')",
-                "add_field('trace.$append', 'after include')"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.literal("record", "1");
-                i.endRecord();
+        MetafixTestHelpers.assertFix(
+                streamReceiver,
+                Arrays.asList(
+                        "set_array('trace')",
+                        "add_field('trace.$append', 'before include')",
+                        "include('src/test/resources/org/metafacture/metafix/fixes/base.fix')",
+                        "add_field('trace.$append', 'after include')"),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("record", "1");
+                    i.endRecord();
 
-                i.startRecord("2");
-                i.literal("record", "2");
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().literal("record", "1");
-                o.get().literal("trace", "before include");
-                o.get().literal("trace", "base 1");
-                o.get().literal("trace", "after include");
-                o.get().endRecord();
+                    i.startRecord("2");
+                    i.literal("record", "2");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("record", "1");
+                    o.get().literal("trace", "before include");
+                    o.get().literal("trace", "base 1");
+                    o.get().literal("trace", "after include");
+                    o.get().endRecord();
 
-                o.get().startRecord("2");
-                o.get().literal("record", "2");
-                o.get().literal("trace", "before include");
-                o.get().literal("trace", "base 2");
-                o.get().literal("trace", "after include");
-                o.get().endRecord();
-            }
-        );
+                    o.get().startRecord("2");
+                    o.get().literal("record", "2");
+                    o.get().literal("trace", "before include");
+                    o.get().literal("trace", "base 2");
+                    o.get().literal("trace", "after include");
+                    o.get().endRecord();
+                });
     }
 
     @Test
     public void shouldIncludeFixFileWithVariables() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "include('src/test/resources/org/metafacture/metafix/fixes/vars.fix', a: '1', b: '23')",
-                "include('src/test/resources/org/metafacture/metafix/fixes/vars.fix', a: '2', b: '42')"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.endRecord();
+        MetafixTestHelpers.assertFix(
+                streamReceiver,
+                Arrays.asList(
+                        "include('src/test/resources/org/metafacture/metafix/fixes/vars.fix', a:"
+                                + " '1', b: '23')",
+                        "include('src/test/resources/org/metafacture/metafix/fixes/vars.fix', a:"
+                                + " '2', b: '42')"),
+                i -> {
+                    i.startRecord("1");
+                    i.endRecord();
 
-                i.startRecord("2");
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().literal("test1", "1-23");
-                o.get().literal("test2", "1-42");
-                o.get().endRecord();
+                    i.startRecord("2");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("test1", "1-23");
+                    o.get().literal("test2", "1-42");
+                    o.get().endRecord();
 
-                o.get().startRecord("2");
-                o.get().literal("test1", "2-23");
-                o.get().literal("test2", "2-42");
-                o.get().endRecord();
-            }
-        );
+                    o.get().startRecord("2");
+                    o.get().literal("test1", "2-23");
+                    o.get().literal("test2", "2-42");
+                    o.get().endRecord();
+                });
     }
 
     @Test
     public void shouldNotLeakVariablesFromIncludingFixFile() {
-        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Variable 'a' was not assigned!\nAssigned variables:\n{}", () ->
-            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "include('src/test/resources/org/metafacture/metafix/fixes/vars.fix', a: '1', b: '23')",
-                    "add_field('vars', '$[a]-$[b]')"
-                ),
-                i -> {
-                    i.startRecord("1");
-                    i.endRecord();
-                },
-                o -> {
-                }
-            )
-        );
+        MetafixTestHelpers.assertProcessException(
+                IllegalArgumentException.class,
+                "Variable 'a' was not assigned!\nAssigned variables:\n{}",
+                () ->
+                        MetafixTestHelpers.assertFix(
+                                streamReceiver,
+                                Arrays.asList(
+                                        "include('src/test/resources/org/metafacture/metafix/fixes/vars.fix',"
+                                            + " a: '1', b: '23')",
+                                        "add_field('vars', '$[a]-$[b]')"),
+                                i -> {
+                                    i.startRecord("1");
+                                    i.endRecord();
+                                },
+                                o -> {}));
     }
 
     @Test
     public void shouldIncludeFixFileInBind() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('trace')",
-                "add_field('trace.$append', 'before bind')",
-                "do list(path: 'data', 'var': '$i')",
-                "  paste('trace.$append', '~before include', '$i')",
-                "  include('src/test/resources/org/metafacture/metafix/fixes/var.fix')",
-                "  paste('trace.$append', '~after include', '$i')",
-                "end",
-                "add_field('trace.$append', 'after bind')"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.literal("record", "1");
-                i.literal("data", "marc");
-                i.literal("data", "json");
-                i.endRecord();
+        MetafixTestHelpers.assertFix(
+                streamReceiver,
+                Arrays.asList(
+                        "set_array('trace')",
+                        "add_field('trace.$append', 'before bind')",
+                        "do list(path: 'data', 'var': '$i')",
+                        "  paste('trace.$append', '~before include', '$i')",
+                        "  include('src/test/resources/org/metafacture/metafix/fixes/var.fix')",
+                        "  paste('trace.$append', '~after include', '$i')",
+                        "end",
+                        "add_field('trace.$append', 'after bind')"),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("record", "1");
+                    i.literal("data", "marc");
+                    i.literal("data", "json");
+                    i.endRecord();
 
-                i.startRecord("2");
-                i.literal("record", "2");
-                i.literal("data", "test");
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().literal("record", "1");
-                o.get().literal("data", "marc");
-                o.get().literal("data", "json");
-                o.get().literal("trace", "before bind");
-                o.get().literal("trace", "before include marc");
-                o.get().literal("trace", "marc 1");
-                o.get().literal("trace", "after include MARC");
-                o.get().literal("trace", "before include json");
-                o.get().literal("trace", "json 1");
-                o.get().literal("trace", "after include JSON");
-                o.get().literal("trace", "after bind");
-                o.get().endRecord();
+                    i.startRecord("2");
+                    i.literal("record", "2");
+                    i.literal("data", "test");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("record", "1");
+                    o.get().literal("data", "marc");
+                    o.get().literal("data", "json");
+                    o.get().literal("trace", "before bind");
+                    o.get().literal("trace", "before include marc");
+                    o.get().literal("trace", "marc 1");
+                    o.get().literal("trace", "after include MARC");
+                    o.get().literal("trace", "before include json");
+                    o.get().literal("trace", "json 1");
+                    o.get().literal("trace", "after include JSON");
+                    o.get().literal("trace", "after bind");
+                    o.get().endRecord();
 
-                o.get().startRecord("2");
-                o.get().literal("record", "2");
-                o.get().literal("data", "test");
-                o.get().literal("trace", "before bind");
-                o.get().literal("trace", "before include test");
-                o.get().literal("trace", "test 2");
-                o.get().literal("trace", "after include TEST");
-                o.get().literal("trace", "after bind");
-                o.get().endRecord();
-            }
-        );
+                    o.get().startRecord("2");
+                    o.get().literal("record", "2");
+                    o.get().literal("data", "test");
+                    o.get().literal("trace", "before bind");
+                    o.get().literal("trace", "before include test");
+                    o.get().literal("trace", "test 2");
+                    o.get().literal("trace", "after include TEST");
+                    o.get().literal("trace", "after bind");
+                    o.get().endRecord();
+                });
     }
 
     @Test
     public void shouldNotIncludeRelativeFixFileFromInlineScript() {
-        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Cannot resolve relative path: ./base.fix", () ->
-            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "include('src/test/resources/org/metafacture/metafix/fixes/include.fix')"
-                ),
-                i -> {
-                    i.startRecord("");
-                    i.endRecord();
-                },
-                o -> {
-                }
-            )
-        );
+        MetafixTestHelpers.assertProcessException(
+                IllegalArgumentException.class,
+                "Cannot resolve relative path: ./base.fix",
+                () ->
+                        MetafixTestHelpers.assertFix(
+                                streamReceiver,
+                                Arrays.asList(
+                                        "include('src/test/resources/org/metafacture/metafix/fixes/include.fix')"),
+                                i -> {
+                                    i.startRecord("");
+                                    i.endRecord();
+                                },
+                                o -> {}));
     }
 
     @Test
     public void shouldIncludeFixFileFromExternalScript() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "src/test/resources/org/metafacture/metafix/fixes/include.fix"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.literal("record", "1");
-                i.endRecord();
+        MetafixTestHelpers.assertFix(
+                streamReceiver,
+                Arrays.asList("src/test/resources/org/metafacture/metafix/fixes/include.fix"),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("record", "1");
+                    i.endRecord();
 
-                i.startRecord("2");
-                i.literal("record", "2");
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().literal("record", "1");
-                o.get().literal("trace", "before include");
-                o.get().literal("trace", "base 1");
-                o.get().literal("trace", "after include");
-                o.get().endRecord();
+                    i.startRecord("2");
+                    i.literal("record", "2");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("record", "1");
+                    o.get().literal("trace", "before include");
+                    o.get().literal("trace", "base 1");
+                    o.get().literal("trace", "after include");
+                    o.get().endRecord();
 
-                o.get().startRecord("2");
-                o.get().literal("record", "2");
-                o.get().literal("trace", "before include");
-                o.get().literal("trace", "base 2");
-                o.get().literal("trace", "after include");
-                o.get().endRecord();
-            }
-        );
+                    o.get().startRecord("2");
+                    o.get().literal("record", "2");
+                    o.get().literal("trace", "before include");
+                    o.get().literal("trace", "base 2");
+                    o.get().literal("trace", "after include");
+                    o.get().endRecord();
+                });
     }
 
     @Test
     public void shouldIncludeNestedFixFileFromExternalScript() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "src/test/resources/org/metafacture/metafix/fixes/nested.fix"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.literal("record", "1");
-                i.endRecord();
+        MetafixTestHelpers.assertFix(
+                streamReceiver,
+                Arrays.asList("src/test/resources/org/metafacture/metafix/fixes/nested.fix"),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("record", "1");
+                    i.endRecord();
 
-                i.startRecord("2");
-                i.literal("record", "2");
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().literal("record", "1");
-                o.get().literal("trace", "before nested");
-                o.get().literal("trace", "before include");
-                o.get().literal("trace", "base 1");
-                o.get().literal("trace", "after include");
-                o.get().literal("trace", "after nested");
-                o.get().endRecord();
+                    i.startRecord("2");
+                    i.literal("record", "2");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("record", "1");
+                    o.get().literal("trace", "before nested");
+                    o.get().literal("trace", "before include");
+                    o.get().literal("trace", "base 1");
+                    o.get().literal("trace", "after include");
+                    o.get().literal("trace", "after nested");
+                    o.get().endRecord();
 
-                o.get().startRecord("2");
-                o.get().literal("record", "2");
-                o.get().literal("trace", "before nested");
-                o.get().literal("trace", "before include");
-                o.get().literal("trace", "base 2");
-                o.get().literal("trace", "after include");
-                o.get().literal("trace", "after nested");
-                o.get().endRecord();
-            }
-        );
+                    o.get().startRecord("2");
+                    o.get().literal("record", "2");
+                    o.get().literal("trace", "before nested");
+                    o.get().literal("trace", "before include");
+                    o.get().literal("trace", "base 2");
+                    o.get().literal("trace", "after include");
+                    o.get().literal("trace", "after nested");
+                    o.get().endRecord();
+                });
     }
 
     @Test
     public void shouldIncludeLocationAndTextInExecutionException() {
         final String fixFile = "src/test/resources/org/metafacture/metafix/fixes/error.fix";
-        final String message = "Error while executing Fix expression (at FILE, line 2): append(\"animals\", \" is cool\")";
+        final String message =
+                "Error while executing Fix expression (at FILE, line 2): append(\"animals\", \" is"
+                        + " cool\")";
 
-        MetafixTestHelpers.assertThrows(FixExecutionException.class, s -> s.replaceAll("file:/.+?" + Pattern.quote(fixFile), "FILE"), message, () ->
-            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(fixFile),
-                i -> {
-                    i.startRecord("1");
-                    i.startEntity("animals");
-                    i.literal("1", "dog");
-                    i.literal("2", "cat");
-                    i.literal("3", "zebra");
-                    i.endEntity();
-                    i.endRecord();
-                },
-                o -> {
-                }
-            )
-        );
+        MetafixTestHelpers.assertThrows(
+                FixExecutionException.class,
+                s -> s.replaceAll("file:/.+?" + Pattern.quote(fixFile), "FILE"),
+                message,
+                () ->
+                        MetafixTestHelpers.assertFix(
+                                streamReceiver,
+                                Arrays.asList(fixFile),
+                                i -> {
+                                    i.startRecord("1");
+                                    i.startEntity("animals");
+                                    i.literal("1", "dog");
+                                    i.literal("2", "cat");
+                                    i.literal("3", "zebra");
+                                    i.endEntity();
+                                    i.endRecord();
+                                },
+                                o -> {}));
     }
 
-    private void assertStrictness(final Metafix.Strictness strictness, final String fixDef, final boolean stubLogging, final Consumer<Metafix> in, final Consumer<Supplier<StreamReceiver>> out) {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_field('before', '')",
-                fixDef,
-                "add_field('after', '')"
-            ),
-            i -> {
-                if (in != null) {
-                    in.accept(i);
-                }
+    private void assertStrictness(
+            final Metafix.Strictness strictness,
+            final String fixDef,
+            final boolean stubLogging,
+            final Consumer<Metafix> in,
+            final Consumer<Supplier<StreamReceiver>> out) {
+        MetafixTestHelpers.assertFix(
+                streamReceiver,
+                Arrays.asList("add_field('before', '')", fixDef, "add_field('after', '')"),
+                i -> {
+                    if (in != null) {
+                        in.accept(i);
+                    }
 
-                final Metafix.Strictness strictnessSpy = Mockito.spy(strictness);
-                i.setStrictness(strictnessSpy);
+                    final Metafix.Strictness strictnessSpy = Mockito.spy(strictness);
+                    i.setStrictness(strictnessSpy);
 
-                if (stubLogging) {
-                    Mockito.doNothing().when(strictnessSpy).log(Mockito.any(), Mockito.any());
-                }
+                    if (stubLogging) {
+                        Mockito.doNothing().when(strictnessSpy).log(Mockito.any(), Mockito.any());
+                    }
 
-                i.startRecord("1");
-                i.literal("data", "foo");
-                i.endRecord();
+                    i.startRecord("1");
+                    i.literal("data", "foo");
+                    i.endRecord();
 
-                i.startRecord("2");
-                i.literal("data", "foo");
-                i.literal("data", "bar");
-                i.endRecord();
+                    i.startRecord("2");
+                    i.literal("data", "foo");
+                    i.literal("data", "bar");
+                    i.endRecord();
 
-                i.startRecord("3");
-                i.literal("data", "bar");
-                i.endRecord();
-            },
-            out
-        );
+                    i.startRecord("3");
+                    i.literal("data", "bar");
+                    i.endRecord();
+                },
+                out);
 
         // TODO: Test logging statements
     }
 
-    private void assertStrictness(final Metafix.Strictness strictness, final boolean stubLogging, final Consumer<Supplier<StreamReceiver>> out) {
+    private void assertStrictness(
+            final Metafix.Strictness strictness,
+            final boolean stubLogging,
+            final Consumer<Supplier<StreamReceiver>> out) {
         assertStrictness(strictness, "upcase('data')", stubLogging, null, out);
     }
 
     @Test
     public void shouldSkipExpressionOnExecutionException() {
-        assertStrictness(Metafix.Strictness.EXPRESSION, true, o -> {
-            o.get().startRecord("1");
-            o.get().literal("data", "FOO");
-            o.get().literal("before", "");
-            o.get().literal("after", "");
-            o.get().endRecord();
+        assertStrictness(
+                Metafix.Strictness.EXPRESSION,
+                true,
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("data", "FOO");
+                    o.get().literal("before", "");
+                    o.get().literal("after", "");
+                    o.get().endRecord();
 
-            o.get().startRecord("2");
-            o.get().literal("data", "foo");
-            o.get().literal("data", "bar");
-            o.get().literal("before", "");
-            o.get().literal("after", "");
-            o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().literal("data", "foo");
+                    o.get().literal("data", "bar");
+                    o.get().literal("before", "");
+                    o.get().literal("after", "");
+                    o.get().endRecord();
 
-            o.get().startRecord("3");
-            o.get().literal("data", "BAR");
-            o.get().literal("before", "");
-            o.get().literal("after", "");
-            o.get().endRecord();
-        });
+                    o.get().startRecord("3");
+                    o.get().literal("data", "BAR");
+                    o.get().literal("before", "");
+                    o.get().literal("after", "");
+                    o.get().endRecord();
+                });
     }
 
     @Test
     public void shouldSkipRecordOnExecutionException() {
-        assertStrictness(Metafix.Strictness.RECORD, true, o -> {
-            o.get().startRecord("1");
-            o.get().literal("data", "FOO");
-            o.get().literal("before", "");
-            o.get().literal("after", "");
-            o.get().endRecord();
+        assertStrictness(
+                Metafix.Strictness.RECORD,
+                true,
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("data", "FOO");
+                    o.get().literal("before", "");
+                    o.get().literal("after", "");
+                    o.get().endRecord();
 
-            o.get().startRecord("3");
-            o.get().literal("data", "BAR");
-            o.get().literal("before", "");
-            o.get().literal("after", "");
-            o.get().endRecord();
-        });
+                    o.get().startRecord("3");
+                    o.get().literal("data", "BAR");
+                    o.get().literal("before", "");
+                    o.get().literal("after", "");
+                    o.get().endRecord();
+                });
     }
 
     @Test
     public void shouldAbortProcessOnExecutionException() {
-        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
-                assertStrictness(Metafix.Strictness.PROCESS, false, o -> {
-                })
-        );
+        MetafixTestHelpers.assertExecutionException(
+                IllegalStateException.class,
+                "Expected String, got Array",
+                () -> assertStrictness(Metafix.Strictness.PROCESS, false, o -> {}));
     }
 
     @Test
     public void shouldAbortProcessOnProcessException() {
-        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Unsupported Fix method: foo", () ->
-                assertStrictness(Metafix.Strictness.EXPRESSION, "foo()", false, null, o -> {
-                })
-        );
+        MetafixTestHelpers.assertProcessException(
+                IllegalArgumentException.class,
+                "Unsupported Fix method: foo",
+                () ->
+                        assertStrictness(
+                                Metafix.Strictness.EXPRESSION, "foo()", false, null, o -> {}));
     }
 
     @Test
     public void shouldOptionallySkipExpressionOnProcessException() {
-        assertStrictness(Metafix.Strictness.EXPRESSION, "upcase()", true, i -> i.setStrictnessHandlesProcessExceptions(true), o -> {
-            o.get().startRecord("1");
-            o.get().literal("data", "foo");
-            o.get().literal("before", "");
-            o.get().literal("after", "");
-            o.get().endRecord();
+        assertStrictness(
+                Metafix.Strictness.EXPRESSION,
+                "upcase()",
+                true,
+                i -> i.setStrictnessHandlesProcessExceptions(true),
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("data", "foo");
+                    o.get().literal("before", "");
+                    o.get().literal("after", "");
+                    o.get().endRecord();
 
-            o.get().startRecord("2");
-            o.get().literal("data", "foo");
-            o.get().literal("data", "bar");
-            o.get().literal("before", "");
-            o.get().literal("after", "");
-            o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().literal("data", "foo");
+                    o.get().literal("data", "bar");
+                    o.get().literal("before", "");
+                    o.get().literal("after", "");
+                    o.get().endRecord();
 
-            o.get().startRecord("3");
-            o.get().literal("data", "bar");
-            o.get().literal("before", "");
-            o.get().literal("after", "");
-            o.get().endRecord();
-        });
+                    o.get().startRecord("3");
+                    o.get().literal("data", "bar");
+                    o.get().literal("before", "");
+                    o.get().literal("after", "");
+                    o.get().endRecord();
+                });
     }
 
-    private void assertVar(final String fixDef, final Map<String, String> vars, final Map<String, String> result) {
-        assertFix(fixDef, vars, f -> result.forEach((k, v) -> Assertions.assertEquals(v, f.getVars().get(k))));
+    private void assertVar(
+            final String fixDef, final Map<String, String> vars, final Map<String, String> result) {
+        assertFix(
+                fixDef,
+                vars,
+                f -> result.forEach((k, v) -> Assertions.assertEquals(v, f.getVars().get(k))));
     }
 
     private void assertMap(final String fixDef, final String mapName) {
@@ -598,7 +636,8 @@ public class MetafixScriptTest {
         assertFix(fixDef, null, consumer);
     }
 
-    private void assertFix(final String fixDef, final Map<String, String> vars, final Consumer<Metafix> consumer) {
+    private void assertFix(
+            final String fixDef, final Map<String, String> vars, final Consumer<Metafix> consumer) {
         try {
             final Metafix metafix = vars == null ? new Metafix(fixDef) : new Metafix(fixDef, vars);
 
@@ -608,42 +647,50 @@ public class MetafixScriptTest {
             metafix.endRecord();
 
             consumer.accept(metafix);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void assertLog(final String fixDef, final String level, final String format, final Object... arguments) {
-        assertFix(fixDef, f -> {
-            final InOrder ordered = Mockito.inOrder(metafixLogger);
-            ordered.verify(metafixLogger).debug("Start record: {}", new Object[]{""});
-            ordered.verify(metafixLogger).debug("End record, walking Fix: {}", new Object[]{f.getCurrentRecord()});
-            ordered.verify(metafixLogger).debug("Sending results to {}", new Object[]{f.getStreamReceiver()});
-            ordered.verifyNoMoreInteractions();
-            Mockito.verifyNoMoreInteractions(metafixLogger);
+    private void assertLog(
+            final String fixDef,
+            final String level,
+            final String format,
+            final Object... arguments) {
+        assertFix(
+                fixDef,
+                f -> {
+                    final InOrder ordered = Mockito.inOrder(metafixLogger);
+                    ordered.verify(metafixLogger).debug("Start record: {}", new Object[] {""});
+                    ordered.verify(metafixLogger)
+                            .debug(
+                                    "End record, walking Fix: {}",
+                                    new Object[] {f.getCurrentRecord()});
+                    ordered.verify(metafixLogger)
+                            .debug("Sending results to {}", new Object[] {f.getStreamReceiver()});
+                    ordered.verifyNoMoreInteractions();
+                    Mockito.verifyNoMoreInteractions(metafixLogger);
 
-            final Logger logger = Mockito.verify(fixMethodLogger);
+                    final Logger logger = Mockito.verify(fixMethodLogger);
 
-            switch (level) {
-                case "DEBUG":
-                    logger.debug(format, arguments);
-                    break;
-                case "ERROR":
-                    logger.error(format, arguments);
-                    break;
-                case "INFO":
-                    logger.info(format, arguments);
-                    break;
-                case "WARN":
-                    logger.warn(format, arguments);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unsupported log level: " + level);
-            }
+                    switch (level) {
+                        case "DEBUG":
+                            logger.debug(format, arguments);
+                            break;
+                        case "ERROR":
+                            logger.error(format, arguments);
+                            break;
+                        case "INFO":
+                            logger.info(format, arguments);
+                            break;
+                        case "WARN":
+                            logger.warn(format, arguments);
+                            break;
+                        default:
+                            throw new IllegalArgumentException("Unsupported log level: " + level);
+                    }
 
-            Mockito.verifyNoMoreInteractions(fixMethodLogger);
-        });
+                    Mockito.verifyNoMoreInteractions(fixMethodLogger);
+                });
     }
-
 }

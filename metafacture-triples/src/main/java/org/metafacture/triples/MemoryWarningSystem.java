@@ -31,9 +31,8 @@ import javax.management.NotificationEmitter;
 import javax.management.NotificationListener;
 
 /**
- * This memory warning system will call the listener when we exceed the
- * percentage of available memory specified. The class is static, since the
- * usage threshold can only be set to one number.
+ * This memory warning system will call the listener when we exceed the percentage of available
+ * memory specified. The class is static, since the usage threshold can only be set to one number.
  */
 final class MemoryWarningSystem {
 
@@ -49,17 +48,23 @@ final class MemoryWarningSystem {
         setUsageThreshold(DEFAULT_THRESHOLD);
         final MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
         final NotificationEmitter emitter = (NotificationEmitter) mbean;
-        emitter.addNotificationListener(new NotificationListener() {
+        emitter.addNotificationListener(
+                new NotificationListener() {
 
-            @Override
-            public void handleNotification(final Notification notification, final Object handback) {
-                if (notification.getType().equals(MemoryNotificationInfo.MEMORY_THRESHOLD_EXCEEDED)) {
-                    for (final Listener listener : getListeners()) {
-                        listener.memoryLow(getUsedMemory(), getMaxMemory());
+                    @Override
+                    public void handleNotification(
+                            final Notification notification, final Object handback) {
+                        if (notification
+                                .getType()
+                                .equals(MemoryNotificationInfo.MEMORY_THRESHOLD_EXCEEDED)) {
+                            for (final Listener listener : getListeners()) {
+                                listener.memoryLow(getUsedMemory(), getMaxMemory());
+                            }
+                        }
                     }
-                }
-            }
-        }, null, null);
+                },
+                null,
+                null);
     }
 
     private static Collection<Listener> getListeners() {
@@ -90,8 +95,8 @@ final class MemoryWarningSystem {
     }
 
     /**
-     * Tenured Space Pool can be determined by it being of type HEAP and by it
-     * being possible to set the usage threshold.
+     * Tenured Space Pool can be determined by it being of type HEAP and by it being possible to set
+     * the usage threshold.
      *
      * @return MXBean for the Tenured Space Pool
      */
@@ -106,11 +111,8 @@ final class MemoryWarningSystem {
         throw new AssertionError("Could not find tenured space");
     }
 
-    /**
-     * Interface for low memory listeners
-     */
+    /** Interface for low memory listeners */
     interface Listener {
         void memoryLow(long usedMemory, long maxMemory);
     }
-
 }

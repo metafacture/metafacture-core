@@ -16,33 +16,36 @@
 
 package org.metafacture.metafix.method.script;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-
 /**
- * Defines a single global variable that can be referenced with
- * {@code $[<variableName>]} and assigns the value of the
- * {@code <sourceField>}.
+ * Defines a single global variable that can be referenced with {@code $[<variableName>]} and
+ * assigns the value of the {@code <sourceField>}.
  */
 @FixCommand("to_var")
 public class ToVar implements FixFunction {
 
-    /**
-     * Creates an instance of {@link ToVar}.
-     */
-    public ToVar() {
-    }
+    /** Creates an instance of {@link ToVar}. */
+    public ToVar() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final Value value = record.get(params.get(0));
-        metafix.getVars().put(params.get(1), Value.isNull(value) ? options.getOrDefault(DEFAULT_OPTION, "") : value.asString());
+        metafix.getVars()
+                .put(
+                        params.get(1),
+                        Value.isNull(value)
+                                ? options.getOrDefault(DEFAULT_OPTION, "")
+                                : value.asString());
     }
-
 }

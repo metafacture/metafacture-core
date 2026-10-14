@@ -17,11 +17,10 @@
 package org.metafacture.javaintegration.pojo;
 
 /**
- * Retrieves a pojos's member, via getter method or field access. Used by
- * {@link ComplexTypeDecoder} only.
+ * Retrieves a pojos's member, via getter method or field access. Used by {@link ComplexTypeDecoder}
+ * only.
  *
  * @author Thomas Seidel
- *
  */
 interface ValueGetter {
 
@@ -30,5 +29,4 @@ interface ValueGetter {
     String getName();
 
     Class<?> getValueType();
-
 }

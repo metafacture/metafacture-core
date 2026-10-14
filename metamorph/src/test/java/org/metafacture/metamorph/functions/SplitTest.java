@@ -16,11 +16,10 @@
 
 package org.metafacture.metamorph.functions;
 
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.TestHelpers;
-
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -32,25 +31,23 @@ import org.mockito.junit.MockitoRule;
  */
 public final class SplitTest {
 
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public SplitTest() {
-    }
+    public SplitTest() {}
 
     @Test
     public void issue265_shouldWorkIfLastFunctionInCombineStatement() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <combine name='out' value='${v}'>" +
-                "    <data source='in' name='v'>" +
-                "      <split delimiter=' ' />" +
-                "    </data>" +
-                "  </combine>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <combine name='out' value='${v}'>"
+                        + "    <data source='in' name='v'>"
+                        + "      <split delimiter=' ' />"
+                        + "    </data>"
+                        + "  </combine>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("in", "1 2");
@@ -61,8 +58,6 @@ public final class SplitTest {
                     o.get().literal("out", "1");
                     o.get().literal("out", "2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
-
 }

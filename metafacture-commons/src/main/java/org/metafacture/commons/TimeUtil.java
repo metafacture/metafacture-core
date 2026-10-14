@@ -61,11 +61,12 @@ public final class TimeUtil {
 
         if (i == 0 || minor == 0) {
             if (i < 0) {
-                i = BASE_UNIT_INDEX;  // Use seconds as default unit
+                i = BASE_UNIT_INDEX; // Use seconds as default unit
             }
             return String.format("%d%s", Long.valueOf(major), UNIT_SYMBOLS[i]);
         }
-        return String.format("%d%s %d%s", Long.valueOf(major), UNIT_SYMBOLS[i], Long.valueOf(minor), UNIT_SYMBOLS[i - 1]);
+        return String.format(
+                "%d%s %d%s",
+                Long.valueOf(major), UNIT_SYMBOLS[i], Long.valueOf(minor), UNIT_SYMBOLS[i - 1]);
     }
-
 }

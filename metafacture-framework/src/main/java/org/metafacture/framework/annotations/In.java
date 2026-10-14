@@ -38,5 +38,4 @@ public @interface In {
      * @return the Class
      */
     Class<?> value();
-
 }

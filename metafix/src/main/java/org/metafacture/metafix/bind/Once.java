@@ -16,38 +16,39 @@
 
 package org.metafacture.metafix.bind;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.RecordTransformer;
 import org.metafacture.metafix.api.FixContext;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 /**
- * Executes the statements only once (when the bind is first encountered),
- * not repeatedly for each record.
+ * Executes the statements only once (when the bind is first encountered), not repeatedly for each
+ * record.
  */
 @FixCommand("once")
 public class Once implements FixContext {
 
     private static final Map<Metafix, Set<String>> EXECUTED = new HashMap<>();
 
-    /**
-     * Creates an instance of {@link Once}.
-     */
-    public Once() {
-    }
+    /** Creates an instance of {@link Once}. */
+    public Once() {}
 
     @Override
-    public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final RecordTransformer recordTransformer) {
-        if (EXECUTED.computeIfAbsent(metafix, k -> new HashSet<>()).add(params.isEmpty() ? null : params.get(0))) {
+    public void execute(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options,
+            final RecordTransformer recordTransformer) {
+        if (EXECUTED.computeIfAbsent(metafix, k -> new HashSet<>())
+                .add(params.isEmpty() ? null : params.get(0))) {
             recordTransformer.transform(record);
         }
     }
-
 }

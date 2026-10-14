@@ -16,22 +16,6 @@
 
 package org.metafacture.metafix.maps;
 
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.metafix.FixExecutionException;
-import org.metafacture.metamorph.api.Maps;
-import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
-
-import org.apache.jena.rdf.model.Literal;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.ResIterator;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.StmtIterator;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.shared.PropertyNotFoundException;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -42,19 +26,31 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.function.UnaryOperator;
+import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.ResIterator;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.shared.PropertyNotFoundException;
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.metafix.FixExecutionException;
+import org.metafacture.metamorph.api.Maps;
+import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
 
 /**
- * Provides a dynamically built {@link Map} based on an RDF resource. Can be one file or a comma separated list of RDF
- * files or HTTP(S) URIs. Redirections of HTTP(S) URIs are followed.
- * The resources are supposed to be UTF-8 encoded.
- * <p>
+ * Provides a dynamically built {@link Map} based on an RDF resource. Can be one file or a comma
+ * separated list of RDF files or HTTP(S) URIs. Redirections of HTTP(S) URIs are followed. The
+ * resources are supposed to be UTF-8 encoded.
  *
- * <strong>Important:</strong> When using a list of files make sure to set the proper separator. All lines that are not
- * split in two parts by the separator are ignored!
+ * <p><strong>Important:</strong> When using a list of files make sure to set the proper separator.
+ * All lines that are not split in two parts by the separator are ignored!
  *
  * @author Markus Michael Geipel
  * @author Pascal Christoph (dr0i)
- *
  * @see org.metafacture.metamorph.maps.FileMap
  */
 public final class RdfMap extends AbstractReadOnlyMap<String, String> implements Closeable {
@@ -77,9 +73,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
     private String targetLanguage = "";
     private boolean isUninitialized = true;
 
-    /**
-     * Creates an instance of {@link RdfMap}.
-     */
+    /** Creates an instance of {@link RdfMap}. */
     public RdfMap() {
         setDefault(null);
     }
@@ -93,7 +87,10 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
 
         if (!isURI(target)) {
             final String[] nsPrefixAndProperty = target.split(":");
-            target = nsPrefixAndProperty.length == 2 ? model.getNsPrefixURI(nsPrefixAndProperty[0]) + nsPrefixAndProperty[1] : nsPrefixAndProperty[0];
+            target =
+                    nsPrefixAndProperty.length == 2
+                            ? model.getNsPrefixURI(nsPrefixAndProperty[0]) + nsPrefixAndProperty[1]
+                            : nsPrefixAndProperty[0];
         }
 
         isUninitialized = false;
@@ -133,30 +130,25 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
 
             if (model == null) {
                 model = RDFDataMgr.loadModel(uri);
-            }
-            else {
+            } else {
                 RDFDataMgr.read(model, uri);
             }
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new FixExecutionException("Error while loading RDF file: " + file, e);
         }
     }
 
     /**
-     * Builds a Map dynamically by querying an RDF model based on a key and a targeted Property
-     * (to be set in {@link RdfMap#setTarget(String)}) and an optional language tag (to be set in
-     * {@link RdfMap#setTargetLanguage}).
-     * <br>
+     * Builds a Map dynamically by querying an RDF model based on a key and a targeted Property (to
+     * be set in {@link RdfMap#setTarget(String)}) and an optional language tag (to be set in {@link
+     * RdfMap#setTargetLanguage}). <br>
      * The Map acts as a cache.
-     * <p>
-     * To minimize the need of parameters three different querying modes are gone through. If one fails, the next one is
-     * tried:
-     * <p>
-     * 1. Get the value of the targeted Property of a Subject
-     * <br>
-     * 2. Get the Subject matching a targeted Property value
-     * <br>
+     *
+     * <p>To minimize the need of parameters three different querying modes are gone through. If one
+     * fails, the next one is tried:
+     *
+     * <p>1. Get the value of the targeted Property of a Subject <br>
+     * 2. Get the Subject matching a targeted Property value <br>
      * 3. Get the value of a Property using the value of a targeted Property
      *
      * @param key the Property value, or a Subject, to be looked up
@@ -168,8 +160,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
 
         if (map.containsKey(resourceName)) {
             result = map.get(resourceName);
-        }
-        else {
+        } else {
             if (isUninitialized) {
                 init();
             }
@@ -180,18 +171,19 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
             try {
                 if (select.equals(Select.SUBJECT)) {
                     result = getSubjectUsingPropertyAndLiteral(resourceName, targetProperty);
-                }
-                else {
+                } else {
                     // 1. try to get LITERAL using SUBJECT and PROPERTY
                     if (!targetLanguage.isEmpty()) {
-                        result = model.getRequiredProperty(resource, targetProperty, targetLanguage).getString();
-                    }
-                    else {
+                        result =
+                                model.getRequiredProperty(resource, targetProperty, targetLanguage)
+                                        .getString();
+                    } else {
                         result = model.getRequiredProperty(resource, targetProperty).getString();
                     }
                 }
-            }
-            catch (final PropertyNotFoundException | NullPointerException | NoSuchElementException e) {
+            } catch (final PropertyNotFoundException
+                    | NullPointerException
+                    | NoSuchElementException e) {
                 // 2. try to get SUBJECT using PROPERTY and LITERAL
                 if (select.equals(Select.DEFAULT)) {
                     result = getSubjectUsingPropertyAndLiteral(resourceName, targetProperty);
@@ -199,7 +191,9 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
                 // 3. try to get LITERAL of PREDICATE A using PREDICATE B
                 if (!select.equals(Select.SUBJECT)) {
                     if (result == null) {
-                        result = getLiteralOfPredicateUsingOtherPredicate(resourceName, targetProperty);
+                        result =
+                                getLiteralOfPredicateUsingOtherPredicate(
+                                        resourceName, targetProperty);
                     }
                 }
             }
@@ -210,7 +204,8 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
         return result;
     }
 
-    private String getLiteralOfPredicateUsingOtherPredicate(final String resourceName, final Property targetProperty) {
+    private String getLiteralOfPredicateUsingOtherPredicate(
+            final String resourceName, final Property targetProperty) {
         final ResIterator iter = model.listSubjectsWithProperty(targetProperty);
         String result = map.get(Maps.DEFAULT_MAP_KEY);
 
@@ -227,7 +222,8 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
                     while (subIterProp.hasNext()) {
                         final Statement subStmt = subIterProp.nextStatement();
 
-                        if (subStmt.getLanguage().equals(targetLanguage) && !subStmt.getString().equals(resourceName)) {
+                        if (subStmt.getLanguage().equals(targetLanguage)
+                                && !subStmt.getString().equals(resourceName)) {
                             result = subStmt.getString();
                         }
                     }
@@ -238,7 +234,8 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
         return result;
     }
 
-    private String getSubjectUsingPropertyAndLiteral(final String resourceName, final Property targetProperty) {
+    private String getSubjectUsingPropertyAndLiteral(
+            final String resourceName, final Property targetProperty) {
         final ResIterator iter = model.listSubjectsWithProperty(targetProperty);
 
         while (iter.hasNext()) {
@@ -249,7 +246,8 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
                 final Literal literal = stmtIterator.next().getObject().asLiteral();
 
                 if (literal.getString().equals(resourceName)) {
-                    if (!targetLanguage.isEmpty() && !literal.getLanguage().equals(targetLanguage)) {
+                    if (!targetLanguage.isEmpty()
+                            && !literal.getLanguage().equals(targetLanguage)) {
                         continue;
                     }
 
@@ -262,7 +260,8 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
     }
 
     /**
-     * Gets the language of the target Property which is queried in the RDF. Valid values are defined by BCP47.
+     * Gets the language of the target Property which is queried in the RDF. Valid values are
+     * defined by BCP47.
      *
      * @return the targeted language
      */
@@ -271,8 +270,8 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
     }
 
     /**
-     * Sets the language of the target Property which is queried in the RDF. Valid values are defined by BCP47.
-     * <br>
+     * Sets the language of the target Property which is queried in the RDF. Valid values are
+     * defined by BCP47. <br>
      * Setting the language of the target Property is optional.
      *
      * @param targetLanguage the language of the target Property to be queried
@@ -291,8 +290,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
     }
 
     /**
-     * Sets the target Property which is queried in the RDF. Namespaces are allowed.
-     * <br>
+     * Sets the target Property which is queried in the RDF. Namespaces are allowed. <br>
      * <strong>Setting a target Property is mandatory.</strong>
      *
      * @param target the Property to be queried
@@ -307,7 +305,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
      * Setting "select" is optional.
      *
      * @return the selected position to be retrieved
-     **/
+     */
     public String getSelect() {
         return select.toString();
     }
@@ -315,26 +313,24 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
     /**
      * Sets whether the Subject or the Object or a mixture of both should be retrieved in the RDF.
      * <br>
-     * Setting "select" is optional.
-     * <strong>Defaults to retrieve both: tries to get "objects" and as a fallback "subjects".</strong>
+     * Setting "select" is optional. <strong>Defaults to retrieve both: tries to get "objects" and
+     * as a fallback "subjects".</strong>
      *
      * @param position the position to be retrieved. Can be "subject" or "object".
      */
     public void setSelect(final String position) {
         if (Select.SUBJECT.name().equalsIgnoreCase(position)) {
             select = Select.SUBJECT;
-        }
-        else if (Select.OBJECT.name().equalsIgnoreCase(position)) {
+        } else if (Select.OBJECT.name().equalsIgnoreCase(position)) {
             select = Select.OBJECT;
-        }
-        else {
-            throw new FixExecutionException("Couldn't set parameter - use 'subject' or 'object' as value");
+        } else {
+            throw new FixExecutionException(
+                    "Couldn't set parameter - use 'subject' or 'object' as value");
         }
     }
 
     /**
-     * Sets the default value returned if the key couldn't be found.
-     * <br>
+     * Sets the default value returned if the key couldn't be found. <br>
      * <strong>Default value: {@link Maps#DEFAULT_MAP_KEY} </strong>
      *
      * @param defaultValue the default value returned
@@ -344,9 +340,10 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
     }
 
     /**
-     * Gets a redirected URL, if any redirection takes place. Adapted predated code from org.apache.jena.rdfxml.xmlinput.JenaReader.
-     * <p>
-     * Note: Using newer Jena version (needs java 11) this method would be obsolete.
+     * Gets a redirected URL, if any redirection takes place. Adapted predated code from
+     * org.apache.jena.rdfxml.xmlinput.JenaReader.
+     *
+     * <p>Note: Using newer Jena version (needs java 11) this method would be obsolete.
      *
      * @param url the URL to resolve
      * @return the (redirected) URL
@@ -399,7 +396,8 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
     }
 
     private enum Select {
-        SUBJECT, OBJECT, DEFAULT
+        SUBJECT,
+        OBJECT,
+        DEFAULT
     }
-
 }

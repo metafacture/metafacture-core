@@ -17,8 +17,8 @@
 package org.metafacture.metamorph.api;
 
 /**
- * Describes a location in a Metamorph script. Instances of this interface are
- * returned by {@link KnowsSourceLocation}.
+ * Describes a location in a Metamorph script. Instances of this interface are returned by {@link
+ * KnowsSourceLocation}.
  *
  * @author Christoph Böhme
  */
@@ -64,7 +64,5 @@ public interface SourceLocation {
          * @return the column number.
          */
         int getColumnNumber();
-
     }
-
 }

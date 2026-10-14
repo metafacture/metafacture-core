@@ -16,6 +16,9 @@
 
 package org.metafacture.metafix.method.field;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.JsonValue;
 import org.metafacture.metafix.Metafix;
@@ -23,37 +26,35 @@ import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-/**
- * Replaces the string with its JSON deserialization.
- */
+/** Replaces the string with its JSON deserialization. */
 @FixCommand("from_json")
 public class FromJson implements FixFunction {
 
-    /**
-     * Creates an instance of {@link FromJson}.
-     */
-    public FromJson() {
-    }
+    /** Creates an instance of {@link FromJson}. */
+    public FromJson() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final String errorString = options.get(ERROR_STRING_OPTION);
         final JsonValue.Parser parser = new JsonValue.Parser();
 
-        record.transform(params.get(0), (m, c) -> m
-                .ifString(s -> {
-                    try {
-                        c.accept(parser.parse(s));
-                    }
-                    catch (final IOException e) {
-                        c.accept(errorString != null ? new Value(errorString) : null);
-                    }
-                })
-        );
+        record.transform(
+                params.get(0),
+                (m, c) ->
+                        m.ifString(
+                                s -> {
+                                    try {
+                                        c.accept(parser.parse(s));
+                                    } catch (final IOException e) {
+                                        c.accept(
+                                                errorString != null
+                                                        ? new Value(errorString)
+                                                        : null);
+                                    }
+                                }));
     }
-
 }

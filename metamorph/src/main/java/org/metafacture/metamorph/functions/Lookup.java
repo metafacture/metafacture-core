@@ -17,8 +17,7 @@
 package org.metafacture.metamorph.functions;
 
 /**
- * Uses the received value as a key for looking up
- * the output value in a map.
+ * Uses the received value as a key for looking up the output value in a map.
  *
  * @author Markus Michael Geipel
  */
@@ -26,11 +25,8 @@ public final class Lookup extends AbstractLookup {
 
     private String defaultValue;
 
-    /**
-     * Creates an instance of {@link Lookup}.
-     */
-    public Lookup() {
-    }
+    /** Creates an instance of {@link Lookup}. */
+    public Lookup() {}
 
     /**
      * Sets the default value.
@@ -59,5 +55,4 @@ public final class Lookup extends AbstractLookup {
     public void setIn(final String mapName) {
         setMap(mapName);
     }
-
 }

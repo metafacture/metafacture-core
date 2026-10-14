@@ -16,37 +16,39 @@
 
 package org.metafacture.metafix.method.record;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 /**
- * Replaces the value with a formatted ({@code sprintf}-like) version as in
- * {@link java.util.Formatter}.
+ * Replaces the value with a formatted ({@code sprintf}-like) version as in {@link
+ * java.util.Formatter}.
  */
 @FixCommand("format")
 public class Format implements FixFunction {
 
-    /**
-     * Creates an instance of {@link Format}.
-     */
-    public Format() {
-    }
+    /** Creates an instance of {@link Format}. */
+    public Format() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final String field = params.get(0);
 
-        record.getList(field, oldValues -> {
-            final String newValue = String.format(params.get(1), oldValues.stream().toArray());
-            record.replace(field, new Value(Arrays.asList(new Value(newValue))));
-        });
+        record.getList(
+                field,
+                oldValues -> {
+                    final String newValue =
+                            String.format(params.get(1), oldValues.stream().toArray());
+                    record.replace(field, new Value(Arrays.asList(new Value(newValue))));
+                });
     }
-
 }

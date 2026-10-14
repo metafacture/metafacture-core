@@ -16,12 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
-import org.metafacture.metamorph.api.NamedValueSource;
-import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
-
 import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import org.metafacture.metamorph.api.NamedValueSource;
+import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
 
 /**
  * Corresponds to the <code>&lt;range&gt;</code> tag.
@@ -30,16 +29,14 @@ import java.util.TreeSet;
  */
 public final class Range extends AbstractFlushingCollect {
 
-    private final SortedSet<Integer> values = new TreeSet<Integer>(new IncrementDependingComparator());
+    private final SortedSet<Integer> values =
+            new TreeSet<Integer>(new IncrementDependingComparator());
 
     private int increment;
     private Integer first;
 
-    /**
-     * Creates an instance of {@link Range}.
-     */
-    public Range() {
-    }
+    /** Creates an instance of {@link Range}. */
+    public Range() {}
 
     /**
      * Gets the incrment.
@@ -61,8 +58,9 @@ public final class Range extends AbstractFlushingCollect {
 
     @Override
     protected void emit() {
-        for (final Integer i: values) {
-            getNamedValueReceiver().receive(getName(), i.toString(), this, getRecordCount(), getEntityCount());
+        for (final Integer i : values) {
+            getNamedValueReceiver()
+                    .receive(getName(), i.toString(), this, getRecordCount(), getEntityCount());
         }
     }
 
@@ -75,8 +73,7 @@ public final class Range extends AbstractFlushingCollect {
     protected void receive(final String name, final String value, final NamedValueSource source) {
         if (first == null) {
             first = Integer.valueOf(value);
-        }
-        else {
+        } else {
             final int last = Integer.valueOf(value).intValue();
             for (int i = first.intValue(); i == last || increment > 0 == i < last; i += increment) {
                 values.add(Integer.valueOf(i));
@@ -92,19 +89,16 @@ public final class Range extends AbstractFlushingCollect {
     }
 
     /**
-     * A comparator which defines the sort order of the values in the range
-     * depending on the increment.
+     * A comparator which defines the sort order of the values in the range depending on the
+     * increment.
      */
     private class IncrementDependingComparator implements Comparator<Integer> {
 
-        IncrementDependingComparator() {
-        }
+        IncrementDependingComparator() {}
 
         @Override
         public int compare(final Integer o1, final Integer o2) {
             return Integer.signum(increment) * (o1 - o2);
         }
-
     }
-
 }

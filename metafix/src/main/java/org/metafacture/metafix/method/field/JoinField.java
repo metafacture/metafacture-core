@@ -16,34 +16,40 @@
 
 package org.metafacture.metafix.method.field;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-/**
- * Joins an array of strings into a single string.
- */
+/** Joins an array of strings into a single string. */
 @FixCommand("join_field")
 public class JoinField implements FixFunction {
 
-    /**
-     * Creates an instance of {@link JoinField}.
-     */
-    public JoinField() {
-    }
+    /** Creates an instance of {@link JoinField}. */
+    public JoinField() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final String joinChar = params.size() > 1 ? params.get(1) : "";
-        record.transform(params.get(0), (m, c) -> m
-                .ifArray(a -> c.accept(new Value(a.stream().map(Value::asString).collect(Collectors.joining(joinChar)))))
-        );
+        record.transform(
+                params.get(0),
+                (m, c) ->
+                        m.ifArray(
+                                a ->
+                                        c.accept(
+                                                new Value(
+                                                        a.stream()
+                                                                .map(Value::asString)
+                                                                .collect(
+                                                                        Collectors.joining(
+                                                                                joinChar))))));
     }
-
 }

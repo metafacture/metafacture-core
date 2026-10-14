@@ -16,11 +16,10 @@
 
 package org.metafacture.biblio.iso2709;
 
-import org.metafacture.commons.Require;
-import org.metafacture.framework.FormatException;
-
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import org.metafacture.commons.Require;
+import org.metafacture.framework.FormatException;
 
 /**
  * Reads a record in ISO 2709:2008 format from a byte array.
@@ -49,8 +48,8 @@ public final class Record {
     private FieldHandler fieldHandler;
 
     /**
-     * Creates an instance of {@code Record} which provides access to the record
-     * stored in the array passed as argument.
+     * Creates an instance of {@code Record} which provides access to the record stored in the array
+     * passed as argument.
      *
      * @param recordData a byte array containing a record in ISO 2709:2008 format.
      */
@@ -61,8 +60,7 @@ public final class Record {
         label = new Label(buffer);
         baseAddress = label.getBaseAddress();
         checkBaseAddress();
-        directoryEntry = new DirectoryEntry(buffer, label.getRecordFormat(),
-                baseAddress);
+        directoryEntry = new DirectoryEntry(buffer, label.getRecordFormat(), baseAddress);
         indicatorLength = label.getIndicatorLength();
         identifierLength = label.getIdentifierLength();
         recordIdFieldStart = findRecordIdFieldStart();
@@ -75,7 +73,8 @@ public final class Record {
     }
 
     private void checkBaseAddress() {
-        if (baseAddress < Iso2709Constants.MIN_BASE_ADDRESS || baseAddress > buffer.getLength() - 1) {
+        if (baseAddress < Iso2709Constants.MIN_BASE_ADDRESS
+                || baseAddress > buffer.getLength() - 1) {
             throw new FormatException("base address is out of range");
         }
     }
@@ -137,11 +136,10 @@ public final class Record {
     }
 
     /**
-     * Sets the character encoding used for reading the data values. The encoding
-     * should be set before calling {@link #getRecordId()} or
-     * {@link #processFields(FieldHandler)}. If it is called while fields are
-     * being processed, the new encoding becomes effective on the next invocation
-     * of {@link FieldHandler#data(char[], String)}.
+     * Sets the character encoding used for reading the data values. The encoding should be set
+     * before calling {@link #getRecordId()} or {@link #processFields(FieldHandler)}. If it is
+     * called while fields are being processed, the new encoding becomes effective on the next
+     * invocation of {@link FieldHandler#data(char[], String)}.
      *
      * @param charset the character encoding of the data values
      */
@@ -150,8 +148,8 @@ public final class Record {
     }
 
     /**
-     * Returns the current character encoding used for reading the data values.
-     * The default encoding is UTF-8.
+     * Returns the current character encoding used for reading the data values. The default encoding
+     * is UTF-8.
      *
      * @return the current character encoding.
      */
@@ -160,13 +158,12 @@ public final class Record {
     }
 
     /**
-     * Returns the contents of the record identifier field. The record identifier
-     * field has the tag <i>001</i>. It must be the first field in the record.
-     * <p>
-     * Defined in section 4.5.2 of the ISO 2709:2008 standard.
+     * Returns the contents of the record identifier field. The record identifier field has the tag
+     * <i>001</i>. It must be the first field in the record.
      *
-     * @return a string which identifies the record or null if the record has
-     * no record identifier.
+     * <p>Defined in section 4.5.2 of the ISO 2709:2008 standard.
+     *
+     * @return a string which identifies the record or null if the record has no record identifier.
      */
     public String getRecordId() {
         if (recordIdFieldStart == RECORD_ID_MISSING) {
@@ -187,8 +184,8 @@ public final class Record {
     }
 
     /**
-     * Iterates through all fields in the record and calls the appropriate method
-     * on the supplied {@link FieldHandler} instance.
+     * Iterates through all fields in the record and calls the appropriate method on the supplied
+     * {@link FieldHandler} instance.
      *
      * @param currentFieldHandler instance of field handler. Must not be null.
      */
@@ -198,10 +195,8 @@ public final class Record {
         directoryEntry.rewind();
         while (!directoryEntry.endOfDirectoryReached()) {
             if (continuedField) {
-                fieldHandler.additionalImplDefinedPart(
-                        directoryEntry.getImplDefinedPart());
-            }
-            else {
+                fieldHandler.additionalImplDefinedPart(directoryEntry.getImplDefinedPart());
+            } else {
                 processField();
             }
             continuedField = directoryEntry.isContinuedField();
@@ -213,8 +208,7 @@ public final class Record {
     private void processField() {
         if (directoryEntry.isReferenceField()) {
             processReferenceField();
-        }
-        else {
+        } else {
             processDataField();
         }
     }
@@ -223,15 +217,15 @@ public final class Record {
         final int fieldStart = baseAddress + directoryEntry.getFieldStart();
         final int fieldLength = buffer.distanceTo(Iso2709Constants.FIELD_SEPARATOR, fieldStart);
         final String value = buffer.stringAt(fieldStart, fieldLength, charset);
-        fieldHandler.referenceField(directoryEntry.getTag(),
-                directoryEntry.getImplDefinedPart(), value);
+        fieldHandler.referenceField(
+                directoryEntry.getTag(), directoryEntry.getImplDefinedPart(), value);
     }
 
     private void processDataField() {
         final int fieldStart = baseAddress + directoryEntry.getFieldStart();
         final char[] indicators = buffer.charsAt(fieldStart, indicatorLength);
-        fieldHandler.startDataField(directoryEntry.getTag(),
-                directoryEntry.getImplDefinedPart(), indicators);
+        fieldHandler.startDataField(
+                directoryEntry.getTag(), directoryEntry.getImplDefinedPart(), indicators);
         processDataValues(fieldStart + indicatorLength);
         fieldHandler.endDataField();
     }
@@ -244,13 +238,13 @@ public final class Record {
     }
 
     /**
-     * Reads the field value starting at {@code fromIndex} and calls
-     * {@link FieldHandler#data(char[], String)}.
+     * Reads the field value starting at {@code fromIndex} and calls {@link
+     * FieldHandler#data(char[], String)}.
      *
      * @param fromIndex index at which the identifier of the field value starts.
-     * @return the index of the end of field marker. This is the position write
-     * after the data field in the buffer. It can be used as the next starting
-     * position when processing multiple subfields.
+     * @return the index of the end of field marker. This is the position write after the data field
+     *     in the buffer. It can be used as the next starting position when processing multiple
+     *     subfields.
      */
     private int processDataValue(final int fromIndex) {
         final char[] identifier = getIdentifier(fromIndex);
@@ -267,5 +261,4 @@ public final class Record {
         }
         return EMPTY_IDENTIFIER;
     }
-
 }

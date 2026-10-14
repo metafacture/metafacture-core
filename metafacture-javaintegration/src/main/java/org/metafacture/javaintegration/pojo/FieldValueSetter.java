@@ -16,10 +16,9 @@
 
 package org.metafacture.javaintegration.pojo;
 
-import org.metafacture.framework.MetafactureException;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import org.metafacture.framework.MetafactureException;
 
 /**
  * Sets the value of a field. The field must be publicly accessible.
@@ -43,11 +42,10 @@ class FieldValueSetter implements ValueSetter {
     public void setValue(final Object object, final Object value) {
         try {
             field.set(object, value);
-        }
-        catch (final IllegalArgumentException e) {
-            throw new MetafactureException("The given object don't have a field named " + field.getName(), e);
-        }
-        catch (final IllegalAccessException e) {
+        } catch (final IllegalArgumentException e) {
+            throw new MetafactureException(
+                    "The given object don't have a field named " + field.getName(), e);
+        } catch (final IllegalAccessException e) {
             throw new MetafactureException("Can't access the field named " + field.getName(), e);
         }
     }
@@ -61,5 +59,4 @@ class FieldValueSetter implements ValueSetter {
     public ValueType getValueType() {
         return new ValueType(field.getType(), field.getGenericType());
     }
-
 }

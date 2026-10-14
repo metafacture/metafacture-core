@@ -20,7 +20,6 @@ package org.metafacture.formeta;
  * Constant definitions for the Formeta format.
  *
  * @author Christoph Böhme
- *
  */
 public final class Formeta {
 
@@ -49,5 +48,4 @@ public final class Formeta {
     public static boolean isWhitespace(final char ch) {
         return WHITESPACE.indexOf(ch) > -1;
     }
-
 }

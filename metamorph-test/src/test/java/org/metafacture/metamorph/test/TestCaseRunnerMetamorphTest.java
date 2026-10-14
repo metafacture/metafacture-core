@@ -28,12 +28,14 @@ import org.junit.runners.model.InitializationError;
  */
 public final class TestCaseRunnerMetamorphTest {
 
-    public TestCaseRunnerMetamorphTest() {
-    }
+    public TestCaseRunnerMetamorphTest() {}
 
     @Test
     public void issue213ShouldNotInitAnnotationsArrayWithNull() throws InitializationError {
-        final MetamorphTestRunner runner = new MetamorphTestRunner(Dummy.class, "/org/metafacture/metamorph/test/test-case-runner-test-dummy.xml");
+        final MetamorphTestRunner runner =
+                new MetamorphTestRunner(
+                        Dummy.class,
+                        "/org/metafacture/metamorph/test/test-case-runner-test-dummy.xml");
         final MetamorphTestCase metamorphTestCase = runner.getChildren().get(0);
         final Description description = runner.describeChild(metamorphTestCase);
 
@@ -42,9 +44,6 @@ public final class TestCaseRunnerMetamorphTest {
 
     public static final class Dummy {
 
-        public Dummy() {
-        }
-
+        public Dummy() {}
     }
-
 }

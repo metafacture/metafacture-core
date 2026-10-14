@@ -16,29 +16,26 @@
 
 package org.metafacture.metafix.method.record;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Ignores records that match a condition.
- */
+/** Ignores records that match a condition. */
 @FixCommand("reject")
 public class Reject implements FixFunction {
 
-    /**
-     * Creates an instance of {@link Reject}.
-     */
-    public Reject() {
-    }
+    /** Creates an instance of {@link Reject}. */
+    public Reject() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         record.setReject(true);
     }
-
 }

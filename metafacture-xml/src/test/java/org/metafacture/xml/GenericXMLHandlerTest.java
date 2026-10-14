@@ -16,10 +16,9 @@
 
 package org.metafacture.xml;
 
-import org.metafacture.framework.StreamReceiver;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -30,19 +29,16 @@ import org.xml.sax.helpers.AttributesImpl;
  * Tests for class {@link GenericXmlHandler}.
  *
  * @author Christoph Böhme
- *
  */
 public final class GenericXMLHandlerTest {
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
     private GenericXmlHandler genericXmlHandler;
 
     private AttributesImpl attributes;
 
-    public GenericXMLHandlerTest() {
-    }
+    public GenericXMLHandlerTest() {}
 
     @Before
     public void setup() {
@@ -207,5 +203,4 @@ public final class GenericXMLHandlerTest {
         ordered.verifyNoMoreInteractions();
         Mockito.verifyNoMoreInteractions(receiver);
     }
-
 }

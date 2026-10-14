@@ -19,8 +19,8 @@ package org.metafacture.metamorph.test.reader;
 import org.metafacture.framework.StreamReceiver;
 
 /**
- * Dynamically instantiated a reader for a specific data format. This module
- * allows to select a concrete reader only at runtime.
+ * Dynamically instantiated a reader for a specific data format. This module allows to select a
+ * concrete reader only at runtime.
  *
  * @author Markus Michael Geipel
  */
@@ -41,8 +41,8 @@ public final class MultiFormatReader implements Reader {
     }
 
     /**
-     * Sets the format of {@link #currentReader} if the {@link #READER_FACTORY}
-     * contains that format.
+     * Sets the format of {@link #currentReader} if the {@link #READER_FACTORY} contains that
+     * format.
      *
      * @param format the format
      */
@@ -74,5 +74,4 @@ public final class MultiFormatReader implements Reader {
     public void closeStream() {
         currentReader.closeStream();
     }
-
 }

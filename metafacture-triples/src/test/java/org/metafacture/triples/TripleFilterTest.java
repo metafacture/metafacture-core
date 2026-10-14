@@ -16,12 +16,11 @@
 
 package org.metafacture.triples;
 
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.objects.Triple;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.objects.Triple;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -30,7 +29,6 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link TripleFilter},
  *
  * @author Christoph Böhme
- *
  */
 public final class TripleFilterTest {
 
@@ -40,11 +38,9 @@ public final class TripleFilterTest {
 
     private TripleFilter tripleFilter;
 
-    @Mock
-    private ObjectReceiver<Triple> receiver;
+    @Mock private ObjectReceiver<Triple> receiver;
 
-    public TripleFilterTest() {
-    }
+    public TripleFilterTest() {}
 
     @Before
     public void setup() {
@@ -94,5 +90,4 @@ public final class TripleFilterTest {
         Mockito.verify(receiver).process(TRIPLE3);
         Mockito.verifyNoMoreInteractions(receiver);
     }
-
 }

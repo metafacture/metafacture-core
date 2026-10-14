@@ -26,7 +26,6 @@ import org.metafacture.metamorph.api.SourceLocation;
  *
  * @author Markus Michael Geipel
  * @author Chistoph Böhme
- *
  */
 public abstract class AbstractNamedValuePipe implements NamedValuePipe {
 
@@ -60,9 +59,7 @@ public abstract class AbstractNamedValuePipe implements NamedValuePipe {
         return sourceLocation;
     }
 
-    protected void onNamedValueSourceAdded(
-            final NamedValueSource namedValueSource) {
+    protected void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
         // Default implementation does nothing
     }
-
 }

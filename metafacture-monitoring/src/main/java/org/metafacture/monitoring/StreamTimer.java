@@ -32,19 +32,16 @@ import org.metafacture.framework.annotations.Out;
 @Out(StreamReceiver.class)
 @Description("Benchmarks the execution time of the downstream modules.")
 @FluxCommand("log-stream-time")
-public final class StreamTimer extends TimerBase<StreamReceiver> implements
-        StreamPipe<StreamReceiver> {
+public final class StreamTimer extends TimerBase<StreamReceiver>
+        implements StreamPipe<StreamReceiver> {
 
-    /**
-     * Creates an instance of {@link StreamTimer}.
-     */
+    /** Creates an instance of {@link StreamTimer}. */
     public StreamTimer() {
         this("");
     }
 
     /**
-     * Creates an instance of {@link StreamTimer} by a given prefix used when log
-     * messages.
+     * Creates an instance of {@link StreamTimer} by a given prefix used when log messages.
      *
      * @param logPrefix the prefix of the log messages
      */
@@ -78,5 +75,4 @@ public final class StreamTimer extends TimerBase<StreamReceiver> implements
     public void literal(final String name, final String value) {
         getReceiver().literal(name, value);
     }
-
 }

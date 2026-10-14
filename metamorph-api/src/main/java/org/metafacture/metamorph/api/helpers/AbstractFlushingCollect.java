@@ -21,7 +21,6 @@ package org.metafacture.metamorph.api.helpers;
  *
  * @author Markus Michael Geipel
  * @author Christoph Böhme
- *
  */
 public abstract class AbstractFlushingCollect extends AbstractCollect {
 
@@ -48,5 +47,4 @@ public abstract class AbstractFlushingCollect extends AbstractCollect {
             }
         }
     }
-
 }

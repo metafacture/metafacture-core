@@ -20,26 +20,20 @@ import org.metafacture.framework.ObjectPipe;
 import org.metafacture.framework.Receiver;
 
 /**
- * Default implementation for {@link ObjectPipe}s which simply
- * does nothing.
+ * Default implementation for {@link ObjectPipe}s which simply does nothing.
  *
  * @param <T> object type that this module processes
  * @param <R> receiver type of the downstream module
-
  * @author Christoph Böhme
- *
  */
-public class DefaultObjectPipe<T, R extends Receiver> extends DefaultSender<R> implements ObjectPipe<T, R> {
+public class DefaultObjectPipe<T, R extends Receiver> extends DefaultSender<R>
+        implements ObjectPipe<T, R> {
 
-    /**
-     * Creates an instance of {@link DefaultObjectPipe}.
-     */
-    public DefaultObjectPipe() {
-    }
+    /** Creates an instance of {@link DefaultObjectPipe}. */
+    public DefaultObjectPipe() {}
 
     @Override
     public void process(final T obj) {
         // Default implementation does nothing
     }
-
 }

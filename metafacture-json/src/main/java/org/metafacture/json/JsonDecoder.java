@@ -16,6 +16,16 @@
 
 package org.metafacture.json;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
@@ -24,26 +34,14 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
-
 /**
  * Decodes a record in JSON format.
  *
  * @author Jens Wille
- *
  */
-@Description("Decodes JSON to metadata events. The \'recordPath\' option can be used to set a JsonPath " +
-    "to extract a path as JSON - or to split the data into multiple JSON documents.")
+@Description(
+        "Decodes JSON to metadata events. The \'recordPath\' option can be used to set a JsonPath "
+                + "to extract a path as JSON - or to split the data into multiple JSON documents.")
 @In(String.class)
 @Out(StreamReceiver.class)
 @FluxCommand("decode-json")
@@ -71,11 +69,8 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
 
     private int recordCount;
 
-    /**
-     * Creates an instance of {@link JsonDecoder}.
-     */
-    public JsonDecoder() {
-    }
+    /** Creates an instance of {@link JsonDecoder}. */
+    public JsonDecoder() {}
 
     /**
      * Flags whether to allow comments.
@@ -221,9 +216,7 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
         return recordPath;
     }
 
-    /**
-     * Resets the record count.
-     */
+    /** Resets the record count. */
     public void resetRecordCount() {
         setRecordCount(0);
     }
@@ -233,11 +226,12 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
         assert !isClosed();
         if (recordPath.isEmpty()) {
             processRecord(json);
-        }
-        else {
-            matches(JsonPath.read(json, recordPath)).forEach(record -> {
-                processRecord(record);
-            });
+        } else {
+            matches(JsonPath.read(json, recordPath))
+                    .forEach(
+                            record -> {
+                                processRecord(record);
+                            });
         }
     }
 
@@ -245,26 +239,25 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
         createParser(record);
         try {
             decode();
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
-        }
-        finally {
+        } finally {
             closeParser();
         }
     }
 
     private Stream<String> matches(final Object obj) {
         final List<?> records = (obj instanceof List<?>) ? (List<?>) obj : Arrays.asList(obj);
-        return records.stream().map(doc -> {
-            try {
-                return new ObjectMapper().writeValueAsString(doc);
-            }
-            catch (final JsonProcessingException e) {
-                e.printStackTrace();
-                return doc.toString();
-            }
-        });
+        return records.stream()
+                .map(
+                        doc -> {
+                            try {
+                                return new ObjectMapper().writeValueAsString(doc);
+                            } catch (final JsonProcessingException e) {
+                                e.printStackTrace();
+                                return doc.toString();
+                            }
+                        });
     }
 
     @Override
@@ -275,8 +268,7 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
     private void createParser(final String string) {
         try {
             jsonParser = jsonFactory.createParser(string);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -284,8 +276,7 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
     private void closeParser() {
         try {
             jsonParser.close();
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -298,12 +289,13 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
         }
 
         if (jsonParser.currentToken() != null) {
-            throw new MetafactureException(new StringBuilder()
-                    .append("Unexpected token '")
-                    .append(jsonParser.currentToken())
-                    .append("' at ")
-                    .append(jsonParser.currentLocation())
-                    .toString());
+            throw new MetafactureException(
+                    new StringBuilder()
+                            .append("Unexpected token '")
+                            .append(jsonParser.currentToken())
+                            .append("' at ")
+                            .append(jsonParser.currentLocation())
+                            .toString());
         }
     }
 
@@ -359,5 +351,4 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
     private String getMarkedName(final String name, final String marker) {
         return marker != null ? name + marker : name;
     }
-
 }

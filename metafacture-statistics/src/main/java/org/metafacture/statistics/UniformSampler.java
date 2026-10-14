@@ -16,6 +16,9 @@
 
 package org.metafacture.statistics;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
@@ -23,25 +26,18 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 /**
  * Draws a uniform sample of records from the input stream.
  *
  * @param <T> object type
- *
  * @author Christoph Böhme
  * @author Markus Geipel
- *
  */
 @Description("Draws a uniform sample of records from the input stream.")
 @In(Object.class)
 @Out(Object.class)
 @FluxCommand("draw-uniform-sample")
-public final class UniformSampler<T> extends
-        DefaultObjectPipe<T, ObjectReceiver<T>> {
+public final class UniformSampler<T> extends DefaultObjectPipe<T, ObjectReceiver<T>> {
 
     private final int sampleSize;
     private final List<T> sample;
@@ -93,8 +89,7 @@ public final class UniformSampler<T> extends
         count += 1;
         if (sample.size() < sampleSize) {
             sample.add(obj);
-        }
-        else {
+        } else {
             final double p = sampleSize / (double) count;
             if (random.nextDouble() < p) {
                 sample.set(random.nextInt(sampleSize), obj);
@@ -116,5 +111,4 @@ public final class UniformSampler<T> extends
         sample.clear();
         count = 0;
     }
-
 }

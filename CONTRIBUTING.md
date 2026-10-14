@@ -19,7 +19,6 @@ The following is a set of guidelines for contributing to Metafacture and how to 
 * [Definition of Done](#definition-of-done)
 * [Releasing Metafacture](#releasing-metafacture)
 
-
 ## How can I contribute?
 
 ### Reporting Bugs
@@ -67,10 +66,10 @@ Provide the following information:
 The overall code contribution process is:
 
 1. Fork the appropriate metafacture repo and clone your fork (members with write access: clone the appropriate metafacture repo)
-1. In your local clone, switch to a new feature branch for the bug fix or feature enhancement you want to implement. The name of the feature branch should start with the corresponding issue number and contain additional info for convenience (using camelCaseFormatting, e.g. '111-featureDesciption')
-1. Implement, test, and build your bug fix or feature enhancement
-1. Commit your changes and push the feature branch to your fork (members with write access: push to the appropriate metafacture repo)
-1. Open a pull request for your feature branch to submit your changes (see details below)
+2. In your local clone, switch to a new feature branch for the bug fix or feature enhancement you want to implement. The name of the feature branch should start with the corresponding issue number and contain additional info for convenience (using camelCaseFormatting, e.g. '111-featureDesciption')
+3. Implement, test, and build your bug fix or feature enhancement
+4. Commit your changes and push the feature branch to your fork (members with write access: push to the appropriate metafacture repo)
+5. Open a pull request for your feature branch to submit your changes (see details below)
 
 #### Pull Requests
 

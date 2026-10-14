@@ -34,16 +34,13 @@ public final class SetMatcher<T> {
     private final ACNode<T> root = new ACNode<>(null, 0);
     private boolean isPrepared;
 
-    /**
-     * Creates an instance of {@link SetMatcher}.
-     */
-    public SetMatcher() {
-    }
+    /** Creates an instance of {@link SetMatcher}. */
+    public SetMatcher() {}
 
     /**
      * Adds a value for a key.
      *
-     * @param key   the key
+     * @param key the key
      * @param value the value
      */
     public void put(final String key, final T value) {
@@ -64,11 +61,9 @@ public final class SetMatcher<T> {
         next = node.getNext(key.charAt(length - 1));
         if (next == null) {
             next = node.addNext(key.charAt(length - 1), value);
-        }
-        else if (next.getValue() == null) {
+        } else if (next.getValue() == null) {
             next.setValue(value);
-        }
-        else {
+        } else {
             throw new IllegalStateException("Key '" + key + "' already in trie");
         }
     }
@@ -94,8 +89,7 @@ public final class SetMatcher<T> {
             final ACNode<T> next = node.getNext(text.charAt(index));
             if (next != null) {
                 node = next;
-            }
-            else if (node != root) {
+            } else if (node != root) {
                 node = node.getFailure();
                 continue;
             }
@@ -105,12 +99,17 @@ public final class SetMatcher<T> {
         return matches;
     }
 
-    private void collectMatches(final ACNode<T> node, final int index, final List<Match<T>> matches) {
-        //direct hit or hit in chain of failure links?
+    private void collectMatches(
+            final ACNode<T> node, final int index, final List<Match<T>> matches) {
+        // direct hit or hit in chain of failure links?
         ACNode<T> tempNode = node;
         do {
             if (tempNode.getValue() != null) {
-                matches.add(new Match<T>(tempNode.getValue(), index - tempNode.getDepth(), tempNode.getDepth()));
+                matches.add(
+                        new Match<T>(
+                                tempNode.getValue(),
+                                index - tempNode.getDepth(),
+                                tempNode.getDepth()));
             }
             tempNode = tempNode.getFailure();
         } while (tempNode != root);
@@ -141,8 +140,7 @@ public final class SetMatcher<T> {
 
                 if (node.getNext(key) == null) {
                     child.setFailure(root);
-                }
-                else {
+                } else {
                     child.setFailure(node.getNext(key));
                 }
                 queue.add(child);
@@ -151,8 +149,8 @@ public final class SetMatcher<T> {
     }
 
     /**
-     * Prints dot description of the automaton to the PrintStream for
-     * visualization in GraphViz. Used for debugging and education.
+     * Prints dot description of the automaton to the PrintStream for visualization in GraphViz.
+     * Used for debugging and education.
      *
      * @param out the stream to which the description is written
      */
@@ -165,8 +163,7 @@ public final class SetMatcher<T> {
     private void printDebug(final PrintStream out, final ACNode<T> node) {
         if (node.getValue() == null) {
             out.println(node.hashCode() + " [shape=point label=\"\"]");
-        }
-        else {
+        } else {
             out.println(node.hashCode() + " [shape=circle style=filled label=\"\"]");
         }
 
@@ -174,7 +171,13 @@ public final class SetMatcher<T> {
             out.println(node.hashCode() + " -> " + node.getFailure().hashCode() + "[color=gray]");
         }
         for (final Entry<Character, ACNode<T>> link : node.getLinks()) {
-            out.println(node.hashCode() + "  -> " + link.getValue().hashCode() + " [label=\"" + link.getKey() + "\"]");
+            out.println(
+                    node.hashCode()
+                            + "  -> "
+                            + link.getValue().hashCode()
+                            + " [label=\""
+                            + link.getKey()
+                            + "\"]");
             printDebug(out, link.getValue());
         }
     }
@@ -233,7 +236,5 @@ public final class SetMatcher<T> {
         public String toString() {
             return value + " " + start + "+" + length;
         }
-
     }
-
 }

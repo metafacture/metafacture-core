@@ -22,15 +22,13 @@ import org.junit.Test;
  * tests {@link SimpleRegexTrie}
  *
  * @author Pascal Christoph, Fabian Steeg
- *
  */
 public final class SimpleRegexTrieTest {
 
     private static final String AACBB = "aacbb";
     private static final String ABCBB = "abcbb";
 
-    public SimpleRegexTrieTest() {
-    }
+    public SimpleRegexTrieTest() {}
 
     @Test
     public void testWithSimpleCharacterClass() {
@@ -48,5 +46,4 @@ public final class SimpleRegexTrieTest {
         trie.put(key, "value");
         Assert.assertTrue("Expecting to find: " + key, trie.get(key).size() == 1);
     }
-
 }

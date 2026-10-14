@@ -21,17 +21,14 @@ import org.metafacture.metamorph.api.InterceptorFactory;
 import org.metafacture.metamorph.api.NamedValuePipe;
 
 /**
- * An implementation of {@link InterceptorFactory} which returns no
- * interceptors. It can be used as a default implementation when no interception
- * should occur.
+ * An implementation of {@link InterceptorFactory} which returns no interceptors. It can be used as
+ * a default implementation when no interception should occur.
  *
  * @author Christoph Böhme
- *
  */
 final class NullInterceptorFactory implements InterceptorFactory {
 
-    NullInterceptorFactory() {
-    }
+    NullInterceptorFactory() {}
 
     @Override
     public NamedValuePipe createNamedValueInterceptor() {
@@ -42,5 +39,4 @@ final class NullInterceptorFactory implements InterceptorFactory {
     public FlushListener createFlushInterceptor(final FlushListener listener) {
         return null;
     }
-
 }

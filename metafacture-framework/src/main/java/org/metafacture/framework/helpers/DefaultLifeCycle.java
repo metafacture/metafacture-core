@@ -19,19 +19,14 @@ package org.metafacture.framework.helpers;
 import org.metafacture.framework.LifeCycle;
 
 /**
- * Default implementation for {@link LifeCycle} which simply
- * does nothing.
+ * Default implementation for {@link LifeCycle} which simply does nothing.
  *
  * @author Christoph Böhme
- *
  */
 public class DefaultLifeCycle implements LifeCycle {
 
-    /**
-     * Creates an instance of {@link DefaultLifeCycle}.
-     */
-    public DefaultLifeCycle() {
-    }
+    /** Creates an instance of {@link DefaultLifeCycle}. */
+    public DefaultLifeCycle() {}
 
     @Override
     public void resetStream() {
@@ -42,5 +37,4 @@ public class DefaultLifeCycle implements LifeCycle {
     public void closeStream() {
         // Default implementation does nothing
     }
-
 }

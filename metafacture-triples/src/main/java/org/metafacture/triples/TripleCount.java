@@ -16,19 +16,17 @@
 
 package org.metafacture.triples;
 
+import java.util.Comparator;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.objects.Triple;
 
-import java.util.Comparator;
-
 /**
  * Counts triples.
  *
  * @author markus geipel
- *
  */
 @Description("Counts triples")
 @In(Triple.class)
@@ -38,7 +36,7 @@ public final class TripleCount extends AbstractTripleSort {
 
     public static final String DEFAULT_COUNT_PREDICATE = "count";
 
-    @Deprecated/*(since="5.3", forRemoval=true)*/
+    @Deprecated /*(since="5.3", forRemoval=true)*/
     public static final String DEFAULT_COUNTP_REDICATE = DEFAULT_COUNT_PREDICATE;
 
     private static final Triple INIT = new Triple("", "", "");
@@ -48,11 +46,8 @@ public final class TripleCount extends AbstractTripleSort {
     private String countPredicate = DEFAULT_COUNT_PREDICATE;
     private Comparator<Triple> comparator;
 
-    /**
-     * Creates an instance of {@link TripleCount}.
-     */
-    public TripleCount() {
-    }
+    /** Creates an instance of {@link TripleCount}. */
+    public TripleCount() {}
 
     @Override
     protected void sortedTriple(final Triple triple) {
@@ -63,8 +58,7 @@ public final class TripleCount extends AbstractTripleSort {
 
         if (comparator.compare(current, triple) == 0) {
             ++count;
-        }
-        else {
+        } else {
             writeResult();
             current = triple;
             count = 1;
@@ -89,17 +83,35 @@ public final class TripleCount extends AbstractTripleSort {
         final Compare compareBy = getCompare();
         switch (compareBy) {
             case ALL:
-                getReceiver().process(new Triple(current.toString(), countPredicate, String.valueOf(count)));
+                getReceiver()
+                        .process(
+                                new Triple(
+                                        current.toString(), countPredicate, String.valueOf(count)));
                 break;
             case OBJECT:
-                getReceiver().process(new Triple(current.getObject(), countPredicate, String.valueOf(count)));
+                getReceiver()
+                        .process(
+                                new Triple(
+                                        current.getObject(),
+                                        countPredicate,
+                                        String.valueOf(count)));
                 break;
             case PREDICATE:
-                getReceiver().process(new Triple(current.getPredicate(), countPredicate, String.valueOf(count)));
+                getReceiver()
+                        .process(
+                                new Triple(
+                                        current.getPredicate(),
+                                        countPredicate,
+                                        String.valueOf(count)));
                 break;
             case SUBJECT:
             default:
-                getReceiver().process(new Triple(current.getSubject(), countPredicate, String.valueOf(count)));
+                getReceiver()
+                        .process(
+                                new Triple(
+                                        current.getSubject(),
+                                        countPredicate,
+                                        String.valueOf(count)));
                 break;
         }
     }
@@ -112,5 +124,4 @@ public final class TripleCount extends AbstractTripleSort {
     public void setCountBy(final Compare countBy) {
         setCompare(countBy);
     }
-
 }

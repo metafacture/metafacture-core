@@ -16,22 +16,19 @@
 
 package org.metafacture.formeta;
 
-import org.metafacture.framework.ObjectReceiver;
-
+import java.io.StringReader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
-import java.io.StringReader;
 
 /**
  * Tests for class {@link FormetaRecordsReader}.
  *
  * @author Christoph Böhme
- *
  */
 public final class FormetaRecordsReaderTest {
 
@@ -53,11 +50,9 @@ public final class FormetaRecordsReaderTest {
 
     private FormetaRecordsReader formetaRecordsReader;
 
-    @Mock
-    private ObjectReceiver<String> receiver;
+    @Mock private ObjectReceiver<String> receiver;
 
-    public FormetaRecordsReaderTest() {
-    }
+    public FormetaRecordsReaderTest() {}
 
     @Before
     public void setup() {
@@ -83,19 +78,20 @@ public final class FormetaRecordsReaderTest {
 
     @Test
     public void shouldSplitBetweenTopLevelElements() {
-        final String records = RECORD_LITERAL +
-                RECORD_GROUP +
-                RECORD_NESTED_GROUP +
-                RECORD_QUOTED_LITERAL +
-                RECORD_LEFT_BRACE_IN_QUOTES +
-                RECORD_RIGHT_BRACE_IN_QUOTES +
-                RECORD_COLON_IN_QUOTES +
-                RECORD_COMMA_IN_QUOTES +
-                RECORD_ESCAPED_LEFT_BRACE +
-                RECORD_ESCAPED_RIGHT_BRACE +
-                RECORD_ESCAPED_COLON +
-                RECORD_ESCAPED_COMMA +
-                RECORD_ESCAPED_QUOTE;
+        final String records =
+                RECORD_LITERAL
+                        + RECORD_GROUP
+                        + RECORD_NESTED_GROUP
+                        + RECORD_QUOTED_LITERAL
+                        + RECORD_LEFT_BRACE_IN_QUOTES
+                        + RECORD_RIGHT_BRACE_IN_QUOTES
+                        + RECORD_COLON_IN_QUOTES
+                        + RECORD_COMMA_IN_QUOTES
+                        + RECORD_ESCAPED_LEFT_BRACE
+                        + RECORD_ESCAPED_RIGHT_BRACE
+                        + RECORD_ESCAPED_COLON
+                        + RECORD_ESCAPED_COMMA
+                        + RECORD_ESCAPED_QUOTE;
 
         final StringReader reader = new StringReader(records);
 
@@ -116,5 +112,4 @@ public final class FormetaRecordsReaderTest {
         Mockito.verify(receiver).process(RECORD_ESCAPED_QUOTE);
         Mockito.verifyNoMoreInteractions(receiver);
     }
-
 }

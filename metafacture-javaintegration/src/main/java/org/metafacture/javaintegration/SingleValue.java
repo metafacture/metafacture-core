@@ -16,14 +16,13 @@
 
 package org.metafacture.javaintegration;
 
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-
 import java.util.Collection;
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 /**
  * Just records the value of the last received literal.
- * @author Markus Michael Geipel
  *
+ * @author Markus Michael Geipel
  */
 public final class SingleValue extends DefaultStreamReceiver implements Collector<String> {
 
@@ -31,11 +30,8 @@ public final class SingleValue extends DefaultStreamReceiver implements Collecto
     private String value = "";
     private Collection<String> collection;
 
-    /**
-     * Creates an instance of {@link SingleValue}.
-     */
-    public SingleValue() {
-    }
+    /** Creates an instance of {@link SingleValue}. */
+    public SingleValue() {}
 
     /**
      * Creates an instance of {@link SingleValue} by a given Collection.
@@ -69,7 +65,6 @@ public final class SingleValue extends DefaultStreamReceiver implements Collecto
     @Override
     public void startRecord(final String identifier) {
         this.setValue("");
-
     }
 
     @Override
@@ -106,5 +101,4 @@ public final class SingleValue extends DefaultStreamReceiver implements Collecto
     public void setCollection(final Collection<String> collection) {
         this.collection = collection;
     }
-
 }

@@ -22,21 +22,16 @@ import org.metafacture.framework.helpers.DefaultObjectReceiver;
  * Interface for objects which receive and process objects of type T.
  *
  * @param <T> object type
- *
  * @see DefaultObjectReceiver
  * @see ObjectPipe
- *
  * @author Christoph Böhme
- *
  */
 public interface ObjectReceiver<T> extends Receiver {
 
     /**
-     * This method is called by upstream modules to trigger the
-     * processing of {@code obj}.
+     * This method is called by upstream modules to trigger the processing of {@code obj}.
      *
      * @param obj the object to be processed
      */
     void process(T obj);
-
 }

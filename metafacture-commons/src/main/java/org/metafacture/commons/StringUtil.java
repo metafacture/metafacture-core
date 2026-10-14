@@ -22,7 +22,6 @@ import java.util.Map;
  * Some handy string utility methods
  *
  * @author Markus Michael Geipel, Christoph Böhme
- *
  */
 public final class StringUtil {
 
@@ -36,8 +35,8 @@ public final class StringUtil {
     /**
      * Returns a fallback of an object if the object is null.
      *
-     * @param <O>           the type of the object
-     * @param value         the object
+     * @param <O> the type of the object
+     * @param value the object
      * @param fallbackValue the default object
      * @return an object
      */
@@ -49,14 +48,13 @@ public final class StringUtil {
     }
 
     /**
-     * Formats a String. If a String has a variable it will be replaced based on a
-     * Map. The start and the end of indicating this variable must be defined.
-     * {@value #DEFAULT_VARSTART} indicates the start of a variable and
-     * {@value #DEFAULT_VAREND} the end of the variable . Unassigned variables are
-     * ignored.
+     * Formats a String. If a String has a variable it will be replaced based on a Map. The start
+     * and the end of indicating this variable must be defined. {@value #DEFAULT_VARSTART} indicates
+     * the start of a variable and {@value #DEFAULT_VAREND} the end of the variable . Unassigned
+     * variables are ignored.
      *
-     * @param format            the String to be formatted
-     * @param variables         a Map of variable names and their values
+     * @param format the String to be formatted
+     * @param variables a Map of variable names and their values
      * @return the formatted String
      */
     public static String format(final String format, final Map<String, String> variables) {
@@ -64,52 +62,59 @@ public final class StringUtil {
     }
 
     /**
-     * Formats a String. If a String has a variable it will be replaced based on a
-     * Map. The start and the end of indicating this variable must be defined.
-     * Unassigned variables are ignored.
+     * Formats a String. If a String has a variable it will be replaced based on a Map. The start
+     * and the end of indicating this variable must be defined. Unassigned variables are ignored.
      *
-     * @param format            the String to be formatted
+     * @param format the String to be formatted
      * @param varStartIndicator a String indicating the start of a variable
-     * @param varEndIndicator   a String indicating the end of a variable
-     * @param variables         a Map of variable names and their values
+     * @param varEndIndicator a String indicating the end of a variable
+     * @param variables a Map of variable names and their values
      * @return the formatted String
      */
-    public static String format(final String format, final String varStartIndicator, final String varEndIndicator,
+    public static String format(
+            final String format,
+            final String varStartIndicator,
+            final String varEndIndicator,
             final Map<String, String> variables) {
         return format(format, varStartIndicator, varEndIndicator, true, variables);
     }
 
     /**
-     * Formats a String. If a String has a variable it will be replaced based on a
-     * Map. The start and the end of indicating this variable must be defined.
-     * {@value #DEFAULT_VARSTART} indicates the start of a variable and
-     * {@value #DEFAULT_VAREND} the end of the variable .
+     * Formats a String. If a String has a variable it will be replaced based on a Map. The start
+     * and the end of indicating this variable must be defined. {@value #DEFAULT_VARSTART} indicates
+     * the start of a variable and {@value #DEFAULT_VAREND} the end of the variable .
      *
-     * @param format            the String to be formatted
+     * @param format the String to be formatted
      * @param ignoreMissingVars boolean if an unassigned variable should be ignored
-     * @param variables         a Map of variable names and their values
+     * @param variables a Map of variable names and their values
      * @return the formatted String
      */
-    public static String format(final String format, final boolean ignoreMissingVars,
+    public static String format(
+            final String format,
+            final boolean ignoreMissingVars,
             final Map<String, String> variables) {
         return format(format, DEFAULT_VARSTART, DEFAULT_VAREND, ignoreMissingVars, variables);
     }
 
     /**
-     * Formats a String. If a String has a variable it will be replaced based on a
-     * Map. The start and the end of indicating this variable must be defined.
+     * Formats a String. If a String has a variable it will be replaced based on a Map. The start
+     * and the end of indicating this variable must be defined.
      *
-     * @param format            the String to be formatted
+     * @param format the String to be formatted
      * @param varStartIndicator a String indicating the start of a variable
-     * @param varEndIndicator   a String indicating the end of a variable
+     * @param varEndIndicator a String indicating the end of a variable
      * @param ignoreMissingVars boolean if an unassigned variable should be ignored
-     * @param variables         a Map of variable names and their values
+     * @param variables a Map of variable names and their values
      * @return the formatted String
      */
-    public static String format(final String format, final String varStartIndicator, final String varEndIndicator,
-            final boolean ignoreMissingVars, final Map<String, String> variables) {
+    public static String format(
+            final String format,
+            final String varStartIndicator,
+            final String varEndIndicator,
+            final boolean ignoreMissingVars,
+            final Map<String, String> variables) {
         if (format.indexOf(varStartIndicator) < 0) { // shortcut if there is
-                                                        // nothing to replace
+            // nothing to replace
             return format;
         }
 
@@ -137,10 +142,12 @@ public final class StringUtil {
             if (varValue == null) {
                 if (ignoreMissingVars) {
                     varValue = "";
-                }
-                else {
-                    throw new IllegalArgumentException("Variable '" + varName +
-                            "' was not assigned!\nAssigned variables:\n" + variables);
+                } else {
+                    throw new IllegalArgumentException(
+                            "Variable '"
+                                    + varName
+                                    + "' was not assigned!\nAssigned variables:\n"
+                                    + variables);
                 }
             }
             builder.append(varValue);
@@ -151,33 +158,33 @@ public final class StringUtil {
     }
 
     /**
-     * Copies the contents of {@code str} into the {@code currentBuffer}. If the size of
-     * the buffer is not sufficient to store the string then a new buffer is allocated.
-     * {@code copyToBuffer} is intended to be used as shown in the example:
-     * <pre>{@code
-     *   final int INITIAL_SIZE = 10;
-     *   char[] myBuffer = new char[INITIAL_SIZE];
+     * Copies the contents of {@code str} into the {@code currentBuffer}. If the size of the buffer
+     * is not sufficient to store the string then a new buffer is allocated. {@code copyToBuffer} is
+     * intended to be used as shown in the example:
      *
-     *   List<String> strings = getAListOfStringsFromSomewhere();
-     *   for (String str : strings) {
-     *     myBuffer = StringUtil.copyToBuffer(str, myBuffer);
-     *     dataLen = str.length();
-     *     // Process data in myBuffer in the range from 0 to dataLen
-     *   }
-     *   myBuffer = null;
+     * <pre>{@code
+     * final int INITIAL_SIZE = 10;
+     * char[] myBuffer = new char[INITIAL_SIZE];
+     *
+     * List<String> strings = getAListOfStringsFromSomewhere();
+     * for (String str : strings) {
+     *   myBuffer = StringUtil.copyToBuffer(str, myBuffer);
+     *   dataLen = str.length();
+     *   // Process data in myBuffer in the range from 0 to dataLen
+     * }
+     * myBuffer = null;
      * }</pre>
      *
-     * This allows the buffer to be reused but at the same time frees the user from
-     * having to manage the size of the buffer.
+     * This allows the buffer to be reused but at the same time frees the user from having to manage
+     * the size of the buffer.
      *
      * @param str string to copy. Must not be null.
-     * @param currentBuffer array to store the string in. If it is too small a new buffer
-     *                      is allocated.  currentBuffer must not be null.
-     *                      The length of the current buffer must not be 0.
-     * @return either currentBuffer or a new buffer if one was allocated. The returned
-     *                      buffer may be larger than the string. Users should call
-     *                      {@code str.length()} to retrieve the actual length of the
-     *                      data in the returned buffer.
+     * @param currentBuffer array to store the string in. If it is too small a new buffer is
+     *     allocated. currentBuffer must not be null. The length of the current buffer must not be
+     *     0.
+     * @return either currentBuffer or a new buffer if one was allocated. The returned buffer may be
+     *     larger than the string. Users should call {@code str.length()} to retrieve the actual
+     *     length of the data in the returned buffer.
      */
     public static char[] copyToBuffer(final String str, final char[] currentBuffer) {
         assert str != null;
@@ -197,5 +204,4 @@ public final class StringUtil {
         str.getChars(0, strLen, buffer, 0);
         return buffer;
     }
-
 }

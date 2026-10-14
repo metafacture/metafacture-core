@@ -23,7 +23,6 @@ import org.metafacture.framework.FormatException;
  * A parser for the formeta metadata serialisation format.
  *
  * @author Christoph Böhme
- *
  */
 public final class FormetaParser {
 
@@ -37,11 +36,8 @@ public final class FormetaParser {
     private char[] buffer = new char[BUFFER_SIZE];
     private final StructureParserContext structureParserContext = new StructureParserContext();
 
-    /**
-     * Creates an instance of {@link FormetaParser}.
-     */
-    public FormetaParser() {
-    }
+    /** Creates an instance of {@link FormetaParser}. */
+    public FormetaParser() {}
 
     /**
      * Sets the Emitter.
@@ -81,24 +77,27 @@ public final class FormetaParser {
             for (; i < bufferLen; ++i) {
                 state = state.processChar(buffer[i], structureParserContext);
             }
-        }
-        catch (final FormatException e) {
-            final String errorMsg = "Parsing error at position " +
-                (i + 1) + ": " + getErrorSnippet(data, i) + ", " + e.getMessage();
+        } catch (final FormatException e) {
+            final String errorMsg =
+                    "Parsing error at position "
+                            + (i + 1)
+                            + ": "
+                            + getErrorSnippet(data, i)
+                            + ", "
+                            + e.getMessage();
             throw new FormatException(errorMsg, e);
         }
         try {
             state.endOfInput(structureParserContext);
-        }
-        catch (final FormatException e) {
+        } catch (final FormatException e) {
             throw new FormatException("Parsing error: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Extracts a text snippet from the record for showing the position at
-     * which an error occurred. The exact position additionally highlighted
-     * with {@link POS_MARKER_LEFT} and {@link POS_MARKER_RIGHT}.
+     * Extracts a text snippet from the record for showing the position at which an error occurred.
+     * The exact position additionally highlighted with {@link POS_MARKER_LEFT} and {@link
+     * POS_MARKER_RIGHT}.
      *
      * @param record the record currently being parsed
      * @param pos the position at which the error occurred
@@ -110,8 +109,7 @@ public final class FormetaParser {
         final int start = pos - SNIPPET_SIZE / 2;
         if (start < 0) {
             snippet.append(record.substring(0, pos));
-        }
-        else {
+        } else {
             snippet.append(SNIPPET_ELLIPSIS);
             snippet.append(record.substring(start, pos));
         }
@@ -124,8 +122,7 @@ public final class FormetaParser {
             final int end = pos + SNIPPET_SIZE / 2;
             if (end > record.length()) {
                 snippet.append(record.substring(pos + 1));
-            }
-            else {
+            } else {
                 snippet.append(record.substring(pos + 1, end));
                 snippet.append(SNIPPET_ELLIPSIS);
             }
@@ -133,5 +130,4 @@ public final class FormetaParser {
 
         return snippet.toString();
     }
-
 }

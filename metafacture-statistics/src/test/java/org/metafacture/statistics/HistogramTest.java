@@ -16,17 +16,15 @@
 
 package org.metafacture.statistics;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests for class {@link Histogram}.
  *
  * @author Christoph Böhme
- *
  */
 public final class HistogramTest {
 
@@ -35,8 +33,7 @@ public final class HistogramTest {
     private static final String[] LITERALS = {"Literal 1", "Literal 2"};
     private static final String[] VALUES = {"Value A", "Value B"};
 
-    public HistogramTest() {
-    }
+    public HistogramTest() {}
 
     @Test
     public void testCountEntities() {
@@ -123,7 +120,6 @@ public final class HistogramTest {
         Assert.assertFalse(histogram.isCountEntities());
         Assert.assertFalse(histogram.isCountLiterals());
         Assert.assertEquals(LITERALS[0], histogram.getCountField());
-
     }
 
     @Test
@@ -151,5 +147,4 @@ public final class HistogramTest {
 
         Assert.assertEquals(expected, histogram.getHistogram());
     }
-
 }

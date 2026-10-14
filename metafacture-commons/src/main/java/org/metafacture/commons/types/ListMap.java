@@ -28,7 +28,6 @@ import java.util.Set;
  * A map containing a list of values for each key.
  *
  * @author Markus Michael Geipel
- *
  * @param <K> key
  * @param <V> value
  */
@@ -37,9 +36,7 @@ public class ListMap<K, V> implements Map<K, List<V>> {
     private String identifier;
     private final Map<K, List<V>> map;
 
-    /**
-     * Creates an empty instance of an empty ListMap.
-     */
+    /** Creates an empty instance of an empty ListMap. */
     public ListMap() {
         map = new HashMap<K, List<V>>();
     }
@@ -85,11 +82,9 @@ public class ListMap<K, V> implements Map<K, List<V>> {
         }
     }
 
-    /**
-     * Clears all values of all keys in the map.
-     */
+    /** Clears all values of all keys in the map. */
     public final void clearAllKeys() {
-        for (final Entry<K, List<V>> entry: map.entrySet()) {
+        for (final Entry<K, List<V>> entry : map.entrySet()) {
             entry.getValue().clear();
         }
     }
@@ -107,7 +102,7 @@ public class ListMap<K, V> implements Map<K, List<V>> {
     /**
      * Adds a value to the List of values of the key in the map.
      *
-     * @param name  the key
+     * @param name the key
      * @param value the value
      */
     public final void add(final K name, final V value) {
@@ -208,7 +203,7 @@ public class ListMap<K, V> implements Map<K, List<V>> {
     /**
      * Adds a List of values to a key in the map.
      *
-     * @param name      the key
+     * @param name the key
      * @param addValues the List of values
      */
     public final void putAll(final K name, final Collection<V> addValues) {
@@ -230,5 +225,4 @@ public class ListMap<K, V> implements Map<K, List<V>> {
     public final Collection<List<V>> values() {
         return map.values();
     }
-
 }

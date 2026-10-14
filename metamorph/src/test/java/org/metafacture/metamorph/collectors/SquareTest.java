@@ -16,11 +16,10 @@
 
 package org.metafacture.metamorph.collectors;
 
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.TestHelpers;
-
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -33,24 +32,22 @@ import org.mockito.junit.MockitoRule;
  */
 public final class SquareTest {
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public SquareTest() {
-    }
+    public SquareTest() {}
 
     @Test
     public void shouldEmitSquaresOfInputValues() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <square delimiter=',' name='square' prefix='{' postfix='}'>" +
-                "    <data source='data1' />" +
-                "    <data source='data2' />" +
-                "  </square>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <square delimiter=',' name='square' prefix='{' postfix='}'>"
+                        + "    <data source='data1' />"
+                        + "    <data source='data2' />"
+                        + "  </square>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "b");
@@ -96,18 +93,15 @@ public final class SquareTest {
                     o.get().literal("square", "{2,3}");
                     o.get().literal("square", "{1,2}");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldEmitSquaresOnFlushEvent() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <square delimiter=',' name='square' prefix='{' postfix='}' flushWith='d'>" +
-                "    <data source='d.1' />" +
-                "  </square>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>  <square delimiter=',' name='square' prefix='{' postfix='}' flushWith='d'>"
+                        + "    <data source='d.1' />  </square></rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("d");
@@ -128,8 +122,6 @@ public final class SquareTest {
                     o.get().literal("square", "{a,b}");
                     o.get().literal("square", "{e,f}");
                     o.get().endRecord();
-                }
-        );
+                });
     }
-
 }

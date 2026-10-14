@@ -16,6 +16,8 @@
 
 package org.metafacture.triples;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
@@ -24,14 +26,10 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 import org.metafacture.framework.objects.Triple;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Filters triples. The patterns for subject, predicate and object are disjunctive.
  *
  * @author Christoph Böhme
- *
  */
 @Description("Filters triple. The  patterns for subject, predicate and object are disjunctive.")
 @In(Triple.class)
@@ -48,11 +46,8 @@ public final class TripleFilter extends DefaultObjectPipe<Triple, ObjectReceiver
     private Matcher objectMatcher = MATCH_NOTHING;
     private boolean passMatches = true;
 
-    /**
-     * Creates an instance of {@link TripleFilter}.
-     */
-    public TripleFilter() {
-    }
+    /** Creates an instance of {@link TripleFilter}. */
+    public TripleFilter() {}
 
     /**
      * Gets the pattern of the subject filter.
@@ -132,11 +127,11 @@ public final class TripleFilter extends DefaultObjectPipe<Triple, ObjectReceiver
         predicateMatcher.reset(obj.getPredicate());
         objectMatcher.reset(obj.getObject());
 
-        final boolean matches = subjectMatcher.matches() || predicateMatcher.matches() || objectMatcher.matches();
+        final boolean matches =
+                subjectMatcher.matches() || predicateMatcher.matches() || objectMatcher.matches();
 
         if (matches == passMatches) {
             getReceiver().process(obj);
         }
     }
-
 }

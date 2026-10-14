@@ -16,14 +16,7 @@
 
 package org.metafacture.elasticsearch;
 
-import org.metafacture.framework.FluxCommand;
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.annotations.In;
-import org.metafacture.framework.annotations.Out;
-import org.metafacture.framework.helpers.DefaultObjectPipe;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -32,13 +25,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
+import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 /**
  * Add Elasticsearch bulk indexing metadata to JSON input.
  *
  * @author Fabian Steeg (fsteeg)
  * @author Jens Wille
- *
  */
 @In(String.class)
 @Out(String.class)
@@ -50,17 +47,14 @@ public class JsonToElasticsearchBulk extends DefaultObjectPipe<String, ObjectRec
     private String type;
     private String index;
 
-    /**
-     * Creates an instance of {@link JsonToElasticsearchBulk}.
-     */
-    public JsonToElasticsearchBulk() {
-    }
+    /** Creates an instance of {@link JsonToElasticsearchBulk}. */
+    public JsonToElasticsearchBulk() {}
 
     /**
-     * Creates an instance of {@link JsonToElasticsearchBulk}. As an id is not
-     * required it can be omitted.
+     * Creates an instance of {@link JsonToElasticsearchBulk}. As an id is not required it can be
+     * omitted.
      *
-     * @param type  The Elasticsearch index type
+     * @param type The Elasticsearch index type
      * @param index The Elasticsearch index name
      */
     public JsonToElasticsearchBulk(final String type, final String index) {
@@ -70,10 +64,9 @@ public class JsonToElasticsearchBulk extends DefaultObjectPipe<String, ObjectRec
     /**
      * Creates an instance of {@link JsonToElasticsearchBulk}.
      *
-     * @param idPath the key path of the JSON value to be used as the ID for the
-     *               record
-     * @param type   the Elasticsearch index type
-     * @param index  the Elasticsearch index name
+     * @param idPath the key path of the JSON value to be used as the ID for the record
+     * @param type the Elasticsearch index type
+     * @param index the Elasticsearch index name
      */
     public JsonToElasticsearchBulk(final String[] idPath, final String type, final String index) {
         this.idPath = idPath;
@@ -85,24 +78,26 @@ public class JsonToElasticsearchBulk extends DefaultObjectPipe<String, ObjectRec
      * Creates an instance of {@link JsonToElasticsearchBulk}.
      *
      * @param idKey the key of the JSON value to be used as the ID for the record
-     * @param type  the Elasticsearch index type
+     * @param type the Elasticsearch index type
      * @param index the Elasticsearch index name
      */
     public JsonToElasticsearchBulk(final String idKey, final String type, final String index) {
-        this(new String[]{idKey}, type, index);
+        this(new String[] {idKey}, type, index);
     }
 
     /**
-     *
      * Creates an instance of {@link JsonToElasticsearchBulk}.
      *
-     * @param idKey           the key of the JSON value to be used as the ID for the
-     *                        record
-     * @param type            the Elasticsearch index type
-     * @param index           the Elasticsearch index name
+     * @param idKey the key of the JSON value to be used as the ID for the record
+     * @param type the Elasticsearch index type
+     * @param index the Elasticsearch index name
      * @param entitySeparator the separator between entity names in idKey
      */
-    public JsonToElasticsearchBulk(final String idKey, final String type, final String index, final String entitySeparator) {
+    public JsonToElasticsearchBulk(
+            final String idKey,
+            final String type,
+            final String index,
+            final String entitySeparator) {
         this(idKey.split(Pattern.quote(entitySeparator)), type, index);
     }
 
@@ -112,7 +107,7 @@ public class JsonToElasticsearchBulk extends DefaultObjectPipe<String, ObjectRec
      * @param idKey the key path of the JSON value
      */
     public void setIdKey(final String idKey) {
-        this.idPath = new String[]{idKey};
+        this.idPath = new String[] {idKey};
     }
 
     /**
@@ -149,8 +144,7 @@ public class JsonToElasticsearchBulk extends DefaultObjectPipe<String, ObjectRec
             mapper.writeValue(stringWriter, indexMap);
             stringWriter.write("\n");
             mapper.writeValue(stringWriter, json);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
         getReceiver().process(stringWriter.toString());
@@ -164,8 +158,7 @@ public class JsonToElasticsearchBulk extends DefaultObjectPipe<String, ObjectRec
                 @SuppressWarnings("unchecked")
                 final Map<String, Object> nestedMap = (Map<String, Object>) newValue;
                 newValue = nestedMap.get(key);
-            }
-            else {
+            } else {
                 return null;
             }
         }
@@ -174,8 +167,8 @@ public class JsonToElasticsearchBulk extends DefaultObjectPipe<String, ObjectRec
     }
 
     /**
-     * Use a MultiMap with Jackson to collect values from multiple fields with
-     * identical names under a single key.
+     * Use a MultiMap with Jackson to collect values from multiple fields with identical names under
+     * a single key.
      */
     static class MultiMap extends HashMap<String, Object> { // checkstyle-disable-line IllegalType
         private static final long serialVersionUID = 490682490432334605L;
@@ -195,18 +188,15 @@ public class JsonToElasticsearchBulk extends DefaultObjectPipe<String, ObjectRec
                     final Set<Object> vals = (Set<Object>) oldValue;
                     vals.add(value);
                     newValue = vals;
-                }
-                else {
+                } else {
                     final Set<Object> set = new HashSet<>(Arrays.asList(oldValue, value));
                     newValue = set.size() == 1 ? value : set;
                 }
-            }
-            else {
+            } else {
                 newValue = value;
             }
 
             return super.put(key, newValue);
         }
     }
-
 }

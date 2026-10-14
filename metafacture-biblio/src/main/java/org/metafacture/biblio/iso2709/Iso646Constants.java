@@ -23,7 +23,6 @@ import java.nio.charset.StandardCharsets;
  * Constant definitions for the ISO646:1991 standard.
  *
  * @author Christoph Böhme
- *
  */
 final class Iso646Constants {
 
@@ -41,5 +40,4 @@ final class Iso646Constants {
     private Iso646Constants() {
         throw new AssertionError("class should not be instantiated");
     }
-
 }

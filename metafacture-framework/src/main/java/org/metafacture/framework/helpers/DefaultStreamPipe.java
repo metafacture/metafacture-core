@@ -20,21 +20,18 @@ import org.metafacture.framework.Receiver;
 import org.metafacture.framework.StreamPipe;
 
 /**
- * Default implementation for {@link StreamPipe}s which simply
- * does nothing.
+ * Default implementation for {@link StreamPipe}s which simply does nothing.
  *
  * @param <R> receiver type of the downstream receiver
  * @author Markus Michael Geipel
  * @author Christoph Böhme
  * @see ForwardingStreamPipe
  */
-public class DefaultStreamPipe<R extends Receiver> extends DefaultSender<R> implements StreamPipe<R> {
+public class DefaultStreamPipe<R extends Receiver> extends DefaultSender<R>
+        implements StreamPipe<R> {
 
-    /**
-     * Creates an instance of {@link DefaultStreamPipe}.
-     */
-    public DefaultStreamPipe() {
-    }
+    /** Creates an instance of {@link DefaultStreamPipe}. */
+    public DefaultStreamPipe() {}
 
     @Override
     public void startRecord(final String identifier) {
@@ -60,5 +57,4 @@ public class DefaultStreamPipe<R extends Receiver> extends DefaultSender<R> impl
     public void literal(final String name, final String value) {
         // Default implementation does nothing
     }
-
 }

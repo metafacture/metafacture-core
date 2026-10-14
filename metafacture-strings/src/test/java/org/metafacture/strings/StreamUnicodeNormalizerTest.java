@@ -16,23 +16,20 @@
 
 package org.metafacture.strings;
 
-import org.metafacture.framework.StreamReceiver;
-
+import java.text.Normalizer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.text.Normalizer;
-
 /**
  * Tests for class {@link StreamUnicodeNormalizer}.
  *
  * @author Christoph Böhme
- *
  */
 public final class StreamUnicodeNormalizerTest {
 
@@ -54,11 +51,9 @@ public final class StreamUnicodeNormalizerTest {
 
     private StreamUnicodeNormalizer streamUnicodeNormalizer;
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public StreamUnicodeNormalizerTest() {
-    }
+    public StreamUnicodeNormalizerTest() {}
 
     @Before
     public void setup() {
@@ -162,11 +157,9 @@ public final class StreamUnicodeNormalizerTest {
     public void shouldNormalizeToNFDIfConfigured() {
         streamUnicodeNormalizer.setNormalizationForm(Normalizer.Form.NFD);
         streamUnicodeNormalizer.startRecord(RECORD_ID);
-        streamUnicodeNormalizer.literal(LITERAL_NAME,
-                KEY_WITH_PRECOMPOSED_CHARS);
+        streamUnicodeNormalizer.literal(LITERAL_NAME, KEY_WITH_PRECOMPOSED_CHARS);
         streamUnicodeNormalizer.endRecord();
 
         Mockito.verify(receiver).literal(LITERAL_NAME, KEY_WITH_DIACRITICS);
     }
-
 }

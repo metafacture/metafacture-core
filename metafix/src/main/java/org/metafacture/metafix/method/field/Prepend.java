@@ -16,30 +16,27 @@
 
 package org.metafacture.metafix.method.field;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Adds a string at the beginning of a field value.
- */
+/** Adds a string at the beginning of a field value. */
 @FixCommand("prepend")
 public class Prepend implements FixFunction {
 
-    /**
-     * Creates an instance of {@link Prepend}.
-     */
-    public Prepend() {
-    }
+    /** Creates an instance of {@link Prepend}. */
+    public Prepend() {}
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final String value = params.get(1);
         record.transform(params.get(0), s -> value + s);
     }
-
 }

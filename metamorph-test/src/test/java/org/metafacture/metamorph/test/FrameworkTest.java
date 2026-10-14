@@ -29,7 +29,5 @@ public final class FrameworkTest {
     // This class serves only as a bonding
     // point for metamorph tests
 
-    public FrameworkTest() {
-    }
-
+    public FrameworkTest() {}
 }

@@ -16,71 +16,65 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.framework.StreamReceiver;
-
+import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Arrays;
 
 /**
  * Test Metafix selectors.
  *
  * @author Fabian Steeg
- *
  */
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(MetafixToDo.Extension.class)
 public final class MetafixSelectorTest {
 
-    @Mock
-    private StreamReceiver streamReceiver;
+    @Mock private StreamReceiver streamReceiver;
 
-    public MetafixSelectorTest() { }
+    public MetafixSelectorTest() {}
 
     @Test
     @MetafixToDo("Support reject() with condition")
     public void reject() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "reject exists(error)"),
-            i -> {
-                i.startRecord("1");
-                i.literal("error", "details");
-                i.endRecord();
+        MetafixTestHelpers.assertFix(
+                streamReceiver,
+                Arrays.asList("reject exists(error)"),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("error", "details");
+                    i.endRecord();
 
-                i.startRecord("2");
-                i.endRecord();
-            }, o -> {
-                o.get().startRecord("2");
-                o.get().literal("name", "Mary");
-                o.get().endRecord();
-            });
+                    i.startRecord("2");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("2");
+                    o.get().literal("name", "Mary");
+                    o.get().endRecord();
+                });
     }
 
     @Test
     public void rejectWithExplicitConditional() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "if exists(error)",
-                "  reject()",
-                "end"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.literal("error", "details");
-                i.endRecord();
+        MetafixTestHelpers.assertFix(
+                streamReceiver,
+                Arrays.asList("if exists(error)", "  reject()", "end"),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("error", "details");
+                    i.endRecord();
 
-                i.startRecord("2");
-                i.literal("name", "Mary");
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("2");
-                o.get().literal("name", "Mary");
-                o.get().endRecord();
-            }
-        );
+                    i.startRecord("2");
+                    i.literal("name", "Mary");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("2");
+                    o.get().literal("name", "Mary");
+                    o.get().endRecord();
+                });
     }
-
 }

@@ -17,8 +17,8 @@
 package org.metafacture.metamorph.api;
 
 /**
- * Thrown by Metamorph if an error occurs while parsing and building the
- * Metamorph transformation pipeline.
+ * Thrown by Metamorph if an error occurs while parsing and building the Metamorph transformation
+ * pipeline.
  *
  * @author Markus Michael Geipel
  */
@@ -36,14 +36,12 @@ public final class MorphBuildException extends RuntimeException {
     }
 
     /**
-     * Creates an instance of {@link MorphBuildException} by a given message and
-     * cause.
+     * Creates an instance of {@link MorphBuildException} by a given message and cause.
      *
      * @param message the message
-     * @param cause   the {@link Throwable}
+     * @param cause the {@link Throwable}
      */
     public MorphBuildException(final String message, final Throwable cause) {
         super(message, cause);
     }
-
 }

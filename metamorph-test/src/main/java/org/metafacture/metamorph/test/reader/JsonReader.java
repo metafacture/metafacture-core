@@ -23,15 +23,11 @@ import org.metafacture.json.JsonDecoder;
  * Reads and decodes a <i>JSON</i> data stream.
  *
  * @author Jens Wille
- *
  */
 public class JsonReader extends ReaderBase {
 
-    /**
-     * Creates an instance of {@link JsonReader}.
-     */
+    /** Creates an instance of {@link JsonReader}. */
     public JsonReader() {
         super(new RecordReader(), new JsonDecoder());
     }
-
 }

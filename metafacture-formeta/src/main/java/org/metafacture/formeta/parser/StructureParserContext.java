@@ -17,8 +17,8 @@
 package org.metafacture.formeta.parser;
 
 /**
- * Context of the record parser. It manages the text parser and the generation of
- * the stream events emitted by the decoder.
+ * Context of the record parser. It manages the text parser and the generation of the stream events
+ * emitted by the decoder.
  */
 class StructureParserContext {
 
@@ -31,8 +31,7 @@ class StructureParserContext {
     private String literalName;
     private int nestingLevel;
 
-    StructureParserContext() {
-    }
+    StructureParserContext() {}
 
     public void setEmitter(final Emitter emitter) {
         this.emitter = emitter;
@@ -43,13 +42,11 @@ class StructureParserContext {
     }
 
     /**
-     * Passes {@code ch} to the embedded text parser for processing. If
-     * the text parser reaches {@code DELIMITER_REACHED} it is
-     * automatically reset.
+     * Passes {@code ch} to the embedded text parser for processing. If the text parser reaches
+     * {@code DELIMITER_REACHED} it is automatically reset.
      *
      * @param ch the character to process
-     * @return true if the text parser reached the
-     *         {@code DELIMITER_REACHED} state.
+     * @return true if the text parser reached the {@code DELIMITER_REACHED} state.
      */
     public boolean processCharWithTextParser(final char ch) {
         textParser = textParser.processChar(ch, textParserContext);
@@ -103,5 +100,4 @@ class StructureParserContext {
         literalName = null;
         nestingLevel = 0;
     }
-
 }

@@ -16,11 +16,6 @@
 
 package org.metafacture.triples;
 
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.helpers.DefaultObjectPipe;
-import org.metafacture.framework.objects.Triple;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,23 +26,26 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.function.Function;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.helpers.DefaultObjectPipe;
+import org.metafacture.framework.objects.Triple;
 
 /**
  * @author markus geipel
- *
  */
-public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> implements MemoryWarningSystem.Listener {
+public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>>
+        implements MemoryWarningSystem.Listener {
 
-    /**
-     * The comparators.
-     */
+    /** The comparators. */
     public enum Compare {
-        SUBJECT, PREDICATE, OBJECT, ALL
+        SUBJECT,
+        PREDICATE,
+        OBJECT,
+        ALL
     }
 
-    /**
-     * The sort orders.
-     */
+    /** The sort orders. */
     public enum Order {
         INCREASING {
             @Override
@@ -63,8 +61,8 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
         };
 
         /**
-         * Gets the indicator. If order is decreasing the the indicator is negativ, if
-         * order is increasing it's positive.
+         * Gets the indicator. If order is decreasing the the indicator is negativ, if order is
+         * increasing it's positive.
          *
          * @param indicator the indicator
          * @return the indicator dependent of the order
@@ -79,9 +77,7 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
     private boolean numeric;
     private volatile boolean memoryLow;
 
-    /**
-     * Constructs an AbstractTripleSort. Calls {@link MemoryWarningSystem}.
-     */
+    /** Constructs an AbstractTripleSort. Calls {@link MemoryWarningSystem}. */
     @SuppressWarnings("this-escape")
     protected AbstractTripleSort() {
         MemoryWarningSystem.addListener(this);
@@ -115,11 +111,9 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
                 if (!buffer.isEmpty()) {
                     nextBatch();
                 }
-            }
-            catch (final IOException e) {
+            } catch (final IOException e) {
                 throw new MetafactureException("Error writing to temp file after sorting", e);
-            }
-            finally {
+            } finally {
                 memoryLow = false;
             }
         }
@@ -151,10 +145,10 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
             }
 
             onFinished();
-        }
-        else {
+        } else {
             final Comparator<Triple> comparator = createComparator();
-            final PriorityQueue<SortedTripleFileFacade> queue = new PriorityQueue<>(11, (o1, o2) -> comparator.compare(o1.peek(), o2.peek()));
+            final PriorityQueue<SortedTripleFileFacade> queue =
+                    new PriorityQueue<>(11, (o1, o2) -> comparator.compare(o1.peek(), o2.peek()));
 
             try {
                 nextBatch();
@@ -169,18 +163,15 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
                     sortedTriple(triple);
                     if (sortedFileFacade.isEmpty()) {
                         sortedFileFacade.close();
-                    }
-                    else {
+                    } else {
                         queue.add(sortedFileFacade);
                     }
                 }
 
                 onFinished();
-            }
-            catch (final IOException e) {
+            } catch (final IOException e) {
                 throw new MetafactureException("Error merging temp files", e);
-            }
-            finally {
+            } finally {
                 for (final SortedTripleFileFacade sortedFileFacade : queue) {
                     sortedFileFacade.close();
                 }
@@ -209,7 +200,7 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
      * Creates an alphanumeric Comparator.
      *
      * @param compare one of {@link Compare}
-     * @param order   the {@link Order}
+     * @param order the {@link Order}
      * @return a Comparator of type Triple
      */
     public static Comparator<Triple> createComparator(final Compare compare, final Order order) {
@@ -220,12 +211,13 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
      * Creates a Comparator.
      *
      * @param compare one of {@link #Compare}
-     * @param order   the {@link #Order}
-     * @param numeric "true" if comparison should be numeric. "false" if comparison
-     *                should be alphanumeric. Defaults to "false".
+     * @param order the {@link #Order}
+     * @param numeric "true" if comparison should be numeric. "false" if comparison should be
+     *     alphanumeric. Defaults to "false".
      * @return a Comparator of type Triple
      */
-    private static Comparator<Triple> createComparator(final Compare compare, final Order order, final boolean numeric) {
+    private static Comparator<Triple> createComparator(
+            final Compare compare, final Order order, final boolean numeric) {
         final Function<Triple, String> tripleFunction;
         switch (compare) {
             case ALL:
@@ -243,9 +235,11 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
         }
 
         final Function<Triple, Integer> numericFunction = tripleFunction.andThen(Integer::valueOf);
-        return numeric ?
-            (o1, o2) -> order.order(numericFunction.apply(o1).compareTo(numericFunction.apply(o2))) :
-            (o1, o2) -> order.order(tripleFunction.apply(o1).compareTo(tripleFunction.apply(o2)));
+        return numeric
+                ? (o1, o2) ->
+                        order.order(numericFunction.apply(o1).compareTo(numericFunction.apply(o2)))
+                : (o1, o2) ->
+                        order.order(tripleFunction.apply(o1).compareTo(tripleFunction.apply(o2)));
     }
 
     @Override
@@ -260,5 +254,4 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 
         tempFiles.clear();
     }
-
 }

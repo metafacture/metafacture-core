@@ -41,10 +41,8 @@ public final class StringSender extends DefaultObjectPipe<Object, ObjectReceiver
     public void process(final Object notUsed) {
         if (notUsed == null) {
             getReceiver().process(string);
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Parameter not used. Must be null");
         }
     }
-
 }

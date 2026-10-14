@@ -16,11 +16,10 @@
 
 package org.metafacture.statistics;
 
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 /**
  * Counts entity names, literal names, or literal values.
@@ -35,15 +34,11 @@ public final class Histogram extends DefaultStreamReceiver {
     private boolean countLiterals;
     private String countField;
 
-    /**
-     * Creates an instance of {@link Histogram}.
-     */
-    public Histogram() {
-    }
+    /** Creates an instance of {@link Histogram}. */
+    public Histogram() {}
 
     /**
-     * Creates an instance of {@link Histogram} with a field whose content is
-     * counted.
+     * Creates an instance of {@link Histogram} with a field whose content is counted.
      *
      * @param countField name of the field whose content is counted
      */
@@ -143,5 +138,4 @@ public final class Histogram extends DefaultStreamReceiver {
         }
         histogram.put(value, Integer.valueOf(c.intValue() + 1));
     }
-
 }

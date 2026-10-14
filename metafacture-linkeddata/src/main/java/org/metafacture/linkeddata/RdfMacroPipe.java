@@ -27,9 +27,10 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
  * Expands some macros for RDF/XML
  *
  * @author Markus Michael Geipel
- *
  */
-@Description("Expands some macros for RDF/XML. When using Fix, configure `referenceMarker` to any char but the default `*`")
+@Description(
+        "Expands some macros for RDF/XML. When using Fix, configure `referenceMarker` to any char"
+                + " but the default `*`")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("rdf-macros")
@@ -44,11 +45,8 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
     private char referenceMarker = REFERENCE_MARKER;
     private char languageMarker = LANGUAGE_MARKER;
 
-    /**
-     * Creates an instance of {@link RdfMacroPipe}.
-     */
-    public RdfMacroPipe() {
-    }
+    /** Creates an instance of {@link RdfMacroPipe}. */
+    public RdfMacroPipe() {}
 
     /**
      * Flas whether to auto add the subject.
@@ -120,7 +118,6 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
     @Override
     public void endEntity() {
         getReceiver().endEntity();
-
     }
 
     @Override
@@ -130,16 +127,13 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
             getReceiver().startEntity(name.substring(1));
             getReceiver().literal(RDF_REFERENCE, value);
             getReceiver().endEntity();
-        }
-        else if (index > 0) {
+        } else if (index > 0) {
             getReceiver().startEntity(name.substring(0, index));
             getReceiver().literal(XML_LANG, name.substring(index + 1));
             getReceiver().literal("", value);
             getReceiver().endEntity();
-        }
-        else {
+        } else {
             getReceiver().literal(name, value);
         }
     }
-
 }

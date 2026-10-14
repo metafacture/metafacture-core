@@ -19,17 +19,14 @@ package org.metafacture.framework;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 /**
- * An {@link ObjectReceiver} that also implements the {@link Sender} interface.
- * This interface should be implemented by all modules which receive objects
- * and invoke methods on a downstream receiver.
+ * An {@link ObjectReceiver} that also implements the {@link Sender} interface. This interface
+ * should be implemented by all modules which receive objects and invoke methods on a downstream
+ * receiver.
  *
  * @param <T> object type that this module processes
  * @param <R> receiver type of the downstream module
- *
  * @see DefaultObjectPipe
- *
  * @author Christoph Böhme
- *
  */
 public interface ObjectPipe<T, R extends Receiver> extends ObjectReceiver<T>, Sender<R> {
     // Just a combination of sender and receiver

@@ -16,30 +16,26 @@
 
 package org.metafacture.javaintegration;
 
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 /**
  * Collects the received results in a {@link Map}. Duplicate names are thus lost.
  *
  * @author Markus Michael Geipel
- *
  */
-public final class StringMap extends DefaultStreamReceiver implements Map<String, String>, Collector<Map<String, String>> {
+public final class StringMap extends DefaultStreamReceiver
+        implements Map<String, String>, Collector<Map<String, String>> {
 
     private boolean closed;
     private Collection<Map<String, String>> collection;
     private Map<String, String> map = new HashMap<>();
 
-    /**
-     * Creates an instance of {@link StringMap}.
-     */
-    public StringMap() {
-    }
+    /** Creates an instance of {@link StringMap}. */
+    public StringMap() {}
 
     /**
      * Constructs a StringMap with a given Collection.
@@ -153,7 +149,6 @@ public final class StringMap extends DefaultStreamReceiver implements Map<String
             collection.add(map);
             map = new HashMap<String, String>();
         }
-
     }
 
     @Override
@@ -182,5 +177,4 @@ public final class StringMap extends DefaultStreamReceiver implements Map<String
     public void setCollection(final Collection<Map<String, String>> collection) {
         this.collection = collection;
     }
-
 }

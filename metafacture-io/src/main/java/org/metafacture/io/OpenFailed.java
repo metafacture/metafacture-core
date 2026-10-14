@@ -1,8 +1,6 @@
 package org.metafacture.io;
 
-/**
- * Error while opening output stream.
- */
+/** Error while opening output stream. */
 public class OpenFailed extends IoFailed {
 
     /**
@@ -27,10 +25,9 @@ public class OpenFailed extends IoFailed {
      * Creates an instance of {@link OpenFailed} by a given message and a cause.
      *
      * @param message the message
-     * @param cause   the {@link Throwable}
+     * @param cause the {@link Throwable}
      */
     public OpenFailed(final String message, final Throwable cause) {
         super(message, cause);
     }
-
 }

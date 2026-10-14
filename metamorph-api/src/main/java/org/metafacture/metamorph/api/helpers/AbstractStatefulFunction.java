@@ -47,8 +47,11 @@ public abstract class AbstractStatefulFunction extends AbstractFunction {
     }
 
     @Override
-    public final void receive(final String currentName, final String value,
-            final NamedValueSource currentSource, final int currentRecordCount,
+    public final void receive(
+            final String currentName,
+            final String value,
+            final NamedValueSource currentSource,
+            final int currentRecordCount,
             final int currentEntityCount) {
 
         if (!sameRecord(currentRecordCount)) {
@@ -67,7 +70,8 @@ public abstract class AbstractStatefulFunction extends AbstractFunction {
             return;
         }
 
-        getNamedValueReceiver().receive(currentName, processedValue, this, currentRecordCount, currentEntityCount);
+        getNamedValueReceiver()
+                .receive(currentName, processedValue, this, currentRecordCount, currentEntityCount);
     }
 
     private boolean entityClearNeeded(final int currentEntityCount) {
@@ -83,5 +87,4 @@ public abstract class AbstractStatefulFunction extends AbstractFunction {
     protected abstract void reset();
 
     protected abstract boolean doResetOnEntityChange();
-
 }

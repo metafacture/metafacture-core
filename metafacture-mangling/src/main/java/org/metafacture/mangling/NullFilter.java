@@ -24,11 +24,10 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.ForwardingStreamPipe;
 
 /**
- * Replaces null values with replacement string, or, if replacement
- * string is null (default), discards null values entirely.
+ * Replaces null values with replacement string, or, if replacement string is null (default),
+ * discards null values entirely.
  *
  * @author Jens Wille
- *
  */
 @Description("Discards or replaces null values")
 @In(StreamReceiver.class)
@@ -38,11 +37,8 @@ public final class NullFilter extends ForwardingStreamPipe {
 
     private String replacement;
 
-    /**
-     * Creates an instance of {@link NullFilter}.
-     */
-    public NullFilter() {
-    }
+    /** Creates an instance of {@link NullFilter}. */
+    public NullFilter() {}
 
     /**
      * Sets the replacement.
@@ -66,10 +62,8 @@ public final class NullFilter extends ForwardingStreamPipe {
     public void literal(final String name, final String value) {
         if (value != null) {
             getReceiver().literal(name, value);
-        }
-        else if (replacement != null) {
+        } else if (replacement != null) {
             getReceiver().literal(name, replacement);
         }
     }
-
 }

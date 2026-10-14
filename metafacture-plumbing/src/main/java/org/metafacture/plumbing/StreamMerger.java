@@ -23,17 +23,13 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
 /**
- * Merges records based on their id. The module compares the id
- * of each record it receives with the one of previous record; if
- * both records have got the same id, then the end-record and
- * start-record events that would normally separate the records
- * are suppressed in the output stream of {@code StreamMerger}.
- * This effectively merges the two records. Of course, this only
- * works if the records which are to be merged follow each other
- * directly.
+ * Merges records based on their id. The module compares the id of each record it receives with the
+ * one of previous record; if both records have got the same id, then the end-record and
+ * start-record events that would normally separate the records are suppressed in the output stream
+ * of {@code StreamMerger}. This effectively merges the two records. Of course, this only works if
+ * the records which are to be merged follow each other directly.
  *
  * @author Christoph Böhme
- *
  */
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
@@ -43,11 +39,8 @@ public final class StreamMerger extends DefaultStreamPipe<StreamReceiver> {
     private boolean hasRecordsReceived;
     private String currentId = "";
 
-    /**
-     * Creates an instance of {@link StreamMerger}.
-     */
-    public StreamMerger() {
-    }
+    /** Creates an instance of {@link StreamMerger}. */
+    public StreamMerger() {}
 
     @Override
     public void startRecord(final String identifier) {
@@ -94,5 +87,4 @@ public final class StreamMerger extends DefaultStreamPipe<StreamReceiver> {
         }
         onResetStream();
     }
-
 }

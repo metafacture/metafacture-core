@@ -16,33 +16,28 @@
 
 package org.metafacture.javaintegration;
 
-import org.metafacture.framework.StreamReceiver;
-
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Tests for class {@link MapToStream}.
  *
  * @author Christoph Böhme
- *
  */
 public final class MapToStreamTest {
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
     private MapToStream mapToStream;
 
-    public MapToStreamTest() {
-    }
+    public MapToStreamTest() {}
 
     @Before
     public void setup() {
@@ -126,5 +121,4 @@ public final class MapToStreamTest {
         Mockito.verify(receiver).literal("1", "11");
         Mockito.verify(receiver).literal("2", "12");
     }
-
 }

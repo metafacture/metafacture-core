@@ -16,32 +16,27 @@
 
 package org.metafacture.html;
 
-import org.metafacture.framework.StreamReceiver;
-
+import java.io.StringReader;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.io.StringReader;
-
 /**
  * Tests for class {@link HtmlDecoder}.
  *
  * @author Fabian Steeg
- *
  */
 public final class HtmlDecoderTest {
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
     private HtmlDecoder htmlDecoder;
 
-    public HtmlDecoderTest() {
-    }
+    public HtmlDecoderTest() {}
 
     @Before
     public void setup() {
@@ -75,7 +70,6 @@ public final class HtmlDecoderTest {
         ordered.verify(receiver).literal("value", "Item");
         // elements above plus body, html
         ordered.verify(receiver, Mockito.times(4)).endEntity();
-
     }
 
     @Test
@@ -86,7 +80,6 @@ public final class HtmlDecoderTest {
         ordered.verify(receiver).literal("value", "This is the full text");
         // elements above plus body, html
         ordered.verify(receiver, Mockito.times(4)).endEntity();
-
     }
 
     @Test
@@ -102,7 +95,8 @@ public final class HtmlDecoderTest {
 
     @Test
     public void htmlScriptElementData() {
-        htmlDecoder.process(new StringReader("<script type=application/ld+json>{\"id\":\"theId\"}</script>"));
+        htmlDecoder.process(
+                new StringReader("<script type=application/ld+json>{\"id\":\"theId\"}</script>"));
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startEntity("script");
         ordered.verify(receiver).literal("type", "application/ld+json");
@@ -125,7 +119,8 @@ public final class HtmlDecoderTest {
     @Test
     public void htmlAttributesAsSubfieldsCustom() {
         htmlDecoder.setAttrValsAsSubfields("mods:url.access");
-        htmlDecoder.process(new StringReader("<mods:url access=\"preview\">file:///img.png</mods:url>"));
+        htmlDecoder.process(
+                new StringReader("<mods:url access=\"preview\">file:///img.png</mods:url>"));
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startEntity("mods:url");
         ordered.verify(receiver).literal("preview", "file:///img.png");
@@ -136,8 +131,10 @@ public final class HtmlDecoderTest {
     @Test
     public void htmlAttributesAsSubfieldsDefaultPlusCustom() {
         htmlDecoder.setAttrValsAsSubfields("&mods:url.access");
-        htmlDecoder.process(new StringReader("<meta name=\"language\" content=\"DE\"/>" +
-                "<mods:url access=\"preview\">file:///img.png</mods:url>"));
+        htmlDecoder.process(
+                new StringReader(
+                        "<meta name=\"language\" content=\"DE\"/>"
+                                + "<mods:url access=\"preview\">file:///img.png</mods:url>"));
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startEntity("meta");
         ordered.verify(receiver).literal("language", "DE");
@@ -146,5 +143,4 @@ public final class HtmlDecoderTest {
         ordered.verify(receiver, Mockito.never()).literal("value", "file:///img.png");
         ordered.verify(receiver, Mockito.times(3)).endEntity();
     }
-
 }

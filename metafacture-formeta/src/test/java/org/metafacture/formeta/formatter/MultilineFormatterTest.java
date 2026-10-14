@@ -24,33 +24,32 @@ import org.junit.Test;
  * Tests for {@link MultilineFormatter}.
  *
  * @author Christoph Böhme
- *
  */
 public final class MultilineFormatterTest {
 
     private static final String MULTILINE_RECORD =
-            "'1' {\n" +
-            "\t'lit1': 'value 1',\n" +
-            "\t' ent1' {\n" +
-            "\t\t'lit2': 'value {x}',\n" +
-            "\t\t'lit\\\\3': 'value 2 '\n" +
-            "\t},\n" +
-            "\t'lit4': 'value \\'3\\''\n" +
-            "}";
+            "'1' {\n"
+                    + "\t'lit1': 'value 1',\n"
+                    + "\t' ent1' {\n"
+                    + "\t\t'lit2': 'value {x}',\n"
+                    + "\t\t'lit\\\\3': 'value 2 '\n"
+                    + "\t},\n"
+                    + "\t'lit4': 'value \\'3\\''\n"
+                    + "}";
 
     private static final String INNER_RECORD =
             "inner{ lit1: value 1, ent1{ lit2: 'hello worlds\\'s end!' } }";
 
     private static final String OUTER_RECORD =
-            "'outer' {\n" +
-            "\t'nested': 'inner{ lit1: value 1, ent1{ lit2: \\'hello worlds\\\\\\'s end!\\' } }',\n" +
-            "\t'note': 'nested records'\n" +
-            "}";
+            "'outer' {\n"
+                + "\t'nested': 'inner{ lit1: value 1, ent1{ lit2: \\'hello worlds\\\\\\'s end!\\' }"
+                + " }',\n"
+                + "\t'note': 'nested records'\n"
+                + "}";
 
     private MultilineFormatter multilineFormatter;
 
-    public MultilineFormatterTest() {
-    }
+    public MultilineFormatterTest() {}
 
     @Before
     public void setup() {
@@ -80,5 +79,4 @@ public final class MultilineFormatterTest {
 
         Assert.assertEquals(OUTER_RECORD, multilineFormatter.toString());
     }
-
 }

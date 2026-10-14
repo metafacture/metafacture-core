@@ -16,35 +16,33 @@
 
 package org.metafacture.metamorph.test.validators;
 
+import java.util.function.Consumer;
 import org.metafacture.framework.StreamReceiver;
 
-import java.util.function.Consumer;
-
 /**
- * Checks that the received stream events are in the correct order and contain
- * valid data. If not, a user-supplied error handler method is invoked. The
- * error handler can be set via {@link #setErrorHandler(Consumer)}. The
- * {@link #DEFAULT_ERROR_HANDLER} does nothing.
- * <p>
- * Errors caused by an invalid order of the event stream have no effect on the
- * state of {@code WellformednessChecker}. The module behaves as if the
- * invalid event was never received.
- * <p>
- * Errors caused by invalid data are reported but otherwise handled as valid
- * events. This means that <i>start-record</i> or <i>start-entity</i> events
- * still start a record or entity even if their identifier or name was reported
- * as invalid.
+ * Checks that the received stream events are in the correct order and contain valid data. If not, a
+ * user-supplied error handler method is invoked. The error handler can be set via {@link
+ * #setErrorHandler(Consumer)}. The {@link #DEFAULT_ERROR_HANDLER} does nothing.
+ *
+ * <p>Errors caused by an invalid order of the event stream have no effect on the state of {@code
+ * WellformednessChecker}. The module behaves as if the invalid event was never received.
+ *
+ * <p>Errors caused by invalid data are reported but otherwise handled as valid events. This means
+ * that <i>start-record</i> or <i>start-entity</i> events still start a record or entity even if
+ * their identifier or name was reported as invalid.
  *
  * @author Christoph Böhme
- *
  */
 public final class WellformednessChecker implements StreamReceiver {
 
     /**
-     * The default error handler which is used if no other error handler was set
-     * via {@link #setErrorHandler(Consumer)}. It does nothing.
+     * The default error handler which is used if no other error handler was set via {@link
+     * #setErrorHandler(Consumer)}. It does nothing.
      */
-    public static final Consumer<String> DEFAULT_ERROR_HANDLER = msg -> { /* do nothing */ };
+    public static final Consumer<String> DEFAULT_ERROR_HANDLER =
+            msg -> {
+                /* do nothing */
+            };
 
     private static final String ID_MUST_NOT_BE_NULL = "id must not be null";
     private static final String NAME_MUST_NOT_BE_NULL = "name must not be null";
@@ -58,17 +56,13 @@ public final class WellformednessChecker implements StreamReceiver {
 
     private int nestingLevel;
 
-    /**
-     * Creates an instance of {@link WellformednessChecker}.
-     */
-    public WellformednessChecker() {
-    }
+    /** Creates an instance of {@link WellformednessChecker}. */
+    public WellformednessChecker() {}
 
     /**
-     * Sets the error handler which is called when a invalid event stream is
-     * received.
-     * <p>
-     * The handler is called with a message describing the error.
+     * Sets the error handler which is called when a invalid event stream is received.
+     *
+     * <p>The handler is called with a message describing the error.
      *
      * @param errorHandler a method which receives an error message
      */
@@ -89,8 +83,7 @@ public final class WellformednessChecker implements StreamReceiver {
     public void startRecord(final String identifier) {
         if (nestingLevel > 0) {
             errorHandler.accept(IN_RECORD);
-        }
-        else {
+        } else {
             nestingLevel += 1;
         }
         if (identifier == null) {
@@ -102,11 +95,9 @@ public final class WellformednessChecker implements StreamReceiver {
     public void endRecord() {
         if (nestingLevel < 1) {
             errorHandler.accept(NOT_IN_RECORD);
-        }
-        else if (nestingLevel > 1) {
+        } else if (nestingLevel > 1) {
             errorHandler.accept(IN_ENTITY);
-        }
-        else {
+        } else {
             nestingLevel -= 1;
         }
     }
@@ -115,8 +106,7 @@ public final class WellformednessChecker implements StreamReceiver {
     public void startEntity(final String name) {
         if (nestingLevel < 1) {
             errorHandler.accept(NOT_IN_RECORD);
-        }
-        else {
+        } else {
             nestingLevel += 1;
         }
         if (name == null) {
@@ -128,8 +118,7 @@ public final class WellformednessChecker implements StreamReceiver {
     public void endEntity() {
         if (nestingLevel < 2) {
             errorHandler.accept(NOT_IN_ENTITY);
-        }
-        else {
+        } else {
             nestingLevel -= 1;
         }
     }
@@ -155,5 +144,4 @@ public final class WellformednessChecker implements StreamReceiver {
             errorHandler.accept(IN_RECORD);
         }
     }
-
 }

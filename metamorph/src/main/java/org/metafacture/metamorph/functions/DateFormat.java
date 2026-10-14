@@ -16,9 +16,6 @@
 
 package org.metafacture.metamorph.functions;
 
-import org.metafacture.metamorph.api.MorphBuildException;
-import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
@@ -26,30 +23,35 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import org.metafacture.metamorph.api.MorphBuildException;
+import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
- * Format date/time strings in Metamorph. By default the input format is
- * dd.MM.yyyy and the output format is {@link java.text.DateFormat.Field#LONG}.
- * <p>
- * The Attribute removeLeadingZeros will remove all leading zeros from all
- * numbers in the output date.
- * <p>
- * The attribute era is used to specify if the date is BC or AD. Default
- * value is AUTO. To understand that, three short examples:
+ * Format date/time strings in Metamorph. By default the input format is dd.MM.yyyy and the output
+ * format is {@link java.text.DateFormat.Field#LONG}.
+ *
+ * <p>The Attribute removeLeadingZeros will remove all leading zeros from all numbers in the output
+ * date.
+ *
+ * <p>The attribute era is used to specify if the date is BC or AD. Default value is AUTO. To
+ * understand that, three short examples:
+ *
  * <ul>
  *   <li>Input: 20.07.356 (era=BC)
  *   <li>Output (German location): 20. Juli 0356 v. Chr.
  *   <li>Input: 20.07.356 (era=AD,removeLeadingZeros=true)
  *   <li>Output (German location): 20. Juli 356
  *   <li>Input: 20.07.-356 (era=AUTO)
- *   <li>Output (German location): 20. Juli 0357 v. Chr. (there is NO year 0;
- *       see ISO 8601, Proleptic Gregorian Calendar)
+ *   <li>Output (German location): 20. Juli 0357 v. Chr. (there is NO year 0; see ISO 8601,
+ *       Proleptic Gregorian Calendar)
  * </ul>
+ *
  * Examples of using this function in Metamorph:
+ *
  * <ul>
  *   <li>Default date format: {@code <dateformat />}
- *   <li>Read ISO-dates and generate German style dates:
- *   {@code <dateformat inputformat="yyyy-MM-dd" outputformat="dd.MM.yyyy" />}
+ *   <li>Read ISO-dates and generate German style dates: {@code <dateformat inputformat="yyyy-MM-dd"
+ *       outputformat="dd.MM.yyyy" />}
  * </ul>
  *
  * @author Michael Büchner
@@ -70,8 +72,7 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
     private Locale outputLocale = Locale.getDefault();
 
     /**
-     * Supported date formats. Maps to the date formats in
-     * {@link java.text.DateFormat}.
+     * Supported date formats. Maps to the date formats in {@link java.text.DateFormat}.
      *
      * @author Christoph Böhme
      */
@@ -90,12 +91,10 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
         int getFormatId() {
             return formatId;
         }
-
     }
 
     /**
-     * Supported eras (basically AUTO, AD and BC). Maps to
-     * {@link java.util.GregorianCalendar}.
+     * Supported eras (basically AUTO, AD and BC). Maps to {@link java.util.GregorianCalendar}.
      *
      * @author Michael Büchner
      */
@@ -113,7 +112,6 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
         int getEraId() {
             return eraId;
         }
-
     }
 
     static {
@@ -122,11 +120,8 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
         SUPPORTED_LANGUAGES = Collections.unmodifiableSet(set);
     }
 
-    /**
-     * Creates an instance of {@link DateFormat}.
-     */
-    public DateFormat() {
-    }
+    /** Creates an instance of {@link DateFormat}. */
+    public DateFormat() {}
 
     @Override
     public final String process(final String value) {
@@ -137,12 +132,14 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
             c.setTime(sdf.parse(value));
             if (era == Era.BC) {
                 c.set(Calendar.ERA, GregorianCalendar.BC);
-            }
-            else if (era == Era.AD) {
+            } else if (era == Era.AD) {
                 c.set(Calendar.ERA, GregorianCalendar.AD);
             }
 
-            final SimpleDateFormat sdfp = (SimpleDateFormat) java.text.DateFormat.getDateInstance(outputFormat.getFormatId(), outputLocale);
+            final SimpleDateFormat sdfp =
+                    (SimpleDateFormat)
+                            java.text.DateFormat.getDateInstance(
+                                    outputFormat.getFormatId(), outputLocale);
             String p = sdfp.toPattern();
             if (c.get(Calendar.ERA) == GregorianCalendar.BC) {
                 p = p.replace("yyyy", "yyyy G");
@@ -155,19 +152,16 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
                 result = result.replaceAll("([0]{1,})([0-9]{1,})", "$2");
             }
 
-        }
-        catch (final IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             throw new MorphBuildException("The date/time format is not supported.", e);
-        }
-        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
+        } catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             result = value;
         }
         return result;
     }
 
     /**
-     * Sets the input format. <strong>Default value:
-     * {@code #DEFAULT_INPUT_FORMAT}</strong>
+     * Sets the input format. <strong>Default value: {@code #DEFAULT_INPUT_FORMAT}</strong>
      *
      * @param inputFormat the input format
      */
@@ -176,8 +170,7 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
     }
 
     /**
-     * Sets the output format. <strong>Default value:
-     * {@link #DEFAULT_OUTPUT_FORMAT}</strong>
+     * Sets the output format. <strong>Default value: {@link #DEFAULT_OUTPUT_FORMAT}</strong>
      *
      * @param outputFormat the output format
      */
@@ -214,5 +207,4 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
         }
         this.outputLocale = Locale.forLanguageTag(language);
     }
-
 }

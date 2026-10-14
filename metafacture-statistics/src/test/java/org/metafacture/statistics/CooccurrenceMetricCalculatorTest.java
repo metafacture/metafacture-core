@@ -16,19 +16,17 @@
 
 package org.metafacture.statistics;
 
+import org.junit.Assert;
+import org.junit.Test;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectReceiver;
 import org.metafacture.framework.objects.Triple;
-
-import org.junit.Assert;
-import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
  * Tests for class {@link CooccurrenceMetricCalculator}.
  *
  * @author Markus Michael Geipel
- *
  */
 public final class CooccurrenceMetricCalculatorTest {
 
@@ -44,36 +42,51 @@ public final class CooccurrenceMetricCalculatorTest {
     private static final double PRECISSION = 0.099;
     private static final double JACCARD = 0.0714;
 
-    public CooccurrenceMetricCalculatorTest() {
-    }
+    public CooccurrenceMetricCalculatorTest() {}
 
     @Test
     public void testX2() {
-        Assert.assertEquals(X2, CooccurrenceMetricCalculator.Metric.X2.calculate(COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL),
+        Assert.assertEquals(
+                X2,
+                CooccurrenceMetricCalculator.Metric.X2.calculate(
+                        COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL),
                 DELTA);
     }
 
     @Test
     public void testF() {
-        Assert.assertEquals(F, CooccurrenceMetricCalculator.Metric.F.calculate(COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL), DELTA);
+        Assert.assertEquals(
+                F,
+                CooccurrenceMetricCalculator.Metric.F.calculate(
+                        COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL),
+                DELTA);
     }
 
     @Test
     public void testPrecission() {
-        Assert.assertEquals(PRECISSION,
-                CooccurrenceMetricCalculator.Metric.PRECISSION.calculate(COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL), DELTA);
+        Assert.assertEquals(
+                PRECISSION,
+                CooccurrenceMetricCalculator.Metric.PRECISSION.calculate(
+                        COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL),
+                DELTA);
     }
 
     @Test
     public void testRecall() {
-        Assert.assertEquals(RECALL,
-                CooccurrenceMetricCalculator.Metric.RECALL.calculate(COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL), DELTA);
+        Assert.assertEquals(
+                RECALL,
+                CooccurrenceMetricCalculator.Metric.RECALL.calculate(
+                        COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL),
+                DELTA);
     }
 
     @Test
     public void testJaccard() {
-        Assert.assertEquals(JACCARD,
-                CooccurrenceMetricCalculator.Metric.JACCARD.calculate(COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL), DELTA);
+        Assert.assertEquals(
+                JACCARD,
+                CooccurrenceMetricCalculator.Metric.JACCARD.calculate(
+                        COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL),
+                DELTA);
     }
 
     @SuppressWarnings("unchecked")
@@ -87,7 +100,14 @@ public final class CooccurrenceMetricCalculatorTest {
         calculator.process(new Triple("1:B", "", Integer.toString(COUNT_B)));
         calculator.process(new Triple("2:A&B", "", Integer.toString(COUNT_A_AND_B)));
 
-        Mockito.verify(receiver).process(new Triple("A&B", CooccurrenceMetricCalculator.Metric.X2.toString(), Double.toString(CooccurrenceMetricCalculator.Metric.X2.calculate(COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL))));
+        Mockito.verify(receiver)
+                .process(
+                        new Triple(
+                                "A&B",
+                                CooccurrenceMetricCalculator.Metric.X2.toString(),
+                                Double.toString(
+                                        CooccurrenceMetricCalculator.Metric.X2.calculate(
+                                                COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL))));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -96,7 +116,5 @@ public final class CooccurrenceMetricCalculatorTest {
         calculator.setReceiver(new DefaultObjectReceiver<Triple>());
         calculator.process(new Triple("2:x&x", "", Integer.toString(COUNT_A_AND_B)));
         calculator.process(new Triple("1:x", "", Integer.toString(COUNT_B)));
-
     }
-
 }

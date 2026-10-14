@@ -16,38 +16,35 @@
 
 package org.metafacture.html;
 
-import org.metafacture.framework.ObjectReceiver;
-
+import java.io.StringReader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
-import java.io.StringReader;
 
 /**
  * Tests for {@link ElementExtractor}.
  *
  * @author Fabian Steeg
- *
  */
 public final class ElementExtractorTest {
 
-    private static final StringReader IN = new StringReader("<html>" +
-            "<script data-test='site-head-data'>{\"code\":\"hey\"}</script>" +
-            "<script data-test='model-linked-data'>{\"code\":\"yo\"}");
+    private static final StringReader IN =
+            new StringReader(
+                    "<html>"
+                            + "<script data-test='site-head-data'>{\"code\":\"hey\"}</script>"
+                            + "<script data-test='model-linked-data'>{\"code\":\"yo\"}");
 
     private static final String OUT = "{\"code\":\"yo\"}";
 
-    @Mock
-    private ObjectReceiver<String> receiver;
+    @Mock private ObjectReceiver<String> receiver;
 
     private ElementExtractor elementExtractor;
 
-    public ElementExtractorTest() {
-    }
+    public ElementExtractorTest() {}
 
     @Before
     public void setup() {
@@ -67,5 +64,4 @@ public final class ElementExtractorTest {
     public void cleanup() {
         elementExtractor.closeStream();
     }
-
 }

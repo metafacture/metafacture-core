@@ -17,18 +17,14 @@
 package org.metafacture.metamorph.functions;
 
 /**
- * A function which checks whether the received value
- * is blacklisted.
+ * A function which checks whether the received value is blacklisted.
  *
  * @author Markus Michael Geipel
  */
 public final class BlackList extends AbstractLookup {
 
-    /**
-     * Creates an instance of {@link BlackList}.
-     */
-    public BlackList() {
-    }
+    /** Creates an instance of {@link BlackList}. */
+    public BlackList() {}
 
     @Override
     public String process(final String key) {
@@ -38,5 +34,4 @@ public final class BlackList extends AbstractLookup {
         }
         return null;
     }
-
 }

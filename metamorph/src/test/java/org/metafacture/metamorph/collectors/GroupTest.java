@@ -16,11 +16,10 @@
 
 package org.metafacture.metamorph.collectors;
 
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.TestHelpers;
-
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -33,25 +32,23 @@ import org.mockito.junit.MockitoRule;
  */
 public final class GroupTest {
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public GroupTest() {
-    }
+    public GroupTest() {}
 
     @Test
     public void shouldGroupToOverwriteNameAndValueOfContaintStatements() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <group name='group' value='constant'>" +
-                "    <data source='data1' />" +
-                "    <data source='data2' />" +
-                "  </group>" +
-                "  <data source='data3' />" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <group name='group' value='constant'>"
+                        + "    <data source='data1' />"
+                        + "    <data source='data2' />"
+                        + "  </group>"
+                        + "  <data source='data3' />"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "skjdfh");
@@ -64,8 +61,6 @@ public final class GroupTest {
                     f.apply(2).literal("group", "constant");
                     o.get().literal("data3", "A");
                     o.get().endRecord();
-                }
-        );
+                });
     }
-
 }

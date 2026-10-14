@@ -16,11 +16,10 @@
 
 package org.metafacture.biblio;
 
-import org.metafacture.framework.StreamReceiver;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -37,16 +36,13 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public final class AlephMabXmlHandlerTest {
 
-    @Rule
-    public MockitoRule mockito = MockitoJUnit.rule();
+    @Rule public MockitoRule mockito = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
     private AlephMabXmlHandler mabXmlHandler;
 
-    public AlephMabXmlHandlerTest() {
-    }
+    public AlephMabXmlHandlerTest() {}
 
     @Before
     public void setup() {
@@ -63,7 +59,7 @@ public final class AlephMabXmlHandlerTest {
         mabXmlHandler.endElement(null, "leader", "");
         mabXmlHandler.endElement(null, "ListRecords", "");
 
-        final InOrder ordered    = Mockito.inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).endRecord();
         ordered.verifyNoMoreInteractions();
@@ -81,7 +77,7 @@ public final class AlephMabXmlHandlerTest {
         mabXmlHandler.endElement(null, "controlfield", "");
         mabXmlHandler.endElement(null, "ListRecords", "");
 
-        final InOrder ordered    = Mockito.inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("FMT");
         ordered.verify(receiver).literal("", data);
@@ -108,7 +104,7 @@ public final class AlephMabXmlHandlerTest {
         mabXmlHandler.endElement(null, "datafield", "");
         mabXmlHandler.endElement(null, "ListRecords", "");
 
-        final InOrder ordered    = Mockito.inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("001ab");
         ordered.verify(receiver).literal("a", data);
@@ -116,5 +112,4 @@ public final class AlephMabXmlHandlerTest {
         ordered.verify(receiver).endRecord();
         ordered.verifyNoMoreInteractions();
     }
-
 }

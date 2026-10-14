@@ -16,11 +16,10 @@
 
 package org.metafacture.metamorph.collectors;
 
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.TestHelpers;
-
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -33,24 +32,22 @@ import org.mockito.junit.MockitoRule;
  */
 public final class ConcatTest {
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public ConcatTest() {
-    }
+    public ConcatTest() {}
 
     @Test
     public void shouldConcatenateValues() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <concat delimiter=', ' name='concat' prefix='{' postfix='}'>" +
-                "    <data source='data1' />" +
-                "    <data source='data2' />" +
-                "  </concat>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <concat delimiter=', ' name='concat' prefix='{' postfix='}'>"
+                        + "    <data source='data1' />"
+                        + "    <data source='data2' />"
+                        + "  </concat>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "a");
@@ -70,18 +67,15 @@ public final class ConcatTest {
                     o.get().startRecord("2");
                     o.get().literal("concat", "{d, e, f}");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldEmitConcatenatedValueOnFlushEvent() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <concat delimiter=', ' name='concat' prefix='{' postfix='}' flushWith='d' reset='true'>" +
-                "    <data source='d.1' />" +
-                "  </concat>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>  <concat delimiter=', ' name='concat' prefix='{' postfix='}' flushWith='d'"
+                        + " reset='true'>    <data source='d.1' />  </concat></rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("d");
@@ -102,19 +96,19 @@ public final class ConcatTest {
                     o.get().literal("concat", "{a, b}");
                     o.get().literal("concat", "{e, f}");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldEmitEmptyValues() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <concat name='concat' delimiter=', '>" +
-                "    <data source='litA' />" +
-                "    <data source='litB' />" +
-                "  </concat>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <concat name='concat' delimiter=', '>"
+                        + "    <data source='litA' />"
+                        + "    <data source='litB' />"
+                        + "  </concat>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("litA", "");
@@ -126,19 +120,19 @@ public final class ConcatTest {
                     o.get().startRecord("1");
                     o.get().literal("concat", ", a, b");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldReverseConcatenationIfReverseIsTrue() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <concat name='concat' delimiter=', ' reverse='true'>" +
-                "    <data source='litA' />" +
-                "    <data source='litB' />" +
-                "  </concat>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <concat name='concat' delimiter=', ' reverse='true'>"
+                        + "    <data source='litA' />"
+                        + "    <data source='litB' />"
+                        + "  </concat>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("litA", "1");
@@ -150,19 +144,16 @@ public final class ConcatTest {
                     o.get().startRecord("1");
                     o.get().literal("concat", "3, 2, 1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void prefixAndPostfixShouldWorkAsNormalIfReverseIsTrue() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <concat name='concat' delimiter=', ' prefix='(' postfix=')' reverse='true'>" +
-                "    <data source='litA' />" +
-                "    <data source='litB' />" +
-                "  </concat>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>  <concat name='concat' delimiter=', ' prefix='(' postfix=')'"
+                        + " reverse='true'>    <data source='litA' />    <data source='litB' /> "
+                        + " </concat></rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("litA", "1");
@@ -174,18 +165,18 @@ public final class ConcatTest {
                     o.get().startRecord("1");
                     o.get().literal("concat", "(3, 2, 1)");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void issue187_shouldUseEmptyDelimiterAsDefault() {
-        TestHelpers.assertMorph(receiver,
-                "<rules>" +
-                "  <concat name='concat'>" +
-                "    <data source='lit' />" +
-                "  </concat>" +
-                "</rules>",
+        TestHelpers.assertMorph(
+                receiver,
+                "<rules>"
+                        + "  <concat name='concat'>"
+                        + "    <data source='lit' />"
+                        + "  </concat>"
+                        + "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("lit", "data1");
@@ -196,8 +187,6 @@ public final class ConcatTest {
                     o.get().startRecord("1");
                     o.get().literal("concat", "data1data2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
-
 }

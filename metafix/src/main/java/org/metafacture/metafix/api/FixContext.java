@@ -16,28 +16,29 @@
 
 package org.metafacture.metafix.api;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.RecordTransformer;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Fix context to execute.
- */
+/** Fix context to execute. */
 @FunctionalInterface
 public interface FixContext {
 
     /**
      * Executes the Fix context.
      *
-     * @param metafix           the Metafix instance
-     * @param record            the record
-     * @param params            the parameters
-     * @param options           the options
+     * @param metafix the Metafix instance
+     * @param record the record
+     * @param params the parameters
+     * @param options the options
      * @param recordTransformer the record transformer
      */
-    void execute(Metafix metafix, Record record, List<String> params, Map<String, String> options, RecordTransformer recordTransformer);
-
+    void execute(
+            Metafix metafix,
+            Record record,
+            List<String> params,
+            Map<String, String> options,
+            RecordTransformer recordTransformer);
 }

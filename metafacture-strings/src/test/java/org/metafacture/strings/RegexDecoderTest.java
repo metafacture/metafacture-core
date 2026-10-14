@@ -16,10 +16,9 @@
 
 package org.metafacture.strings;
 
-import org.metafacture.framework.StreamReceiver;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -31,15 +30,12 @@ import org.mockito.MockitoAnnotations;
  *
  * @author Christoph Böhme (rewrite)
  * @author Thomas Seidel
- *
  */
 public final class RegexDecoderTest {
 
-    @Mock
-    private StreamReceiver receiver;
+    @Mock private StreamReceiver receiver;
 
-    public RegexDecoderTest() {
-    }
+    public RegexDecoderTest() {}
 
     @Before
     public void setup() {
@@ -111,8 +107,7 @@ public final class RegexDecoderTest {
 
     @Test
     public void shouldUseGroupNameAsLiteralNameForNamedCaptureGroups() {
-        final RegexDecoder regexDecoder = new RegexDecoder(
-                "foo=(?<foo>[0-9]+),bar=(?<bar>[a-z]+)");
+        final RegexDecoder regexDecoder = new RegexDecoder("foo=(?<foo>[0-9]+),bar=(?<bar>[a-z]+)");
         regexDecoder.setReceiver(receiver);
 
         regexDecoder.process("foo=1234,bar=abcd");
@@ -124,8 +119,7 @@ public final class RegexDecoderTest {
 
     @Test
     public void shouldOutputLiteralsForEachMatchOfPattern() {
-        final RegexDecoder regexDecoder = new RegexDecoder(
-                "foo=(?<foo>[0-9]+),bar=(?<bar>[a-z]+)");
+        final RegexDecoder regexDecoder = new RegexDecoder("foo=(?<foo>[0-9]+),bar=(?<bar>[a-z]+)");
         regexDecoder.setReceiver(receiver);
 
         regexDecoder.process("foo=1234,bar=abcd,foo=5678,bar=efgh");
@@ -139,8 +133,7 @@ public final class RegexDecoderTest {
 
     @Test
     public void shouldIgnoreNonMatchingPartsOfInputString() {
-        final RegexDecoder regexDecoder = new RegexDecoder(
-                "foo=(?<foo>[0-9]+)");
+        final RegexDecoder regexDecoder = new RegexDecoder("foo=(?<foo>[0-9]+)");
         regexDecoder.setReceiver(receiver);
 
         regexDecoder.process("foo=1234,bar=abcd,foo=5678,bar=efgh");
@@ -154,14 +147,14 @@ public final class RegexDecoderTest {
 
     @Test
     public void shouldIgnoreUnnamedCaptureGroups() {
-        final RegexDecoder regexDecoder = new RegexDecoder(
-                "foo=([0-9]+),bar=(?<bar>[a-z]+)");
+        final RegexDecoder regexDecoder = new RegexDecoder("foo=([0-9]+),bar=(?<bar>[a-z]+)");
         regexDecoder.setReceiver(receiver);
 
         regexDecoder.process("foo=1234,bar=abcd,foo=5678,bar=efgh");
 
-        Mockito.verify(receiver, Mockito.never()).literal(ArgumentMatchers.any(), ArgumentMatchers.eq("1234"));
-        Mockito.verify(receiver, Mockito.never()).literal(ArgumentMatchers.any(), ArgumentMatchers.eq("5678"));
+        Mockito.verify(receiver, Mockito.never())
+                .literal(ArgumentMatchers.any(), ArgumentMatchers.eq("1234"));
+        Mockito.verify(receiver, Mockito.never())
+                .literal(ArgumentMatchers.any(), ArgumentMatchers.eq("5678"));
     }
-
 }

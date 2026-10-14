@@ -24,9 +24,8 @@ import java.lang.annotation.Target;
 import java.util.Collection;
 
 /**
- * Indicates that the method returns the possible values for the constructor
- * {@link String} argument as a {@link Collection} of {@link String}s. The
- * method must be static.
+ * Indicates that the method returns the possible values for the constructor {@link String} argument
+ * as a {@link Collection} of {@link String}s. The method must be static.
  *
  * @author Markus Michael Geipel
  */

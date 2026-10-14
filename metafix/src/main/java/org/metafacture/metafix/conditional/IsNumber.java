@@ -16,29 +16,26 @@
 
 package org.metafacture.metafix.conditional;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixPredicate;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Executes the functions if/unless the field value is a number.
- */
+/** Executes the functions if/unless the field value is a number. */
 @FixCommand("is_number")
 public class IsNumber implements FixPredicate {
 
-    /**
-     * Creates an instance of {@link IsNumber}.
-     */
-    public IsNumber() {
-    }
+    /** Creates an instance of {@link IsNumber}. */
+    public IsNumber() {}
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public boolean test(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         return testStringConditional(record, params, IS_NUMBER);
     }
-
 }

@@ -16,49 +16,76 @@
 
 package org.metafacture.metafix.conditional;
 
+import java.util.List;
+import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixPredicate;
 
-import java.util.List;
-import java.util.Map;
-
 /**
- * Executes the functions if/unless the field value
- * <a href="https://perldoc.perl.org/perlop#Smartmatch-Operator">is contained in</a>
- * the value of the other field.
+ * Executes the functions if/unless the field value <a
+ * href="https://perldoc.perl.org/perlop#Smartmatch-Operator">is contained in</a> the value of the
+ * other field.
  */
 @FixCommand("in")
 public class In implements FixPredicate {
 
-    /**
-     * Creates an instance of {@link In}.
-     */
-    public In() {
-    }
+    /** Creates an instance of {@link In}. */
+    public In() {}
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public boolean test(
+            final Metafix metafix,
+            final Record record,
+            final List<String> params,
+            final Map<String, String> options) {
         final Value value1 = record.get(params.get(0));
         final Value value2 = record.get(params.get(1));
 
-        return value1 != null && value2 != null && value1.<Boolean>extractType((m, c) -> m
-            .ifArray(a1 -> value2.matchType()
-                .ifArray(a2 -> c.accept(a1.equals(a2)))
-                .orElse(v -> c.accept(false))
-            )
-            .ifHash(h1 -> value2.matchType()
-                .ifHash(h2 -> c.accept(h1.equals(h2)))
-                .orElse(v -> c.accept(false))
-            )
-            .ifString(s1 -> value2.matchType()
-                .ifArray(a2 -> c.accept(a2.stream().anyMatch(value1::equals)))
-                .ifHash(h2 -> c.accept(h2.containsField(s1)))
-                .ifString(s2 -> c.accept(s1.equals(s2)))
-            )
-        );
+        return value1 != null
+                && value2 != null
+                && value1.<Boolean>extractType(
+                        (m, c) ->
+                                m.ifArray(
+                                                a1 ->
+                                                        value2.matchType()
+                                                                .ifArray(
+                                                                        a2 ->
+                                                                                c.accept(
+                                                                                        a1.equals(
+                                                                                                a2)))
+                                                                .orElse(v -> c.accept(false)))
+                                        .ifHash(
+                                                h1 ->
+                                                        value2.matchType()
+                                                                .ifHash(
+                                                                        h2 ->
+                                                                                c.accept(
+                                                                                        h1.equals(
+                                                                                                h2)))
+                                                                .orElse(v -> c.accept(false)))
+                                        .ifString(
+                                                s1 ->
+                                                        value2.matchType()
+                                                                .ifArray(
+                                                                        a2 ->
+                                                                                c.accept(
+                                                                                        a2.stream()
+                                                                                                .anyMatch(
+                                                                                                        value1
+                                                                                                                ::equals)))
+                                                                .ifHash(
+                                                                        h2 ->
+                                                                                c.accept(
+                                                                                        h2
+                                                                                                .containsField(
+                                                                                                        s1)))
+                                                                .ifString(
+                                                                        s2 ->
+                                                                                c.accept(
+                                                                                        s1.equals(
+                                                                                                s2)))));
     }
-
 }

@@ -23,15 +23,11 @@ import org.metafacture.formeta.FormetaRecordsReader;
  * Reads and decodes a <i>Formeta</i> data stream.
  *
  * @author Markus Geipel
- *
  */
 public class FormetaReader extends ReaderBase {
 
-    /**
-     * Creates an instance of {@link FormetaReader}.
-     */
+    /** Creates an instance of {@link FormetaReader}. */
     public FormetaReader() {
         super(new FormetaRecordsReader(), new FormetaDecoder());
     }
-
 }
