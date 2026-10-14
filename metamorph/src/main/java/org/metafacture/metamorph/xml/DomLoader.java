@@ -49,8 +49,8 @@ import org.xml.sax.XMLReader;
  * @author Markus Michael Geipel
  * @author Christoph Böhme
  */
-public final
-class DomLoader { // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
+public final class DomLoader {
 
     private static final ErrorHandler SAX_ERROR_HANDLER = new SaxErrorHandler();
 

@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  *
  * @author Pascal Christoph (dr0i)
  */
-@Description( // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
+@Description(
         "Opens a SRU stream and passes a reader to the receiver. The input is the base URL of the"
                 + " SRU service to be retrieved from. Mandatory argument is: QUERY.\n"
                 + "The output is an XML document holding the user defined \"maximumRecords\" as"

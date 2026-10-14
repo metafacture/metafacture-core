@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-/** */
 package org.metafacture.triples;
 
 import org.metafacture.formeta.parser.FormetaParser;

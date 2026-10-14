@@ -303,8 +303,8 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         }
     }
 
-    private MetafactureException tryRun(
-            final Runnable runnable) { // checkstyle-disable-line ReturnCount
+    @SuppressWarnings("checkstyle:ReturnCount")
+    private MetafactureException tryRun(final Runnable runnable) {
         try {
             runnable.run();
         } catch (final FixProcessException e) {

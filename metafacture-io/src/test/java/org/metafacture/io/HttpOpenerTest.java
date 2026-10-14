@@ -403,6 +403,7 @@ public final class HttpOpenerTest {
                 null);
     }
 
+    @SuppressWarnings("checkstyle:ParameterNumber")
     private void shouldPerformRequest(
             final String input,
             final HttpOpener.Method method,
@@ -410,7 +411,7 @@ public final class HttpOpenerTest {
             final Consumer<MappingBuilder> stubConsumer,
             final Consumer<RequestPatternBuilder> requestConsumer,
             final Consumer<ResponseDefinitionBuilder> responseConsumer)
-            throws IOException { // checkstyle-disable-line ParameterNumber
+            throws IOException {
         final ResponseDefinitionBuilder response = WireMock.ok().withBody(RESPONSE_BODY);
         if (responseConsumer != null) {
             responseConsumer.accept(response);
@@ -426,6 +427,7 @@ public final class HttpOpenerTest {
                 method.getResponseHasBody() ? RESPONSE_BODY : "");
     }
 
+    @SuppressWarnings("checkstyle:ParameterNumber")
     private void shouldPerformRequest(
             final String input,
             final HttpOpener.Method method,
@@ -434,7 +436,7 @@ public final class HttpOpenerTest {
             final Consumer<RequestPatternBuilder> requestConsumer,
             final ResponseDefinitionBuilder response,
             final String responseBody)
-            throws IOException { // checkstyle-disable-line ParameterNumber
+            throws IOException {
         final String baseUrl = wireMockRule.baseUrl();
         final String url = String.format(TEST_URL, baseUrl);
 

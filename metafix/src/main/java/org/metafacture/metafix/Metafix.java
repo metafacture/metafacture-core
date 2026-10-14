@@ -60,11 +60,10 @@ import org.metafacture.metamorph.api.Maps;
  * @author Christoph Böhme (Metamorph)
  * @author Fabian Steeg (Metafix)
  */
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
 @Description(
         "Applies a fix transformation to the event stream, given as the path to a fix file or the"
-                + " fixes"
-                + " themselves.") // checkstyle-disable-line
-// ClassDataAbstractionCoupling|ClassFanOutComplexity
+                + " fixes themselves.")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("fix")

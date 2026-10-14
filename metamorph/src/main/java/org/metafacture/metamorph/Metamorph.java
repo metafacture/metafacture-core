@@ -59,10 +59,10 @@ import org.xml.sax.InputSource;
  * @author Markus Michael Geipel
  * @author Christoph Böhme
  */
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
 @Description(
         "Applies a metamorph transformation to the event stream. Metamorph definition is given in"
-                + " brackets.") // checkstyle-disable-line
-// ClassDataAbstractionCoupling|ClassFanOutComplexity
+                + " brackets.")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("morph")

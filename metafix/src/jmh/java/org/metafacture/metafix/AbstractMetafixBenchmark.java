@@ -26,8 +26,8 @@ import org.metafacture.json.JsonDecoder;
 import org.metafacture.json.JsonEncoder;
 
 /** Base class for Metafix benchmarks. */
-public abstract class AbstractMetafixBenchmark
-        extends FixParseBenchmark { // checkstyle-disable-line ClassDataAbstractionCoupling
+@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
+public abstract class AbstractMetafixBenchmark extends FixParseBenchmark {
 
     // TODO: Need to inject system properties into JMHTask's JavaExec process.
     // private static final boolean DEBUG_OUTPUT =

@@ -38,7 +38,8 @@ import org.mockito.MockitoAnnotations;
  * @author Thomas Seidel
  * @author Christoph Böhme (refactored to Mockito)
  */
-public class PojoDecoderTest { // checkstyle-disable-line ClassDataAbstractionCoupling
+@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
+public class PojoDecoderTest {
 
     @Mock private StreamReceiver receiver;
 

@@ -57,10 +57,10 @@ class ComplexTypeDecoder implements TypeDecoder {
         }
     }
 
+    @SuppressWarnings("checkstyle:BooleanExpressionComplexity")
     static boolean supportsType(final Class<?> clazz) {
         return !SimpleTypeDecoder.supportsType(clazz)
-                && // checkstyle-disable-line BooleanExpressionComplexity
-                !MetafactureSourceTypeDecoder.supportsType(clazz)
+                && !MetafactureSourceTypeDecoder.supportsType(clazz)
                 && !CollectionTypeDecoder.supportsType(clazz)
                 && !ArrayTypeDecoder.supportsType(clazz)
                 && !MapTypeDecoder.supportsType(clazz);

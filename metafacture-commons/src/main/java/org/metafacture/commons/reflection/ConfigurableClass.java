@@ -173,9 +173,9 @@ public final class ConfigurableClass<T> {
         throw new NoSuchMethodException("no appropriate constructor found for class " + plainClass);
     }
 
+    @SuppressWarnings("checkstyle:ReturnCount")
     private boolean checkArgumentTypes(
-            final Constructor<?> constructor,
-            final Object[] constructorArgs) { // checkstyle-disable-line ReturnCount
+            final Constructor<?> constructor, final Object[] constructorArgs) {
         final Class<?>[] argTypes = constructor.getParameterTypes();
         if (argTypes.length != constructorArgs.length) {
             return false;

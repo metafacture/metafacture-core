@@ -47,7 +47,7 @@ import org.metafacture.commons.tries.WildcardTrie;
 /**
  * Represents a record value, i.e., either an {@link Array}, a {@link Hash}, or a {@link String}.
  */
-public class Value implements JsonValue { // checkstyle-disable-line ClassDataAbstractionCoupling
+public class Value implements JsonValue {
 
     public static final String FIELD_PATH_SEPARATOR = ".";
     /*package-private*/ static final String FIELD_PATH_SEPARATOR_PATTERN =

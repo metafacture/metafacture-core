@@ -38,11 +38,10 @@ import org.metafacture.triples.TripleSort;
  *
  * @author Tobias Bülte
  */
+@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
 @Description(
         "Finds all paths that have values that match the given pattern. Allows for regex. These"
-                + " paths can be used in a Fix"
-                + " to address"
-                + " fields.") // checkstyle-disable-line ClassDataAbstractionCoupling
+                + " paths can be used in a Fix to address fields.")
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("find-fix-paths")

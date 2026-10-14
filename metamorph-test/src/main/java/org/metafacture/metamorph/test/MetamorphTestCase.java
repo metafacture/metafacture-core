@@ -39,8 +39,8 @@ import org.xml.sax.InputSource;
  *
  * @author Christoph Böhme
  */
-final class MetamorphTestCase
-        extends Statement { // checkstyle-disable-line ClassDataAbstractionCoupling
+@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
+final class MetamorphTestCase extends Statement {
 
     private static final String NO_DATA_FOUND =
             "Please specify either element content or a src attribute";
@@ -116,8 +116,8 @@ final class MetamorphTestCase
         return new MultiFormatReader(mimeType);
     }
 
-    private StreamPipe getTransformation()
-            throws InitializationError { // checkstyle-disable-line ReturnCount
+    @SuppressWarnings("checkstyle:ReturnCount")
+    private StreamPipe getTransformation() throws InitializationError {
         final NodeList nodes = config.getElementsByTagName(TRANSFORMATION_TAG);
         if (nodes.getLength() == 0) {
             return null;

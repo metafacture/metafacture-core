@@ -271,8 +271,9 @@ public class PicaMultiscriptRemodelerTest {
         remodeler.endEntity();
     }
 
+    @SuppressWarnings("checkstyle:ParameterNumber")
     private void verifyMultiscriptField(
-            final InOrder ordered, // checkstyle-disable-line ParameterNumber
+            final InOrder ordered,
             final String field,
             final String groupNumber,
             final String script1,

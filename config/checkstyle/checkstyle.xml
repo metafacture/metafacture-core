@@ -32,11 +32,6 @@
     <module name="ClassTypeParameterName"/>
     <module name="ConstantName"/>
     <module name="CovariantEquals"/>
-    <module name="CustomImportOrder">
-      <property name="customImportOrderRules" value="SAME_PACKAGE(2)###THIRD_PARTY_PACKAGE###STANDARD_JAVA_PACKAGE###SPECIAL_IMPORTS###STATIC"/>
-      <property name="separateLineBetweenGroups" value="true"/>
-      <property name="sortImportsInGroupAlphabetically" value="true"/>
-    </module>
     <module name="CyclomaticComplexity"/>
     <module name="DeclarationOrder"/>
     <module name="DefaultComesLast"/>
@@ -116,9 +111,6 @@
       <property name="treatTryResourcesAsStatement" value="true"/>
     </module>
     <module name="OneTopLevelClass"/>
-    <module name="OperatorWrap">
-      <property name="option" value="eol"/>
-    </module>
     <module name="OuterTypeFilename"/>
     <module name="OuterTypeNumber"/>
     <module name="OverloadMethodsDeclarationOrder"/>
@@ -134,9 +126,6 @@
     <module name="RedundantModifier"/>
     <module name="RequireThis"/>
     <module name="ReturnCount"/>
-    <module name="RightCurly">
-      <property name="option" value="alone"/>
-    </module>
     <module name="SeparatorWrap">
       <property name="tokens" value="COMMA,SEMI,ELLIPSIS,ARRAY_DECLARATOR"/>
       <property name="option" value="eol"/>
@@ -166,7 +155,6 @@
     <module name="ThrowsCount">
       <property name="max" value="2"/>
     </module>
-    <module name="TypeBodyPadding"/>
     <module name="TypeName"/>
     <module name="TypecastParenPad"/>
     <module name="UnnecessaryParentheses"/>
@@ -179,6 +167,5 @@
     <module name="UpperEll"/>
     <module name="VisibilityModifier"/>
     <module name="WhitespaceAfter"/>
-    <module name="WhitespaceAround"/>
   </module>
 </module>

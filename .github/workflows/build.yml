@@ -11,9 +11,7 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 21
-    - name: Test Spotless setup
-      run: |
-        ./gradlew spotlessApply
-        ./gradlew spotlessCheck
+    - name: Build with Gradle
+      run: ./gradlew check
       env:
         METAFACTURE_INTEGRATION_TEST_LOG_PASSED: true

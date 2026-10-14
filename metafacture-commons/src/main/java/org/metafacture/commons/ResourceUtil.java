@@ -40,7 +40,8 @@ import java.util.function.Consumer;
  * @author Christoph Böhme
  * @author Markus Michael Geipel
  */
-public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractionCoupling
+@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
+public final class ResourceUtil {
 
     static final int BUFFER_SIZE = 4096;
 
