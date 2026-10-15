@@ -16,11 +16,12 @@
 
 package org.metafacture.javaintegration.pojo;
 
+import org.metafacture.framework.MetafactureException;
+
 import java.beans.Introspector;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import org.metafacture.framework.MetafactureException;
 
 /**
  * Retrieves a property of an object by calling a getter method.

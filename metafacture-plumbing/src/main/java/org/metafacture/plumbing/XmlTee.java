@@ -16,7 +16,6 @@
 
 package org.metafacture.plumbing;
 
-import java.io.IOException;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.XmlPipe;
 import org.metafacture.framework.XmlReceiver;
@@ -24,11 +23,14 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultTee;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import java.io.IOException;
 
 /**
  * Sends one {@link XmlReceiver} to two {@link XmlReceiver}s.

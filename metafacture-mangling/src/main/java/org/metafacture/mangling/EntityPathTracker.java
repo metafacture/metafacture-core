@@ -16,9 +16,10 @@
 
 package org.metafacture.mangling;
 
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 /**
  * Tracks the <i>path</i> of the current entity. The entity path consists of the names of all parent

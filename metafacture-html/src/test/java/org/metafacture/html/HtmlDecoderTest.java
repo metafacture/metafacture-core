@@ -16,14 +16,16 @@
 
 package org.metafacture.html;
 
-import java.io.StringReader;
+import org.metafacture.framework.StreamReceiver;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.io.StringReader;
 
 /**
  * Tests for class {@link HtmlDecoder}.

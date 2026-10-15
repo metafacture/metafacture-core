@@ -16,13 +16,14 @@
 
 package org.metafacture.metafix.conditional;
 
-import java.util.List;
-import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixPredicate;
+
+import java.util.List;
+import java.util.Map;
 
 /** Executes the functions if/unless the field value is a string (and not a number). */
 @FixCommand("is_string")

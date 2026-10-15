@@ -16,8 +16,6 @@
 
 package org.metafacture.flowcontrol;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.ObjectPipe;
@@ -25,6 +23,9 @@ import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Creates a new thread in which subsequent flow elements run.

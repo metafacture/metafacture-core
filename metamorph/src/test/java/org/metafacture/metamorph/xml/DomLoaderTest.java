@@ -16,18 +16,20 @@
 
 package org.metafacture.metamorph.xml;
 
-import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.framework.MetafactureException;
+
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.framework.MetafactureException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Tests for class {@link DomLoader}.

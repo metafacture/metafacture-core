@@ -16,17 +16,19 @@
 
 package org.metafacture.yaml;
 
-import java.util.Arrays;
-import java.util.function.Consumer;
+import org.metafacture.framework.ObjectReceiver;
+
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+
+import java.util.Arrays;
+import java.util.function.Consumer;
 
 /**
  * Tests for class {@link YamlEncoder}.

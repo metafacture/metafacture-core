@@ -16,12 +16,13 @@
 
 package org.metafacture.biblio.pica;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 import org.metafacture.framework.FormatException;
 import org.metafacture.framework.MissingIdException;
 import org.metafacture.framework.ObjectReceiver;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;

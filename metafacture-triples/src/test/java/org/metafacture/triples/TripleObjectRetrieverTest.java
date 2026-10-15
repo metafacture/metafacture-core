@@ -16,21 +16,23 @@
 
 package org.metafacture.triples;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.objects.Triple;
+import org.metafacture.framework.objects.Triple.ObjectType;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.objects.Triple;
-import org.metafacture.framework.objects.Triple.ObjectType;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Tests for class {@link TripleObjectRetriever}.

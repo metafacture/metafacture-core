@@ -16,12 +16,14 @@
 
 package org.metafacture.metafix;
 
-import java.util.Arrays;
+import org.metafacture.framework.StreamReceiver;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Arrays;
 
 /**
  * Test Metafix selectors.

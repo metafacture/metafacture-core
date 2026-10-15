@@ -16,13 +16,14 @@
 
 package org.metafacture.metafix.bind;
 
-import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.RecordTransformer;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixContext;
+
+import java.util.Map;
 
 /**
  * Iterates over each element of an array. In contrast to Catmandu, it can also iterate over a

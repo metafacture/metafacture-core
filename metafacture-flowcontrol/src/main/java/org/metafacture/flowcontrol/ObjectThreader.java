@@ -15,8 +15,6 @@
 
 package org.metafacture.flowcontrol;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.ObjectPipe;
@@ -25,6 +23,9 @@ import org.metafacture.framework.Tee;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Divides incoming objects and distributes them to added receivers. These receivers are coupled

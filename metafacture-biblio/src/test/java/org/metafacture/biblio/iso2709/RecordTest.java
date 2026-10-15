@@ -16,16 +16,18 @@
 
 package org.metafacture.biblio.iso2709;
 
-import java.nio.charset.Charset;
+import org.metafacture.framework.FormatException;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.FormatException;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.nio.charset.Charset;
 
 /**
  * Tests for class {@link Record}.

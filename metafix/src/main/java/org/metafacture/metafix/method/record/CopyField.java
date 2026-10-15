@@ -16,13 +16,14 @@
 
 package org.metafacture.metafix.method.record;
 
-import java.util.List;
-import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixFunction;
+
+import java.util.List;
+import java.util.Map;
 
 /** Copies a field from an existing field. */
 @FixCommand("copy_field")

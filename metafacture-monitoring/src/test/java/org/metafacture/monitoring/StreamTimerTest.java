@@ -16,10 +16,11 @@
 
 package org.metafacture.monitoring;
 
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;

@@ -16,13 +16,14 @@
 
 package org.metafacture.javaintegration;
 
+import org.metafacture.commons.types.NamedValue;
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import org.metafacture.commons.types.NamedValue;
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 /**
  * Collects the received results in a {@link List}.

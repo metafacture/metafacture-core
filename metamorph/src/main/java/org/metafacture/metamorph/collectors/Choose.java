@@ -16,11 +16,12 @@
 
 package org.metafacture.metamorph.collectors;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.metafacture.commons.StringUtil;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Corresponds to the {@code <choose>} tag.

@@ -16,11 +16,12 @@
 
 package org.metafacture.metamorph.collectors;
 
+import org.metafacture.metamorph.api.NamedValueSource;
+import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.metafacture.metamorph.api.NamedValueSource;
-import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
 
 /**
  * Corresponds to the <code>&lt;collect-literal&gt;</code> tag.

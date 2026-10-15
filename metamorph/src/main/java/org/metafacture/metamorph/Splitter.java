@@ -16,9 +16,6 @@
 
 package org.metafacture.metamorph;
 
-import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
 import org.metafacture.flowcontrol.StreamBuffer;
 import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
@@ -26,6 +23,10 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.javaintegration.SingleValue;
+
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Splits a stream based on a morph definition.

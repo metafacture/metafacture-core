@@ -16,9 +16,10 @@
 
 package org.metafacture.metamorph;
 
-import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 public final class InlineMorphTest {
 

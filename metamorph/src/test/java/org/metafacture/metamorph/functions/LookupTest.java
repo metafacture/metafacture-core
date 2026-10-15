@@ -16,12 +16,13 @@
 
 package org.metafacture.metamorph.functions;
 
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.metamorph.TestHelpers;
 import org.metafacture.metamorph.api.Maps;
+
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;

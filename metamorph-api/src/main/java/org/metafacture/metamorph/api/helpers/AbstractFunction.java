@@ -16,10 +16,11 @@
 
 package org.metafacture.metamorph.api.helpers;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.metafacture.metamorph.api.Function;
 import org.metafacture.metamorph.api.Maps;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Base class for functions.

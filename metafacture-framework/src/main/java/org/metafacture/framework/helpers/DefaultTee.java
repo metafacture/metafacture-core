@@ -16,11 +16,12 @@
 
 package org.metafacture.framework.helpers;
 
+import org.metafacture.framework.Receiver;
+import org.metafacture.framework.Tee;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.metafacture.framework.Receiver;
-import org.metafacture.framework.Tee;
 
 /**
  * Default implementation for tee modules.

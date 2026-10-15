@@ -16,11 +16,12 @@
 
 package org.metafacture.statistics;
 
-import org.junit.Assert;
-import org.junit.Test;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectReceiver;
 import org.metafacture.framework.objects.Triple;
+
+import org.junit.Assert;
+import org.junit.Test;
 import org.mockito.Mockito;
 
 /**

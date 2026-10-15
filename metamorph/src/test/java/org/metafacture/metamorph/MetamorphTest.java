@@ -17,22 +17,24 @@
 
 package org.metafacture.metamorph;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
+import org.metafacture.metamorph.api.Maps;
+import org.metafacture.metamorph.api.NamedValueReceiver;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-import org.metafacture.metamorph.api.Maps;
-import org.metafacture.metamorph.api.NamedValueReceiver;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Tests for class {@link Metamorph}.

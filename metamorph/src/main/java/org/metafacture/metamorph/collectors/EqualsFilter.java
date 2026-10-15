@@ -16,13 +16,14 @@
 
 package org.metafacture.metamorph.collectors;
 
+import org.metafacture.commons.StringUtil;
+import org.metafacture.metamorph.api.NamedValueSource;
+import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.metafacture.commons.StringUtil;
-import org.metafacture.metamorph.api.NamedValueSource;
-import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
 
 /**
  * Corresponds to the <code>&lt;equalsFilter-literal&gt;</code> tag. Emits data if values in

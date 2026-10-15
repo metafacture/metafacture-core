@@ -16,13 +16,15 @@
 
 package org.metafacture.metafix;
 
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.metafacture.commons.tries.SimpleRegexTrie;
+
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.metafacture.commons.tries.SimpleRegexTrie;
+
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HashValueTest {
 

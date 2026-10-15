@@ -16,7 +16,6 @@
 
 package org.metafacture.metafix;
 
-import java.io.IOException;
 import org.metafacture.formatting.ObjectTemplate;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -32,6 +31,8 @@ import org.metafacture.triples.AbstractTripleSort.Compare;
 import org.metafacture.triples.StreamToTriples;
 import org.metafacture.triples.TripleFilter;
 import org.metafacture.triples.TripleSort;
+
+import java.io.IOException;
 
 /**
  * Provide a user-friendly way to finds all paths that have values that match the given pattern.

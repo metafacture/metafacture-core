@@ -16,8 +16,9 @@
 
 package org.metafacture.metamorph.test.validators;
 
-import java.util.function.Consumer;
 import org.metafacture.framework.StreamReceiver;
+
+import java.util.function.Consumer;
 
 /**
  * Checks that the received stream events are in the correct order and contain valid data. If not, a

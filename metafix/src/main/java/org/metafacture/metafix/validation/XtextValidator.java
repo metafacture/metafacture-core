@@ -1,8 +1,8 @@
 package org.metafacture.metafix.validation;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import org.metafacture.framework.MetafactureLogger;
+import org.metafacture.metafix.FixParseException;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.ISetup;
 import org.eclipse.xtext.XtextStandaloneSetup;
@@ -11,8 +11,10 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.Issue;
-import org.metafacture.framework.MetafactureLogger;
-import org.metafacture.metafix.FixParseException;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /** Validator for Xtext resources. */
 public class XtextValidator {

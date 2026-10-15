@@ -16,10 +16,11 @@
 
 package org.metafacture.statistics;
 
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 /**
  * Counts entity names, literal names, or literal values.

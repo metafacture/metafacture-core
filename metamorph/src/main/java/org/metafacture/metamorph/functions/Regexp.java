@@ -16,13 +16,14 @@
 
 package org.metafacture.metamorph.functions;
 
+import org.metafacture.commons.StringUtil;
+import org.metafacture.metamorph.api.NamedValueSource;
+import org.metafacture.metamorph.api.helpers.AbstractFunction;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.metafacture.commons.StringUtil;
-import org.metafacture.metamorph.api.NamedValueSource;
-import org.metafacture.metamorph.api.helpers.AbstractFunction;
 
 /**
  * Performs regexp matching.

@@ -16,7 +16,6 @@
 
 package org.metafacture.flowcontrol;
 
-import java.util.concurrent.TimeUnit;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -24,6 +23,8 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Lets the process sleep for a specific amount of time between objects.

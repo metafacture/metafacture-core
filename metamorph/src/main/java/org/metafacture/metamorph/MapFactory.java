@@ -16,11 +16,12 @@
 
 package org.metafacture.metamorph;
 
-import java.io.IOException;
-import java.util.Map;
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.commons.reflection.ObjectFactory;
 import org.metafacture.framework.MetafactureException;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Creates the maps available in Metamorph.

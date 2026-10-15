@@ -16,9 +16,10 @@
 
 package org.metafacture.biblio.marc21;
 
+import org.metafacture.biblio.iso2709.RecordFormat;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import org.metafacture.biblio.iso2709.RecordFormat;
 
 /**
  * Useful constants for the MARC 21 format.

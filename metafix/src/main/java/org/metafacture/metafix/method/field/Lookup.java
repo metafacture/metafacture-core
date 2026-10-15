@@ -16,6 +16,13 @@
 
 package org.metafacture.metafix.method.field;
 
+import org.metafacture.metafix.FixCommand;
+import org.metafacture.metafix.Metafix;
+import org.metafacture.metafix.Record;
+import org.metafacture.metafix.api.FixFunction;
+import org.metafacture.metafix.method.script.PutFileMap;
+import org.metafacture.metamorph.api.Maps;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,12 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.function.Consumer;
-import org.metafacture.metafix.FixCommand;
-import org.metafacture.metafix.Metafix;
-import org.metafacture.metafix.Record;
-import org.metafacture.metafix.api.FixFunction;
-import org.metafacture.metafix.method.script.PutFileMap;
-import org.metafacture.metamorph.api.Maps;
 
 /**
  * Looks up matching values in a map and replaces the field value with this match. {@link

@@ -16,9 +16,10 @@
 
 package org.metafacture.metamorph;
 
-import java.util.List;
 import org.metafacture.commons.tries.SimpleRegexTrie;
 import org.metafacture.commons.tries.WildcardTrie;
+
+import java.util.List;
 
 /**
  * Implements {@link Registry} with a {@link WildcardTrie}.

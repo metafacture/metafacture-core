@@ -16,14 +16,16 @@
 
 package org.metafacture.metamorph.test.validators;
 
-import java.util.function.Consumer;
+import org.metafacture.javaintegration.EventList;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.javaintegration.EventList;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.util.function.Consumer;
 
 /**
  * Tests for class {@link StreamValidator}.

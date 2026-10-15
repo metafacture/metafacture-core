@@ -16,11 +16,12 @@
 
 package org.metafacture.metafix;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.util.Arrays;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.function.Consumer;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public class RecordTest {
 

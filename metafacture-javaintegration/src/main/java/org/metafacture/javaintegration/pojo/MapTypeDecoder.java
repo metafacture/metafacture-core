@@ -16,8 +16,9 @@
 
 package org.metafacture.javaintegration.pojo;
 
-import java.util.Map;
 import org.metafacture.framework.StreamReceiver;
+
+import java.util.Map;
 
 /**
  * Decodes a {@link Map} to a Metafacture event stream.

@@ -16,11 +16,12 @@
 
 package org.metafacture.flowcontrol;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * {@link StreamPipe} which buffers incoming records and replays them upon request.

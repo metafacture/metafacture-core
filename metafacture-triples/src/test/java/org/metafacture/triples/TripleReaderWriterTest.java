@@ -16,17 +16,19 @@
 
 package org.metafacture.triples;
 
-import java.io.File;
-import java.io.IOException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.objects.Triple;
 import org.metafacture.framework.objects.Triple.ObjectType;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Tests for classes {@link TripleReader} and {@link TripleWriter}. TODO: This test class should be

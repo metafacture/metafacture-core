@@ -16,12 +16,13 @@
 
 package org.metafacture.metafix.method.record;
 
-import java.util.List;
-import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
+
+import java.util.List;
+import java.util.Map;
 
 /** Moves a field from an existing field. Can be used to rename a field. */
 @FixCommand("move_field")

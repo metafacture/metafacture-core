@@ -16,6 +16,11 @@
 
 package org.metafacture.metafix.api;
 
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.commons.reflection.ReflectionUtil;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.metafix.FixCommand;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,10 +38,6 @@ import java.util.function.Function;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.commons.reflection.ReflectionUtil;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.metafix.FixCommand;
 
 /** Registry for Fix commands. */
 public class FixRegistry {

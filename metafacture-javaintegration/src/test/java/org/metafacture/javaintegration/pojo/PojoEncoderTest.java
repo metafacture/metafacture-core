@@ -16,14 +16,16 @@
 
 package org.metafacture.javaintegration.pojo;
 
-import java.util.List;
-import java.util.Map;
+import org.metafacture.framework.ObjectReceiver;
+
 import org.junit.Assert;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Tests for class {@link PojoEncoder}.

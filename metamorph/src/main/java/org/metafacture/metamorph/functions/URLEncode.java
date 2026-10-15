@@ -16,8 +16,9 @@
 
 package org.metafacture.metamorph.functions;
 
-import com.google.common.net.PercentEscaper;
 import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
+
+import com.google.common.net.PercentEscaper;
 
 /**
  * URL encodes the received value. Default is to convert a whitespace " "to a plus sign "+". This

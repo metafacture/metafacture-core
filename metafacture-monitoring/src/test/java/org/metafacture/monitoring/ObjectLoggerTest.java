@@ -16,10 +16,11 @@
 
 package org.metafacture.monitoring;
 
+import org.metafacture.framework.ObjectReceiver;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;

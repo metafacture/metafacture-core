@@ -16,9 +16,10 @@
 
 package org.metafacture.io;
 
-import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Tests shared by all back end implementations of {@link ObjectWriter}.

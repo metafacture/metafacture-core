@@ -16,6 +16,9 @@
 
 package org.metafacture.commons;
 
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import java.io.StringWriter;
 import java.util.stream.Collectors;
 import javax.xml.transform.OutputKeys;
@@ -24,8 +27,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * Utility functions for working with XML data as strings.

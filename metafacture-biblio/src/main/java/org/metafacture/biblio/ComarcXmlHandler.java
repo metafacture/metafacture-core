@@ -16,8 +16,6 @@
 
 package org.metafacture.biblio;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.XmlReceiver;
@@ -25,8 +23,12 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A class handling ComarcXML. Comarc is the MARC version used by the National Library of Slovenia.

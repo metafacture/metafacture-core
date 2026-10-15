@@ -16,13 +16,15 @@
 
 package org.metafacture.flowcontrol;
 
-import java.util.function.Consumer;
+import org.metafacture.framework.ObjectReceiver;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.util.function.Consumer;
 
 /**
  * Tests for class {@link ObjectSleeper}.

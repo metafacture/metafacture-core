@@ -16,9 +16,10 @@
 
 package org.metafacture.javaintegration;
 
+import org.metafacture.framework.ObjectReceiver;
+
 import java.util.LinkedList;
 import java.util.Queue;
-import org.metafacture.framework.ObjectReceiver;
 
 /**
  * Collects the objects emitted by an upstream module.

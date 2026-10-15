@@ -16,21 +16,6 @@
 
 package org.metafacture.metafix;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.metafacture.commons.StringUtil;
 import org.metafacture.commons.reflection.ReflectionUtil;
 import org.metafacture.framework.MetafactureException;
@@ -46,6 +31,23 @@ import org.metafacture.metafix.fix.Fix;
 import org.metafacture.metafix.fix.If;
 import org.metafacture.metafix.fix.MethodCall;
 import org.metafacture.metafix.fix.Unless;
+
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 // TODO: Utilize org.metafacture.commons.types.ScopedHashMap for vars instead?
 

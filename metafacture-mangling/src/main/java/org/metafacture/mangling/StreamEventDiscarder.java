@@ -16,12 +16,13 @@
 
 package org.metafacture.mangling;
 
-import java.util.EnumSet;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
+
+import java.util.EnumSet;
 
 /**
  * Discards stream events by type. The type of a stream event is either {@linkplain EventType#RECORD

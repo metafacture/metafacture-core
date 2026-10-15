@@ -16,9 +16,10 @@
 
 package org.metafacture.javaintegration.pojo;
 
+import org.metafacture.framework.MetafactureException;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import org.metafacture.framework.MetafactureException;
 
 /**
  * Sets the value of a field. The field must be publicly accessible.

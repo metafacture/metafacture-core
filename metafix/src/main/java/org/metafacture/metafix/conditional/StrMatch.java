@@ -16,12 +16,13 @@
 
 package org.metafacture.metafix.conditional;
 
-import java.util.List;
-import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixPredicate;
+
+import java.util.List;
+import java.util.Map;
 
 /** Executes the functions if/unless the string matches the regular expression pattern. */
 @FixCommand("str_match")

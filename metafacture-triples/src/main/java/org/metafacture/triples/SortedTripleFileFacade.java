@@ -16,14 +16,15 @@
 
 package org.metafacture.triples;
 
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.objects.Triple;
+
 import java.io.BufferedInputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.objects.Triple;
 
 /**
  * A SortedTripleFileFacade created with a file. Reads a Triple from the file.

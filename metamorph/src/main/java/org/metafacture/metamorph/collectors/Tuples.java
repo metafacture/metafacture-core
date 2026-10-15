@@ -16,12 +16,13 @@
 
 package org.metafacture.metamorph.collectors;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import org.metafacture.commons.types.ListMap;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Builds the cross product of the data sources.

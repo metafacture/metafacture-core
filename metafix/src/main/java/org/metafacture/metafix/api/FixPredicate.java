@@ -16,15 +16,16 @@
 
 package org.metafacture.metafix.api;
 
+import org.metafacture.metafix.Metafix;
+import org.metafacture.metafix.Record;
+import org.metafacture.metafix.Value;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-import org.metafacture.metafix.Metafix;
-import org.metafacture.metafix.Record;
-import org.metafacture.metafix.Value;
 
 /** Fix predicate to test. */
 @FunctionalInterface

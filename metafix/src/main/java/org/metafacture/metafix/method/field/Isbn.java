@@ -16,13 +16,14 @@
 
 package org.metafacture.metafix.method.field;
 
-import java.util.List;
-import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
 import org.metafacture.metamorph.functions.ISBN;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Extracts an ISBN and replaces the field value with the normalized ISBN; optionally converts

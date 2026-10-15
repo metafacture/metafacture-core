@@ -15,9 +15,6 @@
 
 package org.metafacture.biblio.marc21;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.function.Function;
 import org.metafacture.commons.XmlUtil;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -27,6 +24,10 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.function.Function;
 
 /**
  * Encodes a stream into MARCXML.

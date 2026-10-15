@@ -1,5 +1,8 @@
 package org.metafacture.metafix;
 
+import org.metafacture.metafix.fix.Fix;
+import org.metafacture.metafix.tests.FixInjectorProvider;
+
 import com.google.inject.Inject;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -10,8 +13,6 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.metafacture.metafix.fix.Fix;
-import org.metafacture.metafix.tests.FixInjectorProvider;
 
 @ExtendWith(InjectionExtension.class)
 @InjectWith(FixInjectorProvider.class)

@@ -16,8 +16,9 @@
 
 package org.metafacture.biblio.iso2709;
 
-import java.nio.charset.Charset;
 import org.metafacture.framework.FormatException;
+
+import java.nio.charset.Charset;
 
 /**
  * Provides methods for reading and writing strings and integers in a byte array.

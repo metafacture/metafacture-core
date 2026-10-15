@@ -16,10 +16,11 @@
 
 package org.metafacture.io;
 
-import java.io.IOException;
-import java.io.Writer;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
+
+import java.io.IOException;
+import java.io.Writer;
 
 /**
  * @param <T> object type

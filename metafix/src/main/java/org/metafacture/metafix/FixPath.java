@@ -16,11 +16,12 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.metafix.Value.Array;
+import org.metafacture.metafix.Value.Hash;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import org.metafacture.metafix.Value.Array;
-import org.metafacture.metafix.Value.Hash;
 
 /**
  * Our goal here is something like https://metacpan.org/pod/Catmandu::Path::simple

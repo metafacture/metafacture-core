@@ -16,11 +16,12 @@
 
 package org.metafacture.metamorph.collectors;
 
+import org.metafacture.metamorph.api.NamedValueSource;
+import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
+
 import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import org.metafacture.metamorph.api.NamedValueSource;
-import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
 
 /**
  * Corresponds to the <code>&lt;range&gt;</code> tag.

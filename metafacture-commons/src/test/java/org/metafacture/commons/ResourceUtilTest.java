@@ -16,12 +16,13 @@
 
 package org.metafacture.commons;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  * Tests for class {@link ResourceUtil}.

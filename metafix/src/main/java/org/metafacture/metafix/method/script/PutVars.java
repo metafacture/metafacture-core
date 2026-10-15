@@ -16,12 +16,13 @@
 
 package org.metafacture.metafix.method.script;
 
-import java.util.List;
-import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
+
+import java.util.List;
+import java.util.Map;
 
 /** Defines multiple global variables that can be referenced with {@code $[<variableName>]}. */
 @FixCommand("put_vars")

@@ -16,17 +16,18 @@
 
 package org.metafacture.metamorph;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Supplier;
 import org.metafacture.commons.StringUtil;
 import org.metafacture.flowcontrol.StreamBuffer;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.metamorph.api.NamedValueReceiver;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Corresponds to the <code>&lt;entity&gt;</code> tag.

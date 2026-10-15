@@ -16,10 +16,11 @@
 
 package org.metafacture.flowcontrol;
 
+import org.metafacture.framework.ObjectReceiver;
+
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;

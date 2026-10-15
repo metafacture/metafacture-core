@@ -16,18 +16,20 @@
 
 package org.metafacture.flux;
 
+import org.metafacture.commons.reflection.ReflectionException;
+import org.metafacture.flux.parser.FluxProgramm;
+
+import org.antlr.runtime.RecognitionException;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
-import org.antlr.runtime.RecognitionException;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.metafacture.commons.reflection.ReflectionException;
-import org.metafacture.flux.parser.FluxProgramm;
 
 /**
  * Tests for the Flux grammar.

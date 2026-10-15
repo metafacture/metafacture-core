@@ -16,9 +16,10 @@
 
 package org.metafacture.strings;
 
+import org.metafacture.framework.ObjectReceiver;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;

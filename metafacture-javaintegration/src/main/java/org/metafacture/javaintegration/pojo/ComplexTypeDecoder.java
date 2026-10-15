@@ -16,11 +16,12 @@
 
 package org.metafacture.javaintegration.pojo;
 
+import org.metafacture.framework.StreamReceiver;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import org.metafacture.framework.StreamReceiver;
 
 /**
  * Decodes a POJO to a Metafacture event stream.

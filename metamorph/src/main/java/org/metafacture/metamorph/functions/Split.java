@@ -16,9 +16,10 @@
 
 package org.metafacture.metamorph.functions;
 
-import java.util.regex.Pattern;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.helpers.AbstractFunction;
+
+import java.util.regex.Pattern;
 
 /**
  * Splits the received value and output each part separately.

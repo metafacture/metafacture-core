@@ -16,13 +16,14 @@
 
 package org.metafacture.strings;
 
-import java.text.Normalizer;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import java.text.Normalizer;
 
 /**
  * Normalises Unicode characters in record identifiers, entity and literal names and literal values.

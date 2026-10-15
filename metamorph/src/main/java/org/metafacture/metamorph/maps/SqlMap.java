@@ -16,6 +16,9 @@
 
 package org.metafacture.metamorph.maps;
 
+import org.metafacture.metamorph.api.MorphExecutionException;
+import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.sql.Connection;
@@ -23,8 +26,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.metafacture.metamorph.api.MorphExecutionException;
-import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
 
 /**
  * A map implementation that queries an sql database.

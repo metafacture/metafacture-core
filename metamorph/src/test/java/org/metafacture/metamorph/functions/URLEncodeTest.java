@@ -16,10 +16,11 @@
 
 package org.metafacture.metamorph.functions;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * Tests {@link URLEncode}

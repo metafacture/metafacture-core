@@ -1,8 +1,5 @@
 package org.metafacture.metafix.interpreter;
 
-import java.util.List;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.fix.Do;
@@ -12,6 +9,11 @@ import org.metafacture.metafix.fix.Expression;
 import org.metafacture.metafix.fix.Fix;
 import org.metafacture.metafix.fix.If;
 import org.metafacture.metafix.fix.MethodCall;
+
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
+
+import java.util.List;
 
 /** Interpreter for Fix programs. */
 public class FixInterpreter extends XbaseInterpreter {

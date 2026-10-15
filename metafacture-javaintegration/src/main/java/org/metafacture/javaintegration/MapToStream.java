@@ -16,13 +16,14 @@
 
 package org.metafacture.javaintegration;
 
-import java.util.Map;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StandardEventNames;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.util.Map;
 
 /**
  * Emits a {@link Map} as a record with a literal for each entry in the map. When receiving an empty

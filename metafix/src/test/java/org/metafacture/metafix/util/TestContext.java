@@ -16,13 +16,14 @@
 
 package org.metafacture.metafix.util;
 
-import java.util.List;
-import java.util.Map;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.RecordTransformer;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixContext;
+
+import java.util.List;
+import java.util.Map;
 
 public class TestContext implements FixContext {
 

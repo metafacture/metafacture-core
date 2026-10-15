@@ -16,7 +16,6 @@
 
 package org.metafacture.biblio;
 
-import java.util.regex.Pattern;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.FormatException;
 import org.metafacture.framework.MissingIdException;
@@ -25,6 +24,8 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.util.regex.Pattern;
 
 /**
  * Parses a raw Mab2 stream (utf-8 encoding assumed). Events are handled by a {@link

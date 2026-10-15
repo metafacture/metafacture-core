@@ -16,13 +16,14 @@
 
 package org.metafacture.metafix.bind;
 
-import java.util.List;
-import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.RecordTransformer;
 import org.metafacture.metafix.api.FixContext;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Defines a named macro, i.e. a list of statements that can be executed later with the {@link

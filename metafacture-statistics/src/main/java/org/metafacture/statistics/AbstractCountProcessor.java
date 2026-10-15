@@ -16,12 +16,13 @@
 
 package org.metafacture.statistics;
 
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.regex.Pattern;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 import org.metafacture.framework.objects.Triple;
+
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Base class for operating on count data. The expected inputs are triples containing as subject the

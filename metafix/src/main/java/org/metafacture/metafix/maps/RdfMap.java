@@ -16,16 +16,11 @@
 
 package org.metafacture.metafix.maps;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.function.UnaryOperator;
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.metafix.FixExecutionException;
+import org.metafacture.metamorph.api.Maps;
+import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
+
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
@@ -36,10 +31,17 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.shared.PropertyNotFoundException;
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.metafix.FixExecutionException;
-import org.metafacture.metamorph.api.Maps;
-import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.function.UnaryOperator;
 
 /**
  * Provides a dynamically built {@link Map} based on an RDF resource. Can be one file or a comma

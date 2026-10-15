@@ -16,8 +16,9 @@
 
 package org.metafacture.javaintegration.pojo;
 
-import java.util.Collection;
 import org.metafacture.framework.StreamReceiver;
+
+import java.util.Collection;
 
 /**
  * Decodes a {@link Collection} to a Metafacture event stream.

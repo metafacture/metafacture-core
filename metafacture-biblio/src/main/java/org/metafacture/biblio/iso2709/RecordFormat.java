@@ -16,8 +16,9 @@
 
 package org.metafacture.biblio.iso2709;
 
-import java.util.Arrays;
 import org.metafacture.commons.Require;
+
+import java.util.Arrays;
 
 /**
  * Holds the configuration of an instance of the ISO2709:2008 format.

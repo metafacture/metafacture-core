@@ -16,7 +16,14 @@
 
 package org.metafacture.elasticsearch;
 
+import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
+import org.metafacture.framework.helpers.DefaultObjectPipe;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -25,11 +32,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-import org.metafacture.framework.FluxCommand;
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.annotations.In;
-import org.metafacture.framework.annotations.Out;
-import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 /**
  * Add Elasticsearch bulk indexing metadata to JSON input.

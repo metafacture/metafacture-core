@@ -16,16 +16,17 @@
 
 package org.metafacture.metamorph.test.validators;
 
+import org.metafacture.framework.MetafactureLogger;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.javaintegration.EventList;
+import org.metafacture.javaintegration.EventList.Event;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
-import org.metafacture.framework.MetafactureLogger;
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.javaintegration.EventList;
-import org.metafacture.javaintegration.EventList.Event;
 
 /**
  * Validates a stream of events using a list of expected stream events. If the stream is invalid,

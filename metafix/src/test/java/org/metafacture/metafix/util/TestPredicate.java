@@ -16,13 +16,14 @@
 
 package org.metafacture.metafix.util;
 
-import java.util.List;
-import java.util.Map;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixPredicate;
 import org.metafacture.metafix.conditional.AnyEqual;
 import org.metafacture.metafix.conditional.Exists;
+
+import java.util.List;
+import java.util.Map;
 
 public class TestPredicate implements FixPredicate {
 

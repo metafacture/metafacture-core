@@ -16,13 +16,6 @@
 
 package org.metafacture.csv;
 
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.RFC4180Parser;
-import com.opencsv.RFC4180ParserBuilder;
-import com.opencsv.exceptions.CsvException;
-import java.io.IOException;
-import java.io.StringReader;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
@@ -30,6 +23,15 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.RFC4180Parser;
+import com.opencsv.RFC4180ParserBuilder;
+import com.opencsv.exceptions.CsvException;
+
+import java.io.IOException;
+import java.io.StringReader;
 
 /**
  * Decodes lines of CSV files. First line may be interpreted as header.

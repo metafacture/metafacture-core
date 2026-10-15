@@ -16,9 +16,6 @@
 
 package org.metafacture.monitoring;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.StreamReceiver;
@@ -26,6 +23,10 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Leaves the event stream untouched but logs it to the info log. The {@link StreamReceiver} may be

@@ -16,14 +16,15 @@
 
 package org.metafacture.strings;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Only forwards records which match (or do not match) a regular expression given in the

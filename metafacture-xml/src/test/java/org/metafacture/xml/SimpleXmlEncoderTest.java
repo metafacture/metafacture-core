@@ -16,13 +16,15 @@
 
 package org.metafacture.xml;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.metafacture.framework.helpers.DefaultObjectReceiver;
+import org.metafacture.framework.helpers.DefaultXmlPipe;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.helpers.DefaultObjectReceiver;
-import org.metafacture.framework.helpers.DefaultXmlPipe;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Tests for class {@link SimpleXmlEncoder}.

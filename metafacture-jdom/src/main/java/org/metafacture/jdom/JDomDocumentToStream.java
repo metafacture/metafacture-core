@@ -16,15 +16,16 @@
 
 package org.metafacture.jdom;
 
-import org.jdom2.Document;
-import org.jdom2.JDOMException;
-import org.jdom2.output.SAXOutputter;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectPipe;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.XmlPipe;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
+
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
+import org.jdom2.output.SAXOutputter;
 
 /**
  * Converts a {@link Document} to a stream.

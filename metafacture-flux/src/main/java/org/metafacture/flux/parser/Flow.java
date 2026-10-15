@@ -16,10 +16,6 @@
 
 package org.metafacture.flux.parser;
 
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
 import org.metafacture.flux.FluxParseException;
 import org.metafacture.framework.LifeCycle;
 import org.metafacture.framework.ObjectReceiver;
@@ -27,6 +23,11 @@ import org.metafacture.framework.Receiver;
 import org.metafacture.framework.Sender;
 import org.metafacture.framework.Tee;
 import org.metafacture.io.StdInOpener;
+
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Markus Michael Geipel

@@ -16,8 +16,6 @@
 
 package org.metafacture.mangling;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.StreamReceiver;
@@ -25,6 +23,9 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Emits the values of literals matching {@literal #setPattern(String)} as objects.

@@ -16,13 +16,14 @@
 
 package org.metafacture.biblio.marc21;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.metafacture.framework.FormatException;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.MissingIdException;
 import org.metafacture.framework.helpers.DefaultObjectReceiver;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for class {@link MarcXmlEncoder}.

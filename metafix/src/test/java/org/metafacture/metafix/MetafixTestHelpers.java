@@ -16,6 +16,14 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.framework.StreamReceiver;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.function.Executable;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
+import org.mockito.exceptions.base.MockitoAssertionError;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -29,12 +37,6 @@ import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.function.Executable;
-import org.metafacture.framework.StreamReceiver;
-import org.mockito.InOrder;
-import org.mockito.Mockito;
-import org.mockito.exceptions.base.MockitoAssertionError;
 
 /**
  * Helper functions for Metafix tests.

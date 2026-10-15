@@ -16,10 +16,11 @@
 
 package org.metafacture.xml;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.metafacture.framework.FormatException;
 import org.metafacture.framework.StreamReceiver;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;

@@ -16,7 +16,6 @@
 
 package org.metafacture.xml;
 
-import java.util.regex.Pattern;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.XmlReceiver;
@@ -24,7 +23,10 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
+
 import org.xml.sax.Attributes;
+
+import java.util.regex.Pattern;
 
 /**
  * A generic xml reader.

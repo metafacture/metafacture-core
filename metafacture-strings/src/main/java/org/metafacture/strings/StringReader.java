@@ -16,13 +16,14 @@
 
 package org.metafacture.strings;
 
-import java.io.Reader;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.io.Reader;
 
 /**
  * Creates a reader for the supplied string and sends it to the receiver.

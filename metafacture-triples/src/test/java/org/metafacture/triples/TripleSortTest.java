@@ -16,19 +16,21 @@
 
 package org.metafacture.triples;
 
-import java.util.Arrays;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import org.junit.Rule;
-import org.junit.Test;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.objects.Triple;
+
+import org.junit.Rule;
+import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+
+import java.util.Arrays;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public final class TripleSortTest {
 

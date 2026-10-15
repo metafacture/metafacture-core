@@ -18,6 +18,22 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.MetafactureLogger;
+import org.metafacture.framework.StandardEventNames;
+import org.metafacture.framework.StreamPipe;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.framework.annotations.Description;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
+import org.metafacture.mangling.StreamFlattener;
+import org.metafacture.metafix.api.FixRegistry;
+import org.metafacture.metafix.fix.Expression;
+import org.metafacture.metamorph.api.Maps;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Reader;
@@ -36,21 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.framework.FluxCommand;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.MetafactureLogger;
-import org.metafacture.framework.StandardEventNames;
-import org.metafacture.framework.StreamPipe;
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.framework.annotations.Description;
-import org.metafacture.framework.annotations.In;
-import org.metafacture.framework.annotations.Out;
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-import org.metafacture.mangling.StreamFlattener;
-import org.metafacture.metafix.api.FixRegistry;
-import org.metafacture.metafix.fix.Expression;
-import org.metafacture.metamorph.api.Maps;
 
 /**
  * Transforms a data stream sent via the {@link StreamReceiver} interface. Uses {@link

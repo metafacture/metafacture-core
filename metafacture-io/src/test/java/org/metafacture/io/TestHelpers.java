@@ -16,16 +16,18 @@
 
 package org.metafacture.io;
 
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.framework.ObjectReceiver;
+
+import org.junit.Assert;
+import org.mockito.Mockito;
+
 import java.io.File;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
-import org.junit.Assert;
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.framework.ObjectReceiver;
-import org.mockito.Mockito;
 
 public final class TestHelpers {
 

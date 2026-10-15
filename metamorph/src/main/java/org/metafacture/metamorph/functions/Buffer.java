@@ -16,11 +16,12 @@
 
 package org.metafacture.metamorph.functions;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.metafacture.metamorph.api.NamedValueReceiver;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.helpers.AbstractFunction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Stores all received values and only releases them on flush.

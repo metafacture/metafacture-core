@@ -16,15 +16,16 @@
 
 package org.metafacture.files;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.Arrays;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Arrays;
 
 /**
  * Reads a directory and emits all filenames found.

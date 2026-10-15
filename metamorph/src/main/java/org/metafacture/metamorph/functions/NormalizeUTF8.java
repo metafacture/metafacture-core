@@ -16,9 +16,10 @@
 
 package org.metafacture.metamorph.functions;
 
+import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
+
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
-import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
  * Performs normalization of diacritics in utf-8 encoded strings.

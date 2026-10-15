@@ -16,12 +16,13 @@
 
 package org.metafacture.metamorph.test;
 
-import java.net.URL;
-import java.util.List;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
+
+import java.net.URL;
+import java.util.List;
 
 /**
  * Executes test cases defined in a metamorph-test file.

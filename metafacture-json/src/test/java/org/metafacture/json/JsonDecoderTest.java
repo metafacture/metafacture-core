@@ -16,6 +16,9 @@
 
 package org.metafacture.json;
 
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.StreamReceiver;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.io.JsonEOFException;
 import org.hamcrest.CoreMatchers;
@@ -24,8 +27,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;

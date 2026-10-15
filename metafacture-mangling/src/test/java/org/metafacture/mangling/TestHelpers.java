@@ -16,14 +16,16 @@
 
 package org.metafacture.mangling;
 
+import org.metafacture.framework.StreamReceiver;
+
+import org.mockito.InOrder;
+import org.mockito.Mockito;
+import org.mockito.exceptions.base.MockitoAssertionError;
+
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
-import org.metafacture.framework.StreamReceiver;
-import org.mockito.InOrder;
-import org.mockito.Mockito;
-import org.mockito.exceptions.base.MockitoAssertionError;
 
 public final class TestHelpers {
 

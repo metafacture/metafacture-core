@@ -16,17 +16,19 @@
 
 package org.metafacture.metafix; // checkstyle-disable-line JavaNCSS
 
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.api.MorphBuildException;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.api.MorphBuildException;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * Tests Metafix record level methods. Following the cheat sheet examples at

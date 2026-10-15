@@ -16,11 +16,12 @@
 
 package org.metafacture.metafix.api;
 
-import java.util.List;
-import java.util.Map;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.RecordTransformer;
+
+import java.util.List;
+import java.util.Map;
 
 /** Fix context to execute. */
 @FunctionalInterface

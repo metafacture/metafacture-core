@@ -16,12 +16,14 @@
 
 package org.metafacture.triples;
 
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.WeakReference;
+import org.metafacture.framework.objects.Triple;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.objects.Triple;
+
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
 
 /**
  * Tests for class {@link AbstractTripleSort}.

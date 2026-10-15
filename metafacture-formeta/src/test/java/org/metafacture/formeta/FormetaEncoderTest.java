@@ -16,11 +16,12 @@
 
 package org.metafacture.formeta;
 
+import org.metafacture.formeta.formatter.FormatterStyle;
+import org.metafacture.framework.ObjectReceiver;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.formeta.formatter.FormatterStyle;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;

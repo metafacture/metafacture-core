@@ -16,8 +16,6 @@
 
 package org.metafacture.metamorph.xml;
 
-import java.util.Deque;
-import java.util.LinkedList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.events.Event;
@@ -29,6 +27,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.LocatorImpl;
 import org.xml.sax.helpers.XMLFilterImpl;
+
+import java.util.Deque;
+import java.util.LinkedList;
 
 /**
  * Annotates a DOM with information about the location of the elements in the input file.

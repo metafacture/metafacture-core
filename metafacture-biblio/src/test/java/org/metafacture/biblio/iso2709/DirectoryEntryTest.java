@@ -16,10 +16,11 @@
 
 package org.metafacture.biblio.iso2709;
 
-import java.nio.charset.Charset;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.nio.charset.Charset;
 
 /**
  * Tests for class {@link DirectoryEntry}.

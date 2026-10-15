@@ -16,6 +16,14 @@
 
 package org.metafacture.runner;
 
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
+import org.junit.Assert;
+import org.junit.Test;
+import org.mockito.AdditionalAnswers;
+import org.mockito.Mockito;
+import picocli.CommandLine;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -25,13 +33,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.MatcherAssert;
-import org.junit.Assert;
-import org.junit.Test;
-import org.mockito.AdditionalAnswers;
-import org.mockito.Mockito;
-import picocli.CommandLine;
 
 /**
  * Tests for class {@link Flux}.

@@ -16,10 +16,11 @@
 
 package org.metafacture.formeta.parser;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.metafacture.formeta.FormetaDecoder;
 import org.metafacture.framework.FormatException;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;

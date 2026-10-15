@@ -16,8 +16,9 @@
 
 package org.metafacture.metafix;
 
-import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
+
+import java.util.concurrent.TimeUnit;
 
 /** Baseline benchmark. */
 @OutputTimeUnit(TimeUnit.MICROSECONDS)

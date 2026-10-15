@@ -16,11 +16,13 @@
 
 package org.metafacture.flux;
 
+import org.metafacture.flux.parser.FluxProgramm;
+
+import org.junit.Test;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import org.junit.Test;
-import org.metafacture.flux.parser.FluxProgramm;
 
 /**
  * Tests {@link FluxProgramm}

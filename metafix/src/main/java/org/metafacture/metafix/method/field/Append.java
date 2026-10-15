@@ -16,12 +16,13 @@
 
 package org.metafacture.metafix.method.field;
 
-import java.util.List;
-import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.api.FixFunction;
+
+import java.util.List;
+import java.util.Map;
 
 /** Adds a string at the end of a field value. */
 @FixCommand("append")

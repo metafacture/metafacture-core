@@ -16,10 +16,12 @@
 
 package org.metafacture.metamorph;
 
+import org.metafacture.framework.StreamReceiver;
+
+import org.xml.sax.InputSource;
+
 import java.io.StringReader;
 import java.net.URL;
-import org.metafacture.framework.StreamReceiver;
-import org.xml.sax.InputSource;
 
 /**
  * Helper for including Metamorph scripts directly in Java code.

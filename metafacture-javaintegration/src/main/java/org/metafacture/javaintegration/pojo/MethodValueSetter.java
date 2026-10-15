@@ -16,11 +16,12 @@
 
 package org.metafacture.javaintegration.pojo;
 
+import org.metafacture.framework.MetafactureException;
+
 import java.beans.Introspector;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import org.metafacture.framework.MetafactureException;
 
 /**
  * Invokes a setter method on an object. The method must be public, have exactly one argument and

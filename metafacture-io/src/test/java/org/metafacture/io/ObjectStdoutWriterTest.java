@@ -16,10 +16,11 @@
 
 package org.metafacture.io;
 
+import org.junit.Before;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import org.junit.Before;
 
 /**
  * Tests for class {@link ObjectStdoutWriter}.

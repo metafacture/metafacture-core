@@ -16,15 +16,17 @@
 
 package org.metafacture.metamorph.maps;
 
-import java.util.function.Consumer;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
+
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.TestHelpers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+
+import java.util.function.Consumer;
 
 /**
  * Tests for class {@link FileMap}.

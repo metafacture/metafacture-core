@@ -16,7 +16,6 @@
 
 package org.metafacture.metafix;
 
-import java.io.IOException;
 import org.metafacture.formatting.ObjectTemplate;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -27,6 +26,8 @@ import org.metafacture.triples.AbstractTripleSort.Order;
 import org.metafacture.triples.StreamToTriples;
 import org.metafacture.triples.TripleCount;
 import org.metafacture.triples.TripleSort;
+
+import java.io.IOException;
 
 /**
  * Superclass for Metafix-based analyzer modules based on triples (see {@link

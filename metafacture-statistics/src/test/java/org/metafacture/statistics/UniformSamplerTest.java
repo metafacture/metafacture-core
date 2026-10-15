@@ -16,17 +16,19 @@
 
 package org.metafacture.statistics;
 
-import java.util.Arrays;
+import org.metafacture.framework.ObjectReceiver;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.util.Arrays;
 
 /**
  * Tests for class {@link UniformSampler}.

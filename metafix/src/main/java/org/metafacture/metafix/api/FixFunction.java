@@ -16,6 +16,13 @@
 
 package org.metafacture.metafix.api;
 
+import org.metafacture.framework.StandardEventNames;
+import org.metafacture.io.ObjectWriter;
+import org.metafacture.metafix.FixPath;
+import org.metafacture.metafix.Metafix;
+import org.metafacture.metafix.Record;
+import org.metafacture.metafix.Value;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -25,12 +32,6 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
-import org.metafacture.framework.StandardEventNames;
-import org.metafacture.io.ObjectWriter;
-import org.metafacture.metafix.FixPath;
-import org.metafacture.metafix.Metafix;
-import org.metafacture.metafix.Record;
-import org.metafacture.metafix.Value;
 
 /** Fix function to apply. */
 @FunctionalInterface

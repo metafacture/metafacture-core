@@ -16,6 +16,17 @@
 
 package org.metafacture.metamorph.xml;
 
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.framework.MetafactureException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.XMLReader;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.xml.XMLConstants;
@@ -33,15 +44,6 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.framework.MetafactureException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.XMLReader;
 
 /**
  * Helper to load DOM {@link Document}s.

@@ -16,8 +16,6 @@
 
 package org.metafacture.biblio.pica;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.metafacture.commons.StringUtil;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MissingIdException;
@@ -26,6 +24,9 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Parses pica+ records. The parser only parses single records. A string containing multiple records

@@ -16,6 +16,16 @@
 
 package org.metafacture.flux;
 
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.commons.reflection.ConfigurableClass;
+import org.metafacture.commons.reflection.ObjectFactory;
+import org.metafacture.flux.parser.FluxProgramm;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.annotations.Description;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
+import org.metafacture.framework.annotations.ReturnsAvailableArguments;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -32,15 +42,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.commons.reflection.ConfigurableClass;
-import org.metafacture.commons.reflection.ObjectFactory;
-import org.metafacture.flux.parser.FluxProgramm;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.annotations.Description;
-import org.metafacture.framework.annotations.In;
-import org.metafacture.framework.annotations.Out;
-import org.metafacture.framework.annotations.ReturnsAvailableArguments;
 
 /**
  * Prints Flux help for a given {@link ObjectFactory}. If the file at {@value #PATH_TO_EXAMPLES}

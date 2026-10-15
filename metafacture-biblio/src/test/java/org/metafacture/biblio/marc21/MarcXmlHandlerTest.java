@@ -16,10 +16,11 @@
 
 package org.metafacture.biblio.marc21;
 
+import org.metafacture.framework.StreamReceiver;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;

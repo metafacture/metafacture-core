@@ -16,6 +16,9 @@
 
 package org.metafacture.metamorph.maps;
 
+import org.metafacture.metamorph.api.MorphExecutionException;
+import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.sql.Connection;
@@ -25,8 +28,6 @@ import java.sql.SQLException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import org.metafacture.metamorph.api.MorphExecutionException;
-import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
 
 /**
  * A map which queries an sql database provided as jndi resource.

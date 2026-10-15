@@ -16,16 +16,17 @@
 
 package org.metafacture.metamorph.functions;
 
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.metamorph.api.MorphBuildException;
+import org.metafacture.metamorph.api.MorphExecutionException;
+import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
+
 import java.io.IOException;
 import java.io.Reader;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.metamorph.api.MorphBuildException;
-import org.metafacture.metamorph.api.MorphExecutionException;
-import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
  * A function which executes a JavaScript function.

@@ -16,17 +16,19 @@
 
 package org.metafacture.metamorph;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.metafacture.commons.StringUtil;
 import org.metafacture.commons.types.ScopedHashMap;
 import org.metafacture.metamorph.api.MorphBuildException;
 import org.metafacture.metamorph.xml.DomLoader;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Builds a {@link Metamorph} from an XML description

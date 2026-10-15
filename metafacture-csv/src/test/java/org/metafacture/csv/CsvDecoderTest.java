@@ -16,6 +16,9 @@
 
 package org.metafacture.csv;
 
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.StreamReceiver;
+
 import com.opencsv.exceptions.CsvMalformedLineException;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
@@ -23,8 +26,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;

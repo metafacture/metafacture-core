@@ -16,9 +16,10 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.framework.ObjectReceiver;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;

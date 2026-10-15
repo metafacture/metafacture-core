@@ -16,11 +16,12 @@
 
 package org.metafacture.metamorph.functions;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.metafacture.commons.StringUtil;
 import org.metafacture.metamorph.api.MorphBuildException;
 import org.metafacture.metamorph.api.helpers.AbstractStatefulFunction;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Only outputs the received values in a certain range.

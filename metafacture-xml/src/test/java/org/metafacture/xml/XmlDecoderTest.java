@@ -16,12 +16,14 @@
 
 package org.metafacture.xml;
 
+import org.metafacture.framework.MetafactureException;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import org.junit.Before;
-import org.junit.Test;
-import org.metafacture.framework.MetafactureException;
 
 /**
  * Tests for class {@link XmlDecoder}.

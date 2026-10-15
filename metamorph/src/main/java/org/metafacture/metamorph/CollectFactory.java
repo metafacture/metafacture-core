@@ -16,11 +16,12 @@
 
 package org.metafacture.metamorph;
 
-import java.io.IOException;
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.commons.reflection.ObjectFactory;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.metamorph.api.Collect;
+
+import java.io.IOException;
 
 /**
  * Creates the collectors available in Metamorph.

@@ -16,13 +16,15 @@
 
 package org.metafacture.metafix; // checkstyle-disable-line JavaNCSS
 
-import java.util.Arrays;
-import java.util.Map;
+import org.metafacture.framework.StreamReceiver;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Tests Metafix field level methods. Following the cheat sheet examples at

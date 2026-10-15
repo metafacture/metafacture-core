@@ -16,11 +16,12 @@
 
 package org.metafacture.commons.tries;
 
+import org.metafacture.commons.tries.SetMatcher.Match;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import org.metafacture.commons.tries.SetMatcher.Match;
 
 /**
  * Replaces Strings by other Strings.

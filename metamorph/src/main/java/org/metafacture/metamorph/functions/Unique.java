@@ -16,9 +16,10 @@
 
 package org.metafacture.metamorph.functions;
 
+import org.metafacture.metamorph.api.helpers.AbstractStatefulFunction;
+
 import java.util.HashSet;
 import java.util.Set;
-import org.metafacture.metamorph.api.helpers.AbstractStatefulFunction;
 
 /**
  * Checks whether the received value was not received before.

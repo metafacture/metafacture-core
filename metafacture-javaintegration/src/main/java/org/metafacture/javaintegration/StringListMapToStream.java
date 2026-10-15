@@ -16,14 +16,15 @@
 
 package org.metafacture.javaintegration;
 
-import java.util.List;
-import java.util.Map.Entry;
 import org.metafacture.commons.types.ListMap;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * Reads a {@link ListMap} and sends it to a {@link StreamReceiver}

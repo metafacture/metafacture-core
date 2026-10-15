@@ -16,15 +16,16 @@
 
 package org.metafacture.statistics;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Draws a uniform sample of records from the input stream.

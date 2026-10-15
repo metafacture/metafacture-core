@@ -16,11 +16,12 @@
 
 package org.metafacture.triples;
 
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.objects.Triple;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.objects.Triple;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;

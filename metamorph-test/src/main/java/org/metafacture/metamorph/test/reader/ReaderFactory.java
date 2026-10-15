@@ -16,10 +16,11 @@
 
 package org.metafacture.metamorph.test.reader;
 
-import java.io.IOException;
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.commons.reflection.ObjectFactory;
 import org.metafacture.framework.MetafactureException;
+
+import java.io.IOException;
 
 /**
  * Instantiates instances of the {@link Reader} interface.

@@ -16,8 +16,6 @@
 
 package org.metafacture.flowcontrol;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureLogger;
 import org.metafacture.framework.ObjectReceiver;
@@ -25,6 +23,9 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * Wraps the call to the process method of the downstream module in a try catch block with Exception

@@ -16,6 +16,14 @@
 
 package org.metafacture.flux.parser;
 
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.commons.reflection.ConfigurableClass;
+import org.metafacture.commons.reflection.ObjectFactory;
+import org.metafacture.commons.reflection.ReflectionUtil;
+import org.metafacture.flux.FluxParseException;
+import org.metafacture.flux.HelpPrinter;
+import org.metafacture.framework.Receiver;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -28,13 +36,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.commons.reflection.ConfigurableClass;
-import org.metafacture.commons.reflection.ObjectFactory;
-import org.metafacture.commons.reflection.ReflectionUtil;
-import org.metafacture.flux.FluxParseException;
-import org.metafacture.flux.HelpPrinter;
-import org.metafacture.framework.Receiver;
 
 /**
  * @author Markus Michael Geipel

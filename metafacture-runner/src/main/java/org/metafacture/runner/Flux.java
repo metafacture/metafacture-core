@@ -16,6 +16,23 @@
 
 package org.metafacture.runner;
 
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.flux.FluxCompiler;
+import org.metafacture.flux.parser.FluxProgramm;
+import org.metafacture.runner.util.DirectoryClassLoader;
+
+import org.antlr.runtime.RecognitionException;
+import picocli.CommandLine;
+import picocli.CommandLine.ArgGroup;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.IVersionProvider;
+import picocli.CommandLine.MissingParameterException;
+import picocli.CommandLine.Model;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
+import picocli.CommandLine.Spec;
+import picocli.CommandLine.UnmatchedArgumentException;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -30,21 +47,6 @@ import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.antlr.runtime.RecognitionException;
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.flux.FluxCompiler;
-import org.metafacture.flux.parser.FluxProgramm;
-import org.metafacture.runner.util.DirectoryClassLoader;
-import picocli.CommandLine;
-import picocli.CommandLine.ArgGroup;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.IVersionProvider;
-import picocli.CommandLine.MissingParameterException;
-import picocli.CommandLine.Model;
-import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
-import picocli.CommandLine.Spec;
-import picocli.CommandLine.UnmatchedArgumentException;
 
 /**
  * @author Markus Michael Geipel

@@ -16,8 +16,6 @@
 
 package org.metafacture.formeta;
 
-import java.io.IOException;
-import java.io.Reader;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -25,6 +23,9 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.io.IOException;
+import java.io.Reader;
 
 /**
  * Reads a stream of formeta data and splits between each top-level element.

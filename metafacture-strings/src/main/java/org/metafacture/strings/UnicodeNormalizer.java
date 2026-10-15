@@ -16,13 +16,14 @@
 
 package org.metafacture.strings;
 
-import java.text.Normalizer;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.text.Normalizer;
 
 /**
  * Normalises Unicode characters in strings. Unicode normalisation converts between precomposed

@@ -16,9 +16,10 @@
 
 package org.metafacture.commons.tries;
 
-import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * tests {@link CharMap}

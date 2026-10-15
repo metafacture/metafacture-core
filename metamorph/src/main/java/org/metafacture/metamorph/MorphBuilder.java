@@ -16,10 +16,6 @@
 
 package org.metafacture.metamorph;
 
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.regex.Pattern;
 import org.metafacture.commons.reflection.ConfigurableClass;
 import org.metafacture.commons.reflection.ReflectionUtil;
 import org.metafacture.metamorph.api.Collect;
@@ -31,7 +27,13 @@ import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.api.MorphBuildException;
 import org.metafacture.metamorph.api.NamedValuePipe;
 import org.metafacture.metamorph.xml.Location;
+
 import org.w3c.dom.Node;
+
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Builds a {@link Metamorph} from an xml description

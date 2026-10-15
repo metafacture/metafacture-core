@@ -16,13 +16,14 @@
 
 package org.metafacture.metafix.util;
 
-import java.util.List;
-import java.util.Map;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixFunction;
 import org.metafacture.metafix.method.record.AddField;
+
+import java.util.List;
+import java.util.Map;
 
 public class TestFunction implements FixFunction {
 

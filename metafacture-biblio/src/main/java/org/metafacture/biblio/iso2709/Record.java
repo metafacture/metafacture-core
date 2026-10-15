@@ -16,10 +16,11 @@
 
 package org.metafacture.biblio.iso2709;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import org.metafacture.commons.Require;
 import org.metafacture.framework.FormatException;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Reads a record in ISO 2709:2008 format from a byte array.

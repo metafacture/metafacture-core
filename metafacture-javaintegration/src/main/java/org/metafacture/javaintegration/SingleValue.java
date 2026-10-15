@@ -16,8 +16,9 @@
 
 package org.metafacture.javaintegration;
 
-import java.util.Collection;
 import org.metafacture.framework.helpers.DefaultStreamReceiver;
+
+import java.util.Collection;
 
 /**
  * Just records the value of the last received literal.

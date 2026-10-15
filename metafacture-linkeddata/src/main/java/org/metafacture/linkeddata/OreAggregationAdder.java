@@ -16,13 +16,6 @@
 
 package org.metafacture.linkeddata;
 
-import java.io.IOException;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.regex.Pattern;
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.commons.types.ListMap;
 import org.metafacture.framework.FluxCommand;
@@ -32,6 +25,14 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import java.io.IOException;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.regex.Pattern;
 
 /**
  * Adds ore:Aggregation to an Europeana Data Model stream. The aggregation id is set by emitting

@@ -16,10 +16,6 @@
 
 package org.metafacture.javaintegration.pojo;
 
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.StreamReceiver;
@@ -27,6 +23,11 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorManager;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
  * Creates and fills a new object instance with stream data and sends the result to the given object

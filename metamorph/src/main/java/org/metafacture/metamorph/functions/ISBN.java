@@ -16,9 +16,10 @@
 
 package org.metafacture.metamorph.functions;
 
+import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
  * Offers ISBN conversions.

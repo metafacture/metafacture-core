@@ -1,5 +1,9 @@
 package org.metafacture.metafix;
 
+import org.metafacture.metafix.fix.Fix;
+import org.metafacture.metafix.interpreter.FixInterpreter;
+import org.metafacture.metafix.tests.FixInjectorProvider;
+
 import com.google.inject.Inject;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
@@ -8,9 +12,6 @@ import org.eclipse.xtext.xbase.lib.Extension;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.metafacture.metafix.fix.Fix;
-import org.metafacture.metafix.interpreter.FixInterpreter;
-import org.metafacture.metafix.tests.FixInjectorProvider;
 
 @ExtendWith(InjectionExtension.class)
 @InjectWith(FixInjectorProvider.class)

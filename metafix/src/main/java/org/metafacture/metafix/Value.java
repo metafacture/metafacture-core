@@ -16,7 +16,11 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.commons.tries.SimpleRegexTrie;
+import org.metafacture.commons.tries.WildcardTrie;
+
 import com.fasterxml.jackson.core.JsonGenerator;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
@@ -41,8 +45,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import org.metafacture.commons.tries.SimpleRegexTrie;
-import org.metafacture.commons.tries.WildcardTrie;
 
 /**
  * Represents a record value, i.e., either an {@link Array}, a {@link Hash}, or a {@link String}.

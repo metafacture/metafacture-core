@@ -16,14 +16,16 @@
 
 package org.metafacture.framework.helpers;
 
-import java.io.IOException;
 import org.metafacture.framework.XmlPipe;
 import org.metafacture.framework.XmlReceiver;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import java.io.IOException;
 
 /**
  * Default implementation of {@link XmlReceiver} which simply does nothing. Do not use this class as

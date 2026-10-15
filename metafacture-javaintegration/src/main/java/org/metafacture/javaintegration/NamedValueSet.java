@@ -16,12 +16,13 @@
 
 package org.metafacture.javaintegration;
 
+import org.metafacture.commons.types.NamedValue;
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import org.metafacture.commons.types.NamedValue;
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 /**
  * Collects {@link NamedValue}s in a {@link Set}. So there will not be duplicates.

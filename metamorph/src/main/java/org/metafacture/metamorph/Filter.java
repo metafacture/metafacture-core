@@ -16,7 +16,6 @@
 
 package org.metafacture.metamorph;
 
-import java.util.Map;
 import org.metafacture.flowcontrol.StreamBuffer;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
@@ -26,6 +25,8 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 import org.metafacture.javaintegration.SingleValue;
 import org.metafacture.metamorph.api.InterceptorFactory;
+
+import java.util.Map;
 
 /**
  * Filters a stream based on a morph definition. A record is accepted if the morph returns at least

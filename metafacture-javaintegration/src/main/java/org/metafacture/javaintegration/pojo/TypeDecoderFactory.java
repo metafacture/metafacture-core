@@ -16,9 +16,10 @@
 
 package org.metafacture.javaintegration.pojo;
 
+import org.metafacture.framework.MetafactureException;
+
 import java.util.HashMap;
 import java.util.Map;
-import org.metafacture.framework.MetafactureException;
 
 /**
  * Returns a decoder for a given class.

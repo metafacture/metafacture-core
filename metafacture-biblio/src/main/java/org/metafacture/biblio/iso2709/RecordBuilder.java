@@ -16,11 +16,12 @@
 
 package org.metafacture.biblio.iso2709;
 
+import org.metafacture.commons.Require;
+import org.metafacture.framework.FormatException;
+
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.regex.Pattern;
-import org.metafacture.commons.Require;
-import org.metafacture.framework.FormatException;
 
 /**
  * Builds records in ISO2709:2008 format.

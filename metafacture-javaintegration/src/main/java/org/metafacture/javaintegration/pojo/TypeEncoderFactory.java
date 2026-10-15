@@ -16,9 +16,10 @@
 
 package org.metafacture.javaintegration.pojo;
 
+import org.metafacture.framework.MetafactureException;
+
 import java.util.List;
 import java.util.Map;
-import org.metafacture.framework.MetafactureException;
 
 /**
  * Returns {@link TypeEncoder}s for POJOs, {@link Map}s and {@link List}s.

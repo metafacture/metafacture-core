@@ -16,11 +16,12 @@
 
 package org.metafacture.biblio.marc21;
 
+import org.metafacture.framework.FormatException;
+import org.metafacture.framework.ObjectReceiver;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.FormatException;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;

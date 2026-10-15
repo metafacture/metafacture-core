@@ -16,9 +16,10 @@
 
 package org.metafacture.metamorph;
 
+import org.metafacture.framework.StreamReceiver;
+
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;

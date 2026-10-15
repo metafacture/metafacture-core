@@ -17,6 +17,7 @@
 package org.metafacture.framework;
 
 import org.metafacture.framework.helpers.DefaultXmlReceiver;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
 import org.xml.sax.EntityResolver;

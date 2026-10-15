@@ -16,10 +16,11 @@
 
 package org.metafacture.javaintegration;
 
+import org.metafacture.framework.StreamReceiver;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.metafacture.framework.StreamReceiver;
 
 /**
  * Stores the received stream events in a list.

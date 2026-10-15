@@ -16,12 +16,13 @@
 
 package org.metafacture.triples;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.metafacture.formeta.Formeta;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.objects.Triple;
 import org.metafacture.framework.objects.Triple.ObjectType;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;

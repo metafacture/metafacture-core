@@ -16,10 +16,6 @@
 
 package org.metafacture.metamorph.test;
 
-import java.io.FileNotFoundException;
-import java.io.StringReader;
-import org.junit.runners.model.InitializationError;
-import org.junit.runners.model.Statement;
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.commons.XmlUtil;
 import org.metafacture.commons.reflection.ReflectionUtil;
@@ -30,9 +26,15 @@ import org.metafacture.metamorph.Metamorph;
 import org.metafacture.metamorph.test.reader.MultiFormatReader;
 import org.metafacture.metamorph.test.reader.Reader;
 import org.metafacture.metamorph.test.validators.StreamValidator;
+
+import org.junit.runners.model.InitializationError;
+import org.junit.runners.model.Statement;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+
+import java.io.FileNotFoundException;
+import java.io.StringReader;
 
 /**
  * Runs a test defined in a Metamorph-Test definition.

@@ -16,8 +16,9 @@
 
 package org.metafacture.metamorph.functions;
 
-import java.util.regex.Pattern;
 import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
+
+import java.util.regex.Pattern;
 
 /**
  * Replaces the matches of pattern with a set value.

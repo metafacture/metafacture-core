@@ -16,7 +16,6 @@
 
 package org.metafacture.biblio.marc21;
 
-import java.util.Arrays;
 import org.metafacture.biblio.iso2709.Iso2709Constants;
 import org.metafacture.biblio.iso2709.RecordBuilder;
 import org.metafacture.biblio.iso2709.RecordFormat;
@@ -28,6 +27,8 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import java.util.Arrays;
 
 /**
  * Encodes a stream in MARC21 format.

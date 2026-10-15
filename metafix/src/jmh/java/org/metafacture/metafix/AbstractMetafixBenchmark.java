@@ -16,14 +16,15 @@
 
 package org.metafacture.metafix;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import org.metafacture.framework.helpers.DefaultStreamReceiver;
 import org.metafacture.io.FileOpener;
 import org.metafacture.io.ObjectStdoutWriter;
 import org.metafacture.io.RecordReader;
 import org.metafacture.json.JsonDecoder;
 import org.metafacture.json.JsonEncoder;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
 
 /** Base class for Metafix benchmarks. */
 @SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")

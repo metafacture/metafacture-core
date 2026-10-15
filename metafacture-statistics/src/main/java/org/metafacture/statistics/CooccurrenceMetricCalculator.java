@@ -16,13 +16,14 @@
 
 package org.metafacture.statistics;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.objects.Triple;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Calculates values for various co-occurrence metrics. The expected inputs are triples containing

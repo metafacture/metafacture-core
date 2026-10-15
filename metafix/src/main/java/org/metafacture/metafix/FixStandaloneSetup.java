@@ -1,12 +1,13 @@
 package org.metafacture.metafix;
 
+import org.metafacture.metafix.fix.Fix;
+import org.metafacture.metafix.validation.XtextValidator;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.UncheckedIOException;
-import org.metafacture.metafix.fix.Fix;
-import org.metafacture.metafix.validation.XtextValidator;
 
 /** Initialization support for running Xtext languages without Equinox extension registry. */
 public class FixStandaloneSetup extends FixStandaloneSetupGenerated {

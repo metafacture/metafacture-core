@@ -16,11 +16,13 @@
 
 package org.metafacture.biblio.iso2709;
 
-import java.nio.charset.StandardCharsets;
+import org.metafacture.framework.FormatException;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.FormatException;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * Tests for class {@link RecordBuilder}.

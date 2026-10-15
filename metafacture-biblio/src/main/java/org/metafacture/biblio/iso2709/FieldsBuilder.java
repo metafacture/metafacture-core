@@ -16,9 +16,10 @@
 
 package org.metafacture.biblio.iso2709;
 
+import org.metafacture.framework.FormatException;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import org.metafacture.framework.FormatException;
 
 /**
  * Builds a list of fields in ISO 2709:2008 format.

@@ -16,9 +16,10 @@
 
 package org.metafacture.framework.helpers;
 
+import org.metafacture.framework.StreamReceiver;
+
 import org.junit.Assert;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mockito;
 
 /**

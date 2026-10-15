@@ -16,6 +16,11 @@
 
 package org.metafacture.metamorph.maps;
 
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.io.FileOpener;
+import org.metafacture.metamorph.api.MorphExecutionException;
+import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
+
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.FileInputStream;
@@ -34,10 +39,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.io.FileOpener;
-import org.metafacture.metamorph.api.MorphExecutionException;
-import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
 
 /**
  * Provides a {@link Map} based on files. Can be a single file or a comma-separated list of files.

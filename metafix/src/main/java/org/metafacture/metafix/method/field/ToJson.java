@@ -16,14 +16,15 @@
 
 package org.metafacture.metafix.method.field;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import org.metafacture.metafix.FixCommand;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixFunction;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /** Replaces the value with its JSON serialization. */
 @FixCommand("to_json")

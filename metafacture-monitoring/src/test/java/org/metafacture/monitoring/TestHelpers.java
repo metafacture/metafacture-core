@@ -16,12 +16,13 @@
 
 package org.metafacture.monitoring;
 
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.stream.IntStream;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
+
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.stream.IntStream;
 
 public class TestHelpers { // checkstyle-disable-line HideUtilityClassConstructor
 

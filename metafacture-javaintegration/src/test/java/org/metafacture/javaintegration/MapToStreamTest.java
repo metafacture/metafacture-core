@@ -16,15 +16,17 @@
 
 package org.metafacture.javaintegration;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.metafacture.framework.StreamReceiver;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Tests for class {@link MapToStream}.

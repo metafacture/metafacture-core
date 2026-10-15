@@ -16,13 +16,14 @@
 
 package org.metafacture.metamorph.test.validators;
 
-import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.util.function.Consumer;
 
 /**
  * Tests for class {@link WellformednessChecker}.

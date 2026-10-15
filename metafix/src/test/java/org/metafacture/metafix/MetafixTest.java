@@ -16,19 +16,21 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.metafix.api.FixFunction;
+import org.metafacture.metafix.api.FixRegistry;
+import org.metafacture.metafix.bind.ListAs;
+import org.metafacture.metafix.bind.Once;
+import org.metafacture.metamorph.api.Maps;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.metafacture.metafix.api.FixFunction;
-import org.metafacture.metafix.api.FixRegistry;
-import org.metafacture.metafix.bind.ListAs;
-import org.metafacture.metafix.bind.Once;
-import org.metafacture.metamorph.api.Maps;
 
 /** Tests Metafix API methods. */
 public class MetafixTest {

@@ -16,11 +16,12 @@
 
 package org.metafacture.metamorph.collectors;
 
-import java.util.HashSet;
-import java.util.Set;
 import org.metafacture.commons.StringUtil;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Corresponds to the {@code <all>} tag.

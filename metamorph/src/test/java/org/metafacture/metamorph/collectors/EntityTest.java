@@ -16,11 +16,12 @@
 
 package org.metafacture.metamorph.collectors;
 
-import org.junit.Rule;
-import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.metamorph.Entity;
 import org.metafacture.metamorph.TestHelpers;
+
+import org.junit.Rule;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;

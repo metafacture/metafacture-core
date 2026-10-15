@@ -16,8 +16,6 @@
 
 package org.metafacture.monitoring;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.metafacture.commons.StringUtil;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureLogger;
@@ -26,6 +24,9 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.ForwardingStreamPipe;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Writes log info every {@code batchSize} records.

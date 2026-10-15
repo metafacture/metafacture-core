@@ -16,6 +16,9 @@
 
 package org.metafacture.metamorph.maps;
 
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,8 +27,6 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
 
 /**
  * A map which resolves its keys by doing a REST request and returning the response as value.

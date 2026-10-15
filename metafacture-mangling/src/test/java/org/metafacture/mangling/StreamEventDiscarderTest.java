@@ -16,15 +16,17 @@
 
 package org.metafacture.mangling;
 
-import java.util.EnumSet;
-import org.junit.Before;
-import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.mangling.StreamEventDiscarder.EventType;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.util.EnumSet;
 
 /**
  * Tests for class {@link StreamEventDiscarder}.

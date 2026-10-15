@@ -16,9 +16,10 @@
 
 package org.metafacture.biblio.pica;
 
+import org.metafacture.framework.StreamReceiver;
+
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
-import org.metafacture.framework.StreamReceiver;
 
 /**
  * Parser context for the PICA+ parser.The context implements support for normalising the UTF8

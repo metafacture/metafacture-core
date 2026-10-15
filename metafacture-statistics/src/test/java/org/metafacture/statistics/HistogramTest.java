@@ -16,10 +16,11 @@
 
 package org.metafacture.statistics;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Tests for class {@link Histogram}.

@@ -16,11 +16,12 @@
 
 package org.metafacture.mangling;
 
+import org.metafacture.framework.StandardEventNames;
+import org.metafacture.framework.StreamReceiver;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StandardEventNames;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;

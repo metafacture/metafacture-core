@@ -16,10 +16,6 @@
 
 package org.metafacture.triples;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.metafacture.formeta.formatter.ConciseFormatter;
 import org.metafacture.formeta.formatter.Formatter;
 import org.metafacture.framework.FluxCommand;
@@ -32,6 +28,11 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 import org.metafacture.framework.objects.Triple;
 import org.metafacture.framework.objects.Triple.ObjectType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Emits the literals which are received as triples such that the name and value become the

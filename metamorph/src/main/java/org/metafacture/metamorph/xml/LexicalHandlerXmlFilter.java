@@ -16,7 +16,6 @@
 
 package org.metafacture.metamorph.xml;
 
-import java.io.IOException;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
@@ -24,6 +23,8 @@ import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.XMLFilterImpl;
+
+import java.io.IOException;
 
 /**
  * Extends {@link XMLFilterImpl} to also intercept events defined in {@link LexicalHandler}.

@@ -16,6 +16,9 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.metafix.FixPath.InsertMode;
+import org.metafacture.metafix.Value.TypeMatcher;
+
 import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedHashMap;
@@ -24,8 +27,6 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
-import org.metafacture.metafix.FixPath.InsertMode;
-import org.metafacture.metafix.Value.TypeMatcher;
 
 /** Represents a metadata record, i.e., a {@link Value.Hash Hash} of fields and values. */
 public class Record extends Value.Hash {
