@@ -95,6 +95,8 @@ spotless {
     forbidWildcardImports()
     formatAnnotations()
     googleJavaFormat().aosp().reflowLongStrings()
+    // '' for others, '|' to skip blank line, '\\#' for static:
+    importOrder('org.metafacture', '', 'java|javax', '\\#')
   }
   flexmark {
     target '**/*.md'
