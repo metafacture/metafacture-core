@@ -36,7 +36,7 @@ subprojects {
       'dspace':           '1.0.0',
       'equalsverifier':   '3.19.4',
       'everit':           '1.14.6',
-      'guava':            '32.0.1-jre',
+      'guava':            '33.7.2-jre',
       'jackson':          '2.22.3',
       'jdk':              '21',
       'jdom':             '2.0.6.1',
