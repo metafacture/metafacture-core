@@ -64,7 +64,6 @@
       <property name="tokens" value="POST_INC,POST_DEC"/>
     </module>
     <module name="IllegalType"/>
-    <module name="Indentation"/>
     <module name="InnerAssignment"/>
     <module name="InnerTypeLast"/>
     <module name="InterfaceIsType"/>

@@ -1,0 +1,32 @@
+# --------------------------------------------------------------------------------
+# Eclipse JDT formatter configuration used by Spotless (see PR #793 for details)
+# --------------------------------------------------------------------------------
+
+# Indentation: 4-space indentation, 8-space continuation
+org.eclipse.jdt.core.formatter.tabulation.char=space
+org.eclipse.jdt.core.formatter.tabulation.size=4
+org.eclipse.jdt.core.formatter.indentation.size=4
+org.eclipse.jdt.core.formatter.continuation_indentation=2
+org.eclipse.jdt.core.formatter.continuation_indentation_for_array_initializer=2
+
+# Line width: match existing code; long lines carrying a
+# `checkstyle-disable-line` comment are protected with `@formatter:off`
+org.eclipse.jdt.core.formatter.lineSplit=100
+
+# Javadoc: shorter lines, match existing code
+org.eclipse.jdt.core.formatter.comment.line_length=80
+org.eclipse.jdt.core.formatter.comment.format_javadoc_comments=true
+org.eclipse.jdt.core.formatter.comment.insert_new_line_for_parameter=false
+org.eclipse.jdt.core.formatter.comment.align_tags_descriptions_grouped=true
+
+# Brace placement: put `else`/`catch`/`finally` on their own line
+org.eclipse.jdt.core.formatter.insert_new_line_before_else_in_if_statement=insert
+org.eclipse.jdt.core.formatter.insert_new_line_before_catch_in_try_statement=insert
+org.eclipse.jdt.core.formatter.insert_new_line_before_finally_in_try_statement=insert
+
+# Add blank line before the closing brace of the last class body
+org.eclipse.jdt.core.formatter.blank_lines_after_last_class_body_declaration=1
+
+# Don't add space before the case & default colon (`case X :`)
+org.eclipse.jdt.core.formatter.insert_space_before_colon_in_case=do_not_insert
+org.eclipse.jdt.core.formatter.insert_space_before_colon_in_default=do_not_insert
