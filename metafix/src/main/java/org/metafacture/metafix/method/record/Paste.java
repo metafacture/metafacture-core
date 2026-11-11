@@ -27,38 +27,30 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Joins multiple field values into a new field. Can be combined with additional literal strings.
+ * Joins multiple field values into a new field. Can be combined with
+ * additional literal strings.
  */
 @FixCommand("paste")
 public class Paste implements FixFunction {
 
-    /** Creates an instance of {@link Paste}. */
-    public Paste() {}
+    /**
+     * Creates an instance of {@link Paste}.
+     */
+    public Paste() {
+    }
 
     @Override
-    public void apply(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         final String joinChar = options.get("join_char");
-        final Value newValue =
-                new Value(
-                        params.subList(1, params.size()).stream()
-                                .filter(f -> literalString(f) || record.get(f) != null)
-                                .map(
-                                        f ->
-                                                literalString(f)
-                                                        ? new Value(f.substring(1))
-                                                        : Value.asList(record.get(f), null)
-                                                                .asArray()
-                                                                .get(0))
-                                .map(Value::asString)
-                                .collect(Collectors.joining(joinChar != null ? joinChar : " ")));
+        final Value newValue = new Value(params.subList(1, params.size()).stream()
+                .filter(f -> literalString(f) || record.get(f) != null)
+                .map(f -> literalString(f) ? new Value(f.substring(1)) : Value.asList(record.get(f), null).asArray().get(0))
+                .map(Value::asString).collect(Collectors.joining(joinChar != null ? joinChar : " ")));
         record.set(params.get(0), newValue);
     }
 
     private boolean literalString(final String s) {
         return s.startsWith("~");
     }
+
 }

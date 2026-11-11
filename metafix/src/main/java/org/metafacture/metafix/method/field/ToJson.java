@@ -26,35 +26,33 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-/** Replaces the value with its JSON serialization. */
+/**
+ * Replaces the value with its JSON serialization.
+ */
 @FixCommand("to_json")
 public class ToJson implements FixFunction {
 
-    /** Creates an instance of {@link ToJson}. */
-    public ToJson() {}
+    /**
+     * Creates an instance of {@link ToJson}.
+     */
+    public ToJson() {
+    }
 
     @Override
-    public void apply(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         final String errorString = options.get(ERROR_STRING_OPTION);
         final boolean pretty = getBoolean(options, "pretty");
 
-        record.transform(
-                params.get(0),
-                (m, c) ->
-                        m.orElse(
-                                v -> {
-                                    try {
-                                        c.accept(new Value(v.toJson(pretty)));
-                                    } catch (final IOException e) {
-                                        c.accept(
-                                                errorString != null
-                                                        ? new Value(errorString)
-                                                        : null);
-                                    }
-                                }));
+        record.transform(params.get(0), (m, c) -> m
+                .orElse(v -> {
+                    try {
+                        c.accept(new Value(v.toJson(pretty)));
+                    }
+                    catch (final IOException e) {
+                        c.accept(errorString != null ? new Value(errorString) : null);
+                    }
+                })
+        );
     }
+
 }

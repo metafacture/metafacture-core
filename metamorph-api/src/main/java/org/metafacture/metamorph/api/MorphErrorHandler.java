@@ -17,9 +17,11 @@
 package org.metafacture.metamorph.api;
 
 /**
- * Error handler used by Metamorph. Implement this interface to provide custom error handling.
+ * Error handler used by Metamorph. Implement this interface to provide custom
+ * error handling.
  *
  * @author Markus Michael Geipel
+ *
  */
 public interface MorphErrorHandler {
 
@@ -29,4 +31,5 @@ public interface MorphErrorHandler {
      * @param exception the {@link Exception}
      */
     void error(Exception exception);
+
 }

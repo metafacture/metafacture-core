@@ -32,14 +32,17 @@ import org.mockito.MockitoAnnotations;
  *
  * @author Markus Geipel
  * @author Christoph Böhme
+ *
  */
 public final class StreamToTriplesTest {
 
-    @Mock private ObjectReceiver<Triple> receiver;
+    @Mock
+    private ObjectReceiver<Triple> receiver;
 
     private StreamToTriples streamToTriples;
 
-    public StreamToTriplesTest() {}
+    public StreamToTriplesTest() {
+    }
 
     @Before
     public void setup() {
@@ -68,9 +71,10 @@ public final class StreamToTriplesTest {
         streamToTriples.endEntity();
         streamToTriples.endRecord();
 
-        final String encodedEntity = "{literal1:value1,entity2{literal2:value2}}";
-        Mockito.verify(receiver)
-                .process(new Triple("id", "entity1", encodedEntity, ObjectType.ENTITY));
+        final String encodedEntity =
+                "{literal1:value1,entity2{literal2:value2}}";
+        Mockito.verify(receiver).process(
+                new Triple("id",  "entity1", encodedEntity, ObjectType.ENTITY));
     }
 
     @Test
@@ -109,9 +113,10 @@ public final class StreamToTriplesTest {
         streamToTriples.endEntity();
         streamToTriples.endRecord();
 
-        final String encodedRecord = "{entity1{literal1:value1}entity2{literal2:value2}}";
-        Mockito.verify(receiver)
-                .process(new Triple("id", "record", encodedRecord, ObjectType.ENTITY));
+        final String encodedRecord =
+                "{entity1{literal1:value1}entity2{literal2:value2}}";
+        Mockito.verify(receiver).process(
+                new Triple("id", "record", encodedRecord, ObjectType.ENTITY));
     }
 
     @Test
@@ -125,7 +130,8 @@ public final class StreamToTriplesTest {
         streamToTriples.endRecord();
 
         final String encodedRecord = "{literal:value}";
-        Mockito.verify(receiver)
-                .process(new Triple("altId", "record", encodedRecord, ObjectType.ENTITY));
+        Mockito.verify(receiver).process(
+                new Triple("altId", "record", encodedRecord, ObjectType.ENTITY));
     }
+
 }

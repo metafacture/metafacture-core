@@ -30,22 +30,28 @@ import org.mockito.MockitoAnnotations;
  *
  * @author Markus Michael Geipel
  * @author Christoph Böhme (refactored to Mockito)
+ *
  */
 public final class StreamTeeTest {
 
-    @Mock private StreamReceiver receiver1;
+    @Mock
+    private StreamReceiver receiver1;
 
-    @Mock private StreamReceiver receiver2;
+    @Mock
+    private StreamReceiver receiver2;
 
     private StreamTee streamTee;
 
-    public StreamTeeTest() {}
+    public StreamTeeTest() {
+    }
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         streamTee = new StreamTee();
-        streamTee.addReceiver(receiver1).addReceiver(receiver2);
+        streamTee
+                .addReceiver(receiver1)
+                .addReceiver(receiver2);
     }
 
     @Test
@@ -74,4 +80,5 @@ public final class StreamTeeTest {
         ordered.verify(receiver1).closeStream();
         ordered.verify(receiver2).closeStream();
     }
+
 }

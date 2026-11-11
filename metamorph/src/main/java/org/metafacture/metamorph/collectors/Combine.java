@@ -36,8 +36,11 @@ public final class Combine extends AbstractFlushingCollect {
     private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
     private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
 
-    /** Creates an instance of {@link Combine}. */
-    public Combine() {}
+    /**
+     * Creates an instance of {@link Combine}.
+     */
+    public Combine() {
+    }
 
     @Override
     protected void emit() {
@@ -68,4 +71,5 @@ public final class Combine extends AbstractFlushingCollect {
         sourcesLeft.addAll(sources);
         variables.clear();
     }
+
 }

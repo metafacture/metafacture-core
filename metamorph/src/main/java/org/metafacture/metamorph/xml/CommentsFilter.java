@@ -23,6 +23,7 @@ import org.xml.sax.XMLReader;
  * Filters out {@code comment} SAX events.
  *
  * @author Christoph Böhme
+ *
  */
 final class CommentsFilter extends LexicalHandlerXmlFilter {
 
@@ -34,4 +35,5 @@ final class CommentsFilter extends LexicalHandlerXmlFilter {
     public void comment(final char[] ch, final int start, final int length) throws SAXException {
         // Do not forward comment events
     }
+
 }

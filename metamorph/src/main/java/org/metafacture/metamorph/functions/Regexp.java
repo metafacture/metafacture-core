@@ -36,16 +36,14 @@ public final class Regexp extends AbstractFunction {
     private String format;
     private final Map<String, String> tempVars = new HashMap<String, String>();
 
-    /** Creates an instance of {@link Regexp}. */
-    public Regexp() {}
+    /**
+     * Creates an instance of {@link Regexp}.
+     */
+    public Regexp() {
+    }
 
     @Override
-    public void receive(
-            final String name,
-            final String value,
-            final NamedValueSource source,
-            final int recordCount,
-            final int entityCount) {
+    public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
         if (null == value) {
             return;
         }
@@ -54,20 +52,18 @@ public final class Regexp extends AbstractFunction {
             while (matcher.find()) {
                 final String group = matcher.group();
                 if (!group.isEmpty()) {
-                    getNamedValueReceiver().receive(name, group, this, recordCount, entityCount);
+                    getNamedValueReceiver().receive(name, group, this,
+                            recordCount, entityCount);
                 }
             }
-        } else {
+        }
+        else {
             while (matcher.find()) {
                 populateVars();
                 if (!tempVars.isEmpty()) {
-                    getNamedValueReceiver()
-                            .receive(
-                                    name,
-                                    StringUtil.format(format, tempVars),
-                                    this,
-                                    recordCount,
-                                    entityCount);
+                    getNamedValueReceiver().receive(name,
+                            StringUtil.format(format, tempVars), this,
+                            recordCount, entityCount);
                 }
             }
         }
@@ -100,4 +96,5 @@ public final class Regexp extends AbstractFunction {
     public void setFormat(final String format) {
         this.format = format;
     }
+
 }

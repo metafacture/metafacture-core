@@ -30,13 +30,11 @@ import org.metafacture.triples.TripleSort;
 import java.io.IOException;
 
 /**
- * Superclass for Metafix-based analyzer modules based on triples (see {@link
- * org.metafacture.framework.objects.Triple}).
+ * Superclass for Metafix-based analyzer modules based on triples (see {@link org.metafacture.framework.objects.Triple}).
  *
  * @author Fabian Steeg
  */
-/* package-private */ class MetafixStreamAnalyzer
-        extends DefaultStreamPipe<ObjectReceiver<String>> {
+/* package-private */ class MetafixStreamAnalyzer extends DefaultStreamPipe<ObjectReceiver<String>> {
 
     private static final String DEFAULT_COUNTED_TEMPLATE = "${o}\t|\t${s}";
     private static final String DEFAULT_UNCOUNTED_TEMPLATE = "${s}";
@@ -50,7 +48,8 @@ import java.io.IOException;
         try {
             this.fix = new Metafix(fix);
             this.fix.setRepeatedFieldsToEntities(true);
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
         this.countBy = countBy;
@@ -58,16 +57,14 @@ import java.io.IOException;
 
     @Override
     protected void onSetReceiver() {
-        template =
-                template != null
-                        ? template
-                        : count ? DEFAULT_COUNTED_TEMPLATE : DEFAULT_UNCOUNTED_TEMPLATE;
-        fix.setReceiver(new StreamFlattener())
-                .setReceiver(new StreamToTriples())
-                .setReceiver(tripleCount())
-                .setReceiver(tripleSort())
-                .setReceiver(new ObjectTemplate<>(template))
-                .setReceiver(getReceiver());
+        template = template != null ? template : count ? DEFAULT_COUNTED_TEMPLATE : DEFAULT_UNCOUNTED_TEMPLATE;
+        fix
+            .setReceiver(new StreamFlattener())
+            .setReceiver(new StreamToTriples())
+            .setReceiver(tripleCount())
+            .setReceiver(tripleSort())
+            .setReceiver(new ObjectTemplate<>(template))
+            .setReceiver(getReceiver());
     }
 
     private TripleCount tripleCount() {
@@ -138,4 +135,5 @@ import java.io.IOException;
     /* package-private */ Metafix getFix() {
         return this.fix;
     }
+
 }

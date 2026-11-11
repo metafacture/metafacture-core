@@ -25,21 +25,21 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Executes the functions if/unless the field contains the value. If it is an array or a hash, all
- * field values must contain the string.
+ * Executes the functions if/unless the field contains the value. If it is an
+ * array or a hash, all field values must contain the string.
  */
 @FixCommand("all_contain")
 public class AllContain implements FixPredicate {
 
-    /** Creates an instance of {@link AllContain}. */
-    public AllContain() {}
+    /**
+     * Creates an instance of {@link AllContain}.
+     */
+    public AllContain() {
+    }
 
     @Override
-    public boolean test(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         return testConditional(record, params, ALL, CONTAINS);
     }
+
 }

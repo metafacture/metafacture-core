@@ -25,7 +25,8 @@ import java.util.Locale;
 import java.util.Set;
 
 /**
- * Changes the the received value from upper to lower case or vice versa.
+ * Changes the the received value from upper to lower case
+ * or vice versa.
  *
  * @author Markus Michael Geipel
  */
@@ -42,8 +43,11 @@ public final class Case extends AbstractSimpleStatelessFunction {
         LANGUAGES = Collections.unmodifiableSet(set);
     }
 
-    /** Creates an instance of {@link Case}. */
-    public Case() {}
+    /**
+     * Creates an instance of {@link Case}.
+     */
+    public Case() {
+    }
 
     @Override
     public String process(final String value) {
@@ -73,4 +77,5 @@ public final class Case extends AbstractSimpleStatelessFunction {
         }
         this.locale = Locale.forLanguageTag(language);
     }
+
 }

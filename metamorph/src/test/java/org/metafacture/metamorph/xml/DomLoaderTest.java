@@ -35,14 +35,17 @@ import java.net.URL;
  * Tests for class {@link DomLoader}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class DomLoaderTest {
 
-    private static final String BASE_PATH = "org/metafacture/metamorph/xml/dom-loader/";
+    private static final String BASE_PATH =
+            "org/metafacture/metamorph/xml/dom-loader/";
 
     private static final String SCHEMA_FILE = BASE_PATH + "test-schema.xsd";
 
-    public DomLoaderTest() {}
+    public DomLoaderTest() {
+    }
 
     @Test
     public void shouldCreateDOM() throws FileNotFoundException, MalformedURLException {
@@ -93,7 +96,8 @@ public final class DomLoaderTest {
     }
 
     @Test
-    public void domShouldNotContainComments() throws FileNotFoundException, MalformedURLException {
+    public void domShouldNotContainComments()
+            throws FileNotFoundException, MalformedURLException {
 
         final String inputFile = "dom-should-not-contain-comments.xml";
 
@@ -124,7 +128,8 @@ public final class DomLoaderTest {
     }
 
     @Test
-    public void shouldBeXIncludeAware() throws FileNotFoundException, MalformedURLException {
+    public void shouldBeXIncludeAware()
+            throws FileNotFoundException, MalformedURLException {
 
         final String inputFile = "should-be-xinclude-aware1.xml";
 
@@ -202,4 +207,5 @@ public final class DomLoaderTest {
 
         return new InputSource(resourceUrl.toExternalForm());
     }
+
 }

@@ -20,6 +20,7 @@ package org.metafacture.framework;
  * Thrown if data processing fails due to a format error in the data.
  *
  * @author Markus Michael Geipel
+ *
  */
 public class FormatException extends MetafactureException {
 
@@ -38,9 +39,10 @@ public class FormatException extends MetafactureException {
      * Creates an instance of {@link FormatException} by given message and cause.
      *
      * @param message the message
-     * @param cause the {@link Throwable}
+     * @param cause   the {@link Throwable}
      */
     public FormatException(final String message, final Throwable cause) {
         super(message, cause);
     }
+
 }

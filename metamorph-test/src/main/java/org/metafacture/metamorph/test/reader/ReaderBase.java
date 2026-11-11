@@ -21,10 +21,12 @@ import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.StreamReceiver;
 
 /**
- * Base class for {@link Reader}s that are constructed from a record reader and a record decoder.
+ * Base class for {@link Reader}s that are constructed from a record reader and
+ * a record decoder.
  *
  * @author Markus Michael Geipel
  * @author Christoph Böhme
+ *
  */
 class ReaderBase implements Reader {
 
@@ -59,4 +61,5 @@ class ReaderBase implements Reader {
     public final void closeStream() {
         recordReader.closeStream();
     }
+
 }

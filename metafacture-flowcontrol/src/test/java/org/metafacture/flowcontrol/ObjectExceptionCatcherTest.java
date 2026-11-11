@@ -29,21 +29,23 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link ObjectExceptionCatcher}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class ObjectExceptionCatcherTest {
 
-    @Mock private ObjectReceiver<String> exceptionThrowingModule;
+    @Mock
+    private ObjectReceiver<String> exceptionThrowingModule;
 
     private ObjectExceptionCatcher<String> exceptionCatcher;
 
-    public ObjectExceptionCatcherTest() {}
+    public ObjectExceptionCatcherTest() {
+    }
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         Mockito.doThrow(new TestException("Exception Message"))
-                .when(exceptionThrowingModule)
-                .process(ArgumentMatchers.anyString());
+                .when(exceptionThrowingModule).process(ArgumentMatchers.anyString());
         exceptionCatcher = new ObjectExceptionCatcher<>();
         exceptionCatcher.setReceiver(exceptionThrowingModule);
         exceptionCatcher.setLogExceptionMessage(false);
@@ -57,8 +59,8 @@ public final class ObjectExceptionCatcherTest {
     }
 
     /**
-     * A special exception to make sure the test is not passed accidentally on a different
-     * exception.
+     * A special exception to make sure the test is not passed accidentally on a
+     * different exception.
      */
     private static final class TestException extends RuntimeException {
 
@@ -67,5 +69,7 @@ public final class ObjectExceptionCatcherTest {
         TestException(final String msg) {
             super(msg);
         }
+
     }
+
 }

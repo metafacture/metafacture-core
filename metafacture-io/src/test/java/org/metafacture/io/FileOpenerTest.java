@@ -44,25 +44,28 @@ import java.nio.file.StandardCopyOption;
  * Tests for class {@link FileOpener}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class FileOpenerTest {
 
     private static final String DATA = "Überfacture";
 
-    @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
+    @Rule
+    public TemporaryFolder tempFolder = new TemporaryFolder();
 
-    @Mock private ObjectReceiver<Reader> receiver;
+    @Mock
+    private ObjectReceiver<Reader> receiver;
 
-    public FileOpenerTest() {}
+    public FileOpenerTest() {
+    }
 
     @Test
     public void testUtf8IsDefaultEncoding() throws IOException {
-        Assume.assumeFalse(
-                "Default encoding is UTF-8: It is not possible to test whether FileOpener sets "
-                        + "the encoding to UTF-8 correctly.",
-                StandardCharsets.UTF_8.equals(Charset.defaultCharset()));
+        Assume.assumeFalse("Default encoding is UTF-8: It is not possible to test whether FileOpener sets " +
+                "the encoding to UTF-8 correctly.", StandardCharsets.UTF_8.equals(Charset.defaultCharset()));
 
         TestHelpers.assertFile(receiver, DATA, createTestFile(), null);
     }
@@ -77,13 +80,11 @@ public final class FileOpenerTest {
         testDecompressConcatenated(true);
     }
 
-    private void testDecompressConcatenated(final boolean decompressConcatenated)
-            throws IOException {
-        final int maxBytes = (int) Math.pow(2, 16); // BGZF max compressed block size
+    private void testDecompressConcatenated(final boolean decompressConcatenated) throws IOException {
+        final int maxBytes = (int) Math.pow(2, 16);  // BGZF max compressed block size
         final StringBuilder sb = new StringBuilder();
 
-        try (InputStreamReader r =
-                new InputStreamReader(getClass().getResourceAsStream("compressed.txt"))) {
+        try (InputStreamReader r = new InputStreamReader(getClass().getResourceAsStream("compressed.txt"))) {
             final String data = ResourceUtil.readAll(r);
             for (int i = 0; i < 1525; ++i) {
                 sb.append(data).append("\n");
@@ -93,11 +94,8 @@ public final class FileOpenerTest {
         final String data = sb.toString();
         Assert.assertTrue(data.length() + " > " + maxBytes, data.length() > maxBytes);
 
-        TestHelpers.assertFile(
-                receiver,
-                decompressConcatenated ? data : data.substring(0, maxBytes),
-                copyResourceToTempFile("compressed-large.txt.bgzf"),
-                o -> o.setDecompressConcatenated(decompressConcatenated));
+        TestHelpers.assertFile(receiver, decompressConcatenated ? data : data.substring(0, maxBytes),
+                copyResourceToTempFile("compressed-large.txt.bgzf"), o -> o.setDecompressConcatenated(decompressConcatenated));
     }
 
     private File createTestFile() throws IOException {
@@ -115,4 +113,5 @@ public final class FileOpenerTest {
         }
         return file;
     }
+
 }

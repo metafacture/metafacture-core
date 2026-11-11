@@ -24,19 +24,21 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
-/** Deletes whitespace at the beginning and the end of a field value. */
+/**
+ * Deletes whitespace at the beginning and the end of a field value.
+ */
 @FixCommand("trim")
 public class Trim implements FixFunction {
 
-    /** Creates an instance of {@link Trim}. */
-    public Trim() {}
+    /**
+     * Creates an instance of {@link Trim}.
+     */
+    public Trim() {
+    }
 
     @Override
-    public void apply(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         record.transform(params.get(0), String::trim);
     }
+
 }

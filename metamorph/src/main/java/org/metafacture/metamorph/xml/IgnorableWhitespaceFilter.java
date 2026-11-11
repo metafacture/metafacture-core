@@ -24,6 +24,7 @@ import org.xml.sax.helpers.XMLFilterImpl;
  * Filters out SAX events marking ignorable whitespace.
  *
  * @author Christoph Böhme
+ *
  */
 final class IgnorableWhitespaceFilter extends XMLFilterImpl {
 
@@ -36,4 +37,5 @@ final class IgnorableWhitespaceFilter extends XMLFilterImpl {
             throws SAXException {
         // Do not forward ignorable whitespace events
     }
+
 }

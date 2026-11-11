@@ -36,16 +36,21 @@ import java.util.function.Supplier;
  *
  * @author Markus Michael Geipel
  * @author Christoph Böhme (refactored to Mockito)
+ *
  */
 public final class SplitterTest {
 
-    @Rule public MockitoRule mockito = MockitoJUnit.rule();
+    @Rule
+    public MockitoRule mockito = MockitoJUnit.rule();
 
-    @Mock private StreamReceiver receiver1;
+    @Mock
+    private StreamReceiver receiver1;
 
-    @Mock private StreamReceiver receiver2;
+    @Mock
+    private StreamReceiver receiver2;
 
-    public SplitterTest() {}
+    public SplitterTest() {
+    }
 
     @Test
     public void shouldPassRecordToReceiverWithMatchingKey() {
@@ -69,7 +74,8 @@ public final class SplitterTest {
                     o2.get().startRecord("2");
                     o2.get().literal("forward-to", "receiver-2");
                     o2.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
@@ -80,7 +86,9 @@ public final class SplitterTest {
                     i.literal("forward-to", "none");
                     i.endRecord();
                 },
-                (o1, o2) -> {});
+                (o1, o2) -> {
+                }
+        );
     }
 
     @Test
@@ -92,7 +100,8 @@ public final class SplitterTest {
                 (o1, o2) -> {
                     o1.get().resetStream();
                     o2.get().resetStream();
-                });
+                }
+        );
     }
 
     @Test
@@ -104,12 +113,11 @@ public final class SplitterTest {
                 (o1, o2) -> {
                     o1.get().closeStream();
                     o2.get().closeStream();
-                });
+                }
+        );
     }
 
-    private void assertSplitter(
-            final Consumer<Splitter> in,
-            final BiConsumer<Supplier<StreamReceiver>, Supplier<StreamReceiver>> out) {
+    private void assertSplitter(final Consumer<Splitter> in, final BiConsumer<Supplier<StreamReceiver>, Supplier<StreamReceiver>> out) {
         final InOrder ordered = Mockito.inOrder(receiver1, receiver2);
 
         final Splitter splitter = new Splitter("org/metafacture/metamorph/splitter-test.xml");
@@ -124,10 +132,12 @@ public final class SplitterTest {
             ordered.verifyNoMoreInteractions();
             Mockito.verifyNoMoreInteractions(receiver1);
             Mockito.verifyNoMoreInteractions(receiver2);
-        } catch (final MockitoAssertionError e) {
+        }
+        catch (final MockitoAssertionError e) {
             System.out.println(Mockito.mockingDetails(receiver1).printInvocations());
             System.out.println(Mockito.mockingDetails(receiver2).printInvocations());
             throw e;
         }
     }
+
 }

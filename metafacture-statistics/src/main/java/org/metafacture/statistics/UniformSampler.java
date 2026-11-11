@@ -31,14 +31,17 @@ import java.util.Random;
  * Draws a uniform sample of records from the input stream.
  *
  * @param <T> object type
+ *
  * @author Christoph Böhme
  * @author Markus Geipel
+ *
  */
 @Description("Draws a uniform sample of records from the input stream.")
 @In(Object.class)
 @Out(Object.class)
 @FluxCommand("draw-uniform-sample")
-public final class UniformSampler<T> extends DefaultObjectPipe<T, ObjectReceiver<T>> {
+public final class UniformSampler<T> extends
+        DefaultObjectPipe<T, ObjectReceiver<T>> {
 
     private final int sampleSize;
     private final List<T> sample;
@@ -90,7 +93,8 @@ public final class UniformSampler<T> extends DefaultObjectPipe<T, ObjectReceiver
         count += 1;
         if (sample.size() < sampleSize) {
             sample.add(obj);
-        } else {
+        }
+        else {
             final double p = sampleSize / (double) count;
             if (random.nextDouble() < p) {
                 sample.set(random.nextInt(sampleSize), obj);
@@ -112,4 +116,5 @@ public final class UniformSampler<T> extends DefaultObjectPipe<T, ObjectReceiver
         sample.clear();
         count = 0;
     }
+
 }

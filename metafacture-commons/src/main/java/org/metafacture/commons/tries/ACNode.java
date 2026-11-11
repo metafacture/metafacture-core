@@ -79,4 +79,5 @@ final class ACNode<P> {
     Set<Entry<Character, ACNode<P>>> getLinks() {
         return links.entrySet();
     }
+
 }

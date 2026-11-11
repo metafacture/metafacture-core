@@ -26,6 +26,7 @@ import org.metafacture.metamorph.api.SourceLocation;
  *
  * @author Markus Geipel
  * @author Christoph Böhme
+ *
  */
 public final class Flush implements NamedValueReceiver {
 
@@ -43,12 +44,7 @@ public final class Flush implements NamedValueReceiver {
     }
 
     @Override
-    public void receive(
-            final String name,
-            final String value,
-            final NamedValueSource source,
-            final int recordCount,
-            final int entityCount) {
+    public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
         listener.flush(recordCount, entityCount);
     }
 
@@ -66,4 +62,5 @@ public final class Flush implements NamedValueReceiver {
     public SourceLocation getSourceLocation() {
         return sourceLocation;
     }
+
 }

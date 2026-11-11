@@ -25,23 +25,25 @@ import org.metafacture.metamorph.functions.URLEncode;
 import java.util.List;
 import java.util.Map;
 
-/** Encodes a field value as URI. Aka percent-encoding. */
+/**
+ * Encodes a field value as URI. Aka percent-encoding.
+ */
 @FixCommand("uri_encode")
 public class UriEncode implements FixFunction {
 
-    /** Creates an instance of {@link UriEncode}. */
-    public UriEncode() {}
+    /**
+     * Creates an instance of {@link UriEncode}.
+     */
+    public UriEncode() {
+    }
 
     @Override
-    public void apply(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         final URLEncode urlEncoder = new URLEncode();
         withOption(options, "safe_chars", urlEncoder::setSafeChars);
         withOption(options, "plus_for_space", urlEncoder::setPlusForSpace, this::getBoolean);
 
         record.transform(params.get(0), urlEncoder::process);
     }
+
 }

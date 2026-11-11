@@ -26,10 +26,9 @@ import javax.xml.xpath.XPathException;
  * Opens an OAI-PMH stream and passes a reader to the receiver.
  *
  * @author Pascal Christoph (dr0i)
+ *
  */
-@Description(
-        "Opens an OAI-PMH stream and passes a reader to the receiver. Mandatory arguments are:"
-                + " BASE_URL, DATE_FROM, DATE_UNTIL, METADATA_PREFIX, SET_SPEC .")
+@Description("Opens an OAI-PMH stream and passes a reader to the receiver. Mandatory arguments are: BASE_URL, DATE_FROM, DATE_UNTIL, METADATA_PREFIX, SET_SPEC .")
 @In(String.class)
 @Out(java.io.Reader.class)
 @FluxCommand("open-oaipmh")
@@ -47,8 +46,11 @@ public final class OaiPmhOpener extends DefaultObjectPipe<String, ObjectReceiver
 
     private String metadataPrefix;
 
-    /** Default constructor */
-    public OaiPmhOpener() {}
+    /**
+     * Default constructor
+     */
+    public OaiPmhOpener() {
+    }
 
     /**
      * Sets the encoding to use. The default setting is UTF-8.
@@ -60,7 +62,8 @@ public final class OaiPmhOpener extends DefaultObjectPipe<String, ObjectReceiver
     }
 
     /**
-     * Sets the beginning of the retrieving of updated data. The form is YYYY-MM-DD .
+     * Sets the beginning of the retrieving of updated data. The form is
+     * YYYY-MM-DD .
      *
      * @param dateFrom The form is YYYY-MM-DD .
      */
@@ -99,32 +102,30 @@ public final class OaiPmhOpener extends DefaultObjectPipe<String, ObjectReceiver
     public void process(final String baseUrl) {
 
         try {
-            RawWrite.run(
-                    baseUrl,
-                    this.dateFrom,
-                    this.dateUntil,
-                    this.metadataPrefix,
-                    this.setSpec,
-                    outputStream);
-        } catch (final IOException e) {
+            RawWrite.run(baseUrl, this.dateFrom, this.dateUntil, this.metadataPrefix, this.setSpec, outputStream);
+        }
+        catch (final IOException e) {
             e.printStackTrace();
-        } catch (final ParserConfigurationException e) {
+        }
+        catch (final ParserConfigurationException e) {
             e.printStackTrace();
-        } catch (final SAXException e) {
+        }
+        catch (final SAXException e) {
             e.printStackTrace();
-        } catch (final XPathException e) {
+        }
+        catch (final XPathException e) {
             e.printStackTrace();
-        } catch (final NoSuchFieldException e) {
+        }
+        catch (final NoSuchFieldException e) {
             e.printStackTrace();
         }
         try {
-            getReceiver()
-                    .process(
-                            new InputStreamReader(
-                                    new ByteArrayInputStream(outputStream.toByteArray()),
-                                    encoding));
-        } catch (final IOException e) {
+            getReceiver().process(
+                    new InputStreamReader(new ByteArrayInputStream(outputStream.toByteArray()), encoding));
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
+
 }

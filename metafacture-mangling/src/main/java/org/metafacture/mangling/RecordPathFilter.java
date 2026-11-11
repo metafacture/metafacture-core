@@ -23,7 +23,9 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
-/** Splits a stream into records based on entity path. */
+/**
+ * Splits a stream into records based on entity path.
+ */
 @Description("Splits a stream into records based on entity path")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
@@ -43,8 +45,11 @@ public final class RecordPathFilter extends DefaultStreamPipe<StreamReceiver> {
     private boolean recordStarted;
     private int recordCount;
 
-    /** Creates an instance of {@link RecordPathFilter}. */
-    public RecordPathFilter() {}
+    /**
+     * Creates an instance of {@link RecordPathFilter}.
+     */
+    public RecordPathFilter() {
+    }
 
     /**
      * Constructs a RecordPathFilter with a given path.
@@ -133,7 +138,8 @@ public final class RecordPathFilter extends DefaultStreamPipe<StreamReceiver> {
         if (inMatch()) {
             startRecordIfNeeded();
             getReceiver().startEntity(name);
-        } else if (pathMatching()) {
+        }
+        else if (pathMatching()) {
             inMatch = true;
         }
     }
@@ -143,7 +149,8 @@ public final class RecordPathFilter extends DefaultStreamPipe<StreamReceiver> {
         if (pathMatching()) {
             endRecordIfNeeded();
             inMatch = false;
-        } else if (inMatch()) {
+        }
+        else if (inMatch()) {
             getReceiver().endEntity();
         }
 
@@ -176,8 +183,7 @@ public final class RecordPathFilter extends DefaultStreamPipe<StreamReceiver> {
 
     private void startRecordIfNeeded() {
         if (!recordStarted) {
-            getReceiver()
-                    .startRecord(String.format(recordIdFormat, recordIdentifier, ++recordCount));
+            getReceiver().startRecord(String.format(recordIdFormat, recordIdentifier, ++recordCount));
             recordStarted = true;
         }
     }
@@ -196,4 +202,5 @@ public final class RecordPathFilter extends DefaultStreamPipe<StreamReceiver> {
     private boolean inMatch() {
         return inMatch || path.equals(ROOT_PATH);
     }
+
 }

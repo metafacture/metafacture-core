@@ -31,6 +31,7 @@ import java.io.ObjectOutputStream;
 
 /**
  * @author Christoph Böhme
+ *
  */
 @Description("Writes triples into a file.")
 @In(Triple.class)
@@ -58,7 +59,8 @@ public final class TripleWriter extends DefaultObjectReceiver<Triple> {
     public void process(final Triple obj) {
         try {
             obj.write(outputStream);
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -69,10 +71,9 @@ public final class TripleWriter extends DefaultObjectReceiver<Triple> {
             if (outputStream != null) {
                 outputStream.close();
             }
-            outputStream =
-                    new ObjectOutputStream(
-                            new BufferedOutputStream(new FileOutputStream(filename), BUFFERSIZE));
-        } catch (final IOException e) {
+            outputStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename), BUFFERSIZE));
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -83,8 +84,10 @@ public final class TripleWriter extends DefaultObjectReceiver<Triple> {
             if (outputStream != null) {
                 outputStream.close();
             }
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
+
 }

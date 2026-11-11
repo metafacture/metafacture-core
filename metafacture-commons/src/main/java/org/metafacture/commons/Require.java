@@ -20,6 +20,7 @@ package org.metafacture.commons;
  * Defines static methods for method argument validation.
  *
  * @author Christoph Böhme
+ *
  */
 public final class Require {
 
@@ -28,7 +29,8 @@ public final class Require {
     }
 
     /**
-     * Throws an {@link IllegalArgumentException} if {@code object} is {@literal null}.
+     * Throws an {@link IllegalArgumentException} if {@code object} is
+     * {@literal null}.
      *
      * @param <T> type of the object passed as parameter
      * @param object reference to be checked
@@ -39,7 +41,8 @@ public final class Require {
     }
 
     /**
-     * Throws an {@link IllegalArgumentException} if {@code object} is {@literal null}.
+     * Throws an {@link IllegalArgumentException} if {@code object} is
+     * {@literal null}.
      *
      * @param <T> type of the object passed as parameter
      * @param object reference to be checked
@@ -99,8 +102,8 @@ public final class Require {
     }
 
     /**
-     * Throws an {@link IndexOutOfBoundsException} if {@code index} is negative or equal to or
-     * greater than {@code arrayLength}.
+     * Throws an {@link IndexOutOfBoundsException} if {@code index} is negative
+     * or equal to or greater than {@code arrayLength}.
      *
      * @param index the index value to be checked
      * @param arrayLength the upper bound against which {@code index} is checked
@@ -111,16 +114,16 @@ public final class Require {
     }
 
     /**
-     * Throws an {@link IndexOutOfBoundsException} if {@code index} is negative or equal to or
-     * greater than {@code arrayLength}.
+     * Throws an {@link IndexOutOfBoundsException} if {@code index} is negative
+     * or equal to or greater than {@code arrayLength}.
      *
      * @param index the index value to be checked
      * @param arrayLength the upper bound against which {@code index} is checked
      * @param message exception message
      * @return the {@code index}
      */
-    public static int validArrayIndex(
-            final int index, final int arrayLength, final String message) {
+    public static int validArrayIndex(final int index, final int arrayLength,
+            final String message) {
         if (index < 0 || index >= arrayLength) {
             throw new IndexOutOfBoundsException(message);
         }
@@ -128,34 +131,35 @@ public final class Require {
     }
 
     /**
-     * Throws an {@link IndexOutOfBoundsException} if {@code sliceFrom} or {@code sliceLength} is
-     * negative or the sum of both is greater than {@code arrayLength}. Note that this means that a
-     * slice of length zero starting at array length is a valid slice.
+     * Throws an {@link IndexOutOfBoundsException} if {@code sliceFrom} or
+     * {@code sliceLength} is negative or the sum of both is greater than
+     * {@code arrayLength}. Note that this means that a slice of length zero
+     * starting at array length is a valid slice.
      *
      * @param sliceFrom the start index of the slice to be checked
      * @param sliceLength the length of the slice to be checked
      * @param arrayLength the upper bound against which the slice is checked
      */
-    public static void validArraySlice(
-            final int sliceFrom, final int sliceLength, final int arrayLength) {
-        validArraySlice(sliceFrom, sliceLength, arrayLength, "array slice out of range");
+    public static void validArraySlice(final int sliceFrom,
+            final int sliceLength, final int arrayLength) {
+        validArraySlice(sliceFrom, sliceLength, arrayLength,
+                "array slice out of range");
     }
 
     /**
-     * Throws an {@link IndexOutOfBoundsException} if {@code sliceFrom} or {@code sliceLength} is
-     * negative or the sum of both is greater than {@code arrayLength}. Note that this means that a
-     * slice of length zero starting at array length is a valid slice.
+     * Throws an {@link IndexOutOfBoundsException} if {@code sliceFrom} or
+     * {@code sliceLength} is negative or the sum of both is greater than
+     * {@code arrayLength}. Note that this means that a slice of length zero
+     * starting at array length is a valid slice.
+     *
      *
      * @param sliceFrom the start index of the slice to be checked
      * @param sliceLength the length of the slice to be checked
      * @param arrayLength the upper bound against which the slice is checked
      * @param message exception message
      */
-    public static void validArraySlice(
-            final int sliceFrom,
-            final int sliceLength,
-            final int arrayLength,
-            final String message) {
+    public static void validArraySlice(final int sliceFrom,
+            final int sliceLength, final int arrayLength, final String message) {
         if (sliceFrom < 0 || sliceLength < 0) {
             throw new IndexOutOfBoundsException(message);
         }
@@ -163,4 +167,5 @@ public final class Require {
             throw new IndexOutOfBoundsException(message);
         }
     }
+
 }

@@ -29,11 +29,14 @@ import java.util.function.Supplier;
 
 public final class RecordPathFilterTest {
 
-    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-    public RecordPathFilterTest() {}
+    public RecordPathFilterTest() {
+    }
 
     @Test
     public void shouldFilterRootPath() {
@@ -61,7 +64,8 @@ public final class RecordPathFilterTest {
                     o.get().literal("lit", "record 2");
                     o.get().endEntity();
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
@@ -91,7 +95,8 @@ public final class RecordPathFilterTest {
                     o.get().startRecord("2[1]");
                     o.get().literal("lit", "record 2");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
@@ -125,7 +130,8 @@ public final class RecordPathFilterTest {
                     o.get().startRecord("2[1]");
                     o.get().literal("lit", "record 2");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
@@ -165,7 +171,8 @@ public final class RecordPathFilterTest {
                     o.get().startRecord("2[1]");
                     o.get().literal("lit", "record 2");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
@@ -209,7 +216,8 @@ public final class RecordPathFilterTest {
                     o.get().startRecord("2[1]");
                     o.get().literal("lit", "record 2");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
@@ -267,7 +275,8 @@ public final class RecordPathFilterTest {
                     o.get().startRecord("2[2]");
                     o.get().literal("lit", "record 2.2");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
@@ -291,7 +300,8 @@ public final class RecordPathFilterTest {
                     o.get().startRecord("1[1]");
                     o.get().literal("lit", "record 1");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
@@ -318,7 +328,8 @@ public final class RecordPathFilterTest {
                     o.get().startRecord("1[2]");
                     o.get().literal("lit", "record 1.2");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
@@ -343,7 +354,8 @@ public final class RecordPathFilterTest {
                     o.get().startRecord("1[1]");
                     o.get().literal("lit", "record 1.1");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
@@ -370,7 +382,8 @@ public final class RecordPathFilterTest {
                     o.get().startRecord("1[1]");
                     o.get().literal("lit", "record 1.1");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
@@ -401,7 +414,8 @@ public final class RecordPathFilterTest {
                     o.get().literal("lit", "record 2");
                     o.get().endEntity();
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
@@ -423,14 +437,15 @@ public final class RecordPathFilterTest {
                     o.get().startRecord("1[1]");
                     o.get().literal("lit", "record 1");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
-    private void assertFilter(
-            final Consumer<RecordPathFilter> in, final Consumer<Supplier<StreamReceiver>> out) {
+    private void assertFilter(final Consumer<RecordPathFilter> in, final Consumer<Supplier<StreamReceiver>> out) {
         final RecordPathFilter recordPathFilter = new RecordPathFilter();
         recordPathFilter.setReceiver(receiver);
 
         TestHelpers.assertProcess(receiver, () -> in.accept(recordPathFilter), out);
     }
+
 }

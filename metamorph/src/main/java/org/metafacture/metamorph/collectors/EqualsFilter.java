@@ -26,8 +26,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Corresponds to the <code>&lt;equalsFilter-literal&gt;</code> tag. Emits data if values in
- * variables are all equal.
+ * Corresponds to the <code>&lt;equalsFilter-literal&gt;</code> tag. Emits data
+ * if values in variables are all equal.
  *
  * @author Thomas Haidlas
  */
@@ -38,8 +38,11 @@ public final class EqualsFilter extends AbstractFlushingCollect {
     private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
     private boolean isEqual = true;
 
-    /** Creates an instance of {@link EqualsFilter}. */
-    public EqualsFilter() {}
+    /**
+     * Creates an instance of {@link EqualsFilter}.
+     */
+    public EqualsFilter() {
+    }
 
     @Override
     protected void emit() {
@@ -76,4 +79,5 @@ public final class EqualsFilter extends AbstractFlushingCollect {
         variables.clear();
         isEqual = true;
     }
+
 }

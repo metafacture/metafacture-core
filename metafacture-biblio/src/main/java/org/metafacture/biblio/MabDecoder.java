@@ -28,11 +28,13 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 import java.util.regex.Pattern;
 
 /**
- * Parses a raw Mab2 stream (utf-8 encoding assumed). Events are handled by a {@link
- * StreamReceiver}.
+ * Parses a raw Mab2 stream (utf-8 encoding assumed). Events are handled by a
+ * {@link StreamReceiver}.
  *
  * @see StreamReceiver
+ *
  * @author Markus Michael Geipel, Christoph Böhme
+ *
  */
 @Description("Parses a raw Mab2 stream (UTF-8 encoding expected).")
 @In(String.class)
@@ -41,8 +43,10 @@ import java.util.regex.Pattern;
 public final class MabDecoder extends DefaultObjectPipe<String, StreamReceiver> {
 
     private static final String FIELD_END = "\u001e";
-    private static final Pattern FIELD_PATTERN = Pattern.compile(FIELD_END, Pattern.LITERAL);
-    private static final Pattern SUBFIELD_PATTERN = Pattern.compile("\u001f", Pattern.LITERAL);
+    private static final Pattern FIELD_PATTERN =
+            Pattern.compile(FIELD_END, Pattern.LITERAL);
+    private static final Pattern SUBFIELD_PATTERN =
+            Pattern.compile("\u001f", Pattern.LITERAL);
     private static final String RECORD_END = "\u001d";
 
     private static final int FIELD_NAME_SIZE = 4;
@@ -53,8 +57,11 @@ public final class MabDecoder extends DefaultObjectPipe<String, StreamReceiver> 
     private static final String ID_TAG = "001 ";
     private static final int TAG_LENGTH = 4;
 
-    /** Creates an instance of {@link MabDecoder}. */
-    public MabDecoder() {}
+    /**
+     * Creates an instance of {@link MabDecoder}.
+     */
+    public MabDecoder() {
+    }
 
     @Override
     public void process(final String record) {
@@ -78,7 +85,8 @@ public final class MabDecoder extends DefaultObjectPipe<String, StreamReceiver> 
 
                     if (subFields.length == 1) {
                         getReceiver().literal(fieldName, subFields[0]);
-                    } else {
+                    }
+                    else {
                         getReceiver().startEntity(fieldName);
 
                         for (int i = 1; i < subFields.length; ++i) {
@@ -90,7 +98,8 @@ public final class MabDecoder extends DefaultObjectPipe<String, StreamReceiver> 
                     }
                 }
             }
-        } catch (final IndexOutOfBoundsException e) {
+        }
+        catch (final IndexOutOfBoundsException e) {
             throw new FormatException("[" + record + "]", e);
         }
 
@@ -104,8 +113,10 @@ public final class MabDecoder extends DefaultObjectPipe<String, StreamReceiver> 
                 return record.substring(HEADER_SIZE + TAG_LENGTH, fieldEnd);
             }
             throw new MissingIdException(record);
-        } catch (final IndexOutOfBoundsException e) {
+        }
+        catch (final IndexOutOfBoundsException e) {
             throw new FormatException(INVALID_FORMAT + record, e);
         }
     }
+
 }

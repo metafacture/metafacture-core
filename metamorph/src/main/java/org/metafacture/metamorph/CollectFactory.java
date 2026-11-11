@@ -27,15 +27,17 @@ import java.io.IOException;
  * Creates the collectors available in Metamorph.
  *
  * @author Markus Michael Geipel
+ *
  */
 final class CollectFactory extends ObjectFactory<Collect> {
 
     CollectFactory() {
         try {
-            loadClassesFromMap(
-                    ResourceUtil.loadProperties("morph-collectors.properties"), Collect.class);
-        } catch (final IOException e) {
+            loadClassesFromMap(ResourceUtil.loadProperties("morph-collectors.properties"), Collect.class);
+        }
+        catch (final IOException e) {
             throw new MetafactureException("Failed to load collectors list", e);
         }
     }
+
 }

@@ -34,15 +34,15 @@ import java.util.Map;
 @FixCommand("normalize_utf8")
 public class NormalizeUTF8 implements FixFunction {
 
-    /** Creates an instance of {@link NormalizeUTF8}. */
-    public NormalizeUTF8() {}
+    /**
+     * Creates an instance of {@link NormalizeUTF8}.
+     */
+    public NormalizeUTF8() {
+    }
 
     @Override
-    public void apply(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         record.transform(params.get(0), s -> Normalizer.normalize(s, Form.NFC));
     }
+
 }

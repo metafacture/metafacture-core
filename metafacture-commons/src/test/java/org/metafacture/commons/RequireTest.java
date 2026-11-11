@@ -23,10 +23,12 @@ import org.junit.Test;
  * Tests for class {@link Require}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class RequireTest {
 
-    public RequireTest() {}
+    public RequireTest() {
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void notNullShouldThrowIllegalArgumentExceptionIfArgIsNull() {
@@ -65,8 +67,7 @@ public final class RequireTest {
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
-    public void
-            validArrayIndexShouldThrowIndexOutOfBoundsExceptionIfIndexIsGreaterThanArrayLength() {
+    public void validArrayIndexShouldThrowIndexOutOfBoundsExceptionIfIndexIsGreaterThanArrayLength() {
         Require.validArrayIndex(2, 2);
     }
 
@@ -86,8 +87,7 @@ public final class RequireTest {
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
-    public void
-            validArraySliceShouldThrowIndexOutOfBoundsExceptionIfIndexPlusLengthIsGreaterThanArrayLength() {
+    public void validArraySliceShouldThrowIndexOutOfBoundsExceptionIfIndexPlusLengthIsGreaterThanArrayLength() {
         Require.validArraySlice(1, 2, 2);
     }
 
@@ -95,4 +95,5 @@ public final class RequireTest {
     public void validArraySliceShouldDoNothingIfIndexAndLengthAreWithinArrayBounds() {
         Require.validArraySlice(0, 1, 2);
     }
+
 }

@@ -32,23 +32,25 @@ import org.mockito.junit.MockitoRule;
  */
 public final class SwitchNameValueTest {
 
-    @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-    public SwitchNameValueTest() {}
+    public SwitchNameValueTest() {
+    }
 
     @Test
     public void issue265_shouldWorkIfLastFunctionInCombineStatement() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <combine name='out' value='val'>"
-                        + "    <data source='in'>"
-                        + "      <switch-name-value />"
-                        + "    </data>"
-                        + "  </combine>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <combine name='out' value='val'>" +
+                "    <data source='in'>" +
+                "      <switch-name-value />" +
+                "    </data>" +
+                "  </combine>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("in", "val");
@@ -58,6 +60,8 @@ public final class SwitchNameValueTest {
                     o.get().startRecord("1");
                     o.get().literal("out", "val");
                     o.get().endRecord();
-                });
+                }
+        );
     }
+
 }

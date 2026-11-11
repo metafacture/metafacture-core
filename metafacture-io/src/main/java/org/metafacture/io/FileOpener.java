@@ -36,6 +36,7 @@ import java.io.Reader;
  * Opens a file and passes a reader for it to the receiver.
  *
  * @author Christoph Böhme
+ *
  */
 @Description("Opens a file.")
 @In(String.class)
@@ -47,8 +48,11 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     private FileCompression compression = FileCompression.AUTO;
     private boolean decompressConcatenated = FileCompression.DEFAULT_DECOMPRESS_CONCATENATED;
 
-    /** Creates an instance of {@link FileOpener}. */
-    public FileOpener() {}
+    /**
+     * Creates an instance of {@link FileOpener}.
+     */
+    public FileOpener() {
+    }
 
     /**
      * Returns the encoding used to open the resource.
@@ -133,16 +137,16 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
      */
     public Reader open(final InputStream stream) throws IOException {
         try {
-            final InputStream decompressor =
-                    compression.createDecompressor(stream, decompressConcatenated);
+            final InputStream decompressor = compression.createDecompressor(stream, decompressConcatenated);
             try {
-                return new InputStreamReader(
-                        BOMInputStream.builder().setInputStream(decompressor).get(), encoding);
-            } catch (final IOException | MetafactureException e) {
+                return new InputStreamReader(BOMInputStream.builder().setInputStream(decompressor).get(), encoding);
+            }
+            catch (final IOException | MetafactureException e) {
                 decompressor.close();
                 throw e;
             }
-        } catch (final IOException | MetafactureException e) {
+        }
+        catch (final IOException | MetafactureException e) {
             stream.close();
             throw e;
         }
@@ -152,8 +156,10 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     public void process(final String file) {
         try (Reader reader = open(file)) {
             getReceiver().process(reader);
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
+
 }

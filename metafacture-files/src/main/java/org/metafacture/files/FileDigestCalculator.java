@@ -32,23 +32,24 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Interprets the input string as a file name and computes a cryptographic hash for the file.
+ * Interprets the input string as a file name and computes a cryptographic hash
+ * for the file.
  *
  * @author Christoph Böhme
+ *
  */
 @Description("Uses the input string as a file name and computes a cryptographic hash the file")
 @In(String.class)
 @Out(Triple.class)
 @FluxCommand("digest-file")
-public final class FileDigestCalculator extends DefaultObjectPipe<String, ObjectReceiver<Triple>> {
+public final class FileDigestCalculator extends
+        DefaultObjectPipe<String, ObjectReceiver<Triple>> {
 
     private static final int BUFFER_SIZE = 1024;
 
     private static final int HIGH_NIBBLE = 0xf0;
     private static final int LOW_NIBBLE = 0x0f;
-    private static final char[] NIBBLE_TO_HEX = {
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
-    };
+    private static final char[] NIBBLE_TO_HEX = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
     private static final int NIBBLE_TO_HEX_SHIFT_WIDTH = 4;
 
@@ -82,21 +83,23 @@ public final class FileDigestCalculator extends DefaultObjectPipe<String, Object
         try {
             stream = new FileInputStream(file);
             digest = bytesToHex(getDigest(stream, messageDigest));
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
-        } finally {
+        }
+        finally {
             if (stream != null) {
                 try {
                     stream.close();
-                } catch (final IOException e) {
+                }
+                catch (final IOException e) {
                 }
             }
         }
         getReceiver().process(new Triple(file, algorithm.name(), digest));
     }
 
-    private static byte[] getDigest(final InputStream stream, final MessageDigest messageDigest)
-            throws IOException {
+    private static byte[] getDigest(final InputStream stream, final MessageDigest messageDigest) throws IOException {
         final byte[] buffer = new byte[BUFFER_SIZE];
 
         int read = stream.read(buffer, 0, BUFFER_SIZE);
@@ -122,6 +125,7 @@ public final class FileDigestCalculator extends DefaultObjectPipe<String, Object
      * @author Christoph Böhme
      */
     public enum DigestAlgorithm {
+
         MD2("MD2"),
         MD5("MD5"),
         SHA1("SHA-1"),
@@ -136,16 +140,20 @@ public final class FileDigestCalculator extends DefaultObjectPipe<String, Object
         }
 
         /**
-         * Returns a MessageDigest object that implements the specified digest algorithm.
+         * Returns a MessageDigest object that implements the specified digest
+         * algorithm.
          *
          * @return the MessageDigest
          */
         public MessageDigest getInstance() {
             try {
                 return MessageDigest.getInstance(identifier);
-            } catch (final NoSuchAlgorithmException e) {
+            }
+            catch (final NoSuchAlgorithmException e) {
                 throw new MetafactureException(e);
             }
         }
+
     }
+
 }

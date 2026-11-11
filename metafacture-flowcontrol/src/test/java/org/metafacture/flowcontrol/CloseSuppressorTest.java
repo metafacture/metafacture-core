@@ -29,14 +29,18 @@ import org.mockito.junit.MockitoRule;
  * Tests for class {@link CloseSuppressor}.
  *
  * @author Markus Geipel
+ *
  */
 public final class CloseSuppressorTest {
 
-    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock private ObjectReceiver<Object> receiver;
+    @Mock
+    private ObjectReceiver<Object> receiver;
 
-    public CloseSuppressorTest() {}
+    public CloseSuppressorTest() {
+    }
 
     @Test
     public void testSuppression() {
@@ -50,4 +54,5 @@ public final class CloseSuppressorTest {
         supressor.closeStream();
         Mockito.verifyNoMoreInteractions(receiver);
     }
+
 }

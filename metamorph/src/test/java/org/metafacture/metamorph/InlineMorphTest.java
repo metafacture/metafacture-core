@@ -23,13 +23,13 @@ import java.util.Arrays;
 
 public final class InlineMorphTest {
 
-    private static final String PREFIX =
-            "<?xml version='1.1' encoding='UTF-8'?>\n"
-                    + "<metamorph version='1'\n    xmlns='http://www.culturegraph.org/metamorph'>";
+    private static final String PREFIX = "<?xml version='1.1' encoding='UTF-8'?>\n" +
+        "<metamorph version='1'\n    xmlns='http://www.culturegraph.org/metamorph'>";
 
     private static final String SUFFIX = "\n</metamorph>\n";
 
-    public InlineMorphTest() {}
+    public InlineMorphTest() {
+    }
 
     @Test
     public void shouldProvideEmptyStringRepresentation() {
@@ -40,20 +40,20 @@ public final class InlineMorphTest {
     public void shouldProvideScriptStringRepresentation() {
         final InlineMorph morph = InlineMorph.in(this);
 
-        final String[] script =
-                new String[] {
-                    "<rules>",
-                    "  <data source='litA'>",
-                    "    <lookup>",
-                    "      <entry name='cat' value='mammal' />",
-                    "      <entry name='dog' value='mammal' />",
-                    "    </lookup>",
-                    "  </data>",
-                    "</rules>"
-                };
+        final String[] script = new String[]{
+            "<rules>",
+            "  <data source='litA'>",
+            "    <lookup>",
+            "      <entry name='cat' value='mammal' />",
+            "      <entry name='dog' value='mammal' />",
+            "    </lookup>",
+            "  </data>",
+            "</rules>"
+        };
 
         Arrays.stream(script).forEach(morph::with);
 
         Assert.assertEquals(PREFIX + String.join("\n", script) + SUFFIX, morph.toString());
     }
+
 }

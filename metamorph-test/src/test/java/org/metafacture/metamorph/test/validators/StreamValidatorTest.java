@@ -31,12 +31,15 @@ import java.util.function.Consumer;
  * Tests for class {@link StreamValidator}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class StreamValidatorTest {
 
-    @Mock private Consumer<String> errorHandler;
+    @Mock
+    private Consumer<String> errorHandler;
 
-    public StreamValidatorTest() {}
+    public StreamValidatorTest() {
+    }
 
     @Before
     public void initMocks() {
@@ -58,4 +61,5 @@ public final class StreamValidatorTest {
 
         Mockito.verify(errorHandler, Mockito.atLeastOnce()).accept(ArgumentMatchers.any());
     }
+
 }

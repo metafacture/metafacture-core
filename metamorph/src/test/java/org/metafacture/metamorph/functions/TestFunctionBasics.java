@@ -33,24 +33,26 @@ import org.mockito.junit.MockitoRule;
  */
 public final class TestFunctionBasics {
 
-    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-    public TestFunctionBasics() {}
+    public TestFunctionBasics() {
+    }
 
     @Test
     public void shouldSupportFunctionChainingInDataStatements() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <data source='data'>"
-                        + "    <trim />"
-                        + "    <replace pattern=' ' with='X' />"
-                        + "    <replace pattern='a' with='A' />"
-                        + "    <regexp match='Abc' />"
-                        + "  </data>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <data source='data'>" +
+                "    <trim />" +
+                "    <replace pattern=' ' with='X' />" +
+                "    <replace pattern='a' with='A' />" +
+                "    <regexp match='Abc' />" +
+                "  </data>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data", " abc ");
@@ -66,23 +68,23 @@ public final class TestFunctionBasics {
                     o.get().startRecord("2");
                     o.get().literal("data", "Abc");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldSupportFunctionChainingInEntities() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <choose>"
-                        + "    <data source='data'>"
-                        + "      <trim />"
-                        + "      <replace pattern=' ' with='X' />"
-                        + "      <replace pattern='a' with='A' />"
-                        + "      <regexp match='Abc' />"
-                        + "    </data>"
-                        + "  </choose>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <choose>" +
+                "    <data source='data'>" +
+                "      <trim />" +
+                "      <replace pattern=' ' with='X' />" +
+                "      <replace pattern='a' with='A' />" +
+                "      <regexp match='Abc' />" +
+                "    </data>" +
+                "  </choose>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data", " abc ");
@@ -98,16 +100,18 @@ public final class TestFunctionBasics {
                     o.get().startRecord("2");
                     o.get().literal("data", "Abc");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldUseJavaClassesAsFunctions() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>  <data source='data'>    <java"
-                        + " class='org.metafacture.metamorph.functions.Compose' prefix='Hula ' /> "
-                        + " </data></rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <data source='data'>" +
+                "    <java class='org.metafacture.metamorph.functions.Compose' prefix='Hula ' />" +
+                "  </data>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data", "Aloha");
@@ -117,6 +121,8 @@ public final class TestFunctionBasics {
                     o.get().startRecord("1");
                     o.get().literal("data", "Hula Aloha");
                     o.get().endRecord();
-                });
+                }
+        );
     }
+
 }

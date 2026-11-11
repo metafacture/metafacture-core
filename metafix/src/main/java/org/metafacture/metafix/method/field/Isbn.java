@@ -26,21 +26,20 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Extracts an ISBN and replaces the field value with the normalized ISBN; optionally converts
- * and/or validates the ISBN.
+ * Extracts an ISBN and replaces the field value with the normalized ISBN;
+ * optionally converts and/or validates the ISBN.
  */
 @FixCommand("isbn")
 public class Isbn implements FixFunction {
 
-    /** Creates an instance of {@link Isbn}. */
-    public Isbn() {}
+    /**
+     * Creates an instance of {@link Isbn}.
+     */
+    public Isbn() {
+    }
 
     @Override
-    public void apply(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         final ISBN isbn = new ISBN();
 
         withOption(options, ERROR_STRING_OPTION, isbn::setErrorString);
@@ -49,4 +48,5 @@ public class Isbn implements FixFunction {
 
         record.transform(params.get(0), isbn::process);
     }
+
 }

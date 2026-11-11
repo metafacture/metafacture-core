@@ -24,19 +24,21 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
-/** Downcases all characters in a field value. */
+/**
+ * Downcases all characters in a field value.
+ */
 @FixCommand("downcase")
 public class Downcase implements FixFunction {
 
-    /** Creates an instance of {@link Downcase}. */
-    public Downcase() {}
+    /**
+     * Creates an instance of {@link Downcase}.
+     */
+    public Downcase() {
+    }
 
     @Override
-    public void apply(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         record.transform(params.get(0), s -> s.toLowerCase());
     }
+
 }

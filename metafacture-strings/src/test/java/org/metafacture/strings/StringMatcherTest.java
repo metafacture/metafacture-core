@@ -29,16 +29,20 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link StringMatcher}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class StringMatcherTest {
 
-    private static final String INPUT_STRING = "The pattern is not part of the input";
+    private static final String INPUT_STRING =
+            "The pattern is not part of the input";
 
     private StringMatcher matcher;
 
-    @Mock private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
 
-    public StringMatcherTest() {}
+    public StringMatcherTest() {
+    }
 
     @Before
     public void setup() {
@@ -80,4 +84,5 @@ public final class StringMatcherTest {
 
         Mockito.verify(receiver).process(INPUT_STRING);
     }
+
 }

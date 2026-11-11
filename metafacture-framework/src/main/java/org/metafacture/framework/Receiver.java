@@ -20,6 +20,7 @@ package org.metafacture.framework;
  * A common base for all receiver interfaces.
  *
  * @author Christoph Böhme
+ *
  */
 public interface Receiver extends LifeCycle {
     // This interface servces only as a common

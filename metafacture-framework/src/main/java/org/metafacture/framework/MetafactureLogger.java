@@ -20,8 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Provides a logging facility for both internal/developer-oriented and external/user-oriented
- * messages.
+ * Provides a logging facility for both internal/developer-oriented and
+ * external/user-oriented messages.
  *
  * @author Jens Wille
  */
@@ -32,8 +32,11 @@ public class MetafactureLogger {
     private final Logger externalLogger;
     private final Logger internalLogger;
 
-    /** Wrapper for the supported log levels and their associated actions. */
+    /**
+     * Wrapper for the supported log levels and their associated actions.
+     */
     public enum Level {
+
         ERROR((l, f, a) -> l.error(f, a)),
         WARN((l, f, a) -> l.warn(f, a)),
         INFO((l, f, a) -> l.info(f, a)),
@@ -49,6 +52,7 @@ public class MetafactureLogger {
         private void log(final Logger logger, final String format, final Object... arguments) {
             consumer.accept(logger, format, arguments);
         }
+
     }
 
     /**
@@ -88,24 +92,17 @@ public class MetafactureLogger {
         return externalLogger;
     }
 
-    private void log(
-            final Level level,
-            final Logger logger,
-            final String format,
-            final Object... arguments) {
+    private void log(final Level level, final Logger logger, final String format, final Object... arguments) {
         level.log(logger, format, arguments);
     }
 
-    private void log(
-            final String level,
-            final Logger logger,
-            final String format,
-            final Object... arguments) {
+    private void log(final String level, final Logger logger, final String format, final Object... arguments) {
         final Level levelValue;
 
         try {
             levelValue = Level.valueOf(level);
-        } catch (final IllegalArgumentException e) {
+        }
+        catch (final IllegalArgumentException e) {
             throw new IllegalArgumentException("Unsupported log level: " + level, e);
         }
 
@@ -113,8 +110,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>internal</i> message at the specified {@link Level level} according to the
-     * specified format and arguments.
+     * Logs an <i>internal</i> message at the specified {@link Level level}
+     * according to the specified format and arguments.
      *
      * @param level the log level
      * @param format the format string
@@ -125,8 +122,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>internal</i> message at the specified {@link Level level} according to the
-     * specified format and arguments.
+     * Logs an <i>internal</i> message at the specified {@link Level level}
+     * according to the specified format and arguments.
      *
      * @param level the log level
      * @param format the format string
@@ -137,8 +134,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>external</i> message at the specified {@link Level level} according to the
-     * specified format and arguments.
+     * Logs an <i>external</i> message at the specified {@link Level level}
+     * according to the specified format and arguments.
      *
      * @param level the log level
      * @param format the format string
@@ -149,8 +146,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>external</i> message at the specified {@link Level level} according to the
-     * specified format and arguments.
+     * Logs an <i>external</i> message at the specified {@link Level level}
+     * according to the specified format and arguments.
      *
      * @param level the log level
      * @param format the format string
@@ -161,8 +158,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>internal and external</i> message at the specified {@link Level level} according
-     * to the specified format and arguments.
+     * Logs an <i>internal and external</i> message at the specified {@link Level level}
+     * according to the specified format and arguments.
      *
      * @param level the log level
      * @param format the format string
@@ -174,8 +171,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>internal and external</i> message at the specified {@link Level level} according
-     * to the specified format and arguments.
+     * Logs an <i>internal and external</i> message at the specified {@link Level level}
+     * according to the specified format and arguments.
      *
      * @param level the log level
      * @param format the format string
@@ -187,8 +184,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>internal</i> message at the ERROR level according to the specified format and
-     * arguments.
+     * Logs an <i>internal</i> message at the ERROR level according to the
+     * specified format and arguments.
      *
      * @param format the format string
      * @param arguments a list of arguments
@@ -198,8 +195,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>external</i> message at the ERROR level according to the specified format and
-     * arguments.
+     * Logs an <i>external</i> message at the ERROR level according to the
+     * specified format and arguments.
      *
      * @param format the format string
      * @param arguments a list of arguments
@@ -209,8 +206,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>internal and external</i> message at the ERROR level according to the specified
-     * format and arguments.
+     * Logs an <i>internal and external</i> message at the ERROR level according
+     * to the specified format and arguments.
      *
      * @param format the format string
      * @param arguments a list of arguments
@@ -221,8 +218,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>internal</i> message at the WARN level according to the specified format and
-     * arguments.
+     * Logs an <i>internal</i> message at the WARN level according to the
+     * specified format and arguments.
      *
      * @param format the format string
      * @param arguments a list of arguments
@@ -232,8 +229,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>external</i> message at the WARN level according to the specified format and
-     * arguments.
+     * Logs an <i>external</i> message at the WARN level according to the
+     * specified format and arguments.
      *
      * @param format the format string
      * @param arguments a list of arguments
@@ -243,8 +240,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>internal and external</i> message at the WARN level according to the specified
-     * format and arguments.
+     * Logs an <i>internal and external</i> message at the WARN level according
+     * to the specified format and arguments.
      *
      * @param format the format string
      * @param arguments a list of arguments
@@ -255,8 +252,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>internal</i> message at the INFO level according to the specified format and
-     * arguments.
+     * Logs an <i>internal</i> message at the INFO level according to the
+     * specified format and arguments.
      *
      * @param format the format string
      * @param arguments a list of arguments
@@ -266,8 +263,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>external</i> message at the INFO level according to the specified format and
-     * arguments.
+     * Logs an <i>external</i> message at the INFO level according to the
+     * specified format and arguments.
      *
      * @param format the format string
      * @param arguments a list of arguments
@@ -277,8 +274,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>internal and external</i> message at the INFO level according to the specified
-     * format and arguments.
+     * Logs an <i>internal and external</i> message at the INFO level according
+     * to the specified format and arguments.
      *
      * @param format the format string
      * @param arguments a list of arguments
@@ -289,8 +286,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>internal</i> message at the DEBUG level according to the specified format and
-     * arguments.
+     * Logs an <i>internal</i> message at the DEBUG level according to the
+     * specified format and arguments.
      *
      * @param format the format string
      * @param arguments a list of arguments
@@ -300,8 +297,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>external</i> message at the DEBUG level according to the specified format and
-     * arguments.
+     * Logs an <i>external</i> message at the DEBUG level according to the
+     * specified format and arguments.
      *
      * @param format the format string
      * @param arguments a list of arguments
@@ -311,8 +308,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>internal and external</i> message at the DEBUG level according to the specified
-     * format and arguments.
+     * Logs an <i>internal and external</i> message at the DEBUG level according
+     * to the specified format and arguments.
      *
      * @param format the format string
      * @param arguments a list of arguments
@@ -323,8 +320,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>internal</i> message at the TRACE level according to the specified format and
-     * arguments.
+     * Logs an <i>internal</i> message at the TRACE level according to the
+     * specified format and arguments.
      *
      * @param format the format string
      * @param arguments a list of arguments
@@ -334,8 +331,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>external</i> message at the TRACE level according to the specified format and
-     * arguments.
+     * Logs an <i>external</i> message at the TRACE level according to the
+     * specified format and arguments.
      *
      * @param format the format string
      * @param arguments a list of arguments
@@ -345,8 +342,8 @@ public class MetafactureLogger {
     }
 
     /**
-     * Logs an <i>internal and external</i> message at the TRACE level according to the specified
-     * format and arguments.
+     * Logs an <i>internal and external</i> message at the TRACE level according
+     * to the specified format and arguments.
      *
      * @param format the format string
      * @param arguments a list of arguments
@@ -360,4 +357,5 @@ public class MetafactureLogger {
     private interface LoggingConsumer {
         void accept(Logger logger, String format, Object... arguments);
     }
+
 }

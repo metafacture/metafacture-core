@@ -52,4 +52,5 @@ class MapTypeEncoder implements TypeEncoder {
     public Object getInstance() {
         return objectMap;
     }
+
 }

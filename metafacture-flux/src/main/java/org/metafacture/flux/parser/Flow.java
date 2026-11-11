@@ -31,6 +31,7 @@ import java.util.List;
 
 /**
  * @author Markus Michael Geipel
+ *
  */
 final class Flow {
 
@@ -41,7 +42,8 @@ final class Flow {
     private ObjectReceiver<? extends Object> start;
     private boolean joinLooseEnds;
 
-    Flow() {}
+    Flow() {
+    }
 
     @SuppressWarnings("unchecked")
     public void addElement(final Receiver nextElement) {
@@ -56,21 +58,24 @@ final class Flow {
                 for (final LifeCycle looseEnd : looseEndsStack.pop()) {
                     if (looseEnd instanceof Tee) {
                         ((Tee) looseEnd).addReceiver(nextElement);
-                    } else {
+                    }
+                    else {
                         ((Sender) looseEnd).setReceiver(nextElement);
                     }
                 }
                 joinLooseEnds = false;
-            } else {
+            }
+            else {
                 if (sender instanceof Tee) {
                     ((Tee) sender).addReceiver(nextElement);
-                } else {
+                }
+                else {
                     sender.setReceiver(nextElement);
                 }
             }
-        } else {
-            throw new FluxParseException(
-                    element.getClass().getCanonicalName() + " is not a sender");
+        }
+        else {
+            throw new FluxParseException(element.getClass().getCanonicalName() + " is not a sender");
         }
         element = nextElement;
     }
@@ -80,13 +85,15 @@ final class Flow {
             final Tee<?> tee = (Tee<?>) element;
             teeStack.push(tee);
             looseEndsStack.push(new ArrayList<LifeCycle>());
-        } else {
+        }
+        else {
             throw new FluxParseException("Flow cannot be split without a tee-element.");
         }
     }
 
     public void endTee() {
         joinLooseEnds = true;
+
     }
 
     public void endSubFlow() {
@@ -118,4 +125,5 @@ final class Flow {
     public Receiver getFirst() {
         return start;
     }
+
 }

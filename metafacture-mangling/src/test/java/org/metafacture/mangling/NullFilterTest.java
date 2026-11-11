@@ -30,6 +30,7 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link NullFilter}.
  *
  * @author Jens Wille
+ *
  */
 public final class NullFilterTest {
 
@@ -40,9 +41,11 @@ public final class NullFilterTest {
 
     private NullFilter nullFilter;
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-    public NullFilterTest() {}
+    public NullFilterTest() {
+    }
 
     @Before
     public void setup() {
@@ -114,4 +117,5 @@ public final class NullFilterTest {
 
         Mockito.verifyNoMoreInteractions(receiver);
     }
+
 }

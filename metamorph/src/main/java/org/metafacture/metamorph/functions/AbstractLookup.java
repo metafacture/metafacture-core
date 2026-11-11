@@ -29,9 +29,11 @@ abstract class AbstractLookup extends AbstractSimpleStatelessFunction {
         final String returnValue;
         if (getMapName() == null) {
             returnValue = getLocalValue(key);
-        } else {
+        }
+        else {
             returnValue = getValue(getMapName(), key);
         }
         return returnValue;
     }
+
 }

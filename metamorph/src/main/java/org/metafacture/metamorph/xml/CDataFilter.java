@@ -22,12 +22,15 @@ import org.xml.sax.XMLReader;
 /**
  * Filters out CDATA events.
  *
- * <p>Note that the actual contents of the CDATA section is not filtered. This filter removes only
- * the events marking the start and end of CDATA sections. Their contents are still passed as {@code
- * characters} events. This filter only hides the fact that the character data comes from a CDATA
- * section.
+ * Note that the actual contents of the CDATA section is
+ * not filtered. This filter removes only the events
+ * marking the start and end of CDATA sections. Their
+ * contents are still passed as {@code characters} events.
+ * This filter only hides the fact that the character data
+ * comes from a CDATA section.
  *
  * @author Christoph Böhme
+ *
  */
 final class CDataFilter extends LexicalHandlerXmlFilter {
 
@@ -44,4 +47,5 @@ final class CDataFilter extends LexicalHandlerXmlFilter {
     public void endCDATA() throws SAXException {
         // Do not forward CDATA section events
     }
+
 }

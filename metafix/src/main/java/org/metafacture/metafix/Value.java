@@ -47,13 +47,13 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
- * Represents a record value, i.e., either an {@link Array}, a {@link Hash}, or a {@link String}.
+ * Represents a record value, i.e., either an {@link Array}, a {@link Hash},
+ * or a {@link String}.
  */
-public class Value implements JsonValue {
+public class Value implements JsonValue { // checkstyle-disable-line ClassDataAbstractionCoupling
 
     public static final String FIELD_PATH_SEPARATOR = ".";
-    /*package-private*/ static final String FIELD_PATH_SEPARATOR_PATTERN =
-            Pattern.quote(FIELD_PATH_SEPARATOR);
+    /*package-private*/ static final String FIELD_PATH_SEPARATOR_PATTERN = Pattern.quote(FIELD_PATH_SEPARATOR);
 
     private final Array array;
     private final Hash hash;
@@ -70,7 +70,8 @@ public class Value implements JsonValue {
             if (hasValue) {
                 throw new IllegalArgumentException("Value without type");
             }
-        } else {
+        }
+        else {
             if (!hasValue) {
                 throw new IllegalArgumentException("Type without value");
             }
@@ -157,6 +158,7 @@ public class Value implements JsonValue {
      * Creates an instance of {@link Value} representing an {@link Array}.
      *
      * @param consumer the optional Array consumer
+     *
      * @return the new Value
      */
     public static Value newArray(final Consumer<Array> consumer) {
@@ -182,6 +184,7 @@ public class Value implements JsonValue {
      * Creates an instance of {@link Value} representing a {@link Hash}.
      *
      * @param consumer the optional Hash consumer
+     *
      * @return the new Value
      */
     public static Value newHash(final Consumer<Hash> consumer) {
@@ -238,6 +241,7 @@ public class Value implements JsonValue {
      * Checks whether the given Value has no type.
      *
      * @param value the Value
+     *
      * @return true if the Value is {@code null} or has no type, otherwise false
      */
     public static boolean isNull(final Value value) {
@@ -252,6 +256,7 @@ public class Value implements JsonValue {
      * Extracts the Array from the Value.
      *
      * @return the Array
+     *
      * @throws IllegalStateException if the Value is not an Array
      */
     public Array asArray() {
@@ -262,6 +267,7 @@ public class Value implements JsonValue {
      * Extracts the Hash from the Value.
      *
      * @return the Hash
+     *
      * @throws IllegalStateException if the Value is not a Hash
      */
     public Hash asHash() {
@@ -272,6 +278,7 @@ public class Value implements JsonValue {
      * Extracts the String from the Value.
      *
      * @return the String
+     *
      * @throws IllegalStateException if the Value is not a String
      */
     public String asString() {
@@ -279,10 +286,12 @@ public class Value implements JsonValue {
     }
 
     /**
-     * Converts the given Value into a new Value representing an Array if it isn't already.
+     * Converts the given Value into a new Value representing an Array if it
+     * isn't already.
      *
-     * @param value the Value
+     * @param value    the Value
      * @param consumer the consumer
+     *
      * @return the Array
      */
     public static Value asList(final Value value, final Consumer<Array> consumer) {
@@ -290,9 +299,11 @@ public class Value implements JsonValue {
     }
 
     /**
-     * Converts the Value into a new Value representing an Array if it isn't already.
+     * Converts the Value into a new Value representing an Array if it isn't
+     * already.
      *
      * @param consumer the consumer
+     *
      * @return the Array
      */
     public Value asList(final Consumer<Array> consumer) {
@@ -302,15 +313,15 @@ public class Value implements JsonValue {
             }
 
             return this;
-        } else {
-            return newArray(
-                    a -> {
-                        a.add(this);
+        }
+        else {
+            return newArray(a -> {
+                a.add(this);
 
-                        if (consumer != null) {
-                            consumer.accept(a);
-                        }
-                    });
+                if (consumer != null) {
+                    consumer.accept(a);
+                }
+            });
         }
     }
 
@@ -326,8 +337,9 @@ public class Value implements JsonValue {
     /**
      * Extracts a result based on the Value's type.
      *
-     * @param <T> the type of the result
+     * @param <T>      the type of the result
      * @param consumer the consumer
+     *
      * @return the result
      */
     public <T> T extractType(final BiConsumer<TypeMatcher, Consumer<T>> consumer) {
@@ -347,30 +359,28 @@ public class Value implements JsonValue {
         }
 
         final Value other = (Value) object;
-        return Objects.equals(type, other.type)
-                && Objects.equals(array, other.array)
-                && Objects.equals(hash, other.hash)
-                && Objects.equals(string, other.string);
+        return Objects.equals(type, other.type) &&
+            Objects.equals(array, other.array) &&
+            Objects.equals(hash, other.hash) &&
+            Objects.equals(string, other.string);
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hashCode(type)
-                + Objects.hashCode(array)
-                + Objects.hashCode(hash)
-                + Objects.hashCode(string);
+        return Objects.hashCode(type) +
+            Objects.hashCode(array) +
+            Objects.hashCode(hash) +
+            Objects.hashCode(string);
     }
 
     @Override
     public String toString() {
-        return isNull()
-                ? null
-                : extractType(
-                        (m, c) ->
-                                m.ifArray(a -> c.accept(a.toString()))
-                                        .ifHash(h -> c.accept(h.toString()))
-                                        .ifString(c)
-                                        .orElseThrow());
+        return isNull() ? null : extractType((m, c) -> m
+                .ifArray(a -> c.accept(a.toString()))
+                .ifHash(h -> c.accept(h.toString()))
+                .ifString(c)
+                .orElseThrow()
+        );
     }
 
     @Override
@@ -378,22 +388,24 @@ public class Value implements JsonValue {
         if (isNull()) {
             try {
                 jsonGenerator.writeNull();
-            } catch (final IOException e) {
+            }
+            catch (final IOException e) {
                 throw new UncheckedIOException(e);
             }
-        } else {
+        }
+        else {
             matchType()
-                    .ifArray(a -> a.toJson(jsonGenerator))
-                    .ifHash(h -> h.toJson(jsonGenerator))
-                    .ifString(
-                            s -> {
-                                try {
-                                    jsonGenerator.writeString(s);
-                                } catch (final IOException e) {
-                                    throw new UncheckedIOException(e);
-                                }
-                            })
-                    .orElseThrow();
+                .ifArray(a -> a.toJson(jsonGenerator))
+                .ifHash(h -> h.toJson(jsonGenerator))
+                .ifString(s -> {
+                    try {
+                        jsonGenerator.writeString(s);
+                    }
+                    catch (final IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                })
+                .orElseThrow();
         }
     }
 
@@ -414,6 +426,7 @@ public class Value implements JsonValue {
      * Sets the value's path.
      *
      * @param p the path
+     *
      * @return the Value
      */
     public Value withPathSet(final String p) {
@@ -426,42 +439,22 @@ public class Value implements JsonValue {
     }
 
     private Value withPathAppend(final String field) {
-        return withPathSet(
-                path == null || path.isEmpty() ? field : path + FIELD_PATH_SEPARATOR + field);
+        return withPathSet(path == null || path.isEmpty() ? field : path + FIELD_PATH_SEPARATOR + field);
     }
 
     /*package-private*/ Value copy() {
-        return extractType(
-                (m, c) ->
-                        m.ifArray(
-                                        oldArray ->
-                                                c.accept(
-                                                        Value.newArray(
-                                                                newArray ->
-                                                                        oldArray.forEach(
-                                                                                v ->
-                                                                                        newArray
-                                                                                                .add(
-                                                                                                        v)))))
-                                .ifHash(
-                                        oldHash ->
-                                                c.accept(
-                                                        Value.newHash(
-                                                                newHash ->
-                                                                        oldHash.forEach(
-                                                                                (k, v) ->
-                                                                                        newHash.put(
-                                                                                                k,
-                                                                                                v)))))
-                                .ifString(s -> c.accept(new Value(s)))
-                                .orElseThrow());
+        return extractType((m, c) -> m
+                .ifArray(oldArray -> c.accept(Value.newArray(newArray -> oldArray.forEach(v -> newArray.add(v)))))
+                .ifHash(oldHash -> c.accept(Value.newHash(newHash -> oldHash.forEach((k, v) -> newHash.put(k, v)))))
+                .ifString(s -> c.accept(new Value(s)))
+                .orElseThrow());
     }
 
     private void retainFields(final Collection<String> fields) {
         matchType()
-                .ifArray(a -> a.retainFields(fields))
-                .ifHash(h -> h.retainFields(fields))
-                .orElseThrow();
+            .ifArray(a -> a.retainFields(fields))
+            .ifHash(h -> h.retainFields(fields))
+            .orElseThrow();
     }
 
     enum Type {
@@ -470,7 +463,9 @@ public class Value implements JsonValue {
         String
     }
 
-    /** Matcher for value types. */
+    /**
+     * Matcher for value types.
+     */
     public static class TypeMatcher {
 
         private final Set<Type> expected = EnumSet.noneOf(Type.class);
@@ -484,7 +479,9 @@ public class Value implements JsonValue {
          * Performs the consumer if the Value represents an Array.
          *
          * @param consumer the consumer
+         *
          * @return the TypeMatcher
+         *
          * @throws IllegalStateException if already matching for Array
          */
         public TypeMatcher ifArray(final Consumer<Array> consumer) {
@@ -495,7 +492,9 @@ public class Value implements JsonValue {
          * Performs the consumer if the Value represents an Hash.
          *
          * @param consumer the consumer
+         *
          * @return the TypeMatcher
+         *
          * @throws IllegalStateException if already matching for Hash
          */
         public TypeMatcher ifHash(final Consumer<Hash> consumer) {
@@ -506,7 +505,9 @@ public class Value implements JsonValue {
          * Performs the consumer if the Value represents an String.
          *
          * @param consumer the consumer
+         *
          * @return the TypeMatcher
+         *
          * @throws IllegalStateException if already matching for String
          */
         public TypeMatcher ifString(final Consumer<String> consumer) {
@@ -530,51 +531,43 @@ public class Value implements JsonValue {
          * @throws IllegalStateException if the Value represents an unmatched type
          */
         public void orElseThrow() {
-            orElse(
-                    v -> {
-                        final String types =
-                                expected.stream()
-                                        .map(Type::name)
-                                        .collect(Collectors.joining(" or "));
-                        throw new IllegalStateException(
-                                "Expected " + types + ", got " + value.type);
-                    });
+            orElse(v -> {
+                final String types = expected.stream().map(Type::name).collect(Collectors.joining(" or "));
+                throw new IllegalStateException("Expected " + types + ", got " + value.type);
+            });
         }
 
-        private <T> TypeMatcher match(
-                final Type type, final Consumer<T> consumer, final T rawValue) {
+        private <T> TypeMatcher match(final Type type, final Consumer<T> consumer, final T rawValue) {
             if (expected.add(type)) {
                 if (value.isType(type)) {
                     consumer.accept(rawValue);
                 }
 
                 return this;
-            } else {
+            }
+            else {
                 throw new IllegalStateException("Already expecting " + type);
             }
         }
+
     }
 
     private abstract static class AbstractValueType implements JsonValue {
 
-        protected static final Predicate<Value> REMOVE_EMPTY_VALUES =
-                v ->
-                        v.extractType(
-                                (m, c) ->
-                                        m.ifArray(
-                                                        a -> {
-                                                            a.removeEmptyValues();
-                                                            c.accept(a.isEmpty());
-                                                        })
-                                                .ifHash(
-                                                        h -> {
-                                                            h.removeEmptyValues();
-                                                            c.accept(h.isEmpty());
-                                                        })
-                                                // TODO: Catmandu considers whitespace-only strings
-                                                // empty (`$v !~ /\S/`)
-                                                .ifString(s -> c.accept(s.isEmpty()))
-                                                .orElseThrow());
+        protected static final Predicate<Value> REMOVE_EMPTY_VALUES = v ->
+            v.extractType((m, c) -> m
+                .ifArray(a -> {
+                    a.removeEmptyValues();
+                    c.accept(a.isEmpty());
+                })
+                .ifHash(h -> {
+                    h.removeEmptyValues();
+                    c.accept(h.isEmpty());
+                })
+                // TODO: Catmandu considers whitespace-only strings empty (`$v !~ /\S/`)
+                .ifString(s -> c.accept(s.isEmpty()))
+                .orElseThrow()
+        );
 
         @Override
         public abstract boolean equals(Object object);
@@ -588,40 +581,41 @@ public class Value implements JsonValue {
         @Override
         public abstract void toJson(JsonGenerator jsonGenerator);
 
-        protected <T> Map<T, Collection<String>> retainFields(
-                final Collection<String> fields, final Function<String, Set<T>> function) {
+        protected <T> Map<T, Collection<String>> retainFields(final Collection<String> fields, final Function<String, Set<T>> function) {
             final Map<T, Collection<String>> retainFields = new HashMap<>();
 
-            fields.forEach(
-                    p -> {
-                        final String[] parts = p.split(FIELD_PATH_SEPARATOR_PATTERN, 2);
+            fields.forEach(p -> {
+                final String[] parts = p.split(FIELD_PATH_SEPARATOR_PATTERN, 2);
 
-                        function.apply(parts[0])
-                                .forEach(
-                                        f -> {
-                                            final Collection<String> retainNested =
-                                                    retainFields.computeIfAbsent(
-                                                            f, k -> new HashSet<>());
-                                            if (parts.length > 1) {
-                                                retainNested.add(parts[1]);
-                                            }
-                                        });
-                    });
+                function.apply(parts[0]).forEach(f -> {
+                    final Collection<String> retainNested = retainFields.computeIfAbsent(f, k -> new HashSet<>());
+                    if (parts.length > 1) {
+                        retainNested.add(parts[1]);
+                    }
+                });
+            });
 
             return retainFields;
         }
+
     }
 
-    /** Represents an array of metadata values. */
+    /**
+     * Represents an array of metadata values.
+     */
     public static class Array extends AbstractValueType {
 
         private final List<Value> list = new ArrayList<>();
 
-        /** Creates an empty instance of {@link Array}. */
-        private Array() {}
+        /**
+         * Creates an empty instance of {@link Array}.
+         */
+        private Array() {
+        }
 
         /**
-         * Adds the given Value to the Array and appends the index number to its path.
+         * Adds the given Value to the Array and appends the index number to its
+         * path.
          *
          * @param value the Value
          */
@@ -637,8 +631,7 @@ public class Value implements JsonValue {
             add(index, value, true);
         }
 
-        /* package-private */ void add(
-                final int index, final Value value, final boolean appendToPath) {
+        /* package-private */ void add(final int index, final Value value, final boolean appendToPath) {
             if (!isNull(value)) {
                 list.add(index, appendToPath ? value.withPathAppend(index + 1) : value);
                 updateIndexesInPathsAfter(index);
@@ -674,7 +667,9 @@ public class Value implements JsonValue {
          * Returns the element at the specified position in this Array.
          *
          * @param index the index of the element to return
+         *
          * @return the element at the specified position in this Array
+         *
          * @throws IndexOutOfBoundsException if the index is out of range
          */
         public Value get(final int index) {
@@ -699,21 +694,18 @@ public class Value implements JsonValue {
         }
 
         private void retainFields(final Collection<String> fields) {
-            final Map<Integer, Collection<String>> retainFields =
-                    retainFields(fields, this::findFields);
+            final Map<Integer, Collection<String>> retainFields = retainFields(fields, this::findFields);
 
             final int max = size() - 1;
-            indexes()
-                    .map(i -> max - i)
-                    .forEach(
-                            i -> {
-                                final Collection<String> retainNested = retainFields.get(i);
-                                if (retainNested == null) {
-                                    remove(i);
-                                } else if (!retainNested.isEmpty()) {
-                                    get(i).retainFields(retainNested);
-                                }
-                            });
+            indexes().map(i -> max - i).forEach(i -> {
+                final Collection<String> retainNested = retainFields.get(i);
+                if (retainNested == null) {
+                    remove(i);
+                }
+                else if (!retainNested.isEmpty()) {
+                    get(i).retainFields(retainNested);
+                }
+            });
         }
 
         private Set<Integer> findFields(final String pattern) {
@@ -721,7 +713,8 @@ public class Value implements JsonValue {
 
             if ("*".equals(pattern)) {
                 indexes().forEach(fieldSet::add);
-            } else {
+            }
+            else {
                 final int index;
 
                 switch (pattern) {
@@ -732,9 +725,7 @@ public class Value implements JsonValue {
                         index = size() - 1;
                         break;
                     default:
-                        index =
-                                Integer.parseInt(pattern)
-                                        - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
+                        index = Integer.parseInt(pattern) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
                 }
 
                 if (index >= 0 && index < size()) {
@@ -784,7 +775,8 @@ public class Value implements JsonValue {
                 jsonGenerator.writeStartArray();
                 forEach(v -> v.toJson(jsonGenerator));
                 jsonGenerator.writeEndArray();
-            } catch (final IOException e) {
+            }
+            catch (final IOException e) {
                 throw new UncheckedIOException(e);
             }
         }
@@ -793,6 +785,7 @@ public class Value implements JsonValue {
          * Removes the element at the specified position in this Array.
          *
          * @param index the index of the element to be removed
+         *
          * @throws IndexOutOfBoundsException if the index is out of range
          */
         public void remove(final int index) {
@@ -800,8 +793,8 @@ public class Value implements JsonValue {
         }
 
         /**
-         * Sets the Array element at the given index to the given Value and appends the index number
-         * to its path.
+         * Sets the Array element at the given index to the given Value and
+         * appends the index number to its path.
          *
          * @param index the index
          * @param value the Value
@@ -817,25 +810,22 @@ public class Value implements JsonValue {
         /*package-private*/ void removeAll() {
             list.clear();
         }
+
     }
 
-    /** Represents a hash of metadata fields and values. */
+    /**
+     * Represents a hash of metadata fields and values.
+     */
     public static class Hash extends AbstractValueType {
 
-        // NOTE: Keep in sync with `WildcardTrie`/`SimpleRegexTrie` implementation in
-        // metafacture-core.
-        private static final Pattern ALTERNATION_PATTERN =
-                Pattern.compile(WildcardTrie.OR_STRING, Pattern.LITERAL);
-        private static final ThreadLocal<Matcher> PATTERN_MATCHER =
-                ThreadLocal.withInitial(() -> Pattern.compile("[*?]|\\[[^\\]]").matcher(""));
+        // NOTE: Keep in sync with `WildcardTrie`/`SimpleRegexTrie` implementation in metafacture-core.
+        private static final Pattern ALTERNATION_PATTERN = Pattern.compile(WildcardTrie.OR_STRING, Pattern.LITERAL);
+        private static final ThreadLocal<Matcher> PATTERN_MATCHER = ThreadLocal.withInitial(() -> Pattern.compile("[*?]|\\[[^\\]]").matcher(""));
 
-        private static final ThreadLocal<Map<String, String>> PREFIX_CACHE =
-                ThreadLocal.withInitial(HashMap::new);
+        private static final ThreadLocal<Map<String, String>> PREFIX_CACHE = ThreadLocal.withInitial(HashMap::new);
 
-        private static final ThreadLocal<Map<String, Map<String, Boolean>>> TRIE_CACHE =
-                ThreadLocal.withInitial(HashMap::new);
-        private static final ThreadLocal<SimpleRegexTrie<String>> TRIE =
-                ThreadLocal.withInitial(SimpleRegexTrie::new);
+        private static final ThreadLocal<Map<String, Map<String, Boolean>>> TRIE_CACHE = ThreadLocal.withInitial(HashMap::new);
+        private static final ThreadLocal<SimpleRegexTrie<String>> TRIE = ThreadLocal.withInitial(SimpleRegexTrie::new);
 
         private final Map<String, Map<String, Boolean>> trieCache = TRIE_CACHE.get();
         private final Map<String, String> prefixCache = PREFIX_CACHE.get();
@@ -843,8 +833,11 @@ public class Value implements JsonValue {
         private final Matcher patternMatcher = PATTERN_MATCHER.get();
         private final SimpleRegexTrie<String> trie = TRIE.get();
 
-        /** Creates an empty instance of {@link Hash}. */
-        protected Hash() {}
+        /**
+         * Creates an empty instance of {@link Hash}.
+         */
+        protected Hash() {
+        }
 
         /**
          * Checks whether this hash contains the metadata field.
@@ -860,6 +853,7 @@ public class Value implements JsonValue {
          * Checks whether this Hash contains a Value at the given Fix path.
          *
          * @param fieldPath the Fix path
+         *
          * @return true if this Hash contains a Value at the path, otherwise false
          */
         public boolean containsPath(final String fieldPath) {
@@ -874,12 +868,14 @@ public class Value implements JsonValue {
 
                 try {
                     value = new FixPath(fieldPath).findIn(this);
-                } catch (final IllegalStateException e) {
+                }
+                catch (final IllegalStateException e) {
                     return false;
                 }
 
                 containsPath = !isNull(value);
-            } else {
+            }
+            else {
                 containsPath = containsField;
             }
 
@@ -917,8 +913,8 @@ public class Value implements JsonValue {
         /**
          * Adds a field/value pair to this hash, provided it's not {@link #isNull(Value) null}.
          *
-         * @param field the field name
-         * @param value the metadata value
+         * @param field        the field name
+         * @param value        the metadata value
          * @param appendToPath whether to append the field name to the Value's path
          */
         public void put(final String field, final Value value, final boolean appendToPath) {
@@ -928,8 +924,8 @@ public class Value implements JsonValue {
         }
 
         /**
-         * {@link #put(String, Value) Replaces} a field/value pair in this hash, provided the field
-         * name is already {@link #containsField(String) present}.
+         * {@link #put(String, Value) Replaces} a field/value pair in this hash,
+         * provided the field name is already {@link #containsField(String) present}.
          *
          * @param field the field name
          * @param value the metadata value
@@ -950,37 +946,22 @@ public class Value implements JsonValue {
             return get(field, false);
         }
 
-        /*package-private*/ Value get(
-                final String field,
-                final boolean enforceStringValue) { // TODO use Type.String etc.?
+        /*package-private*/ Value get(final String field, final boolean enforceStringValue) { // TODO use Type.String etc.?
             // TODO: special treatment (only) for exact matches?
             final Set<String> set = findFields(field);
 
-            return set.isEmpty()
-                    ? null
-                    : set.size() == 1
-                            ? getField(set.iterator().next(), enforceStringValue)
-                            : newArray(
-                                    a ->
-                                            set.forEach(
-                                                    f ->
-                                                            getField(f, enforceStringValue)
-                                                                    .matchType()
-                                                                    .ifArray(
-                                                                            b ->
-                                                                                    b.forEach(
-                                                                                            t ->
-                                                                                                    a
-                                                                                                            .add(
-                                                                                                                    t,
-                                                                                                                    false)))
-                                                                    .orElse(t -> a.add(t, false))));
+            return set.isEmpty() ? null : set.size() == 1 ? getField(set.iterator().next(), enforceStringValue) :
+                newArray(a -> set.forEach(f -> getField(f, enforceStringValue).matchType()
+                            .ifArray(b -> b.forEach(t -> a.add(t, false)))
+                            .orElse(t -> a.add(t, false))
+                ));
         }
 
         /**
          * Retrieves the Value for the given field name.
          *
          * @param field the field name
+         *
          * @return the Value
          */
         public Value getField(final String field) {
@@ -1000,8 +981,9 @@ public class Value implements JsonValue {
         /**
          * Retrieves the Value for the given field name represented as an Array.
          *
-         * @param field the field name
+         * @param field    the field name
          * @param consumer the consumer
+         *
          * @return the Value
          */
         public Value getList(final String field, final Consumer<Array> consumer) {
@@ -1011,7 +993,7 @@ public class Value implements JsonValue {
         /**
          * Adds all values at the given field name.
          *
-         * @param field the field name
+         * @param field  the field name
          * @param values the values
          */
         public void addAll(final String field, final List<String> values) {
@@ -1028,8 +1010,8 @@ public class Value implements JsonValue {
         }
 
         /**
-         * {@link #put(String, Value) Adds} a field/value pair to this hash, potentially merging
-         * with an existing value.
+         * {@link #put(String, Value) Adds} a field/value pair to this hash,
+         * potentially merging with an existing value.
          *
          * @param field the field name
          * @param newValue the new metadata value
@@ -1039,23 +1021,15 @@ public class Value implements JsonValue {
 
             if (oldValue == null) {
                 put(field, newValue);
-            } else {
+            }
+            else {
                 final String basePath = oldValue.getPath();
                 if (!oldValue.isArray()) { // repeated field: convert single val to first in array
                     oldValue.withPathAppend(1);
                 }
 
-                put(
-                        field,
-                        oldValue.asList(
-                                oldVals ->
-                                        newValue.asList(
-                                                newVals ->
-                                                        newVals.forEach(
-                                                                newVal ->
-                                                                        oldVals.add(
-                                                                                newVal.withPathSet(
-                                                                                        basePath))))));
+                put(field, oldValue.asList(oldVals -> newValue.asList(newVals ->
+                                newVals.forEach(newVal -> oldVals.add(newVal.withPathSet(basePath))))));
             }
         }
 
@@ -1069,7 +1043,8 @@ public class Value implements JsonValue {
 
             if (fixPath.size() > 1) {
                 fixPath.removeNestedFrom(this);
-            } else {
+            }
+            else {
                 modifyFields(field, this::removeField);
             }
         }
@@ -1089,20 +1064,20 @@ public class Value implements JsonValue {
          * @param fields the field names
          */
         public void retainFields(final Collection<String> fields) {
-            final Map<String, Collection<String>> retainFields =
-                    retainFields(fields, this::findFields);
+            final Map<String, Collection<String>> retainFields = retainFields(fields, this::findFields);
 
             map.keySet().retainAll(retainFields.keySet());
 
-            retainFields.forEach(
-                    (k, v) -> {
-                        if (!v.isEmpty()) {
-                            getField(k).retainFields(v);
-                        }
-                    });
+            retainFields.forEach((k, v) -> {
+                if (!v.isEmpty()) {
+                    getField(k).retainFields(v);
+                }
+            });
         }
 
-        /** Recursively removes all field/value pairs from this hash whose value is empty. */
+        /**
+         * Recursively removes all field/value pairs from this hash whose value is empty.
+         */
         public void removeEmptyValues() {
             map.values().removeIf(REMOVE_EMPTY_VALUES);
         }
@@ -1145,32 +1120,31 @@ public class Value implements JsonValue {
             try {
                 jsonGenerator.writeStartObject();
 
-                forEach(
-                        (f, v) -> {
-                            try {
-                                jsonGenerator.writeFieldName(f);
-                            } catch (final IOException e) {
-                                throw new UncheckedIOException(e);
-                            }
+                forEach((f, v) -> {
+                    try {
+                        jsonGenerator.writeFieldName(f);
+                    }
+                    catch (final IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
 
-                            v.toJson(jsonGenerator);
-                        });
+                    v.toJson(jsonGenerator);
+                });
 
                 jsonGenerator.writeEndObject();
-            } catch (final IOException e) {
+            }
+            catch (final IOException e) {
                 throw new UncheckedIOException(e);
             }
         }
 
         /**
-         * Avoids {@link ConcurrentModificationException} when modifying the hash based on matched
-         * fields.
+         * Avoids {@link ConcurrentModificationException} when modifying the hash based on matched fields.
          *
          * @param pattern the field name pattern
          * @param consumer the action to be performed for each value
          */
-        /*package-private*/ void modifyFields(
-                final String pattern, final Consumer<String> consumer) {
+        /*package-private*/ void modifyFields(final String pattern, final Consumer<String> consumer) {
             findFields(pattern).forEach(consumer);
         }
 
@@ -1193,7 +1167,8 @@ public class Value implements JsonValue {
                     trieCache.put(pattern, new HashMap<>());
 
                     prefixCache.put(pattern, pattern.substring(0, matcher.start()));
-                } else {
+                }
+                else {
                     prefixCache.put(pattern, null);
                 }
             }
@@ -1205,20 +1180,23 @@ public class Value implements JsonValue {
 
                 for (final String field : map.keySet()) {
                     if (!fieldCache.containsKey(field)) {
-                        final boolean matches =
-                                field.startsWith(prefix) && trie.get(field).contains(pattern);
+                        final boolean matches = field.startsWith(prefix) && trie.get(field).contains(pattern);
                         fieldCache.put(field, matches);
 
                         if (matches) {
                             fieldSet.add(field);
                         }
-                    } else if (fieldCache.get(field)) {
+                    }
+                    else if (fieldCache.get(field)) {
                         fieldSet.add(field);
                     }
                 }
-            } else if (map.containsKey(pattern)) {
+            }
+            else if (map.containsKey(pattern)) {
                 fieldSet.add(pattern);
             }
         }
+
     }
+
 }

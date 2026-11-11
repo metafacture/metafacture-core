@@ -24,19 +24,21 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
-/** Deletes all fields except the ones listed (incl. subfields). */
+/**
+ * Deletes all fields except the ones listed (incl. subfields).
+ */
 @FixCommand("retain")
 public class Retain implements FixFunction {
 
-    /** Creates an instance of {@link Retain}. */
-    public Retain() {}
+    /**
+     * Creates an instance of {@link Retain}.
+     */
+    public Retain() {
+    }
 
     @Override
-    public void apply(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         record.retainFields(params);
     }
+
 }

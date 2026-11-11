@@ -34,22 +34,24 @@ import org.mockito.junit.MockitoRule;
  */
 public final class EntityTest {
 
-    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-    public EntityTest() {}
+    public EntityTest() {
+    }
 
     @Test
     public void shouldEmitEntities() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <entity name='entity'>"
-                        + "    <data source='data1' name='l1' />"
-                        + "    <data source='data2' name='l2' />"
-                        + "  </entity>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <entity name='entity'>" +
+                "    <data source='data1' name='l1' />" +
+                "    <data source='data2' name='l2' />" +
+                "  </entity>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1x");
                     i.literal("data1", "a1");
@@ -75,19 +77,19 @@ public final class EntityTest {
                     o.get().literal("l1", "d");
                     o.get().endEntity();
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldEmitEntityOnFlushEvent() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <entity name='entity' flushWith='record'>"
-                        + "    <data source='d1' name='l1' />"
-                        + "    <data source='d2' name='l2' />"
-                        + "  </entity>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <entity name='entity' flushWith='record'>" +
+                "    <data source='d1' name='l1' />" +
+                "    <data source='d2' name='l2' />" +
+                "  </entity>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("d1", "a");
@@ -111,19 +113,19 @@ public final class EntityTest {
                     o.get().literal("l2", "c");
                     o.get().endEntity();
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldNotEmitEntityOnFlushEventIfIncomplete() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <entity name='entity' flushWith='record' flushIncomplete='false'>"
-                        + "    <data source='d1' name='l1' />"
-                        + "    <data source='d2' name='l2' />"
-                        + "  </entity>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <entity name='entity' flushWith='record' flushIncomplete='false'>" +
+                "    <data source='d1' name='l1' />" +
+                "    <data source='d2' name='l2' />" +
+                "  </entity>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("d1", "a");
@@ -144,22 +146,22 @@ public final class EntityTest {
                     o.get().endRecord();
                     o.get().startRecord("2");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldEmitEntityOnEachFlushEvent() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<metamorph version='1' entityMarker='.'"
-                        + "    xmlns='http://www.culturegraph.org/metamorph'>"
-                        + "  <rules>"
-                        + "    <entity name='entity' flushWith='E' reset='true'>"
-                        + "      <data source='E.d1' name='l1' />"
-                        + "      <data source='E.d2' name='l2' />"
-                        + "    </entity>"
-                        + "  </rules>"
-                        + "</metamorph>",
+        TestHelpers.assertMorph(receiver,
+                "<metamorph version='1' entityMarker='.'" +
+                "    xmlns='http://www.culturegraph.org/metamorph'>" +
+                "  <rules>" +
+                "    <entity name='entity' flushWith='E' reset='true'>" +
+                "      <data source='E.d1' name='l1' />" +
+                "      <data source='E.d2' name='l2' />" +
+                "    </entity>" +
+                "  </rules>" +
+                "</metamorph>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("E");
@@ -183,23 +185,23 @@ public final class EntityTest {
                     o.get().literal("l2", "d");
                     o.get().endEntity();
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldSupportNestedEntities() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <entity name='e1' flushWith='record'>"
-                        + "    <data source='d1' />"
-                        + "    <data source='d2' />"
-                        + "    <entity name='e2' flushWith='record'>"
-                        + "      <data source='d3' />"
-                        + "      <data source='d4' />"
-                        + "    </entity>"
-                        + "  </entity>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <entity name='e1' flushWith='record'>" +
+                "    <data source='d1' />" +
+                "    <data source='d2' />" +
+                "    <entity name='e2' flushWith='record'>" +
+                "      <data source='d3' />" +
+                "      <data source='d4' />" +
+                "    </entity>" +
+                "  </entity>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("d1", "a");
@@ -240,25 +242,25 @@ public final class EntityTest {
                     o.get().literal("d3", "c");
                     f.apply(2).endEntity();
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldSupportMultipleNestedEntities() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <entity name='uber' flushWith='record'>"
-                        + "    <data source='d' name='l' />"
-                        + "    <entity name='unter' sameEntity='true'>"
-                        + "      <data source='E.d1' name='l' />"
-                        + "      <data source='E.d2' name='l' />"
-                        + "    </entity>"
-                        + "    <entity name='void' sameEntity='true'>"
-                        + "      <data source='nothing' />"
-                        + "    </entity>"
-                        + "  </entity>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <entity name='uber' flushWith='record'>" +
+                "    <data source='d' name='l' />" +
+                "    <entity name='unter' sameEntity='true'>" +
+                "      <data source='E.d1' name='l' />" +
+                "      <data source='E.d2' name='l' />" +
+                "    </entity>" +
+                "    <entity name='void' sameEntity='true'>" +
+                "      <data source='nothing' />" +
+                "    </entity>" +
+                "  </entity>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1x");
                     i.startEntity("E");
@@ -297,26 +299,26 @@ public final class EntityTest {
                     o.get().literal("l", "c");
                     o.get().endEntity();
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldSupportDeeplyNestedEnities() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <entity name='1'>"
-                        + "    <data source='1' />"
-                        + "    <entity name='2'>"
-                        + "      <data source='2' />"
-                        + "      <entity name='3'>"
-                        + "        <entity name='4'>"
-                        + "          <data source='4' />"
-                        + "        </entity>"
-                        + "      </entity>"
-                        + "    </entity>"
-                        + "  </entity>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <entity name='1'>" +
+                "    <data source='1' />" +
+                "    <entity name='2'>" +
+                "      <data source='2' />" +
+                "      <entity name='3'>" +
+                "        <entity name='4'>" +
+                "          <data source='4' />" +
+                "        </entity>" +
+                "      </entity>" +
+                "    </entity>" +
+                "  </entity>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1x");
                     i.literal("1", "a");
@@ -335,24 +337,24 @@ public final class EntityTest {
                     o.get().literal("4", "c");
                     f.apply(4).endEntity();
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldGetNameFromDataInEntityName() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <entity>"
-                        + "    <entity-name>"
-                        + "      <data source='data1'>"
-                        + "        <compose prefix='entity:' />"
-                        + "      </data>"
-                        + "    </entity-name>"
-                        + "    <data source='data1' name='l1' />"
-                        + "    <data source='data2' name='l2' />"
-                        + "  </entity>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <entity>" +
+                "    <entity-name>" +
+                "      <data source='data1'>" +
+                "        <compose prefix='entity:' />" +
+                "      </data>" +
+                "    </entity-name>" +
+                "    <data source='data1' name='l1' />" +
+                "    <data source='data2' name='l2' />" +
+                "  </entity>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1x");
                     i.literal("data1", "a1");
@@ -378,25 +380,25 @@ public final class EntityTest {
                     o.get().literal("l1", "d");
                     o.get().endEntity();
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldGetNameFromCollectInEntityName() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <entity>"
-                        + "    <entity-name>"
-                        + "      <combine name='' value='entity:${a},${b}'>"
-                        + "        <data source='data1' name='a' />"
-                        + "        <data source='data2' name='b' />"
-                        + "      </combine>"
-                        + "    </entity-name>"
-                        + "    <data source='data1' name='l1' />"
-                        + "    <data source='data2' name='l2' />"
-                        + "  </entity>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <entity>" +
+                "    <entity-name>" +
+                "      <combine name='' value='entity:${a},${b}'>" +
+                "        <data source='data1' name='a' />" +
+                "        <data source='data2' name='b' />" +
+                "      </combine>" +
+                "    </entity-name>" +
+                "    <data source='data1' name='l1' />" +
+                "    <data source='data2' name='l2' />" +
+                "  </entity>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1x");
                     i.literal("data1", "a1");
@@ -422,21 +424,21 @@ public final class EntityTest {
                     o.get().literal("l1", "d");
                     o.get().endEntity();
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldResetNameToNameAttribute() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <entity name='defaultName' flushWith='record'>"
-                        + "    <entity-name>"
-                        + "      <data source='data3' />"
-                        + "    </entity-name>"
-                        + "    <data source='data1' name='l1' />"
-                        + "  </entity>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <entity name='defaultName' flushWith='record'>" +
+                "    <entity-name>" +
+                "      <data source='data3' />" +
+                "    </entity-name>" +
+                "    <data source='data1' name='l1' />" +
+                "  </entity>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1x");
                     i.literal("data1", "a");
@@ -457,18 +459,18 @@ public final class EntityTest {
                     o.get().literal("l1", "b");
                     o.get().endEntity();
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldEmitEmptyStringIfEntityNameIsNotSet() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <entity>"
-                        + "    <data source='in' name='out' />"
-                        + "  </entity>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <entity>" +
+                "    <data source='in' name='out' />" +
+                "  </entity>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("in", "a");
@@ -480,19 +482,19 @@ public final class EntityTest {
                     o.get().literal("out", "a");
                     o.get().endEntity();
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldEmitEntityContentsAgainIfResetIsFalse() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <entity name='entity'>"
-                        + "    <data source='lit1' />"
-                        + "    <data source='lit2' />"
-                        + "  </entity>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <entity name='entity'>" +
+                "    <data source='lit1' />" +
+                "    <data source='lit2' />" +
+                "  </entity>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("lit1", "const");
@@ -512,19 +514,19 @@ public final class EntityTest {
                     o.get().literal("lit2", "2");
                     o.get().endEntity();
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldNotEmitEntityContentsAgainIfResetIsTrue() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <entity name='entity' reset='true'>"
-                        + "    <data source='lit1' />"
-                        + "    <data source='lit2' />"
-                        + "  </entity>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <entity name='entity' reset='true'>" +
+                "    <data source='lit1' />" +
+                "    <data source='lit2' />" +
+                "  </entity>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("lit1", "const");
@@ -539,6 +541,8 @@ public final class EntityTest {
                     o.get().literal("lit2", "1");
                     o.get().endEntity();
                     o.get().endRecord();
-                });
+                }
+        );
     }
+
 }

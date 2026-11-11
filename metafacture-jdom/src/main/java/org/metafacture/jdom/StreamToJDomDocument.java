@@ -46,7 +46,8 @@ import java.util.regex.Pattern;
 @In(StreamReceiver.class)
 @Out(Document.class)
 @FluxCommand("to-jdom-document")
-public final class StreamToJDomDocument extends DefaultStreamPipe<ObjectReceiver<Document>> {
+public final class StreamToJDomDocument
+        extends DefaultStreamPipe<ObjectReceiver<Document>> {
 
     private static final String ATTRIBUTE_MARKER = "~";
     private static final Pattern NAMESPACE_DELIMITER = Pattern.compile(":", Pattern.LITERAL);
@@ -58,10 +59,10 @@ public final class StreamToJDomDocument extends DefaultStreamPipe<ObjectReceiver
     private final Map<String, Namespace> namespaces = new HashMap<String, Namespace>();
 
     /**
-     * Constructs a StreamToJDomDocument initialized with a given root tag name and a location of a
-     * file with named properties.
+     * Constructs a StreamToJDomDocument initialized with a given root tag name and
+     * a location of a file with named properties.
      *
-     * @param rootTagName the root tag name
+     * @param rootTagName         the root tag name
      * @param namespaceProperties the location of the file of the named properties
      */
     public StreamToJDomDocument(final String rootTagName, final String namespaceProperties) {
@@ -70,13 +71,12 @@ public final class StreamToJDomDocument extends DefaultStreamPipe<ObjectReceiver
         final Properties properties;
         try {
             properties = ResourceUtil.loadProperties(namespaceProperties);
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException("Cannot load namespaces list", e);
         }
         for (final Entry<Object, Object> entry : properties.entrySet()) {
-            namespaces.put(
-                    entry.getKey().toString(),
-                    Namespace.getNamespace(entry.getKey().toString(), entry.getValue().toString()));
+            namespaces.put(entry.getKey().toString(), Namespace.getNamespace(entry.getKey().toString(), entry.getValue().toString()));
         }
     }
 
@@ -125,15 +125,18 @@ public final class StreamToJDomDocument extends DefaultStreamPipe<ObjectReceiver
         assert !isClosed();
         if (name.isEmpty()) {
             currentElement.addContent(value);
-        } else if (name.startsWith(ATTRIBUTE_MARKER)) {
+        }
+        else if (name.startsWith(ATTRIBUTE_MARKER)) {
             final String[] parts = NAMESPACE_DELIMITER.split(name);
             if (parts.length == 2) {
                 currentElement.setAttribute(parts[1], value, getNamespace(parts[0].substring(1)));
-            } else {
+            }
+            else {
                 currentElement.setAttribute(name.substring(1), value);
             }
 
-        } else {
+        }
+        else {
             final Element temp = createElement(name);
             currentElement.addContent(temp);
             temp.setText(value);
@@ -145,4 +148,5 @@ public final class StreamToJDomDocument extends DefaultStreamPipe<ObjectReceiver
         assert !isClosed();
         getReceiver().process(document);
     }
+
 }

@@ -33,21 +33,21 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Writes the object value of the triple into a file. The filename is constructed from subject and
- * predicate.
+ * Writes the object value of the triple into a file. The filename
+ * is constructed from subject and predicate.
  *
- * <p>Please note: This module does not check if the filename constructed from subject and predicate
- * stays within {@code baseDir}. THIS MODULE SHOULD NOT BE USED IN ENVIRONMENTS IN WHICH THE VALUES
- * OF SUBJECT AND PREDICATE A PROVIDED BY AN UNTRUSTED SOURCE!
+ * Please note: This module does not check if the filename constructed
+ * from subject and predicate stays within {@code baseDir}. THIS MODULE
+ * SHOULD NOT BE USED IN ENVIRONMENTS IN WHICH THE VALUES OF SUBJECT AND
+ * PREDICATE A PROVIDED BY AN UNTRUSTED SOURCE!
  *
  * @author Christoph Böhme
  */
-@Description(
-        "Writes the object value of the triple into a file. The filename is "
-                + "constructed from subject and predicate. Please note: This module does "
-                + "not check if the filename constructed from subject and predicate stays "
-                + "within `baseDir`. THIS MODULE SHOULD NOT BE USED IN ENVIRONMENTS IN WHICH "
-                + "THE VALUES OF SUBJECT AND PREDICATE A PROVIDED BY AN UNTRUSTED SOURCE!")
+@Description("Writes the object value of the triple into a file. The filename is " +
+    "constructed from subject and predicate. Please note: This module does " +
+    "not check if the filename constructed from subject and predicate stays " +
+    "within `baseDir`. THIS MODULE SHOULD NOT BE USED IN ENVIRONMENTS IN WHICH " +
+    "THE VALUES OF SUBJECT AND PREDICATE A PROVIDED BY AN UNTRUSTED SOURCE!")
 @In(Triple.class)
 @Out(Void.class)
 @FluxCommand("write-triple-objects")
@@ -58,7 +58,8 @@ public final class TripleObjectWriter extends DefaultObjectReceiver<Triple> {
     private Charset encoding = StandardCharsets.UTF_8;
 
     /**
-     * Creates an instance of {@link TripleObjectWriter} with a given directory to write to.
+     * Creates an instance of {@link TripleObjectWriter} with a given directory to
+     * write to.
      *
      * @param baseDir the path to the base directory
      */
@@ -69,7 +70,8 @@ public final class TripleObjectWriter extends DefaultObjectReceiver<Triple> {
     /**
      * Sets the encoding used to open the resource.
      *
-     * @param encoding new encoding
+     * @param encoding
+     *            new encoding
      */
     public void setEncoding(final String encoding) {
         this.encoding = Charset.forName(encoding);
@@ -78,7 +80,8 @@ public final class TripleObjectWriter extends DefaultObjectReceiver<Triple> {
     /**
      * Sets the encoding used to open the resource.
      *
-     * @param encoding new encoding
+     * @param encoding
+     *            new encoding
      */
     public void setEncoding(final Charset encoding) {
         this.encoding = encoding;
@@ -99,7 +102,8 @@ public final class TripleObjectWriter extends DefaultObjectReceiver<Triple> {
         ensureParentPathExists(filePath);
         try (Writer writer = Files.newBufferedWriter(filePath, encoding)) {
             writer.write(triple.getObject());
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -114,9 +118,11 @@ public final class TripleObjectWriter extends DefaultObjectReceiver<Triple> {
         if (parentDir != null) {
             try {
                 Files.createDirectories(parentDir);
-            } catch (final IOException e) {
+            }
+            catch (final IOException e) {
                 throw new MetafactureException(e);
             }
         }
     }
+
 }

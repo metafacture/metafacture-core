@@ -24,8 +24,8 @@ import java.util.Set;
 /**
  * A {@link Map} with char as key. Used for set matching, tries etc.
  *
- * <p><strong>Important:</strong> It is optimized for size in memory. No extra information for fast
- * entry/keySet/values iteration etc. is held.
+ * <strong>Important:</strong> It is optimized for size in memory. No extra
+ * information for fast entry/keySet/values iteration etc. is held.
  *
  * @param <V> type of the values in the map
  * @author Markus Michael Geipel
@@ -105,7 +105,8 @@ final class CharMap<V> implements Map<Character, V> {
 
         if (entry == null) {
             currentTable[key % currentTable.length] = newEntry;
-        } else {
+        }
+        else {
             while (entry.getNext() != null) {
                 if (entry.getKeyChar() == key) {
                     throw new IllegalStateException("Key '" + key + "' already used");
@@ -175,8 +176,7 @@ final class CharMap<V> implements Map<Character, V> {
 
     @Override
     public Set<java.util.Map.Entry<Character, V>> entrySet() {
-        final Set<java.util.Map.Entry<Character, V>> entries =
-                new HashSet<java.util.Map.Entry<Character, V>>();
+        final Set<java.util.Map.Entry<Character, V>> entries = new HashSet<java.util.Map.Entry<Character, V>>();
         for (int i = 0; i < table.length; ++i) {
             Entry<V> entry = table[i];
             while (entry != null) {
@@ -235,5 +235,7 @@ final class CharMap<V> implements Map<Character, V> {
         public String toString() {
             return key + "=" + value;
         }
+
     }
+
 }

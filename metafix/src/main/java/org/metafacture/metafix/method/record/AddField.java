@@ -25,19 +25,21 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
-/** Creates a field with a defined value. */
+/**
+ * Creates a field with a defined value.
+ */
 @FixCommand("add_field")
 public class AddField implements FixFunction {
 
-    /** Creates an instance of {@link AddField}. */
-    public AddField() {}
+    /**
+     * Creates an instance of {@link AddField}.
+     */
+    public AddField() {
+    }
 
     @Override
-    public void apply(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         record.set(params.get(0), new Value(params.get(1)));
     }
+
 }

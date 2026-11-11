@@ -26,13 +26,13 @@ import org.metafacture.json.JsonEncoder;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
-/** Base class for Metafix benchmarks. */
-@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
-public abstract class AbstractMetafixBenchmark extends FixParseBenchmark {
+/**
+ * Base class for Metafix benchmarks.
+ */
+public abstract class AbstractMetafixBenchmark extends FixParseBenchmark { // checkstyle-disable-line ClassDataAbstractionCoupling
 
     // TODO: Need to inject system properties into JMHTask's JavaExec process.
-    // private static final boolean DEBUG_OUTPUT =
-    // Boolean.parseBoolean(System.getProperty("org.metafacture.metafix.debugBenchmarkOutput"));
+    //private static final boolean DEBUG_OUTPUT = Boolean.parseBoolean(System.getProperty("org.metafacture.metafix.debugBenchmarkOutput"));
     private static final boolean DEBUG_OUTPUT = false;
 
     private static final String INPUT = BASE + "/input/%s.json";
@@ -40,8 +40,11 @@ public abstract class AbstractMetafixBenchmark extends FixParseBenchmark {
     private FileOpener fileOpener;
     private String inputFile;
 
-    /** Creates an instance of {@link AbstractMetafixBenchmark}. */
-    public AbstractMetafixBenchmark() {}
+    /**
+     * Creates an instance of {@link AbstractMetafixBenchmark}.
+     */
+    public AbstractMetafixBenchmark() {
+    }
 
     @Override
     public void setup() {
@@ -52,21 +55,26 @@ public abstract class AbstractMetafixBenchmark extends FixParseBenchmark {
         final Metafix metafix;
         try {
             metafix = new Metafix(getFixFile());
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new UncheckedIOException(e);
         }
 
         if (DEBUG_OUTPUT) {
-            metafix.setReceiver(new JsonEncoder()).setReceiver(new ObjectStdoutWriter<String>());
-        } else {
-            metafix.setReceiver(new DefaultStreamReceiver());
+            metafix
+                .setReceiver(new JsonEncoder())
+                .setReceiver(new ObjectStdoutWriter<String>());
+        }
+        else {
+            metafix
+                .setReceiver(new DefaultStreamReceiver());
         }
 
         fileOpener = new FileOpener();
         fileOpener
-                .setReceiver(new RecordReader())
-                .setReceiver(new JsonDecoder())
-                .setReceiver(metafix);
+            .setReceiver(new RecordReader())
+            .setReceiver(new JsonDecoder())
+            .setReceiver(metafix);
     }
 
     @Override
@@ -75,4 +83,5 @@ public abstract class AbstractMetafixBenchmark extends FixParseBenchmark {
     }
 
     protected abstract String getInput();
+
 }

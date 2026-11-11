@@ -27,19 +27,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Only forwards records which match (or do not match) a regular expression given in the
- * constructor.
+ * Only forwards records which match (or do not match) a regular expression
+ * given in the constructor.
  *
  * @author Christoph Böhme
+ *
  */
-@Description(
-        "Only forwards records which match (or do not match) a regular expression. Patterns are not"
-            + " implicitly anchored and therefore without anchoring the filter works as long as the"
-            + " pattern matches a part of the incoming string.")
+@Description("Only forwards records which match (or do not match) a regular expression. Patterns are not implicitly anchored and therefore without anchoring the filter works as long as the pattern matches a part of the incoming string.")
 @In(String.class)
 @Out(String.class)
 @FluxCommand("filter-strings")
-public final class StringFilter extends DefaultObjectPipe<String, ObjectReceiver<String>> {
+public final class StringFilter extends
+        DefaultObjectPipe<String, ObjectReceiver<String>> {
 
     private final Matcher matcher;
     private boolean passMatches = true;
@@ -89,4 +88,5 @@ public final class StringFilter extends DefaultObjectPipe<String, ObjectReceiver
             getReceiver().process(obj);
         }
     }
+
 }

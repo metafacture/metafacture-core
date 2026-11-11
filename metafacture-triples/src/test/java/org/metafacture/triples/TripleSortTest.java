@@ -34,16 +34,20 @@ import java.util.function.Consumer;
 
 public final class TripleSortTest {
 
-    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock private ObjectReceiver<Triple> receiver;
+    @Mock
+    private ObjectReceiver<Triple> receiver;
 
-    public TripleSortTest() {}
+    public TripleSortTest() {
+    }
 
     @Test
     public void shouldSortByIncreasingSubject() {
         assertSort(
-                t -> {},
+                t -> {
+                },
                 "s0 p1 o2",
                 "s2 p1 o0",
                 "s0 p1 o1",
@@ -54,7 +58,8 @@ public final class TripleSortTest {
                 "s0 p1 o1",
                 "s0 p2 o1",
                 "s1 p0 o2",
-                "s2 p1 o0");
+                "s2 p1 o0"
+        );
     }
 
     @Test
@@ -73,7 +78,8 @@ public final class TripleSortTest {
                 "s1 p0 o2",
                 "s0 p1 o2",
                 "s0 p1 o1",
-                "s0 p2 o1");
+                "s0 p2 o1"
+        );
     }
 
     @Test
@@ -92,7 +98,8 @@ public final class TripleSortTest {
                 "s0 p1 o2",
                 "s2 p1 o0",
                 "s0 p1 o1",
-                "s0 p2 o1");
+                "s0 p2 o1"
+        );
     }
 
     @Test
@@ -112,7 +119,8 @@ public final class TripleSortTest {
                 "s0 p1 o2",
                 "s2 p1 o0",
                 "s0 p1 o1",
-                "s1 p0 o2");
+                "s1 p0 o2"
+        );
     }
 
     @Test
@@ -131,7 +139,8 @@ public final class TripleSortTest {
                 "s0 p1 o1",
                 "s0 p2 o1",
                 "s0 p1 o2",
-                "s1 p0 o2");
+                "s1 p0 o2"
+        );
     }
 
     @Test
@@ -151,7 +160,8 @@ public final class TripleSortTest {
                 "s1 p0 o2",
                 "s0 p1 o1",
                 "s0 p2 o1",
-                "s2 p1 o0");
+                "s2 p1 o0"
+        );
     }
 
     @Test
@@ -170,7 +180,8 @@ public final class TripleSortTest {
                 "s0 p1 o2",
                 "s0 p2 o1",
                 "s1 p0 o2",
-                "s2 p1 o0");
+                "s2 p1 o0"
+        );
     }
 
     @Test
@@ -190,13 +201,15 @@ public final class TripleSortTest {
                 "s1 p0 o2",
                 "s0 p2 o1",
                 "s0 p1 o2",
-                "s0 p1 o1");
+                "s0 p1 o1"
+        );
     }
 
     @Test
     public void shouldNotSortNumerically() {
         assertSort(
-                t -> {},
+                t -> {
+                },
                 "10  p1 o2",
                 "2   p1 o0",
                 "0   p1 o1",
@@ -207,7 +220,8 @@ public final class TripleSortTest {
                 "10  p1 o2",
                 "101 p0 o2",
                 "11  p2 o1",
-                "2   p1 o0");
+                "2   p1 o0"
+        );
     }
 
     @Test
@@ -226,7 +240,8 @@ public final class TripleSortTest {
                 "2   p1 o0",
                 "10  p1 o2",
                 "11  p2 o1",
-                "101 p0 o2");
+                "101 p0 o2"
+        );
     }
 
     @Test
@@ -246,7 +261,8 @@ public final class TripleSortTest {
                 "11  p2 o1",
                 "10  p1 o2",
                 "2   p1 o0",
-                "0   p1 o1");
+                "0   p1 o1"
+        );
     }
 
     @Test(expected = NumberFormatException.class)
@@ -265,7 +281,8 @@ public final class TripleSortTest {
                 "",
                 "",
                 "",
-                "");
+                ""
+        );
     }
 
     @Test
@@ -285,22 +302,19 @@ public final class TripleSortTest {
                 "10  p1 o2",
                 "101 p0 o2",
                 "11  p2 o1",
-                "2   p1 o0");
+                "2   p1 o0"
+        );
     }
 
     public void assertSort(final Consumer<TripleSort> consumer, final String... triples) {
-        final BiConsumer<Integer, Consumer<Triple>> processor =
-                (i, c) -> {
-                    final int j = triples.length / 2;
+        final BiConsumer<Integer, Consumer<Triple>> processor = (i, c) -> {
+            final int j = triples.length / 2;
 
-                    Arrays.stream(triples, i * j, (i + 1) * j)
-                            .map(
-                                    s -> {
-                                        final String[] t = s.split("\\s+");
-                                        return new Triple(t[0], t[1], t[2]);
-                                    })
-                            .forEach(c);
-                };
+            Arrays.stream(triples, i * j, (i + 1) * j).map(s -> {
+                final String[] t = s.split("\\s+");
+                return new Triple(t[0], t[1], t[2]);
+            }).forEach(c);
+        };
 
         final InOrder ordered = Mockito.inOrder(receiver);
 
@@ -317,9 +331,11 @@ public final class TripleSortTest {
 
             ordered.verifyNoMoreInteractions();
             Mockito.verifyNoMoreInteractions(receiver);
-        } catch (final MockitoAssertionError e) {
+        }
+        catch (final MockitoAssertionError e) {
             System.out.println(Mockito.mockingDetails(receiver).printInvocations());
             throw e;
         }
     }
+
 }

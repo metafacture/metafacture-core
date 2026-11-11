@@ -32,6 +32,7 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link TripleCollect}.
  *
  * @author Markus Geipel
+ *
  */
 public final class TripleCollectTest {
 
@@ -43,11 +44,13 @@ public final class TripleCollectTest {
     private static final String REC_ID = "id";
     private static final String REC_ALT_ID = "altid";
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
     private TripleCollect collect;
 
-    public TripleCollectTest() {}
+    public TripleCollectTest() {
+    }
 
     @Before
     public void initMocks() {
@@ -76,23 +79,10 @@ public final class TripleCollectTest {
 
     @Test
     public void testShouldDecodeEntities() {
-        collect.process(
-                new Triple(
-                        REC_ID,
-                        ENTITY_NAME,
-                        Formeta.GROUP_START
-                                + NAME
-                                + Formeta.NAME_VALUE_SEPARATOR
-                                + VALUE
-                                + Formeta.ITEM_SEPARATOR
-                                + ENTITY_NAME
-                                + Formeta.GROUP_START
-                                + NAME
-                                + Formeta.NAME_VALUE_SEPARATOR
-                                + VALUE
-                                + Formeta.GROUP_END
-                                + Formeta.GROUP_END,
-                        ObjectType.ENTITY));
+        collect.process(new Triple(REC_ID,  ENTITY_NAME, Formeta.GROUP_START + NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE +
+                Formeta.ITEM_SEPARATOR + ENTITY_NAME + Formeta.GROUP_START + NAME +
+                Formeta.NAME_VALUE_SEPARATOR + VALUE + Formeta.GROUP_END + Formeta.GROUP_END,
+                ObjectType.ENTITY));
         collect.closeStream();
 
         final InOrder ordered = Mockito.inOrder(receiver);
@@ -119,4 +109,5 @@ public final class TripleCollectTest {
 
         Mockito.verify(receiver, Mockito.never()).endRecord();
     }
+
 }

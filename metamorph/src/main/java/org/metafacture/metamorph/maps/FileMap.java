@@ -41,21 +41,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Provides a {@link Map} based on files. Can be a single file or a comma-separated list of files.
+ * Provides a {@link Map} based on files. Can be a single file or a
+ * comma-separated list of files.
  *
- * <p>The default {@link #setEncoding encoding} is UTF-8. The default {@link #setSeparator
- * separator} is {@code \t}. The default {@link #setKeyColumn keyColumn} is {@code 0}. The default
- * {@link #setValueColumn valueColumn} is {@code 1}.
+ * The default {@link #setEncoding encoding} is UTF-8.
+ * The default {@link #setSeparator separator} is {@code \t}.
+ * The default {@link #setKeyColumn keyColumn} is {@code 0}.
+ * The default {@link #setValueColumn valueColumn} is {@code 1}.
  *
- * <p>By setting {@link #setAllowEmptyValues allowEmptyValues} to {@code true}, the values in the
- * {@link Map} can be empty; thus enabling e.g. {@link
- * org.metafacture.metamorph.functions.SetReplace} to remove matching keys.
+ * <p>By setting {@link #setAllowEmptyValues allowEmptyValues} to {@code true},
+ * the values in the {@link Map} can be empty; thus enabling e.g.
+ * {@link org.metafacture.metamorph.functions.SetReplace} to remove matching
+ * keys.
  *
- * <p>By setting {@link #setExpectedColumns expectedColumns} to {@code -1}, the number of columns is
- * not checked.
+ * <p>By setting {@link #setExpectedColumns expectedColumns} to
+ * {@code -1}, the number of columns is not checked.
  *
- * <p><strong>Important:</strong> Otherwise, all lines that are not split into the expected number
- * of parts by the separator are ignored!
+ * <p><strong>Important:</strong> Otherwise, all lines that are not split into
+ * the expected number of parts by the separator are ignored!
  *
  * @author Markus Michael Geipel
  */
@@ -73,8 +76,11 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> implement
     private int keyColumn;
     private int valueColumn = 1;
 
-    /** Creates an instance of {@link FileMap}. */
-    public FileMap() {}
+    /**
+     * Creates an instance of {@link FileMap}.
+     */
+    public FileMap() {
+    }
 
     private void init() {
         loadFiles();
@@ -82,9 +88,10 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> implement
     }
 
     /**
-     * Sets whether to allow empty values in the {@link Map} or ignore these entries.
+     * Sets whether to allow empty values in the {@link Map} or ignore these
+     * entries.
      *
-     * <p><strong>Default value: false</strong>
+     * <strong>Default value: false</strong>
      *
      * @param allowEmptyValues true if empty values in the Map are allowed
      */
@@ -93,11 +100,12 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> implement
     }
 
     /**
-     * Sets number of expected columns; lines with different number of columns are ignored. Set to
-     * {@code -1} to disable the check and allow arbitrary number of columns.
+     * Sets number of expected columns; lines with different number of columns
+     * are ignored. Set to {@code -1} to disable the check and allow arbitrary
+     * number of columns.
      *
-     * <p><strong>Default value: calculated from {@link #setKeyColumn key} and {@link
-     * #setValueColumn value} columns</strong>
+     * <strong>Default value: calculated from {@link #setKeyColumn key} and
+     * {@link #setValueColumn value} columns</strong>
      *
      * @param expectedColumns number of expected columns
      */
@@ -125,7 +133,6 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> implement
 
     /**
      * Sets a file which provides the {@link Map}.
-     *
      * @param file the file
      */
     public void setFile(final String file) {
@@ -164,9 +171,11 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> implement
     }
 
     private void loadFile(final String file) {
-        try (InputStream stream = openStream(file);
+        try (
+                InputStream stream = openStream(file);
                 Reader reader = fileOpener.open(stream);
-                BufferedReader br = new BufferedReader(reader)) {
+                BufferedReader br = new BufferedReader(reader)
+        ) {
             final int minColumns = Math.max(keyColumn, valueColumn) + 1;
             final int expColumns = expectedColumns != 0 ? expectedColumns : minColumns;
 
@@ -183,7 +192,8 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> implement
 
                 map.put(parts[keyColumn], parts[valueColumn]);
             }
-        } catch (final IOException | UncheckedIOException e) {
+        }
+        catch (final IOException | UncheckedIOException e) {
             throw new MorphExecutionException("filemap: cannot read map file", e);
         }
     }
@@ -198,44 +208,37 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> implement
 
     private InputStream openStream(final String file) {
         return openAsFile(file)
-                .orElseGet(
-                        () ->
-                                openAsResource(file)
-                                        .orElseGet(
-                                                () ->
-                                                        openAsUrl(file)
-                                                                .orElseThrow(
-                                                                        () ->
-                                                                                new MorphExecutionException(
-                                                                                        "File not"
-                                                                                            + " found:"
-                                                                                            + " "
-                                                                                                + file))));
+            .orElseGet(() -> openAsResource(file)
+                .orElseGet(() -> openAsUrl(file)
+                    .orElseThrow(() -> new MorphExecutionException("File not found: " + file))));
     }
 
     private Optional<InputStream> openAsFile(final String file) {
         try {
             return Optional.of(new FileInputStream(file));
-        } catch (final FileNotFoundException e) {
+        }
+        catch (final FileNotFoundException e) {
             return Optional.empty();
         }
     }
 
     private Optional<InputStream> openAsResource(final String file) {
-        return Optional.ofNullable(
-                Thread.currentThread().getContextClassLoader().getResourceAsStream(file));
+        return Optional.ofNullable(Thread.currentThread()
+                .getContextClassLoader().getResourceAsStream(file));
     }
 
     private Optional<InputStream> openAsUrl(final String file) {
         final URL url;
         try {
             url = ResourceUtil.toURL(file);
-        } catch (final MalformedURLException e) {
+        }
+        catch (final MalformedURLException e) {
             return Optional.empty();
         }
         try {
             return Optional.of(url.openStream());
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new UncheckedIOException(e);
         }
     }
@@ -243,7 +246,7 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> implement
     /**
      * Sets the separator.
      *
-     * <p><strong>Default value: {@code \t}</strong>
+     * <strong>Default value: {@code \t}</strong>
      *
      * @param delimiter the separator
      */
@@ -254,7 +257,7 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> implement
     /**
      * Sets the key column (0-based).
      *
-     * <p><strong>Default value: {@code 0}</strong>
+     * <strong>Default value: {@code 0}</strong>
      *
      * @param keyColumn the key column
      */
@@ -265,7 +268,7 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> implement
     /**
      * Sets the value column (0-based).
      *
-     * <p><strong>Default value: {@code 1}</strong>
+     * <strong>Default value: {@code 1}</strong>
      *
      * @param valueColumn the value column
      */
@@ -294,4 +297,5 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> implement
         map.clear();
         fileOpener.closeStream();
     }
+
 }

@@ -29,6 +29,7 @@ import java.io.Reader;
  * Creates a reader for the supplied string and sends it to the receiver.
  *
  * @author Christoph Böhme
+ *
  */
 @Description("Creates a reader for the supplied string and sends it to the receiver")
 @In(String.class)
@@ -36,11 +37,15 @@ import java.io.Reader;
 @FluxCommand("read-string")
 public final class StringReader extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
-    /** Creates an instance of {@link StringReader}. */
-    public StringReader() {}
+    /**
+     * Creates an instance of {@link StringReader}.
+     */
+    public StringReader() {
+    }
 
     @Override
     public void process(final String str) {
         getReceiver().process(new java.io.StringReader(str));
     }
+
 }

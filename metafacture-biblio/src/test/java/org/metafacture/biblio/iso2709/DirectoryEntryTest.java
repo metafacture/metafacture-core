@@ -31,28 +31,23 @@ public class DirectoryEntryTest {
 
     private static final String DUMMY_LABEL = " ".repeat(24);
 
-    private static final byte[] RECORD =
-            asBytes(
-                    DUMMY_LABEL
-                            + "001234IMP"
-                            + "002567LEM"
-                            + "012090AKB"
-                            + "012890AKB"
-                            + Iso646Constants.INFORMATION_SEPARATOR_2
-                            + Iso646Constants.INFORMATION_SEPARATOR_3);
+    private static final byte[] RECORD = asBytes(DUMMY_LABEL + "001234IMP" +
+            "002567LEM" + "012090AKB" +  "012890AKB" +
+            Iso646Constants.INFORMATION_SEPARATOR_2 +
+            Iso646Constants.INFORMATION_SEPARATOR_3);
 
     private DirectoryEntry directoryEntry;
 
-    public DirectoryEntryTest() {}
+    public DirectoryEntryTest() {
+    }
 
     @Before
     public void createSystemUnderTest() {
-        final RecordFormat recordFormat =
-                RecordFormat.create()
-                        .withFieldLengthLength(1)
-                        .withFieldStartLength(2)
-                        .withImplDefinedPartLength(3)
-                        .build();
+        final RecordFormat recordFormat = RecordFormat.create()
+                .withFieldLengthLength(1)
+                .withFieldStartLength(2)
+                .withImplDefinedPartLength(3)
+                .build();
         final Iso646ByteBuffer buffer = new Iso646ByteBuffer(RECORD);
         directoryEntry = new DirectoryEntry(buffer, recordFormat, RECORD.length - 1);
     }
@@ -149,4 +144,5 @@ public class DirectoryEntryTest {
     private static byte[] asBytes(final String str) {
         return str.getBytes(Charset.forName("UTF-8"));
     }
+
 }

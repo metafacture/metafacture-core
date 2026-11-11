@@ -17,7 +17,8 @@
 package org.metafacture.biblio.iso2709;
 
 /**
- * Callback interface defining the events emitted by {@link Record#processFields(FieldHandler)}.
+ * Callback interface defining the events emitted by
+ * {@link Record#processFields(FieldHandler)}.
  *
  * @author Christoph Böhme
  */
@@ -26,22 +27,24 @@ public interface FieldHandler {
     /**
      * Reference a field.
      *
-     * @param tag the tag
+     * @param tag             the tag
      * @param implDefinedPart the impl defined part
-     * @param value the value
+     * @param value           the value
      */
     void referenceField(char[] tag, char[] implDefinedPart, String value);
 
     /**
      * Starts a data field.
      *
-     * @param tag the tag
+     * @param tag             the tag
      * @param implDefinedPart the impl defined part
-     * @param indicators the indicators
+     * @param indicators      the indicators
      */
     void startDataField(char[] tag, char[] implDefinedPart, char[] indicators);
 
-    /** Ends the data field. */
+    /**
+     * Ends the data field.
+     */
     void endDataField();
 
     /**
@@ -55,7 +58,8 @@ public interface FieldHandler {
      * Sets the identifier to a value.
      *
      * @param identifier the identifier
-     * @param value the value
+     * @param value      the value
      */
     void data(char[] identifier, String value);
+
 }

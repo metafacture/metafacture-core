@@ -29,14 +29,17 @@ import java.util.function.Consumer;
  * Tests for class {@link WellformednessChecker}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class WellformednessCheckerTest {
 
-    @Mock private Consumer<String> errorHandler;
+    @Mock
+    private Consumer<String> errorHandler;
 
     private WellformednessChecker wellformednessChecker;
 
-    public WellformednessCheckerTest() {}
+    public WellformednessCheckerTest() {
+    }
 
     @Before
     public void setup() {
@@ -189,4 +192,5 @@ public final class WellformednessCheckerTest {
 
         Mockito.verify(errorHandler).accept(ArgumentMatchers.any());
     }
+
 }

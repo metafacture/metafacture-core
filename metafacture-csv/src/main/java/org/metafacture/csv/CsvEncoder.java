@@ -35,7 +35,9 @@ import java.util.List;
 /**
  * A csv encoder that converts a record into a csv line (Default separator: {@value #DEFAULT_SEP}).
  *
- * <p>Each record represents a row. Each literal value represents a column value.
+ * <p>
+ * Each record represents a row. Each literal value represents a column value.
+ * </P>
  *
  * @author eberhardtj (j.eberhardt@dnb.de)
  */
@@ -75,12 +77,15 @@ public class CsvEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
     }
 
     /**
-     * Creates an instance of {@link CsvEncoder}. The default separator is {@value #DEFAULT_SEP}.
+     * Creates an instance of {@link CsvEncoder}. The default separator is
+     * {@value #DEFAULT_SEP}.
      */
-    public CsvEncoder() {}
+    public CsvEncoder() {
+    }
 
     /**
-     * Start each line with the record ID. Default is to not start each line with the record ID.
+     * Start each line with the record ID.
+     * Default is to not start each line with the record ID.
      *
      * @param includeRecordId true if the first column should consist of the record's ID
      */
@@ -89,7 +94,8 @@ public class CsvEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
     }
 
     /**
-     * Add first record as a column description header. Default is to not add a column description.
+     * Add first record as a column description header.
+     * Default is to not add a column description.
      *
      * @param includeHeader true if the first record should act as a CSV header, otherwise false
      */
@@ -98,7 +104,8 @@ public class CsvEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
     }
 
     /**
-     * Set the character to separate the columns. The default is {@value #DEFAULT_SEP}.
+     * Set the character to separate the columns.
+     * The default is {@value #DEFAULT_SEP}.
      *
      * @param separator set the character which separates the columns
      */
@@ -110,7 +117,8 @@ public class CsvEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
     }
 
     /**
-     * Set the character to separate the columns. The default is {@value #DEFAULT_SEP}.
+     * Set the character to separate the columns.
+     * The default is {@value #DEFAULT_SEP}.
      *
      * @param separator set the character which separates the columns
      */
@@ -119,7 +127,8 @@ public class CsvEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
     }
 
     /**
-     * Set if values should be not quoted by '"'. The default is to quote values.
+     * Set if values should be not quoted by '"'.
+     * The default is to quote values.
      *
      * @param noQuotes true if no quotes should be used. Default is false.
      */
@@ -130,13 +139,7 @@ public class CsvEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
     private void initialize() {
         writer = new StringWriter();
         final String emptyLineEnd = "";
-        csvWriter =
-                new CSVWriter(
-                        writer,
-                        separator,
-                        noQuotes ? CSVWriter.NO_QUOTE_CHARACTER : CSVWriter.DEFAULT_QUOTE_CHARACTER,
-                        CSVWriter.DEFAULT_ESCAPE_CHARACTER,
-                        emptyLineEnd);
+        csvWriter = new CSVWriter(writer, separator, noQuotes ? CSVWriter.NO_QUOTE_CHARACTER : CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, emptyLineEnd);
     }
 
     private String[] arrayOf(final List<String> list) {
@@ -198,7 +201,8 @@ public class CsvEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
     public void onCloseStream() {
         try {
             csvWriter.close();
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -211,4 +215,5 @@ public class CsvEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
         this.isFirstRecord = true;
         this.rowItems = new ArrayList<>();
     }
+
 }

@@ -35,30 +35,34 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Emits the literals which are received as triples such that the name and value become the
- * predicate and the object of the triple. The record id containing the literal becomes the subject.
- *
- * <p>If 'redirect' is true, the value of the subject is determined by using either the value of a
- * literal named '_id', or for individual literals by prefixing their name with '{to:ID}'.
- *
- * <p>Set 'recordPredicate' to encode a complete record in one triple. The value of
- * 'recordPredicate' is used as the predicate of the triple. If 'recordPredicate' is set, no
- * {to:ID}NAME-style redirects are possible.
+ * Emits the literals which are received as triples such
+ * that the name and value become the predicate and the object
+ * of the triple. The record id containing the literal becomes
+ * the subject.
+ * <p>
+ * If 'redirect' is true, the value of the subject is determined
+ * by using either the value of a literal named '_id', or for
+ * individual literals by prefixing their name with '{to:ID}'.
+ * <p>
+ * Set 'recordPredicate' to encode a complete record in one triple.
+ * The value of 'recordPredicate' is used as the predicate of the
+ * triple. If 'recordPredicate' is set, no {to:ID}NAME-style
+ * redirects are possible.
  *
  * @author Markus Michael Geipel
+ *
  */
-@Description(
-        "Emits the literals which are received as triples such "
-                + "that the name and value become the predicate and the object "
-                + "of the triple. The record id containing the literal becomes "
-                + "the subject. "
-                + "If 'redirect' is true, the value of the subject is determined "
-                + "by using either the value of a literal named '_id', or for "
-                + "individual literals by prefixing their name with '{to:ID}'. "
-                + "Set 'recordPredicate' to encode a complete record in one triple. "
-                + "The value of 'recordPredicate' is used as the predicate of the "
-                + "triple. If 'recordPredicate' is set, no {to:ID}NAME-style "
-                + "redirects are possible.")
+@Description("Emits the literals which are received as triples such " +
+        "that the name and value become the predicate and the object " +
+        "of the triple. The record id containing the literal becomes " +
+        "the subject. " +
+        "If 'redirect' is true, the value of the subject is determined " +
+        "by using either the value of a literal named '_id', or for " +
+        "individual literals by prefixing their name with '{to:ID}'. " +
+        "Set 'recordPredicate' to encode a complete record in one triple. " +
+        "The value of 'recordPredicate' is used as the predicate of the " +
+        "triple. If 'recordPredicate' is set, no {to:ID}NAME-style " +
+        "redirects are possible.")
 @In(StreamReceiver.class)
 @Out(Triple.class)
 @FluxCommand("stream-to-triples")
@@ -79,8 +83,11 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
     private String predicateName;
     private String currentId;
 
-    /** Creates an instance of {@link StreamToTriples}. */
-    public StreamToTriples() {}
+    /**
+     * Creates an instance of {@link StreamToTriples}.
+     */
+    public StreamToTriples() {
+    }
 
     /**
      * Checks whether redirection is enabled.
@@ -127,7 +134,8 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
         if (recordPredicate != null) {
             encodeLevel = 0;
             startEncode(recordPredicate);
-        } else {
+        }
+        else {
             encodeLevel = 1;
         }
 
@@ -146,13 +154,7 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 
         if (redirect) {
             for (int i = 0; i < nameBuffer.size(); ++i) {
-                getReceiver()
-                        .process(
-                                new Triple(
-                                        currentId,
-                                        nameBuffer.get(i),
-                                        valueBuffer.get(i),
-                                        typeBuffer.get(i)));
+                getReceiver().process(new Triple(currentId, nameBuffer.get(i), valueBuffer.get(i), typeBuffer.get(i)));
             }
             nameBuffer.clear();
             valueBuffer.clear();
@@ -166,7 +168,8 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 
         if (nestingLevel > encodeLevel) {
             formatter.startGroup(name);
-        } else {
+        }
+        else {
             startEncode(name);
         }
         ++nestingLevel;
@@ -179,7 +182,8 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
         --nestingLevel;
         if (nestingLevel == encodeLevel) {
             endEncode();
-        } else {
+        }
+        else {
             formatter.endGroup();
         }
     }
@@ -191,10 +195,12 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
         if (nestingLevel > encodeLevel) {
             if (nestingLevel == 1 && redirect && StandardEventNames.ID.equals(name)) {
                 currentId = value;
-            } else {
+            }
+            else {
                 formatter.literal(name, value);
             }
-        } else {
+        }
+        else {
             dispatch(name, value, ObjectType.STRING);
         }
     }
@@ -214,19 +220,22 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
         if (redirect) {
             if (StandardEventNames.ID.equals(name)) {
                 currentId = value;
-            } else {
+            }
+            else {
                 final Matcher matcher = REDIRECT_PATTERN.matcher(name);
                 if (matcher.find()) {
-                    getReceiver()
-                            .process(new Triple(matcher.group(1), matcher.group(2), value, type));
-                } else {
+                    getReceiver().process(new Triple(matcher.group(1), matcher.group(2), value, type));
+                }
+                else {
                     nameBuffer.add(name);
                     valueBuffer.add(value);
                     typeBuffer.add(type);
                 }
             }
-        } else {
+        }
+        else {
             getReceiver().process(new Triple(currentId, name, value, type));
         }
     }
+
 }

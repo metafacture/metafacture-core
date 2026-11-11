@@ -53,20 +53,17 @@ import java.util.regex.Pattern;
  * @author Christoph Böhme
  */
 @Command( // checkstyle-disable-line ClassFanOutComplexity|ParenPad
-        name = "flux",
-        description = "Runs the Flux.",
-        mixinStandardHelpOptions = true,
-        sortOptions = false,
-        sortSynopsis = false,
-        versionProvider = Flux.VersionProvider.class,
-        descriptionHeading = "%n",
-        optionListHeading = "%nOptions:%n",
-        exitCodeListHeading = "%nExit codes:%n",
-        exitCodeList = {
-            "0:Successful program execution",
-            "1:Internal software error",
-            "2:Usage error"
-        })
+    name = "flux",
+    description = "Runs the Flux.",
+    mixinStandardHelpOptions = true,
+    sortOptions = false,
+    sortSynopsis = false,
+    versionProvider = Flux.VersionProvider.class,
+    descriptionHeading = "%n",
+    optionListHeading = "%nOptions:%n",
+    exitCodeListHeading = "%nExit codes:%n",
+    exitCodeList = { "0:Successful program execution", "1:Internal software error", "2:Usage error" }
+)
 public class Flux implements Callable<Integer> {
 
     public static final String PLUGINS_DIR_PROPERTY = "flux.pluginsdir";
@@ -78,31 +75,26 @@ public class Flux implements Callable<Integer> {
     private static final int LONG_OPTIONS_MAX_WIDTH = 42;
 
     private static final String DEPRECATION_NOTICE =
-            "############################################################\n"
-                    + "# DEPRECATION NOTICE: Legacy parameters are deprecated and #\n"
-                    + "# will be removed in a future release! Please use the      #\n"
-                    + "# dedicated options instead; see `--help` for details.     #\n"
-                    + "############################################################\n";
+        "############################################################\n" +
+        "# DEPRECATION NOTICE: Legacy parameters are deprecated and #\n" +
+        "# will be removed in a future release! Please use the      #\n" +
+        "# dedicated options instead; see `--help` for details.     #\n" +
+        "############################################################\n";
 
     @ArgGroup(exclusive = true) // TODO: Add `multiplicity = "1"` after deprecation period is over.
     private FluxInput fluxInput;
 
-    @Option(
-            names = {"-v", "--var"},
-            paramLabel = "<name>=<value>",
-            description = "Assign Flux variables (repeatable).")
+    @Option(names = {"-v", "--var"}, paramLabel = "<name>=<value>", description = "Assign Flux variables (repeatable).")
     private final Map<String, String> vars = new HashMap<>();
 
-    @Option(
-            names = {"-l", "--list-commands"},
-            help = true,
-            description = "List all available Flux commands and exit.")
+    @Option(names = {"-l", "--list-commands"}, help = true, description = "List all available Flux commands and exit.")
     private boolean listCommands;
 
     @Parameters(hidden = true) // TODO: Remove catch-all parameter after deprecation period is over.
     private List<String> legacyParameters = new ArrayList<>();
 
-    @Spec private Model.CommandSpec commandSpec;
+    @Spec
+    private Model.CommandSpec commandSpec;
 
     /*package-private*/ Flux() {
         // No (public) instances allowed
@@ -139,16 +131,17 @@ public class Flux implements Callable<Integer> {
             if (listCommands) {
                 FluxProgramm.printHelp(commandLine.getOut());
                 return CommandLine.ExitCode.OK;
-            } else if (fluxInput == null) { // TODO: Remove after deprecation period is over.
-                throw new MissingParameterException(
-                        commandLine,
-                        commandSpec.args(),
-                        "Error: Missing required argument (specify one of these): "
-                                + commandSpec.args().get(0).group().synopsis());
-            } else {
+            }
+            else if (fluxInput == null) { // TODO: Remove after deprecation period is over.
+                throw new MissingParameterException(commandLine, commandSpec.args(),
+                        "Error: Missing required argument (specify one of these): " +
+                        commandSpec.args().get(0).group().synopsis());
+            }
+            else {
                 fluxFile = fluxInput.fluxFile;
             }
-        } else {
+        }
+        else {
             commandLine.getErr().println(DEPRECATION_NOTICE);
 
             // No arguments at all
@@ -179,24 +172,22 @@ public class Flux implements Callable<Integer> {
             }
 
             runFlux(fluxFile.getAbsoluteFile().getParent(), ResourceUtil.getStream(fluxFile));
-        } else {
-            runFlux(
-                    System.getProperty("user.dir"),
-                    new ByteArrayInputStream(
-                            fluxInput.fluxScript.getBytes(StandardCharsets.UTF_8)));
+        }
+        else {
+            runFlux(System.getProperty("user.dir"), new ByteArrayInputStream(fluxInput.fluxScript.getBytes(StandardCharsets.UTF_8)));
         }
 
         return CommandLine.ExitCode.OK;
     }
 
-    /*package-private*/ void runFlux(final String scriptHome, final InputStream inputStream)
-            throws Exception {
+    /*package-private*/ void runFlux(final String scriptHome, final InputStream inputStream) throws Exception {
         vars.put(SCRIPT_HOME, scriptHome + System.getProperty("file.separator"));
 
         try {
             // run parser and builder
             FluxCompiler.compile(inputStream, vars).start();
-        } finally {
+        }
+        finally {
             inputStream.close();
         }
     }
@@ -226,22 +217,20 @@ public class Flux implements Callable<Integer> {
 
     private static class FluxInput {
 
-        @Option(
-                names = {"-f", "--file"},
-                required = true,
-                description = "Specify the path to the Flux file.")
+        @Option(names = {"-f", "--file"}, required = true, description = "Specify the path to the Flux file.")
         private File fluxFile;
 
-        @Option(
-                names = {"-e", "--script"},
-                required = true,
-                description = "Specify the inline Flux script.")
+        @Option(names = {"-e", "--script"}, required = true, description = "Specify the inline Flux script.")
         private String fluxScript;
 
-        private FluxInput() {}
+        private FluxInput() {
+        }
+
     }
 
-    /** Provides a means to determine the Metafacture version. */
+    /**
+     * Provides a means to determine the Metafacture version.
+     */
     public static class VersionProvider implements IVersionProvider {
 
         private static final String SYSTEM_PROPERTY_NAME = "org.metafacture.metafactureVersion";
@@ -249,17 +238,21 @@ public class Flux implements Callable<Integer> {
         private static final String BUILD_PROPERTY_FILE = "build.properties";
         private static final String BUILD_PROPERTY_NAME = "version";
 
-        /** Creates an instance of {@link VersionProvider}. */
-        public VersionProvider() {}
+        /**
+         * Creates an instance of {@link VersionProvider}.
+         */
+        public VersionProvider() {
+        }
 
         @Override
         public String[] getVersion() throws Exception {
-            return new String[] {"Metafacture Flux version " + getVersionString()};
+            return new String[]{"Metafacture Flux version " + getVersionString()};
         }
 
         /**
-         * Determines the Metafacture version either from the system property {@value
-         * SYSTEM_PROPERTY_NAME} or from the build properties file {@value BUILD_PROPERTY_FILE}.
+         * Determines the Metafacture version either from the system property
+         * {@value SYSTEM_PROPERTY_NAME} or from the build properties file
+         * {@value BUILD_PROPERTY_FILE}.
          *
          * @return the Metafacture version
          */
@@ -275,10 +268,13 @@ public class Flux implements Callable<Integer> {
                 if (buildVersion != null) {
                     return buildVersion;
                 }
-            } catch (final IOException e) {
+            }
+            catch (final IOException e) {
             }
 
             return "n/a";
         }
+
     }
+
 }

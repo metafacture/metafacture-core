@@ -28,8 +28,11 @@ public final class Substring extends AbstractSimpleStatelessFunction {
     private int start;
     private int end;
 
-    /** Creates an instance of {@link Substring}. */
-    public Substring() {}
+    /**
+     * Creates an instance of {@link Substring}.
+     */
+    public Substring() {
+    }
 
     @Override
     public String process(final String value) {
@@ -39,9 +42,10 @@ public final class Substring extends AbstractSimpleStatelessFunction {
             return null;
         }
         final int adjEnd;
-        if (end == 0 || end > length) {
+        if (end == 0  || end > length) {
             adjEnd = length;
-        } else {
+        }
+        else {
             adjEnd = end;
         }
 
@@ -60,9 +64,12 @@ public final class Substring extends AbstractSimpleStatelessFunction {
     /**
      * Sets the end of the substring.
      *
-     * @param end end of substring, if end==0 the the complete remaining string is returned
+     * @param end end of substring, if end==0 the the complete remaining string is
+     *            returned
+     *
      */
     public void setEnd(final String end) {
         this.end = Integer.parseInt(end);
     }
+
 }

@@ -25,14 +25,14 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * Base class for operating on count data. The expected inputs are triples containing as subject the
- * variable name and as object the count. Marginal counts must appear first, joint counts second.
- * Marinal counts must be written as 1:VARNAME, Joint counts as 2:FIRSTVARNAME&amp;SECONDVARNAME.
+ * Base class for operating on count data. The expected inputs are triples
+ * containing as subject the variable name and as object the count. Marginal
+ * counts must appear first, joint counts second. Marinal counts must be written
+ * as 1:VARNAME, Joint counts as 2:FIRSTVARNAME&amp;SECONDVARNAME.
  *
  * @author Markus Michael Geipel
  */
-public abstract class AbstractCountProcessor
-        extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
+public abstract class AbstractCountProcessor extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
 
     private static final Pattern KEY_SPLIT_PATTERN = Pattern.compile("&", Pattern.LITERAL);
 
@@ -56,8 +56,7 @@ public abstract class AbstractCountProcessor
         if (triple.getSubject().indexOf('&') == -1) {
             if (!inHeader) {
                 throw new IllegalArgumentException(
-                        "Marginal counts and joint count must not be mixed. Marginal counts must"
-                                + " appear first, joint counts second");
+                        "Marginal counts and joint count must not be mixed. Marginal counts must appear first, joint counts second");
             }
             if (!triple.getSubject().startsWith(MARGINAL_PREFIX)) {
                 throw new IllegalArgumentException("Marginal counts must start with '1:'");
@@ -68,7 +67,8 @@ public abstract class AbstractCountProcessor
                 marginals.put(triple.getSubject().substring(2), Integer.valueOf(marginal));
             }
 
-        } else {
+        }
+        else {
             inHeader = false;
             if (!triple.getSubject().startsWith(JOINT_PREFIX)) {
                 throw new IllegalArgumentException("Joint counts must start with '2:'");
@@ -85,8 +85,7 @@ public abstract class AbstractCountProcessor
         }
     }
 
-    protected abstract void processCount(
-            String varA, String varB, int countA, int countB, int countAandB);
+    protected abstract void processCount(String varA, String varB, int countA, int countB, int countAandB);
 
     private int getMarginal(final String string) {
         final Integer value = marginals.get(string);
@@ -116,4 +115,5 @@ public abstract class AbstractCountProcessor
     protected void close() {
         // nothing to do
     }
+
 }

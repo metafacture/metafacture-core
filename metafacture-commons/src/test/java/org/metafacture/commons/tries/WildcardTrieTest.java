@@ -30,6 +30,7 @@ import java.util.List;
  * Tests for class {@link WildcardTrie}
  *
  * @author Markus Michael Geipel
+ *
  */
 public final class WildcardTrieTest {
 
@@ -44,8 +45,7 @@ public final class WildcardTrieTest {
     private static final String CCB = "ccb";
     private static final String EMPTY = "";
     private static final String X = "x";
-    private static final List<String> ALL =
-            List.of(A, AABB, AACBB, AB, ABBC, ABC, ACB, B, CCB, EMPTY, X);
+    private static final List<String> ALL = List.of(A, AABB, AACBB, AB, ABBC, ABC, ACB, B, CCB, EMPTY, X);
 
     private static final String AAQBB = "aa?bb";
     private static final String AA_STAR_BB = "aa*bb";
@@ -59,7 +59,8 @@ public final class WildcardTrieTest {
 
     private WildcardTrie<String> trie;
 
-    public WildcardTrieTest() {}
+    public WildcardTrieTest() {
+    }
 
     @Before
     public void createSystemUnderTest() {
@@ -139,17 +140,14 @@ public final class WildcardTrieTest {
             trie.put(key, key);
         }
 
-        Arrays.stream(positive)
-                .forEach(
-                        k -> {
-                            negative.remove(k);
-                            Assert.assertTrue(k + NOT_FOUND_BY + key, trie.get(k).contains(key));
-                        });
+        Arrays.stream(positive).forEach(k -> {
+            negative.remove(k);
+            Assert.assertTrue(k + NOT_FOUND_BY + key, trie.get(k).contains(key));
+        });
 
-        negative.forEach(
-                k -> {
-                    Assert.assertFalse(k + FOUND_BY + key, trie.get(k).contains(key));
-                });
+        negative.forEach(k -> {
+            Assert.assertFalse(k + FOUND_BY + key, trie.get(k).contains(key));
+        });
     }
 
     private void assertList(final String key, final String... expected) {
@@ -160,4 +158,5 @@ public final class WildcardTrieTest {
 
         Assert.assertEquals(Arrays.asList(expected), actual);
     }
+
 }

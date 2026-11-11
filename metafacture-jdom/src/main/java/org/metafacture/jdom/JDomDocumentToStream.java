@@ -35,7 +35,8 @@ import org.jdom2.output.SAXOutputter;
 @In(Document.class)
 @Out(StreamReceiver.class)
 @FluxCommand("from-jdom-document")
-public final class JDomDocumentToStream implements ObjectPipe<Document, StreamReceiver> {
+public final class JDomDocumentToStream
+        implements ObjectPipe<Document, StreamReceiver> {
 
     private final SAXOutputter saxOutputer;
     private final XmlPipe<StreamReceiver> xmlPipe;
@@ -55,7 +56,8 @@ public final class JDomDocumentToStream implements ObjectPipe<Document, StreamRe
         assert null != document;
         try {
             saxOutputer.output(document);
-        } catch (final JDOMException e) {
+        }
+        catch (final JDOMException e) {
             throw new IllegalArgumentException("Invalid JDOM document", e);
         }
     }
@@ -68,10 +70,12 @@ public final class JDomDocumentToStream implements ObjectPipe<Document, StreamRe
     @Override
     public void closeStream() {
         xmlPipe.closeStream();
+
     }
 
     @Override
     public <R extends StreamReceiver> R setReceiver(final R receiver) {
         return xmlPipe.setReceiver(receiver);
     }
+
 }

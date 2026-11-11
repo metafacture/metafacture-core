@@ -30,18 +30,25 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link StringFilter}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class StringFilterTest {
 
-    private static final String[] RECORDS = {"Record 1: Data", "Record 42: Data", "Record 3: Data"};
+    private static final String[] RECORDS = {
+        "Record 1: Data",
+        "Record 42: Data",
+        "Record 3: Data"
+    };
 
     private static final String PATTERN = "\\d\\d";
 
     private StringFilter filter;
 
-    @Mock private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
 
-    public StringFilterTest() {}
+    public StringFilterTest() {
+    }
 
     @Before
     public void setup() {
@@ -81,4 +88,5 @@ public final class StringFilterTest {
         ordered.verify(receiver).process(RECORDS[2]);
         Mockito.verifyNoMoreInteractions(receiver);
     }
+
 }

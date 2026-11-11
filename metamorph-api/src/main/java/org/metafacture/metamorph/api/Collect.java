@@ -20,6 +20,7 @@ package org.metafacture.metamorph.api;
  * Base interface for all classes which act as collectors in Metamorph.
  *
  * @author Markus Michael Geipel
+ *
  */
 public interface Collect extends FlushListener, ConditionAware, NamedValuePipe {
 
@@ -57,4 +58,5 @@ public interface Collect extends FlushListener, ConditionAware, NamedValuePipe {
      * @param name the name
      */
     void setName(String name);
+
 }

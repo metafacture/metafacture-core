@@ -28,20 +28,25 @@ import java.util.Map;
  */
 class TypeEncoderFactory {
 
-    TypeEncoderFactory() {}
+    TypeEncoderFactory() {
+    }
 
     TypeEncoder create(final ValueType valueType) {
         final TypeEncoder typeEncoder;
         final Class<?> rawClass = valueType.getRawClass();
         if (MapTypeEncoder.supportsType(rawClass)) {
             typeEncoder = new MapTypeEncoder(valueType);
-        } else if (ListTypeEncoder.supportsType(rawClass)) {
+        }
+        else if (ListTypeEncoder.supportsType(rawClass)) {
             typeEncoder = new ListTypeEncoder(valueType);
-        } else if (ComplexTypeEncoder.supportsType(rawClass)) {
+        }
+        else if (ComplexTypeEncoder.supportsType(rawClass)) {
             typeEncoder = new ComplexTypeEncoder(rawClass);
-        } else {
+        }
+        else {
             throw new MetafactureException("Can't encode type " + rawClass);
         }
         return typeEncoder;
     }
+
 }

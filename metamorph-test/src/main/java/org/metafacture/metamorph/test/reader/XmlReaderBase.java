@@ -24,6 +24,7 @@ import org.metafacture.xml.XmlDecoder;
  * Base class for {@link Reader}s for xml formats.
  *
  * @author Christoph Böhme
+ *
  */
 class XmlReaderBase implements Reader {
 
@@ -55,4 +56,5 @@ class XmlReaderBase implements Reader {
     public final void closeStream() {
         xmlDecoder.closeStream();
     }
+
 }

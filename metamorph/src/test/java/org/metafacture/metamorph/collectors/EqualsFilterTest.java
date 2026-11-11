@@ -34,23 +34,25 @@ import org.mockito.junit.MockitoRule;
  */
 public final class EqualsFilterTest {
 
-    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-    public EqualsFilterTest() {}
+    public EqualsFilterTest() {
+    }
 
     @Test
     public void shouldEmitValueIfAllReceivedValuesAreEqual() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <equalsFilter name='equalsFiltered' value='${one}'>"
-                        + "    <data source='data1' name='one' />"
-                        + "    <data source='data2' name='two' />"
-                        + "    <data source='data3' name='three' />"
-                        + "  </equalsFilter>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}'>" +
+                "    <data source='data1' name='one' />" +
+                "    <data source='data2' name='two' />" +
+                "    <data source='data3' name='three' />" +
+                "  </equalsFilter>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "a");
@@ -62,20 +64,20 @@ public final class EqualsFilterTest {
                     o.get().startRecord("1");
                     o.get().literal("equalsFiltered", "a");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldEmitNothingIfReceivedValuesDiffer() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <equalsFilter name='equalsFiltered' value='${one}'>"
-                        + "    <data source='data1' name='one' />"
-                        + "    <data source='data2' name='two' />"
-                        + "    <data source='data3' name='three' />"
-                        + "  </equalsFilter>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}'>" +
+                "    <data source='data1' name='one' />" +
+                "    <data source='data2' name='two' />" +
+                "    <data source='data3' name='three' />" +
+                "  </equalsFilter>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "a");
@@ -85,21 +87,20 @@ public final class EqualsFilterTest {
                 },
                 (o, f) -> {
                     o.get().startRecord("1");
-                    f.apply(0)
-                            .literal(ArgumentMatchers.eq("equalsFiltered"), ArgumentMatchers.any());
+                    f.apply(0).literal(ArgumentMatchers.eq("equalsFiltered"), ArgumentMatchers.any());
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldFireIfOnlyASingleValueIsReceived() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <equalsFilter name='equalsFiltered' value='${one}'>"
-                        + "    <data source='data1' name='one' />"
-                        + "  </equalsFilter>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}'>" +
+                "    <data source='data1' name='one' />" +
+                "  </equalsFilter>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "a");
@@ -109,19 +110,19 @@ public final class EqualsFilterTest {
                     o.get().startRecord("1");
                     o.get().literal("equalsFiltered", "a");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldIgnoreLiteralsNotListedInStatements() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <equalsFilter name='equalsFiltered' value='${one}'>"
-                        + "    <data source='data1' name='one' />"
-                        + "    <data source='data2' name='two' />"
-                        + "  </equalsFilter>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}'>" +
+                "    <data source='data1' name='one' />" +
+                "    <data source='data2' name='two' />" +
+                "  </equalsFilter>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "a");
@@ -133,20 +134,20 @@ public final class EqualsFilterTest {
                     o.get().startRecord("1");
                     o.get().literal("equalsFiltered", "a");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldFireIfValuesInEntityAreEqual() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <equalsFilter name='equalsFiltered' value='${one}'>"
-                        + "    <data source='field.data1' name='one' />"
-                        + "    <data source='field.data2' name='two' />"
-                        + "    <data source='field.data3' name='three' />"
-                        + "  </equalsFilter>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}'>" +
+                "    <data source='field.data1' name='one' />" +
+                "    <data source='field.data2' name='two' />" +
+                "    <data source='field.data3' name='three' />" +
+                "  </equalsFilter>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("field");
@@ -160,20 +161,20 @@ public final class EqualsFilterTest {
                     o.get().startRecord("1");
                     o.get().literal("equalsFiltered", "a");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldNotFireIfValuesInEntityAreNotEqual() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <equalsFilter name='equalsFiltered' value='${one}'>"
-                        + "    <data source='field.data1' name='one' />"
-                        + "    <data source='field.data2' name='two' />"
-                        + "    <data source='field.data3' name='three' />"
-                        + "  </equalsFilter>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}'>" +
+                "    <data source='field.data1' name='one' />" +
+                "    <data source='field.data2' name='two' />" +
+                "    <data source='field.data3' name='three' />" +
+                "  </equalsFilter>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("field");
@@ -186,19 +187,19 @@ public final class EqualsFilterTest {
                 o -> {
                     o.get().startRecord("1");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldFireIfLiteralsInEntitiesAreReceivedThatAreNotListedInStatements() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <equalsFilter name='equalsFiltered' value='${one}'>"
-                        + "    <data source='field1.data1' name='one' />"
-                        + "    <data source='field1.data2' name='two' />"
-                        + "  </equalsFilter>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}'>" +
+                "    <data source='field1.data1' name='one' />" +
+                "    <data source='field1.data2' name='two' />" +
+                "  </equalsFilter>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("field1");
@@ -225,16 +226,19 @@ public final class EqualsFilterTest {
                     o.get().startRecord("3");
                     o.get().literal("equalsFiltered", "a");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldFireOnFlush() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>  <equalsFilter name='equalsFiltered' value='${one}'"
-                    + " flushWith='field1.data2'>    <data source='field1.data1' name='one' />   "
-                    + " <data source='field1.data2' name='two' />  </equalsFilter></rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}' flushWith='field1.data2'>" +
+                "    <data source='field1.data1' name='one' />" +
+                "    <data source='field1.data2' name='two' />" +
+                "  </equalsFilter>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("field1");
@@ -262,17 +266,19 @@ public final class EqualsFilterTest {
                     o.get().startRecord("3");
                     o.get().literal("equalsFiltered", "a");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldNotFireOnFlushIfIncomplete() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>  <equalsFilter name='equalsFiltered' value='${one}'"
-                        + " flushWith='field1.data2' flushIncomplete='false'>    <data"
-                        + " source='field1.data1' name='one' />    <data source='field1.data2'"
-                        + " name='two' />  </equalsFilter></rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}' flushWith='field1.data2' flushIncomplete='false'>" +
+                "    <data source='field1.data1' name='one' />" +
+                "    <data source='field1.data2' name='two' />" +
+                "  </equalsFilter>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("field1");
@@ -299,6 +305,8 @@ public final class EqualsFilterTest {
                     o.get().startRecord("3");
                     o.get().literal("equalsFiltered", "a");
                     o.get().endRecord();
-                });
+                }
+        );
     }
+
 }

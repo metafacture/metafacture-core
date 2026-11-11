@@ -27,14 +27,17 @@ import java.util.Map;
  * Creates the maps available in Metamorph.
  *
  * @author Markus Michael Geipel
+ *
  */
 final class MapFactory extends ObjectFactory<Map> {
 
     MapFactory() {
         try {
             loadClassesFromMap(ResourceUtil.loadProperties("morph-maps.properties"), Map.class);
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException("Failed to load maps list", e);
         }
     }
+
 }

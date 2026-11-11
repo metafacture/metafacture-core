@@ -21,16 +21,19 @@ package org.metafacture.metamorph.api;
  *
  * @author Markus Michael Geipel
  * @author Christoph Böhme
+ *
  */
 public interface NamedValueSource extends KnowsSourceLocation {
 
     /**
      * Connects a source of named values to a receiver of named values.
      *
-     * <p>Users should not call this method to connect sources and receivers but rather call {@link
-     * NamedValueReceiver#addNamedValueSource}.
+     * Users should not call this method to connect sources and
+     * receivers but rather call
+     * {@link NamedValueReceiver#addNamedValueSource}.
      *
      * @param receiver receiver of the named-values from this source.
      */
     void setNamedValueReceiver(NamedValueReceiver receiver);
+
 }

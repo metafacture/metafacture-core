@@ -25,6 +25,7 @@ import java.util.Set;
  * Checks whether the received value was not received before.
  *
  * @author Markus Michael Geipel
+ *
  */
 public final class Unique extends AbstractStatefulFunction {
 
@@ -36,16 +37,18 @@ public final class Unique extends AbstractStatefulFunction {
 
     private boolean uniqueInEntity;
 
-    private KeyGenerator keyGenerator =
-            new KeyGenerator() {
-                @Override
-                public String createKey(final String name, final String value) {
-                    return name + "\0" + value;
-                }
-            };
+    private KeyGenerator keyGenerator = new KeyGenerator() {
+        @Override
+        public String createKey(final String name, final String value) {
+            return name + "\0" + value;
+        }
+    };
 
-    /** Creates an instance of {@link Unique}. */
-    public Unique() {}
+    /**
+     * Creates an instance of {@link Unique}.
+     */
+    public Unique() {
+    }
 
     @Override
     public String process(final String value) {
@@ -77,32 +80,35 @@ public final class Unique extends AbstractStatefulFunction {
     }
 
     /**
-     * Sets the Unique part to be processed. Possible values are {@value #NAME} or {@value #VALUE}.
+     * Sets the Unique part to be processed. Possible values are {@value #NAME}
+     * or {@value #VALUE}.
      *
      * @param part the part
      */
     public void setPart(final String part) {
         if (NAME.equals(part)) {
-            keyGenerator =
-                    new KeyGenerator() {
-                        @Override
-                        public String createKey(final String name, final String value) {
-                            return name;
-                        }
-                    };
-        } else if (VALUE.equals(part)) {
-            keyGenerator =
-                    new KeyGenerator() {
-                        @Override
-                        public String createKey(final String name, final String value) {
-                            return value;
-                        }
-                    };
+            keyGenerator = new KeyGenerator() {
+                @Override
+                public String createKey(final String name, final String value) {
+                    return name;
+                }
+            };
+        }
+        else if (VALUE.equals(part)) {
+            keyGenerator = new KeyGenerator() {
+                @Override
+                public String createKey(final String name, final String value) {
+                    return value;
+                }
+            };
         }
     }
 
-    /** To implement different uniqueness strategies */
+    /**
+     * To implement different uniqueness strategies
+     */
     private interface KeyGenerator {
         String createKey(String name, String value);
     }
+
 }

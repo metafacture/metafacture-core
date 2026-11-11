@@ -29,15 +29,18 @@ import java.util.ListIterator;
  * Collects the received results in a {@link List}.
  *
  * @author Markus Michael Geipel
+ *
  */
-public final class NamedValueList extends DefaultStreamReceiver
-        implements List<NamedValue>, Collector<List<NamedValue>> {
+public final class NamedValueList extends DefaultStreamReceiver implements List<NamedValue>, Collector<List<NamedValue>> {
 
     private Collection<List<NamedValue>> collection;
     private List<NamedValue> list = new ArrayList<>();
 
-    /** Creates an instance of {@link NamedValueList}. */
-    public NamedValueList() {}
+    /**
+     * Creates an instance of {@link NamedValueList}.
+     */
+    public NamedValueList() {
+    }
 
     /**
      * Constructs a NamedValueList with a given Collection.
@@ -109,8 +112,7 @@ public final class NamedValueList extends DefaultStreamReceiver
     }
 
     @Override
-    public boolean addAll(
-            final int index, final Collection<? extends NamedValue> currentCollection) {
+    public boolean addAll(final int index, final Collection<? extends NamedValue> currentCollection) {
         return list.addAll(index, currentCollection);
     }
 
@@ -191,4 +193,5 @@ public final class NamedValueList extends DefaultStreamReceiver
     public void setCollection(final Collection<List<NamedValue>> collection) {
         this.collection = collection;
     }
+
 }

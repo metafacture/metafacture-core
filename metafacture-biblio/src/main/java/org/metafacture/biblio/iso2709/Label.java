@@ -17,10 +17,10 @@
 package org.metafacture.biblio.iso2709;
 
 /**
- * Provides read access to the record label of an ISO 2709:2008 formatted record. The record label
- * consists of the first 24 octets of the record.
- *
- * <p>Use {@link LabelBuilder} if write access to the label is required.
+ * Provides read access to the record label of an ISO 2709:2008 formatted
+ * record. The record label consists of the first 24 octets of the record.
+ * <p>
+ * Use {@link LabelBuilder} if write access to the label is required.
  *
  * @author Christoph Böhme
  */
@@ -45,8 +45,7 @@ class Label {
     }
 
     int getRecordLength() {
-        return buffer.parseIntAt(
-                Iso2709Constants.RECORD_LENGTH_START, Iso2709Constants.RECORD_LENGTH_LENGTH);
+        return buffer.parseIntAt(Iso2709Constants.RECORD_LENGTH_START, Iso2709Constants.RECORD_LENGTH_LENGTH);
     }
 
     char getRecordStatus() {
@@ -54,8 +53,7 @@ class Label {
     }
 
     char[] getImplCodes() {
-        return buffer.charsAt(
-                Iso2709Constants.IMPL_CODES_START, Iso2709Constants.IMPL_CODES_LENGTH);
+        return buffer.charsAt(Iso2709Constants.IMPL_CODES_START, Iso2709Constants.IMPL_CODES_LENGTH);
     }
 
     int getIndicatorLength() {
@@ -67,13 +65,11 @@ class Label {
     }
 
     int getBaseAddress() {
-        return buffer.parseIntAt(
-                Iso2709Constants.BASE_ADDRESS_START, Iso2709Constants.BASE_ADDRESS_LENGTH);
+        return buffer.parseIntAt(Iso2709Constants.BASE_ADDRESS_START, Iso2709Constants.BASE_ADDRESS_LENGTH);
     }
 
     char[] getSystemChars() {
-        return buffer.charsAt(
-                Iso2709Constants.SYSTEM_CHARS_START, Iso2709Constants.SYSTEM_CHARS_LENGTH);
+        return buffer.charsAt(Iso2709Constants.SYSTEM_CHARS_START, Iso2709Constants.SYSTEM_CHARS_LENGTH);
     }
 
     int getFieldLengthLength() {
@@ -96,4 +92,5 @@ class Label {
     public String toString() {
         return buffer.stringAt(0, Iso2709Constants.RECORD_LABEL_LENGTH, Iso646Constants.CHARSET);
     }
+
 }

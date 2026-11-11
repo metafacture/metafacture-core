@@ -38,6 +38,7 @@ import javax.xml.validation.SchemaFactory;
  * Utility methods for loading Metamorph-Test resources.
  *
  * @author Christoph Böhme
+ *
  */
 final class MetamorphTestLoader {
 
@@ -48,7 +49,8 @@ final class MetamorphTestLoader {
         // No instances allowed
     }
 
-    static List<MetamorphTestCase> load(final URL testDef) throws InitializationError {
+    static List<MetamorphTestCase> load(final URL testDef)
+            throws InitializationError {
         final InputSource inputSource = new InputSource(testDef.toExternalForm());
         return load(inputSource);
     }
@@ -57,10 +59,10 @@ final class MetamorphTestLoader {
             throws InitializationError {
 
         try {
-            final SchemaFactory schemaFactory =
-                    SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            final URL schemaUrl =
-                    Thread.currentThread().getContextClassLoader().getResource(SCHEMA_FILE);
+            final SchemaFactory schemaFactory = SchemaFactory.newInstance(
+                    XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            final URL schemaUrl = Thread.currentThread().getContextClassLoader()
+                    .getResource(SCHEMA_FILE);
             if (schemaUrl == null) {
                 throw new InitializationError("XML Schema not found: " + SCHEMA_FILE);
             }
@@ -85,8 +87,10 @@ final class MetamorphTestLoader {
 
             return metamorphTestCases;
 
-        } catch (final ParserConfigurationException | SAXException | IOException e) {
+        }
+        catch (final ParserConfigurationException | SAXException | IOException e) {
             throw new InitializationError(e);
         }
     }
+
 }

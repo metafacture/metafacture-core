@@ -33,21 +33,26 @@ import org.mockito.junit.MockitoRule;
  */
 public final class ScriptTest {
 
-    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-    public ScriptTest() {}
+    public ScriptTest() {
+    }
 
     @Test
     public void shouldExecuteJavascriptFunctions() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>  <data source='data1'>    <script"
-                    + " file='org/metafacture/metamorph/functions/script-test.js' invoke='process'"
-                    + " />  </data>  <data source='data2'>    <script"
-                    + " file='org/metafacture/metamorph/functions/script-test.js' invoke='process2'"
-                    + " />  </data></rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <data source='data1'>" +
+                "    <script file='org/metafacture/metamorph/functions/script-test.js' invoke='process' />" +
+                "  </data>" +
+                "  <data source='data2'>" +
+                "    <script file='org/metafacture/metamorph/functions/script-test.js' invoke='process2' />" +
+                "  </data>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "ABC");
@@ -59,6 +64,8 @@ public final class ScriptTest {
                     o.get().literal("data1", "ABC!");
                     o.get().literal("data2", "ABCABC");
                     o.get().endRecord();
-                });
+                }
+        );
     }
+
 }

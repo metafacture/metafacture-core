@@ -22,11 +22,14 @@ import java.util.Collection;
  * Interface for classes which collect data.
  *
  * @param <V> the type of data collected
+ *
  * @author Markus Michael Geipel
+ *
  */
 public interface Collector<V> {
 
     /**
+     *
      * Gets the Collection.
      *
      * @return the Collection of collected data
@@ -39,4 +42,5 @@ public interface Collector<V> {
      * @param collection the collection
      */
     void setCollection(Collection<V> collection);
+
 }

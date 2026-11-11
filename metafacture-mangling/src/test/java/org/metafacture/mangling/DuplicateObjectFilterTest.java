@@ -29,6 +29,7 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link DuplicateObjectFilter}.
  *
  * @author Alexander Haffner
+ *
  */
 public final class DuplicateObjectFilterTest {
 
@@ -37,9 +38,11 @@ public final class DuplicateObjectFilterTest {
 
     private DuplicateObjectFilter<String> duplicateObjectFilter;
 
-    @Mock private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
 
-    public DuplicateObjectFilterTest() {}
+    public DuplicateObjectFilterTest() {
+    }
 
     @Before
     public void setup() {
@@ -63,4 +66,5 @@ public final class DuplicateObjectFilterTest {
         Mockito.verify(receiver).process(OBJECT2);
         Mockito.verifyNoMoreInteractions(receiver);
     }
+
 }

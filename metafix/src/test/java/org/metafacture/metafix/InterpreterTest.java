@@ -17,27 +17,34 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @InjectWith(FixInjectorProvider.class)
 public class InterpreterTest {
 
-    @Inject @Extension private FixInterpreter fixInterpreter;
+    @Inject
+    @Extension
+    private FixInterpreter fixInterpreter;
 
-    @Inject @Extension private ParseHelper<Fix> parseHelper;
+    @Inject
+    @Extension
+    private ParseHelper<Fix> parseHelper;
 
-    public InterpreterTest() {}
+    public InterpreterTest() {
+    }
 
     @Test
     public void shouldInterpretSimple() throws Exception {
-        interpret(1, "add_field(hello,world)");
+        interpret(1,
+                "add_field(hello,world)"
+        );
     }
 
     @Test
     public void shouldInterpretNested() throws Exception {
-        interpret(
-                3,
+        interpret(3,
                 "do list(path:'700??','var':'$i')",
                 "\tif any_equal('$i.4','aut')",
                 "\t\tcopy_field($i.a,authors.$append)",
                 "\tend",
                 "end",
-                "");
+                ""
+        );
     }
 
     private void interpret(final int expressions, final String... fix) throws Exception {
@@ -45,9 +52,7 @@ public class InterpreterTest {
         Assert.assertTrue(metafix.getExpressions().isEmpty());
 
         fixInterpreter.run(metafix, parseHelper.parse(String.join("\n", fix)));
-        Assert.assertEquals(
-                "metafix expressions: " + metafix.getExpressions(),
-                expressions,
-                metafix.getExpressions().size());
+        Assert.assertEquals("metafix expressions: " + metafix.getExpressions(), expressions, metafix.getExpressions().size());
     }
+
 }

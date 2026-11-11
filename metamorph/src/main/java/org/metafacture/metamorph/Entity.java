@@ -55,8 +55,8 @@ public final class Entity extends AbstractFlushingCollect {
     }
 
     /**
-     * Creates an instance of {@link Entity} by a given {@link Supplier} of object type {@link
-     * StreamReceiver}.
+     * Creates an instance of {@link Entity} by a given {@link Supplier} of object
+     * type {@link StreamReceiver}.
      *
      * @param receiver the {@link Supplier} of object type {@link StreamReceiver}
      */
@@ -81,7 +81,8 @@ public final class Entity extends AbstractFlushingCollect {
         if (namedValueReceiver instanceof Entity) {
             final Entity parent = (Entity) namedValueReceiver;
             parent.receive(null, null, this, getRecordCount(), getEntityCount());
-        } else {
+        }
+        else {
             write(receiver.get());
         }
     }
@@ -99,10 +100,12 @@ public final class Entity extends AbstractFlushingCollect {
     protected void receive(final String name, final String value, final NamedValueSource source) {
         if (source == nameSource) {
             currentName = value;
-        } else if (source instanceof Entity) {
+        }
+        else if (source instanceof Entity) {
             final Entity child = (Entity) source;
             child.write(buffer);
-        } else {
+        }
+        else {
             buffer.literal(name, value);
         }
         sourcesLeft.remove(source);
@@ -125,4 +128,5 @@ public final class Entity extends AbstractFlushingCollect {
         sourceList.add(namedValueSource);
         sourcesLeft.add(namedValueSource);
     }
+
 }

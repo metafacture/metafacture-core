@@ -25,42 +25,30 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
-/** Converts a hash/object into an array. */
+/**
+ * Converts a hash/object into an array.
+ */
 @FixCommand("array")
 public class Array implements FixFunction {
 
-    /** Creates an instance of {@link Array}. */
-    public Array() {}
+    /**
+     * Creates an instance of {@link Array}.
+     */
+    public Array() {
+    }
 
     @Override
-    public void apply(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         final String field = params.get(0);
 
-        record.getList(
-                field,
-                a ->
-                        a.forEach(
-                                v ->
-                                        v.matchType()
-                                                .ifHash(
-                                                        h -> {
-                                                            record.remove(field);
+        record.getList(field, a -> a.forEach(v -> v.matchType().ifHash(h -> {
+            record.remove(field);
 
-                                                            h.forEach(
-                                                                    (subField, value) -> {
-                                                                        record.addNested(
-                                                                                field,
-                                                                                new Value(
-                                                                                        subField));
-                                                                        record.addNested(
-                                                                                field,
-                                                                                value.withPathSet(
-                                                                                        null));
-                                                                    });
-                                                        })));
+            h.forEach((subField, value) -> {
+                record.addNested(field, new Value(subField));
+                record.addNested(field, value.withPathSet(null));
+            });
+        })));
     }
+
 }

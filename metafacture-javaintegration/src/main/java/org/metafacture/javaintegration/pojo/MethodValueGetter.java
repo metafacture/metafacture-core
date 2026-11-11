@@ -43,23 +43,24 @@ class MethodValueGetter implements ValueGetter {
     }
 
     static boolean supportsMethod(final Method m) {
-        return Modifier.isPublic(m.getModifiers())
-                && m.getName().length() > METHOD_PREFIX.length()
-                && m.getName().startsWith(METHOD_PREFIX);
+        return Modifier.isPublic(m.getModifiers()) &&
+            m.getName().length() > METHOD_PREFIX.length() &&
+            m.getName().startsWith(METHOD_PREFIX);
     }
 
     @Override
     public Object getValue(final Object object) {
         try {
             return method.invoke(object);
-        } catch (final IllegalArgumentException e) {
-            throw new MetafactureException(
-                    "The given object don't have a method named " + method.getName(), e);
-        } catch (final IllegalAccessException e) {
+        }
+        catch (final IllegalArgumentException e) {
+            throw new MetafactureException("The given object don't have a method named " + method.getName(), e);
+        }
+        catch (final IllegalAccessException e) {
             throw new MetafactureException("Can't access the method named " + method.getName(), e);
-        } catch (final InvocationTargetException e) {
-            throw new MetafactureException(
-                    "Invoking the method named " + method.getName() + " throws an excpetion", e);
+        }
+        catch (final InvocationTargetException e) {
+            throw new MetafactureException("Invoking the method named " + method.getName() + " throws an excpetion", e);
         }
     }
 
@@ -72,4 +73,5 @@ class MethodValueGetter implements ValueGetter {
     public Class<?> getValueType() {
         return method.getReturnType();
     }
+
 }

@@ -1,6 +1,8 @@
 package org.metafacture.io;
 
-/** Error while closing output stream. */
+/**
+ * Error while closing output stream.
+ */
 public class CloseFailed extends IoFailed {
 
     /**
@@ -25,9 +27,10 @@ public class CloseFailed extends IoFailed {
      * Creates an instance of {@link CloseFailed} by a given message and a cause.
      *
      * @param message the message
-     * @param cause the {@link Throwable}
+     * @param cause   the {@link Throwable}
      */
     public CloseFailed(final String message, final Throwable cause) {
         super(message, cause);
     }
+
 }

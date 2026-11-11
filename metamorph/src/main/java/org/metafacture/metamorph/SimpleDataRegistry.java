@@ -32,7 +32,8 @@ final class SimpleDataRegistry<T> implements Registry<T> {
 
     private final Map<String, List<T>> map = new HashMap<String, List<T>>();
 
-    SimpleDataRegistry() {}
+    SimpleDataRegistry() {
+    }
 
     @Override
     public void register(final String path, final T value) {
@@ -40,8 +41,10 @@ final class SimpleDataRegistry<T> implements Registry<T> {
         if (matchingData == null) {
             matchingData = new ArrayList<T>();
             map.put(path, matchingData);
+
         }
         matchingData.add(value);
+
     }
 
     @Override
@@ -52,4 +55,5 @@ final class SimpleDataRegistry<T> implements Registry<T> {
         }
         return matchingData;
     }
+
 }

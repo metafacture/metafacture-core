@@ -29,40 +29,32 @@ public @interface MetafixToDo {
 
     class Extension implements AfterAllCallback, InvocationInterceptor {
 
-        private static final boolean DISABLE_TO_DO =
-                Boolean.parseBoolean(System.getProperty("org.metafacture.metafix.disableToDo"));
+        private static final boolean DISABLE_TO_DO = Boolean.parseBoolean(System.getProperty("org.metafacture.metafix.disableToDo"));
 
         private boolean annotationPresent;
 
-        private Extension() {}
+        private Extension() {
+        }
 
         @Override
         public void afterAll(final ExtensionContext context) {
             if (!annotationPresent) {
                 for (final Method method : context.getTestClass().get().getDeclaredMethods()) {
-                    if (method.isAnnotationPresent(Test.class)
-                            && method.isAnnotationPresent(MetafixToDo.class)) {
+                    if (method.isAnnotationPresent(Test.class) && method.isAnnotationPresent(MetafixToDo.class)) {
                         return;
                     }
                 }
 
-                Assertions.fail(
-                        "Unused extension (no annotations present): " + Handler.EXTENSION_NAME);
+                Assertions.fail("Unused extension (no annotations present): " + Handler.EXTENSION_NAME);
             }
         }
 
         @Override
-        public void interceptTestMethod(
-                final InvocationInterceptor.Invocation<Void> invocation,
-                final ReflectiveInvocationContext<Method> invocationContext,
-                final ExtensionContext extensionContext)
-                throws Throwable {
+        public void interceptTestMethod(final InvocationInterceptor.Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) throws Throwable {
             if (DISABLE_TO_DO) {
-                handleAnnotation(
-                        invocationContext,
-                        a -> {
-                            throw new TestAbortedException(a.value());
-                        });
+                handleAnnotation(invocationContext, a -> {
+                    throw new TestAbortedException(a.value());
+                });
 
                 invocation.proceed();
                 return;
@@ -70,31 +62,27 @@ public @interface MetafixToDo {
 
             try {
                 invocation.proceed();
-            } catch (final Throwable e) { // checkstyle-disable-line IllegalCatch
-                handleAnnotation(
-                        invocationContext,
-                        a -> {
-                            throw new TestAbortedException(a.value(), e);
-                        });
+            }
+            catch (final Throwable e) { // checkstyle-disable-line IllegalCatch
+                handleAnnotation(invocationContext, a -> {
+                    throw new TestAbortedException(a.value(), e);
+                });
 
                 throw e;
             }
 
-            handleAnnotation(
-                    invocationContext, a -> Assertions.fail("Marked as " + a + ", but passed."));
+            handleAnnotation(invocationContext, a -> Assertions.fail("Marked as " + a + ", but passed."));
         }
 
-        private void handleAnnotation(
-                final ReflectiveInvocationContext<Method> invocationContext,
-                final Consumer<MetafixToDo> consumer) {
-            final MetafixToDo annotation =
-                    invocationContext.getExecutable().getAnnotation(MetafixToDo.class);
+        private void handleAnnotation(final ReflectiveInvocationContext<Method> invocationContext, final Consumer<MetafixToDo> consumer) {
+            final MetafixToDo annotation = invocationContext.getExecutable().getAnnotation(MetafixToDo.class);
 
             if (annotation != null) {
                 annotationPresent = true;
                 consumer.accept(annotation);
             }
         }
+
     }
 
     class Handler implements ExecutionCondition {
@@ -104,37 +92,32 @@ public @interface MetafixToDo {
 
         private static final Map<Class<?>, Boolean> EXTENSION_PRESENT = new HashMap<>();
 
-        private Handler() {}
+        private Handler() {
+        }
 
         @Override
-        public ConditionEvaluationResult evaluateExecutionCondition(
-                final ExtensionContext context) {
-            final boolean extensionPresent =
-                    EXTENSION_PRESENT.computeIfAbsent(
-                            context.getTestClass().get(),
-                            k -> {
-                                for (final ExtendWith annotation :
-                                        k.getAnnotationsByType(ExtendWith.class)) {
-                                    for (final Class<
-                                                    ? extends
-                                                            org.junit.jupiter.api.extension
-                                                                    .Extension>
-                                            extensionClass : annotation.value()) {
-                                        if (extensionClass.isAssignableFrom(EXTENSION_CLASS)) {
-                                            return true;
-                                        }
-                                    }
-                                }
+        public ConditionEvaluationResult evaluateExecutionCondition(final ExtensionContext context) {
+            final boolean extensionPresent = EXTENSION_PRESENT.computeIfAbsent(context.getTestClass().get(), k -> {
+                for (final ExtendWith annotation : k.getAnnotationsByType(ExtendWith.class)) {
+                    for (final Class<? extends org.junit.jupiter.api.extension.Extension> extensionClass : annotation.value()) {
+                        if (extensionClass.isAssignableFrom(EXTENSION_CLASS)) {
+                            return true;
+                        }
+                    }
+                }
 
-                                return false;
-                            });
+                return false;
+            });
 
             if (extensionPresent) {
                 return ConditionEvaluationResult.enabled("Extension present: " + EXTENSION_NAME);
-            } else {
+            }
+            else {
                 Assertions.fail("Extension missing: " + EXTENSION_NAME);
                 return null; // not reached
             }
         }
+
     }
+
 }

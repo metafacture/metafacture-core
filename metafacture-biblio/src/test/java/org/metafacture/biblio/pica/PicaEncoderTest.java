@@ -31,14 +31,17 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link PicaEncoder}.
  *
  * @author Yining Li
+ *
  */
 public final class PicaEncoderTest {
 
     private PicaEncoder picaEncoder;
 
-    @Mock private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
 
-    public PicaEncoderTest() {}
+    public PicaEncoderTest() {
+    }
 
     @Before
     public void setup() {
@@ -65,10 +68,7 @@ public final class PicaEncoderTest {
         picaEncoder.endEntity();
         picaEncoder.endRecord();
 
-        Mockito.verify(receiver)
-                .process(
-                        "003@ \u001f017709958X\u001e028@"
-                            + " \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
+        Mockito.verify(receiver).process("003@ \u001f017709958X\u001e028@ \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
     }
 
     @Test
@@ -84,10 +84,7 @@ public final class PicaEncoderTest {
         picaEncoder.endEntity();
         picaEncoder.endRecord();
 
-        Mockito.verify(receiver)
-                .process(
-                        "003@ \u001f017709958X\u001e028@/30"
-                            + " \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
+        Mockito.verify(receiver).process("003@ \u001f017709958X\u001e028@/30 \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
     }
 
     @Test(expected = FormatException.class)
@@ -96,17 +93,14 @@ public final class PicaEncoderTest {
         picaEncoder.startEntity("003@");
         picaEncoder.literal("0", "17709958X");
         picaEncoder.endEntity();
-        picaEncoder.startEntity("@028"); // the fieldname pattern not match!
+        picaEncoder.startEntity("@028"); //the fieldname pattern not match!
         picaEncoder.literal("P", "Abläöübolo");
         picaEncoder.literal("n", "VIX");
         picaEncoder.literal("l", "Bapst");
         picaEncoder.endEntity();
         picaEncoder.endRecord();
 
-        Mockito.verify(receiver)
-                .process(
-                        "003@ \u001f017709958X\u001e@028"
-                            + " \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
+        Mockito.verify(receiver).process("003@ \u001f017709958X\u001e@028 \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
     }
 
     @Test(expected = FormatException.class)
@@ -115,17 +109,14 @@ public final class PicaEncoderTest {
         picaEncoder.startEntity("003@");
         picaEncoder.literal("0", "17709958X");
         picaEncoder.endEntity();
-        picaEncoder.startEntity("028@/301"); // the fieldname pattern not match!
+        picaEncoder.startEntity("028@/301"); //the fieldname pattern not match!
         picaEncoder.literal("P", "Abläöübolo");
         picaEncoder.literal("n", "VIX");
         picaEncoder.literal("l", "Bapst");
         picaEncoder.endEntity();
         picaEncoder.endRecord();
 
-        Mockito.verify(receiver)
-                .process(
-                        "003@ \u001f017709958X\u001e@028"
-                            + " \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
+        Mockito.verify(receiver).process("003@ \u001f017709958X\u001e@028 \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
     }
 
     @Test(expected = FormatException.class)
@@ -141,10 +132,7 @@ public final class PicaEncoderTest {
         picaEncoder.endEntity();
         picaEncoder.endRecord();
 
-        Mockito.verify(receiver)
-                .process(
-                        "003@ \u001f017709958X\u001e@028"
-                            + " \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
+        Mockito.verify(receiver).process("003@ \u001f017709958X\u001e@028 \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
     }
 
     @Test(expected = FormatException.class)
@@ -160,10 +148,7 @@ public final class PicaEncoderTest {
         picaEncoder.endEntity();
         picaEncoder.endRecord();
 
-        Mockito.verify(receiver)
-                .process(
-                        "003@ \u001f017709958X\u001e@028"
-                            + " \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
+        Mockito.verify(receiver).process("003@ \u001f017709958X\u001e@028 \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
     }
 
     @Test(expected = MissingIdException.class)
@@ -179,10 +164,7 @@ public final class PicaEncoderTest {
         picaEncoder.endEntity();
         picaEncoder.endRecord();
 
-        Mockito.verify(receiver)
-                .process(
-                        "003@ \u001f017709958X\u001e028@"
-                            + " \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
+        Mockito.verify(receiver).process("003@ \u001f017709958X\u001e028@ \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
     }
 
     @Test
@@ -199,9 +181,7 @@ public final class PicaEncoderTest {
         picaEncoder.endEntity();
         picaEncoder.endRecord();
 
-        Mockito.verify(receiver)
-                .process(
-                        "003@ \u001f017709958X\u001e028@"
-                            + " \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
+        Mockito.verify(receiver).process("003@ \u001f017709958X\u001e028@ \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
     }
+
 }

@@ -33,6 +33,7 @@ import java.text.Normalizer;
  * A pica ppxml handler.
  *
  * @author Pascal Christoph (dr0i)
+ *
  */
 @Description("A pica ppxml reader")
 @In(XmlReceiver.class)
@@ -43,53 +44,58 @@ public final class PpXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private static final String SUBFIELD = "subf";
     private static final String DATAFIELD = "tag";
     private static final String RECORD = "record";
-    private static final String NAMESPACE = "http://www.oclcpica.org/xmlns/ppxml-1.0";
+    private static final String NAMESPACE =
+            "http://www.oclcpica.org/xmlns/ppxml-1.0";
     private static final String LEADER = "global";
     private String currentTag = "";
     private StringBuilder builder = new StringBuilder();
 
-    /** Creates an instance of {@link PpXmlHandler}. */
-    public PpXmlHandler() {}
+    /**
+     * Creates an instance of {@link PpXmlHandler}.
+     */
+    public PpXmlHandler() {
+    }
 
     @Override
-    public void startElement(
-            final String uri,
-            final String localName,
-            final String qName,
-            final Attributes attributes)
-            throws SAXException {
+    public void startElement(final String uri, final String localName,
+            final String qName, final Attributes attributes) throws SAXException {
         if (SUBFIELD.equals(localName)) {
             builder = new StringBuilder();
             currentTag = attributes.getValue("id");
-        } else if (DATAFIELD.equals(localName)) {
+        }
+        else if (DATAFIELD.equals(localName)) {
             final String id = attributes.getValue("id");
             final String occurence = attributes.getValue("occ");
             if (occurence.matches("[1-9]")) {
                 getReceiver().startEntity(id + "/0" + occurence);
-            } else if (occurence.isEmpty()) {
+            }
+            else if (occurence.isEmpty()) {
                 getReceiver().startEntity(id);
-            } else {
+            }
+            else {
                 getReceiver().startEntity(id + "/" + occurence);
             }
-        } else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
+        }
+        else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
             getReceiver().startRecord("");
-        } else if (LEADER.equals(localName)) {
+        }
+        else if (LEADER.equals(localName)) {
             builder = new StringBuilder();
             currentTag = LEADER;
         }
     }
 
     @Override
-    public void endElement(final String uri, final String localName, final String qName)
-            throws SAXException {
+    public void endElement(final String uri, final String localName,
+            final String qName) throws SAXException {
         if (SUBFIELD.equals(localName)) {
-            getReceiver()
-                    .literal(
-                            currentTag,
-                            Normalizer.normalize(builder.toString().trim(), Normalizer.Form.NFC));
-        } else if (DATAFIELD.equals(localName)) {
+            getReceiver().literal(currentTag,
+                    Normalizer.normalize(builder.toString().trim(), Normalizer.Form.NFC));
+        }
+        else if (DATAFIELD.equals(localName)) {
             getReceiver().endEntity();
-        } else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
+        }
+        else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
             getReceiver().endRecord();
         }
     }
@@ -99,4 +105,5 @@ public final class PpXmlHandler extends DefaultXmlPipe<StreamReceiver> {
             throws SAXException {
         builder.append(chars, start, length);
     }
+
 }

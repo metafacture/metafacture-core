@@ -28,12 +28,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Emits the values of literals matching {@literal #setPattern(String)} as objects.
- *
- * <p>The matcher does only match the literal name and does not take the enclosing entities into
- * account.
+ * Emits the values of literals matching {@literal #setPattern(String)}
+ * as objects.
+ * <p>
+ * The matcher does only match the literal name and does not
+ * take the enclosing entities into account.
  *
  * @author Christoph Böhme
+ *
  */
 @Description("Emits literal values as objects.")
 @In(StreamReceiver.class)
@@ -41,22 +43,27 @@ import java.util.regex.Pattern;
 @FluxCommand("literal-to-object")
 public final class LiteralToObject extends DefaultStreamPipe<ObjectReceiver<String>> {
 
-    /** Default value for {@link #setPattern(String)}. */
+    /**
+     * Default value for {@link #setPattern(String)}.
+     */
     public static final java.lang.String DEFAULT_PATTERN = ".*";
 
     private Matcher matcher = Pattern.compile(DEFAULT_PATTERN).matcher("");
 
-    /** Creates an instance of {@link LiteralToObject}. */
-    public LiteralToObject() {}
+    /**
+     * Creates an instance of {@link LiteralToObject}.
+     */
+    public LiteralToObject() {
+    }
 
     /**
-     * Sets the pattern against which literal names are matched. Only the values of matching
-     * literals are converted into objects.
-     *
-     * <p>The parameter can be changed at any time during processing. It becomes effective with the
-     * next literal being processed.
-     *
-     * <p>The default pattern matches all literal names including empty ones.
+     * Sets the pattern against which literal names are matched. Only the
+     * values of matching literals are converted into objects.
+     * <p>
+     * The parameter can be changed at any time during processing. It becomes
+     * effective with the next literal being processed.
+     * <p>
+     * The default pattern matches all literal names including empty ones.
      *
      * @param pattern a Java regular expression
      */
@@ -81,4 +88,5 @@ public final class LiteralToObject extends DefaultStreamPipe<ObjectReceiver<Stri
             getReceiver().process(value);
         }
     }
+
 }

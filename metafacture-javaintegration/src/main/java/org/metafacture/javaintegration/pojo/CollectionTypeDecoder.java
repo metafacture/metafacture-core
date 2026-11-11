@@ -38,12 +38,12 @@ class CollectionTypeDecoder implements TypeDecoder {
     }
 
     @Override
-    public void decodeToStream(
-            final StreamReceiver streamReceiver, final String name, final Object object) {
+    public void decodeToStream(final StreamReceiver streamReceiver, final String name, final Object object) {
         final Collection<?> collection = (Collection<?>) object;
         for (final Object element : collection) {
             final TypeDecoder typeDecoder = typeDecoderFactury.create(element.getClass());
             typeDecoder.decodeToStream(streamReceiver, name, element);
         }
     }
+
 }

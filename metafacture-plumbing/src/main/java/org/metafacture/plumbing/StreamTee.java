@@ -28,16 +28,19 @@ import org.metafacture.framework.helpers.DefaultTee;
  * Replicates an event stream to an arbitrary number of {@link StreamReceiver}s.
  *
  * @author Christoph Böhme, Markus Michael Geipel
+ *
  */
 @Description("Replicates an event stream to an arbitrary number of stream receivers.")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("stream-tee")
-public final class StreamTee extends DefaultTee<StreamReceiver>
-        implements StreamPipe<StreamReceiver> {
+public final class StreamTee extends DefaultTee<StreamReceiver> implements StreamPipe<StreamReceiver> {
 
-    /** Creates an instance of {@link StreamTee}. */
-    public StreamTee() {}
+    /**
+     * Creates an instance of {@link StreamTee}.
+     */
+    public StreamTee() {
+    }
 
     @Override
     public void startRecord(final String identifier) {
@@ -73,4 +76,5 @@ public final class StreamTee extends DefaultTee<StreamReceiver>
             receiver.literal(name, value);
         }
     }
+
 }

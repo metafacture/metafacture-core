@@ -25,6 +25,7 @@ import java.io.IOException;
  * Tests shared by all back end implementations of {@link ObjectWriter}.
  *
  * @author Christoph Böhme
+ *
  */
 public abstract class AbstractConfigurableObjectWriterTest {
 
@@ -47,7 +48,10 @@ public abstract class AbstractConfigurableObjectWriterTest {
         writer.process(DATA3);
         writer.closeStream();
 
-        final String expectedResult = DATA1 + "\n" + DATA2 + "\n" + DATA3 + "\n";
+        final String expectedResult =
+                DATA1 + "\n" +
+                DATA2 + "\n" +
+                DATA3 + "\n";
 
         Assert.assertEquals(getOutput(), expectedResult);
     }
@@ -64,13 +68,11 @@ public abstract class AbstractConfigurableObjectWriterTest {
         writer.closeStream();
 
         final String expectedResult =
-                HEADER
-                        + DATA1
-                        + ObjectWriter.DEFAULT_SEPARATOR
-                        + DATA2
-                        + ObjectWriter.DEFAULT_SEPARATOR
-                        + DATA3
-                        + ObjectWriter.DEFAULT_FOOTER;
+                HEADER +
+                DATA1 + ObjectWriter.DEFAULT_SEPARATOR +
+                DATA2 + ObjectWriter.DEFAULT_SEPARATOR +
+                DATA3 +
+                ObjectWriter.DEFAULT_FOOTER;
 
         Assert.assertEquals(getOutput(), expectedResult);
     }
@@ -87,13 +89,11 @@ public abstract class AbstractConfigurableObjectWriterTest {
         writer.closeStream();
 
         final String expectedResult =
-                ObjectWriter.DEFAULT_HEADER
-                        + DATA1
-                        + ObjectWriter.DEFAULT_SEPARATOR
-                        + DATA2
-                        + ObjectWriter.DEFAULT_SEPARATOR
-                        + DATA3
-                        + FOOTER;
+                ObjectWriter.DEFAULT_HEADER +
+                DATA1 + ObjectWriter.DEFAULT_SEPARATOR +
+                DATA2 + ObjectWriter.DEFAULT_SEPARATOR +
+                DATA3 +
+                FOOTER;
 
         Assert.assertEquals(getOutput(), expectedResult);
     }
@@ -110,13 +110,11 @@ public abstract class AbstractConfigurableObjectWriterTest {
         writer.closeStream();
 
         final String expectedResult =
-                ObjectWriter.DEFAULT_HEADER
-                        + DATA1
-                        + SEPARATOR
-                        + DATA2
-                        + SEPARATOR
-                        + DATA3
-                        + ObjectWriter.DEFAULT_FOOTER;
+                ObjectWriter.DEFAULT_HEADER +
+                DATA1 + SEPARATOR +
+                DATA2 + SEPARATOR +
+                DATA3 +
+                ObjectWriter.DEFAULT_FOOTER;
 
         Assert.assertEquals(getOutput(), expectedResult);
     }
@@ -132,7 +130,10 @@ public abstract class AbstractConfigurableObjectWriterTest {
         writer.process(DATA1);
         writer.closeStream();
 
-        final String expectedResult = HEADER + DATA1 + FOOTER;
+        final String expectedResult =
+                HEADER +
+                DATA1 +
+                FOOTER;
 
         Assert.assertEquals(getOutput(), expectedResult);
     }
@@ -155,4 +156,5 @@ public abstract class AbstractConfigurableObjectWriterTest {
     protected abstract ConfigurableObjectWriter<String> getWriter();
 
     protected abstract String getOutput() throws IOException;
+
 }

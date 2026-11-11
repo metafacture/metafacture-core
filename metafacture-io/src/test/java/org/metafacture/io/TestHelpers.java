@@ -31,36 +31,25 @@ import java.util.function.Consumer;
 
 public final class TestHelpers {
 
-    private TestHelpers() {}
-
-    public static void assertFile(
-            final ObjectReceiver<Reader> receiver,
-            final String expected,
-            final File file,
-            final Consumer<FileOpener> consumer) {
-        assertReader(
-                receiver,
-                () -> {
-                    final FileOpener opener = new FileOpener();
-                    if (consumer != null) {
-                        consumer.accept(opener);
-                    }
-
-                    opener.setReceiver(receiver);
-                    opener.process(file.getAbsolutePath());
-                    opener.closeStream();
-                },
-                expected);
+    private TestHelpers() {
     }
 
-    public static void assertReader(
-            final ObjectReceiver<Reader> receiver,
-            final Runnable runnable,
-            final String... expected) {
+    public static void assertFile(final ObjectReceiver<Reader> receiver, final String expected, final File file, final Consumer<FileOpener> consumer) {
+        assertReader(receiver, () -> {
+            final FileOpener opener = new FileOpener();
+            if (consumer != null) {
+                consumer.accept(opener);
+            }
+
+            opener.setReceiver(receiver);
+            opener.process(file.getAbsolutePath());
+            opener.closeStream();
+        }, expected);
+    }
+
+    public static void assertReader(final ObjectReceiver<Reader> receiver, final Runnable runnable, final String... expected) {
         final List<String> actual = new ArrayList<>();
-        Mockito.doAnswer(i -> actual.add(ResourceUtil.readAll(i.getArgument(0))))
-                .when(receiver)
-                .process(Mockito.any(Reader.class));
+        Mockito.doAnswer(i -> actual.add(ResourceUtil.readAll(i.getArgument(0)))).when(receiver).process(Mockito.any(Reader.class));
 
         runnable.run();
 
@@ -68,4 +57,5 @@ public final class TestHelpers {
         Arrays.stream(expected).forEach(i -> Assert.assertEquals(i, actual.remove(0)));
         Assert.assertEquals(0, actual.size());
     }
+
 }

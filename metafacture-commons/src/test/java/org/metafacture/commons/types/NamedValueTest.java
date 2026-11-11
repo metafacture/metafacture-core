@@ -32,7 +32,8 @@ public final class NamedValueTest {
     private static final String SMALL = "a";
     private static final String BIG = "b";
 
-    public NamedValueTest() {}
+    public NamedValueTest() {
+    }
 
     @Test
     public void testNamedValueCompare() {
@@ -70,4 +71,5 @@ public final class NamedValueTest {
 
         Assert.assertTrue(namedValue1.hashCode() == namedValue2.hashCode());
     }
+
 }

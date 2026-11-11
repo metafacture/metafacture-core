@@ -31,21 +31,25 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Tests for classes {@link TripleReader} and {@link TripleWriter}. TODO: This test class should be
- * split into two separated test classes.
+ * Tests for classes {@link TripleReader} and {@link TripleWriter}.
+ * TODO: This test class should be split into two separated test classes.
  *
  * @author Christoph Böhme
+ *
  */
 public final class TripleReaderWriterTest {
 
     private static final Triple TRIPLE1 = new Triple("S", "P", "O1");
     private static final Triple TRIPLE2 = new Triple("S", "P", "O2", ObjectType.ENTITY);
 
-    @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
+    @Rule
+    public TemporaryFolder tempFolder = new TemporaryFolder();
 
-    @Mock private ObjectReceiver<Triple> receiver;
+    @Mock
+    private ObjectReceiver<Triple> receiver;
 
-    public TripleReaderWriterTest() {}
+    public TripleReaderWriterTest() {
+    }
 
     @Test
     public void testShouldWriteAndReadTriples() throws IOException {
@@ -65,4 +69,5 @@ public final class TripleReaderWriterTest {
         Mockito.verify(receiver).process(TRIPLE1);
         Mockito.verify(receiver).process(TRIPLE2);
     }
+
 }

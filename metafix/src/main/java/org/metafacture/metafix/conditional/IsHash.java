@@ -24,19 +24,21 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
-/** <i>Alias for {@link IsObject}.</i> */
+/**
+ * <i>Alias for {@link IsObject}.</i>
+ */
 @FixCommand("is_hash")
 public class IsHash implements FixPredicate {
 
-    /** Creates an instance of {@link IsHash}. */
-    public IsHash() {}
+    /**
+     * Creates an instance of {@link IsHash}.
+     */
+    public IsHash() {
+    }
 
     @Override
-    public boolean test(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         return new IsObject().test(metafix, record, params, options);
     }
+
 }

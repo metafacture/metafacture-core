@@ -31,6 +31,7 @@ import java.io.Reader;
  * Reads a stream of formeta data and splits between each top-level element.
  *
  * @author Christoph Böhme
+ *
  */
 @In(Reader.class)
 @Out(String.class)
@@ -43,8 +44,11 @@ public final class FormetaRecordsReader extends DefaultObjectPipe<Reader, Object
     private final StringBuilder builder = new StringBuilder();
     private final char[] buffer = new char[BUFFER_SIZE];
 
-    /** Creates an instance of {@link FormetaRecordsReader}. */
-    public FormetaRecordsReader() {}
+    /**
+     * Creates an instance of {@link FormetaRecordsReader}.
+     */
+    public FormetaRecordsReader() {
+    }
 
     @Override // checkstyle-disable-line CyclomaticComplexity
     @SuppressWarnings("fallthrough")
@@ -74,7 +78,7 @@ public final class FormetaRecordsReader extends DefaultObjectPipe<Reader, Object
                             if (!inQuotedText) {
                                 groupLevel -= 1;
                             }
-                        // fall through
+                            // fall through
                         case Formeta.ITEM_SEPARATOR:
                             if (!inQuotedText && groupLevel == 0) {
                                 builder.append(buffer, offset, i - offset + 1);
@@ -95,7 +99,8 @@ public final class FormetaRecordsReader extends DefaultObjectPipe<Reader, Object
                 emitRecord();
             }
 
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -105,4 +110,5 @@ public final class FormetaRecordsReader extends DefaultObjectPipe<Reader, Object
         getReceiver().process(record);
         builder.delete(0, builder.length());
     }
+
 }

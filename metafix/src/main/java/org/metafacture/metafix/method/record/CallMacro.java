@@ -26,28 +26,29 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Calls a named macro, i.e. a list of statements that have been previously defined with the {@link
- * org.metafacture.metafix.bind.PutMacro} bind.
+ * Calls a named macro, i.e. a list of statements that have been previously
+ * defined with the {@link org.metafacture.metafix.bind.PutMacro} bind.
  */
 @FixCommand("call_macro")
 public class CallMacro implements FixFunction {
 
-    /** Creates an instance of {@link CallMacro}. */
-    public CallMacro() {}
+    /**
+     * Creates an instance of {@link CallMacro}.
+     */
+    public CallMacro() {
+    }
 
     @Override
-    public void apply(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         final String macroName = params.get(0);
         final RecordTransformer recordTransformer = metafix.getMacro(macroName);
 
         if (recordTransformer != null) {
             recordTransformer.transform(record, options);
-        } else {
+        }
+        else {
             throw new IllegalArgumentException("Macro '" + macroName + "' undefined!");
         }
     }
+
 }

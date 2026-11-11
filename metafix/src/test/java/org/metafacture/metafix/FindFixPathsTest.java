@@ -30,19 +30,25 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * Tests for class {@link FindFixPaths}.
  *
  * @author Tobias Bülte
+ *
  */
 @ExtendWith(MockitoExtension.class)
 public final class FindFixPathsTest {
 
     private final FindFixPaths finder = new FindFixPaths(".*ETL.*");
 
-    @Mock private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
 
-    public FindFixPathsTest() {}
+    public FindFixPathsTest() {
+    }
 
     @Test
     public void testShouldFindPaths() {
-        verify("a\t|\tAn ETL test", "a\t|\tAnother ETL test", "c.2\t|\tETL what?");
+        verify(
+                "a\t|\tAn ETL test",
+                "a\t|\tAnother ETL test",
+                "c.2\t|\tETL what?");
     }
 
     private void processRecord() {
@@ -76,9 +82,11 @@ public final class FindFixPathsTest {
             ordered.verify(receiver, Mockito.times(2)).closeStream();
             ordered.verifyNoMoreInteractions();
             Mockito.verifyNoMoreInteractions(receiver);
-        } catch (final MockitoAssertionError e) {
+        }
+        catch (final MockitoAssertionError e) {
             System.out.println(Mockito.mockingDetails(receiver).printInvocations());
             throw e;
         }
     }
+
 }

@@ -21,12 +21,14 @@ import org.junit.jupiter.api.Test;
 
 public class ArrayValueTest {
 
-    public ArrayValueTest() {}
+    public ArrayValueTest() {
+    }
 
     @Test
     public void shouldSatisfyEqualsContract() {
         EqualsVerifier.forClass(Value.Array.class)
-                .withPrefabValues(Value.class, Value.newArray(), Value.newHash())
-                .verify();
+            .withPrefabValues(Value.class, Value.newArray(), Value.newHash())
+            .verify();
     }
+
 }

@@ -26,14 +26,17 @@ import java.io.PrintStream;
  * Tests for class {@link ObjectStdoutWriter}.
  *
  * @author Christoph Böhme
+ *
  */
-public final class ObjectStdoutWriterTest extends AbstractConfigurableObjectWriterTest {
+public final class ObjectStdoutWriterTest
+        extends AbstractConfigurableObjectWriterTest {
 
     private ObjectStdoutWriter<String> writer;
 
     private ByteArrayOutputStream stdoutBuffer;
 
-    public ObjectStdoutWriterTest() {}
+    public ObjectStdoutWriterTest() {
+    }
 
     @Before
     public void setup() {
@@ -54,4 +57,5 @@ public final class ObjectStdoutWriterTest extends AbstractConfigurableObjectWrit
         System.out.flush();
         return stdoutBuffer.toString();
     }
+
 }

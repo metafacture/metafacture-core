@@ -32,22 +32,24 @@ import org.mockito.junit.MockitoRule;
  */
 public final class AnyTest {
 
-    @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-    public AnyTest() {}
+    public AnyTest() {
+    }
 
     @Test
     public void shouldFireOnlyIfAtLeastOneElementFires() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <any>"
-                        + "    <data source='data1' />"
-                        + "    <data source='data2' />"
-                        + "  </any>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <any>" +
+                "    <data source='data1' />" +
+                "    <data source='data2' />" +
+                "  </any>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "A");
@@ -68,19 +70,19 @@ public final class AnyTest {
                     o.get().endRecord();
                     o.get().startRecord("3");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldSupportUserdefinedNameAndValue() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <any name='ANY' value='found one'>"
-                        + "    <data source='data1' />"
-                        + "    <data source='data2' />"
-                        + "  </any>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <any name='ANY' value='found one'>" +
+                "    <data source='data1' />" +
+                "    <data source='data2' />" +
+                "  </any>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "A");
@@ -90,19 +92,19 @@ public final class AnyTest {
                     o.get().startRecord("1");
                     o.get().literal("ANY", "found one");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldNotFireAgainIfAdditionalValueIsReceivedAndResetIsFalse() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <any>"
-                        + "    <data source='data1' />"
-                        + "    <data source='data2' />"
-                        + "  </any>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <any>" +
+                "    <data source='data1' />" +
+                "    <data source='data2' />" +
+                "  </any>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "A");
@@ -114,19 +116,19 @@ public final class AnyTest {
                     o.get().startRecord("1");
                     o.get().literal("", "true");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldFireAgainIfAdditionalValueIsReceivedAndResetIsTrue() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <any reset='true'>"
-                        + "    <data source='data1' />"
-                        + "    <data source='data2' />"
-                        + "  </any>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <any reset='true'>" +
+                "    <data source='data1' />" +
+                "    <data source='data2' />" +
+                "  </any>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "A");
@@ -138,19 +140,19 @@ public final class AnyTest {
                     o.get().startRecord("1");
                     f.apply(3).literal("", "true");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldFireAgainAfterFlushing() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <any flushWith='entity'>"
-                        + "    <data source='entity.data1' />"
-                        + "    <data source='entity.data2' />"
-                        + "  </any>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <any flushWith='entity'>" +
+                "    <data source='entity.data1' />" +
+                "    <data source='entity.data2' />" +
+                "  </any>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -165,19 +167,19 @@ public final class AnyTest {
                     o.get().startRecord("1");
                     f.apply(2).literal("", "true");
                     o.get().endRecord();
-                });
+                }
+        );
     }
 
     @Test
     public void shouldNotFireIfFlushingAnUntriggeredCollection() {
-        TestHelpers.assertMorph(
-                receiver,
-                "<rules>"
-                        + "  <any flushWith='entity'>"
-                        + "    <data source='entity.data1' />"
-                        + "    <data source='entity.data2' />"
-                        + "  </any>"
-                        + "</rules>",
+        TestHelpers.assertMorph(receiver,
+                "<rules>" +
+                "  <any flushWith='entity'>" +
+                "    <data source='entity.data1' />" +
+                "    <data source='entity.data2' />" +
+                "  </any>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -188,6 +190,8 @@ public final class AnyTest {
                 o -> {
                     o.get().startRecord("1");
                     o.get().endRecord();
-                });
+                }
+        );
     }
+
 }

@@ -30,19 +30,20 @@ import java.util.Map;
  * Turns HTML text to plain text.
  *
  * @author Tobias Bülte (tobiasNx)
+ *
  */
 @FixCommand("html_to_text")
 public class HtmlToText implements FixFunction {
 
-    /** Creates an instance of {@link HtmlToText}. */
-    public HtmlToText() {}
+    /**
+     * Creates an instance of {@link HtmlToText}.
+     */
+    public HtmlToText() {
+    }
 
     @Override
-    public void apply(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         record.transform(params.get(0), s -> Jsoup.parse(s).wholeText());
     }
+
 }

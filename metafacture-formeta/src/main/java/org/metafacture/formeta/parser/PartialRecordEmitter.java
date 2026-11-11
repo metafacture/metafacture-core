@@ -18,14 +18,19 @@ package org.metafacture.formeta.parser;
 
 import org.metafacture.framework.StreamReceiver;
 
-/** Emits partial records. */
+/**
+ * Emits partial records.
+ */
 public final class PartialRecordEmitter implements Emitter {
 
     private StreamReceiver receiver;
     private String defaultName;
 
-    /** Creates an instance of {@link PartialRecordEmitter}. */
-    public PartialRecordEmitter() {}
+    /**
+     * Creates an instance of {@link PartialRecordEmitter}.
+     */
+    public PartialRecordEmitter() {
+    }
 
     /**
      * Sets the default name.
@@ -54,7 +59,8 @@ public final class PartialRecordEmitter implements Emitter {
     public void startGroup(final String name, final int nestingLevel) {
         if (nestingLevel == 0 && defaultName != null && name.isEmpty()) {
             receiver.startEntity(defaultName);
-        } else {
+        }
+        else {
             receiver.startEntity(name);
         }
     }
@@ -68,8 +74,10 @@ public final class PartialRecordEmitter implements Emitter {
     public void literal(final String name, final String value, final int nestingLevel) {
         if (nestingLevel == 0 && defaultName != null && name.isEmpty()) {
             receiver.literal(defaultName, value);
-        } else {
+        }
+        else {
             receiver.literal(name, value);
         }
     }
+
 }

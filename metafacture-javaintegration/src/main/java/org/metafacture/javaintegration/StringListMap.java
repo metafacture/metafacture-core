@@ -28,16 +28,19 @@ import java.util.Set;
  * Collects the received results in a {@link ListMap}.
  *
  * @author Markus Michael Geipel
+ *
  */
-public final class StringListMap extends DefaultStreamReceiver
-        implements Collector<ListMap<String, String>>, Map<String, List<String>> {
+public final class StringListMap extends DefaultStreamReceiver implements Collector<ListMap<String, String>>, Map<String, List<String>> {
 
     private boolean closed;
     private Collection<ListMap<String, String>> collection;
     private ListMap<String, String> listMap = new ListMap<String, String>();
 
-    /** Creates an instance of {@link StringListMap}. */
-    public StringListMap() {}
+    /**
+     * Creates an instance of {@link StringListMap}.
+     */
+    public StringListMap() {
+    }
 
     /**
      * Creates an instance of {@link StringListMap} by a given Collection.
@@ -80,7 +83,9 @@ public final class StringListMap extends DefaultStreamReceiver
         listMap.clearKey(key);
     }
 
-    /** Clears all keys in the map. */
+    /**
+     * Clears all keys in the map.
+     */
     public void clearAllKeys() {
         listMap.clearAllKeys();
     }
@@ -98,7 +103,7 @@ public final class StringListMap extends DefaultStreamReceiver
     /**
      * Adds a value to the List of values of the key in the map.
      *
-     * @param name the key
+     * @param name  the key
      * @param value the value
      */
     public void add(final String name, final String value) {
@@ -108,7 +113,7 @@ public final class StringListMap extends DefaultStreamReceiver
     /**
      * Adds a List of values to a key in the map
      *
-     * @param name the key
+     * @param name      the key
      * @param addValues the {@link Collection} of values
      */
     public void putAll(final String name, final Collection<String> addValues) {
@@ -144,7 +149,8 @@ public final class StringListMap extends DefaultStreamReceiver
      * Gets the first element of the List of values of the key in the map or null
      *
      * @param name the name
-     * @return the first element of the List of values of the key in the map or null.
+     * @return the first element of the List of values of the key in the map or
+     *         null.
      */
     public String getFirst(final String name) {
         return listMap.getFirst(name);
@@ -252,4 +258,5 @@ public final class StringListMap extends DefaultStreamReceiver
     public void setCollection(final Collection<ListMap<String, String>> collection) {
         this.collection = collection;
     }
+
 }

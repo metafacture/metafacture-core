@@ -29,10 +29,9 @@ import org.xml.sax.Attributes;
 
 /**
  * Decodes an CG-XML document into an event stream.
- *
- * <p>The GG-XML format is a simple XML schema for writing event streams into XML documents. The
- * following example shows a complete CG-XML document:
- *
+ * <p>
+ * The GG-XML format is a simple XML schema for writing event streams into XML
+ * documents. The following example shows a complete CG-XML document:
  * <pre>{@literal
  * <?xml version="1.0" encoding="UTF-8"?>
  * <cgxml xmlns="http://www.culturegraph.org/cgxml" version="1.0">
@@ -55,6 +54,7 @@ import org.xml.sax.Attributes;
  * }</pre>
  *
  * @author Christoph Böhme
+ *
  */
 @Description("Reads CG-XML files")
 @In(XmlReceiver.class)
@@ -77,15 +77,15 @@ public final class CGXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
     private static final String VERSION = "1.0";
 
-    /** Creates an instance of {@link CGXmlHandler}. */
-    public CGXmlHandler() {}
+    /**
+     * Creates an instance of {@link CGXmlHandler}.
+     */
+    public CGXmlHandler() {
+    }
 
     @Override
-    public void startElement(
-            final String uri,
-            final String localName,
-            final String qName,
-            final Attributes attributes) {
+    public void startElement(final String uri, final String localName,
+            final String qName, final Attributes attributes) {
         if (!CGXML_NAMESPACE.equals(uri)) {
             return;
         }
@@ -121,7 +121,8 @@ public final class CGXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         final String recordId = attributes.getValue("", ID_ATTR);
         if (recordId == null) {
             getReceiver().startRecord("");
-        } else {
+        }
+        else {
             getReceiver().startRecord(recordId);
         }
     }
@@ -144,14 +145,17 @@ public final class CGXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void endElement(final String uri, final String localName, final String qName) {
+    public void endElement(final String uri, final String localName,
+            final String qName) {
         if (!CGXML_NAMESPACE.equals(uri)) {
             return;
         }
         if (RECORD_TAG.equals(localName)) {
             getReceiver().endRecord();
-        } else if (ENTITY_TAG.equals(localName)) {
+        }
+        else if (ENTITY_TAG.equals(localName)) {
             getReceiver().endEntity();
         }
     }
+
 }

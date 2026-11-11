@@ -17,7 +17,8 @@
 package org.metafacture.metamorph.api;
 
 /**
- * Thrown if an error occurs while executing the Metamorph transformation pipeline.
+ * Thrown if an error occurs while executing the Metamorph transformation
+ * pipeline.
  *
  * @author Markus Michael Geipel
  */
@@ -35,12 +36,14 @@ public class MorphExecutionException extends RuntimeException {
     }
 
     /**
-     * Creates an instance of {@link MorphExecutionException} by a given message and cause.
+     * Creates an instance of {@link MorphExecutionException} by a given message and
+     * cause.
      *
      * @param message the message
-     * @param cause the {@link Throwable}
+     * @param cause   the {@link Throwable}
      */
     public MorphExecutionException(final String message, final Throwable cause) {
         super(message, cause);
     }
+
 }

@@ -20,22 +20,30 @@ import org.metafacture.framework.Receiver;
 import org.metafacture.framework.Sender;
 
 /**
- * Default implementation for {@link Sender}s that simply stores a reference to the receiver and
- * implements the correct behaviour required by the LifeCycle interface.
+ * Default implementation for {@link Sender}s that simply stores a reference to
+ * the receiver and implements the correct behaviour required by the LifeCycle
+ * interface.
  *
- * @param <T> receiver base type of the downstream module
+ * @param <T>
+ *            receiver base type of the downstream module
+ *
  * @see DefaultStreamPipe
  * @see DefaultObjectPipe
  * @see DefaultXmlPipe
+ *
  * @author Christoph Böhme
+ *
  */
 public class DefaultSender<T extends Receiver> implements Sender<T> {
 
     private T receiver;
     private boolean isClosed;
 
-    /** Creates an instance of {@link DefaultSender}. */
-    public DefaultSender() {}
+    /**
+     * Creates an instance of {@link DefaultSender}.
+     */
+    public DefaultSender() {
+    }
 
     /**
      * Checks whether the DefaultSender is closed.
@@ -74,37 +82,39 @@ public class DefaultSender<T extends Receiver> implements Sender<T> {
     }
 
     /**
-     * Invoked when the sender is connected with a receiver. This method is called after the
-     * receiver has been updated. Hence, {@code getReceiver} will return a reference to the new
-     * receiver.
+     * Invoked when the sender is connected with a receiver. This method is
+     * called after the receiver has been updated. Hence, {@code getReceiver}
+     * will return a reference to the new receiver.
      */
     protected void onSetReceiver() {
         // Default implementation does nothing
     }
 
     /**
-     * Invoked when the {@code resetStream()} method is called. Override this method to perform a
-     * reset of the module.
+     * Invoked when the {@code resetStream()} method is called. Override this
+     * method to perform a reset of the module.
      *
-     * <p>Do not call the {@code resetStream()} method of the next module downstream. This is
-     * handled by the implementation of {@code resetStream()} in {@code DefaultSender}.
+     * Do not call the {@code resetStream()} method of the next module
+     * downstream. This is handled by the implementation of
+     * {@code resetStream()} in {@code DefaultSender}.
      *
-     * <p>{@code onResetStream()} is called before {@code DefaultSender} calls the {@code
-     * resetStream()} method of the downstream module.
+     * {@code onResetStream()} is called before {@code DefaultSender} calls the
+     * {@code resetStream()} method of the downstream module.
      */
     protected void onResetStream() {
         // Default implementation does nothing
     }
 
     /**
-     * Invoked when the {@code closeStream()} method is called. Override this method to close any
-     * resources used by the module.
+     * Invoked when the {@code closeStream()} method is called. Override this
+     * method to close any resources used by the module.
      *
-     * <p>Do not call the {@code closeStream()} method of the next module downstream. This is
-     * handled by the implementation of {@code closeStream()} in {@code DefaultSender}.
+     * Do not call the {@code closeStream()} method of the next module
+     * downstream. This is handled by the implementation of
+     * {@code closeStream()} in {@code DefaultSender}.
      *
-     * <p>{@code onCloseStream()} is called before {@code DefaultSender} calls the {@code
-     * closeStream()} method of the downstream module.
+     * {@code onCloseStream()} is called before {@code DefaultSender} calls the
+     * {@code closeStream()} method of the downstream module.
      */
     protected void onCloseStream() {
         // Default implementation does nothing
@@ -118,4 +128,5 @@ public class DefaultSender<T extends Receiver> implements Sender<T> {
     protected final T getReceiver() {
         return receiver;
     }
+
 }

@@ -27,18 +27,22 @@ import java.util.Set;
  * Collects {@link String}s in a {@link Set}.
  *
  * @author Markus Michael Geipel
+ *
  */
-public final class ValueSet extends DefaultStreamReceiver
-        implements Set<String>, Collector<Set<String>> {
+public final class ValueSet extends DefaultStreamReceiver implements Set<String>, Collector<Set<String>> {
 
     private Collection<Set<String>> collection = new HashSet<>();
     private Set<String> set;
 
-    /** Creates an instance of {@link ValueSet}. */
-    public ValueSet() {}
+    /**
+     * Creates an instance of {@link ValueSet}.
+     */
+    public ValueSet() {
+    }
 
     /**
-     * Creates a {@code ValueSet} receiver which stores the received values in the passed set.
+     * Creates a {@code ValueSet} receiver which stores the received values in the
+     * passed set.
      *
      * @param collection is filled with the received results.
      */
@@ -153,4 +157,5 @@ public final class ValueSet extends DefaultStreamReceiver
     public void setCollection(final Collection<Set<String>> collection) {
         this.collection = collection;
     }
+
 }

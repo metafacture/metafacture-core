@@ -30,6 +30,7 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link TripleFilter},
  *
  * @author Christoph Böhme
+ *
  */
 public final class TripleFilterTest {
 
@@ -39,9 +40,11 @@ public final class TripleFilterTest {
 
     private TripleFilter tripleFilter;
 
-    @Mock private ObjectReceiver<Triple> receiver;
+    @Mock
+    private ObjectReceiver<Triple> receiver;
 
-    public TripleFilterTest() {}
+    public TripleFilterTest() {
+    }
 
     @Before
     public void setup() {
@@ -91,4 +94,5 @@ public final class TripleFilterTest {
         Mockito.verify(receiver).process(TRIPLE3);
         Mockito.verifyNoMoreInteractions(receiver);
     }
+
 }

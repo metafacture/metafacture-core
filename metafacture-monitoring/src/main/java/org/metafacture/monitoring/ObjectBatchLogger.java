@@ -31,8 +31,11 @@ import java.util.Map;
 /**
  * Writes log info for every BATCHSIZE records.
  *
- * @param <T> object type
+ * @param <T>
+ *            object type
+ *
  * @author Markus Geipel
+ *
  */
 @Description("Writes log info for every BATCHSIZE records.")
 @In(Object.class)
@@ -59,8 +62,8 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
     private long batchCount;
 
     /**
-     * Creates an instance of {@link ObjectBatchLogger} with the default format of {@value
-     * #DEFAULT_FORMAT}.
+     * Creates an instance of {@link ObjectBatchLogger} with the default format of
+     * {@value #DEFAULT_FORMAT}.
      */
     public ObjectBatchLogger() {
         this.format = DEFAULT_FORMAT;
@@ -79,7 +82,7 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
      * Constructs an ObjectBatchLogger with a format and a map of variables.
      *
      * @param format a format
-     * @param vars a map of variables
+     * @param vars   a map of variables
      */
     ObjectBatchLogger(final String format, final Map<String, String> vars) {
         this.format = format;
@@ -131,4 +134,5 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
             writeLog();
         }
     }
+
 }

@@ -49,25 +49,22 @@ public final class FluxCompiler {
      * @param vars the variables of the flux
      * @return the flow
      * @throws RecognitionException if an ANTLR exception occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException          if an I/O error occurs
      */
-    public static FluxProgramm compile(final InputStream flux, final Map<String, String> vars)
-            throws RecognitionException, IOException {
+    public static FluxProgramm compile(final InputStream flux, final Map<String, String> vars) throws RecognitionException, IOException {
         return compileFlow(compileAst(flux), vars);
     }
 
-    private static CommonTreeNodeStream compileAst(final InputStream flowDef)
-            throws IOException, RecognitionException {
-        final FluxParser parser =
-                new FluxParser(new CommonTokenStream(new FluxLexer(new ANTLRInputStream(flowDef))));
+    private static CommonTreeNodeStream compileAst(final InputStream flowDef) throws IOException, RecognitionException {
+        final FluxParser parser = new FluxParser(new CommonTokenStream(new FluxLexer(new ANTLRInputStream(flowDef))));
         return new CommonTreeNodeStream(parser.flux().getTree());
     }
 
-    private static FluxProgramm compileFlow(
-            final CommonTreeNodeStream treeNodes, final Map<String, String> vars)
+    private static FluxProgramm compileFlow(final CommonTreeNodeStream treeNodes, final Map<String, String> vars)
             throws RecognitionException {
         final FlowBuilder flowBuilder = new FlowBuilder(treeNodes);
         flowBuilder.addVaribleAssignements(vars);
         return flowBuilder.flux();
     }
+
 }

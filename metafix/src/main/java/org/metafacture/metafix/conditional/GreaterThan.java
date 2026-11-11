@@ -24,19 +24,22 @@ import org.metafacture.metafix.api.FixPredicate;
 import java.util.List;
 import java.util.Map;
 
-/** Executes the functions if/unless the field value is greater than the given value. */
+/**
+ * Executes the functions if/unless the field value is greater than the given
+ * value.
+ */
 @FixCommand("greater_than")
 public class GreaterThan implements FixPredicate {
 
-    /** Creates an instance of {@link GreaterThan}. */
-    public GreaterThan() {}
+    /**
+     * Creates an instance of {@link GreaterThan}.
+     */
+    public GreaterThan() {
+    }
 
     @Override
-    public boolean test(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         return testConditional(record, params, ALL, GREATER_THAN);
     }
+
 }

@@ -37,20 +37,25 @@ import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 
 /**
- * Tests for file compression in class {@link FileOpener}.
+ * Tests for file compression in  class {@link FileOpener}.
  *
  * @author Christoph Böhme
+ *
  */
 @RunWith(Parameterized.class)
 public final class FileOpenerCompressionTest {
 
-    private static final String DATA = "This could have been a remarkable sentence.";
+    private static final String DATA =
+            "This could have been a remarkable sentence.";
 
-    @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
+    @Rule
+    public TemporaryFolder tempFolder = new TemporaryFolder();
 
-    @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock private ObjectReceiver<Reader> receiver;
+    @Mock
+    private ObjectReceiver<Reader> receiver;
 
     private final String resourcePath;
     private final FileCompression compression;
@@ -62,23 +67,22 @@ public final class FileOpenerCompressionTest {
 
     @Parameters
     public static Iterable<Object[]> data() {
-        return Arrays.asList(
-                new Object[][] {
-                    {"compressed.txt", FileCompression.AUTO},
-                    {"compressed.txt.bgzf", FileCompression.AUTO},
-                    {"compressed.txt.bz2", FileCompression.AUTO},
-                    {"compressed.txt.bzip2", FileCompression.AUTO},
-                    {"compressed.txt.gz", FileCompression.AUTO},
-                    {"compressed.txt.gzip", FileCompression.AUTO},
-                    {"compressed.txt.xz", FileCompression.AUTO},
-                    {"compressed.txt", FileCompression.NONE},
-                    {"compressed.txt.bz2", FileCompression.BZIP2},
-                    {"compressed.txt.bzip2", FileCompression.BZIP2},
-                    {"compressed.txt.bgzf", FileCompression.GZIP},
-                    {"compressed.txt.gz", FileCompression.GZIP},
-                    {"compressed.txt.gzip", FileCompression.GZIP},
-                    {"compressed.txt.xz", FileCompression.XZ}
-                });
+        return Arrays.asList(new Object[][] {
+                {"compressed.txt", FileCompression.AUTO},
+                {"compressed.txt.bgzf", FileCompression.AUTO},
+                {"compressed.txt.bz2", FileCompression.AUTO},
+                {"compressed.txt.bzip2", FileCompression.AUTO},
+                {"compressed.txt.gz", FileCompression.AUTO},
+                {"compressed.txt.gzip", FileCompression.AUTO},
+                {"compressed.txt.xz", FileCompression.AUTO},
+                {"compressed.txt", FileCompression.NONE},
+                {"compressed.txt.bz2", FileCompression.BZIP2},
+                {"compressed.txt.bzip2", FileCompression.BZIP2},
+                {"compressed.txt.bgzf", FileCompression.GZIP},
+                {"compressed.txt.gz", FileCompression.GZIP},
+                {"compressed.txt.gzip", FileCompression.GZIP},
+                {"compressed.txt.xz", FileCompression.XZ}
+            });
     }
 
     @Test
@@ -91,4 +95,5 @@ public final class FileOpenerCompressionTest {
 
         TestHelpers.assertFile(receiver, DATA, file, o -> o.setCompression(compression));
     }
+
 }

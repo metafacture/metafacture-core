@@ -35,15 +35,15 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Uses the object value of the triple as a URL and emits a new triple in which the object value is
- * replaced with the contents of the resource identified by the URL.
+ * Uses the object value of the triple as a URL and emits a new triple
+ * in which the object value is replaced with the contents of the resource
+ * identified by the URL.
  *
  * @author Christoph Böhme
  */
-@Description(
-        "Uses the object value of the triple as a URL and emits a new triple "
-                + "in which the object value is replaced with the contents of the resource "
-                + "identified by the URL.")
+@Description("Uses the object value of the triple as a URL and emits a new triple " +
+    "in which the object value is replaced with the contents of the resource " +
+    "identified by the URL.")
 @In(Triple.class)
 @Out(Triple.class)
 @FluxCommand("retrieve-triple-objects")
@@ -51,12 +51,15 @@ public final class TripleObjectRetriever extends DefaultObjectPipe<Triple, Objec
 
     private Charset defaultEncoding = StandardCharsets.UTF_8;
 
-    /** Creates an instance of {@link TripleObjectRetriever}. */
-    public TripleObjectRetriever() {}
+    /**
+     * Creates an instance of {@link TripleObjectRetriever}.
+     */
+    public TripleObjectRetriever() {
+    }
 
     /**
-     * Sets the default encoding to use when no encoding is provided by the server. The default
-     * setting is UTF-8.
+     * Sets the default encoding to use when no encoding is
+     * provided by the server. The default setting is UTF-8.
      *
      * @param defaultEncoding new default encoding
      */
@@ -65,8 +68,8 @@ public final class TripleObjectRetriever extends DefaultObjectPipe<Triple, Objec
     }
 
     /**
-     * Sets the default encoding to use when no encoding is provided by the server. The default
-     * setting is UTF-8.
+     * Sets the default encoding to use when no encoding is
+     * provided by the server. The default setting is UTF-8.
      *
      * @param defaultEncoding new default encoding
      */
@@ -75,8 +78,8 @@ public final class TripleObjectRetriever extends DefaultObjectPipe<Triple, Objec
     }
 
     /**
-     * Returns the default encoding used when no encoding is provided by the server. The default
-     * setting is UTF-8.
+     * Returns the default encoding used when no encoding is
+     * provided by the server. The default setting is UTF-8.
      *
      * @return current default setting
      */
@@ -91,7 +94,8 @@ public final class TripleObjectRetriever extends DefaultObjectPipe<Triple, Objec
             return;
         }
         final String objectValue = retrieveObjectValue(triple.getObject());
-        getReceiver().process(new Triple(triple.getSubject(), triple.getPredicate(), objectValue));
+        getReceiver().process(new Triple(triple.getSubject(), triple.getPredicate(),
+                objectValue));
     }
 
     private String retrieveObjectValue(final String urlString) {
@@ -100,13 +104,14 @@ public final class TripleObjectRetriever extends DefaultObjectPipe<Triple, Objec
             final URLConnection connection = url.openConnection();
             connection.connect();
             final String encodingName = connection.getContentEncoding();
-            final Charset encoding =
-                    encodingName != null ? Charset.forName(encodingName) : defaultEncoding;
+            final Charset encoding = encodingName != null ? Charset.forName(encodingName) : defaultEncoding;
             try (InputStream inputStream = connection.getInputStream()) {
                 return ResourceUtil.readAll(inputStream, encoding);
             }
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
+
 }

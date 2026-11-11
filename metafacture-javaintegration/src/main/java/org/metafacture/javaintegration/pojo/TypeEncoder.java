@@ -28,4 +28,5 @@ interface TypeEncoder {
     ValueType getValueType(String name);
 
     Object getInstance();
+
 }

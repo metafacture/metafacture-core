@@ -31,6 +31,7 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link RecordIdChanger}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class RecordIdChangerTest {
 
@@ -44,9 +45,11 @@ public final class RecordIdChangerTest {
 
     private RecordIdChanger recordIdChanger;
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-    public RecordIdChangerTest() {}
+    public RecordIdChangerTest() {
+    }
 
     @Before
     public void setup() {
@@ -185,4 +188,5 @@ public final class RecordIdChangerTest {
         ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
         ordered.verify(receiver).endRecord();
     }
+
 }

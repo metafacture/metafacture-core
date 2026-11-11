@@ -31,22 +31,23 @@ import java.io.StringReader;
  * Tests for {@link ElementExtractor}.
  *
  * @author Fabian Steeg
+ *
  */
 public final class ElementExtractorTest {
 
-    private static final StringReader IN =
-            new StringReader(
-                    "<html>"
-                            + "<script data-test='site-head-data'>{\"code\":\"hey\"}</script>"
-                            + "<script data-test='model-linked-data'>{\"code\":\"yo\"}");
+    private static final StringReader IN = new StringReader("<html>" +
+            "<script data-test='site-head-data'>{\"code\":\"hey\"}</script>" +
+            "<script data-test='model-linked-data'>{\"code\":\"yo\"}");
 
     private static final String OUT = "{\"code\":\"yo\"}";
 
-    @Mock private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
 
     private ElementExtractor elementExtractor;
 
-    public ElementExtractorTest() {}
+    public ElementExtractorTest() {
+    }
 
     @Before
     public void setup() {
@@ -66,4 +67,5 @@ public final class ElementExtractorTest {
     public void cleanup() {
         elementExtractor.closeStream();
     }
+
 }

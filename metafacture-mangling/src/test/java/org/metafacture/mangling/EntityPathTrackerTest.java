@@ -24,12 +24,14 @@ import org.junit.Test;
  * Tests for class {@link EntityPathTracker}.
  *
  * @author Christoph Böhme
+ *
  */
 public class EntityPathTrackerTest {
 
     private EntityPathTracker pathTracker;
 
-    public EntityPathTrackerTest() {}
+    public EntityPathTrackerTest() {
+    }
 
     @Before
     public void initSystemUnderTest() {
@@ -142,4 +144,5 @@ public class EntityPathTrackerTest {
         Assert.assertNull(pathTracker.getCurrentEntityName());
         pathTracker.endRecord();
     }
+
 }

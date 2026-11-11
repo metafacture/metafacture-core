@@ -32,6 +32,7 @@ import java.util.Map;
  * Splits a stream based on a morph definition.
  *
  * @author Markus Michael Geipel
+ *
  */
 @Description("Splits a stream based on a morph definition")
 @In(StreamReceiver.class)
@@ -82,8 +83,8 @@ public final class Splitter implements StreamPipe<StreamReceiver> {
     /**
      * Sets the receiver.
      *
-     * @param <R> the type of the receiver
-     * @param key the name of the receiver
+     * @param <R>      the type of the receiver
+     * @param key      the name of the receiver
      * @param receiver the receiver
      * @return the receiver
      */
@@ -138,7 +139,7 @@ public final class Splitter implements StreamPipe<StreamReceiver> {
     public void resetStream() {
         buffer.clear();
         metamorph.resetStream();
-        for (final StreamReceiver receiver : receiverMap.values()) {
+        for (final StreamReceiver receiver: receiverMap.values()) {
             receiver.resetStream();
         }
     }
@@ -147,8 +148,9 @@ public final class Splitter implements StreamPipe<StreamReceiver> {
     public void closeStream() {
         buffer.clear();
         metamorph.closeStream();
-        for (final StreamReceiver receiver : receiverMap.values()) {
+        for (final StreamReceiver receiver: receiverMap.values()) {
             receiver.closeStream();
         }
     }
+
 }

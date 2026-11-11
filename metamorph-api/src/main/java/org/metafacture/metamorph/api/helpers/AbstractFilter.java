@@ -47,4 +47,5 @@ public abstract class AbstractFilter extends AbstractSimpleStatelessFunction {
     public final void setString(final String string) {
         this.string = string;
     }
+
 }

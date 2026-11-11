@@ -35,17 +35,16 @@ import org.metafacture.triples.TripleSort;
 import java.io.IOException;
 
 /**
- * Provide a user-friendly way to finds all paths that have values that match the given pattern.
+ * Provide a user-friendly way to finds all paths that have values that match
+ * the given pattern.
  *
  * @author Tobias Bülte
  */
-@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
-@Description(
-        "Finds all paths that have values that match the given pattern. Allows for regex. These"
-                + " paths can be used in a Fix to address fields.")
+@Description("Finds all paths that have values that match the given pattern. Allows for regex. These paths can be used in a Fix to address fields.") // checkstyle-disable-line ClassDataAbstractionCoupling
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("find-fix-paths")
+
 public class FindFixPaths extends DefaultStreamPipe<ObjectReceiver<String>> {
 
     private final Metafix fix;
@@ -61,7 +60,8 @@ public class FindFixPaths extends DefaultStreamPipe<ObjectReceiver<String>> {
         try {
             this.fix = new Metafix("nothing()");
             this.fix.setRepeatedFieldsToEntities(true);
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -72,7 +72,8 @@ public class FindFixPaths extends DefaultStreamPipe<ObjectReceiver<String>> {
         tripleFilter.setObjectPattern(objectPattern);
         final TripleSort tripleSort = new TripleSort();
         tripleSort.setBy(Compare.PREDICATE);
-        fix.setReceiver(new StreamFlattener())
+        fix
+                .setReceiver(new StreamFlattener())
                 .setReceiver(new StreamToTriples())
                 .setReceiver(tripleFilter)
                 .setReceiver(tripleSort)
@@ -115,4 +116,5 @@ public class FindFixPaths extends DefaultStreamPipe<ObjectReceiver<String>> {
     protected void onResetStream() {
         fix.resetStream();
     }
+
 }

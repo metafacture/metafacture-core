@@ -32,15 +32,18 @@ import java.util.Map;
  *
  * @author Thomas Seidel
  * @author Christoph Böhme (refactored to Mockito)
+ *
  */
 public class PojoEncoderTest {
 
-    public PojoEncoderTest() {}
+    public PojoEncoderTest() {
+    }
 
     @Test
     public void shouldEncodeEmptyEntityStreamToEmptyPojo() {
         final ObjectReceiver<EmptyPojo> receiver = createObjectReceiverMock();
-        final PojoEncoder<EmptyPojo> pojoEncoder = new PojoEncoder<>(EmptyPojo.class);
+        final PojoEncoder<EmptyPojo> pojoEncoder = new PojoEncoder<>(
+                EmptyPojo.class);
         pojoEncoder.setReceiver(receiver);
 
         pojoEncoder.startRecord("identifier");
@@ -52,7 +55,8 @@ public class PojoEncoderTest {
     @Test
     public void shouldEncodeEntityStreamToSimplePojo() {
         final ObjectReceiver<SimplePojo> receiver = createObjectReceiverMock();
-        final PojoEncoder<SimplePojo> pojoEncoder = new PojoEncoder<>(SimplePojo.class);
+        final PojoEncoder<SimplePojo> pojoEncoder = new PojoEncoder<>(
+                SimplePojo.class);
         pojoEncoder.setReceiver(receiver);
 
         pojoEncoder.startRecord("identifier");
@@ -62,7 +66,8 @@ public class PojoEncoderTest {
         pojoEncoder.literal("intField2", "23");
         pojoEncoder.endRecord();
 
-        final ArgumentCaptor<SimplePojo> objectCaptor = ArgumentCaptor.forClass(SimplePojo.class);
+        final ArgumentCaptor<SimplePojo> objectCaptor =
+                ArgumentCaptor.forClass(SimplePojo.class);
         Mockito.verify(receiver).process(objectCaptor.capture());
         final SimplePojo encodedPojo = objectCaptor.getValue();
         Assert.assertNotNull(encodedPojo);
@@ -74,8 +79,10 @@ public class PojoEncoderTest {
 
     @Test
     public void shouldEncodeEntityStreamToDoubleNestedPojo() {
-        final ObjectReceiver<DoubleNestedPojo> receiver = createObjectReceiverMock();
-        final PojoEncoder<DoubleNestedPojo> pojoEncoder = new PojoEncoder<>(DoubleNestedPojo.class);
+        final ObjectReceiver<DoubleNestedPojo> receiver =
+                createObjectReceiverMock();
+        final PojoEncoder<DoubleNestedPojo> pojoEncoder =
+                new PojoEncoder<>(DoubleNestedPojo.class);
         pojoEncoder.setReceiver(receiver);
 
         pojoEncoder.startRecord("identifier");
@@ -103,7 +110,8 @@ public class PojoEncoderTest {
     @Test
     public void shouldEncodeEntityStreamToPojoWithStringList() {
         final ObjectReceiver<StringListPojo> receiver = createObjectReceiverMock();
-        final PojoEncoder<StringListPojo> pojoEncoder = new PojoEncoder<>(StringListPojo.class);
+        final PojoEncoder<StringListPojo> pojoEncoder =
+                new PojoEncoder<>(StringListPojo.class);
         pojoEncoder.setReceiver(receiver);
 
         pojoEncoder.startRecord("identifier");
@@ -129,7 +137,8 @@ public class PojoEncoderTest {
     @Test
     public void shouldEncodeEntityStreamToPojoWithIntegerList() {
         final ObjectReceiver<IntegerListPojo> receiver = createObjectReceiverMock();
-        final PojoEncoder<IntegerListPojo> pojoEncoder = new PojoEncoder<>(IntegerListPojo.class);
+        final PojoEncoder<IntegerListPojo> pojoEncoder =
+                new PojoEncoder<>(IntegerListPojo.class);
         pojoEncoder.setReceiver(receiver);
 
         pojoEncoder.startRecord("identifier");
@@ -152,7 +161,8 @@ public class PojoEncoderTest {
 
     @Test
     public void shouldEncodeEntityStreamToPojoWithSimplePojoList() {
-        final ObjectReceiver<SimplePojoListPojo> receiver = createObjectReceiverMock();
+        final ObjectReceiver<SimplePojoListPojo> receiver =
+                createObjectReceiverMock();
         final PojoEncoder<SimplePojoListPojo> pojoEncoder =
                 new PojoEncoder<>(SimplePojoListPojo.class);
         pojoEncoder.setReceiver(receiver);
@@ -183,7 +193,8 @@ public class PojoEncoderTest {
 
     @Test
     public void shouldEncodeEntityStreamToPojoWithStringMap() {
-        final ObjectReceiver<StringMapPojo> receiver = createObjectReceiverMock();
+        final ObjectReceiver<StringMapPojo> receiver =
+                createObjectReceiverMock();
         final PojoEncoder<StringMapPojo> pojoEncoder =
                 new PojoEncoder<StringMapPojo>(StringMapPojo.class);
         pojoEncoder.setReceiver(receiver);
@@ -208,7 +219,8 @@ public class PojoEncoderTest {
 
     @Test
     public void shouldEncodeEntityStreamToPojoWithSimplePojoMap() {
-        final ObjectReceiver<SimplePojoMapPojo> receiver = createObjectReceiverMock();
+        final ObjectReceiver<SimplePojoMapPojo> receiver =
+                createObjectReceiverMock();
         final PojoEncoder<SimplePojoMapPojo> pojoEncoder =
                 new PojoEncoder<>(SimplePojoMapPojo.class);
         pojoEncoder.setReceiver(receiver);
@@ -233,10 +245,14 @@ public class PojoEncoderTest {
         Assert.assertNotNull(encodedPojo);
         Assert.assertNotNull(encodedPojo.simplePojoMap);
         Assert.assertEquals(2, encodedPojo.simplePojoMap.size());
-        Assert.assertEquals("stringValueA1", encodedPojo.simplePojoMap.get("mapKeyA").stringField1);
-        Assert.assertEquals("stringValueA2", encodedPojo.simplePojoMap.get("mapKeyA").stringField2);
-        Assert.assertEquals("stringValueB1", encodedPojo.simplePojoMap.get("mapKeyB").stringField1);
-        Assert.assertEquals("stringValueB2", encodedPojo.simplePojoMap.get("mapKeyB").stringField2);
+        Assert.assertEquals("stringValueA1", encodedPojo.simplePojoMap.get("mapKeyA")
+                .stringField1);
+        Assert.assertEquals("stringValueA2", encodedPojo.simplePojoMap.get("mapKeyA")
+                .stringField2);
+        Assert.assertEquals("stringValueB1", encodedPojo.simplePojoMap.get("mapKeyB")
+                .stringField1);
+        Assert.assertEquals("stringValueB2", encodedPojo.simplePojoMap.get("mapKeyB")
+                .stringField2);
     }
 
     @SuppressWarnings("unchecked")
@@ -248,7 +264,9 @@ public class PojoEncoderTest {
 
     public static class EmptyPojo {
 
-        public EmptyPojo() {}
+        public EmptyPojo() {
+        }
+
     }
 
     public static class SimplePojo {
@@ -259,7 +277,8 @@ public class PojoEncoderTest {
         private String stringField2;
         private int intField2;
 
-        public SimplePojo() {}
+        public SimplePojo() {
+        }
 
         public void setStringField2(final String stringField2) {
             this.stringField2 = stringField2;
@@ -276,6 +295,7 @@ public class PojoEncoderTest {
         public int getIntField2() {
             return intField2;
         }
+
     }
 
     public static class NestedPojo {
@@ -283,14 +303,18 @@ public class PojoEncoderTest {
         public String attribute; // checkstyle-disable-line VisibilityModifier
         public SimplePojo simplePojo; // checkstyle-disable-line VisibilityModifier
 
-        public NestedPojo() {}
+        public NestedPojo() {
+        }
+
     }
 
     public static class DoubleNestedPojo {
 
         public NestedPojo nestedPojo; // checkstyle-disable-line VisibilityModifier
 
-        public DoubleNestedPojo() {}
+        public DoubleNestedPojo() {
+        }
+
     }
 
     public static class StringListPojo {
@@ -298,38 +322,49 @@ public class PojoEncoderTest {
         public List<String> stringList; // checkstyle-disable-line VisibilityModifier
         public String attribute; // checkstyle-disable-line VisibilityModifier
 
-        public StringListPojo() {}
+        public StringListPojo() {
+        }
+
     }
 
     public static class IntegerListPojo {
 
         public List<Integer> integerList; // checkstyle-disable-line VisibilityModifier
 
-        public IntegerListPojo() {}
+        public IntegerListPojo() {
+        }
+
     }
 
     public static class SimplePojoListPojo {
 
         private List<SimplePojo> simplePojoList;
 
-        public SimplePojoListPojo() {}
+        public SimplePojoListPojo() {
+        }
 
         public void setSimplePojoList(final List<SimplePojo> simplePojoList) {
             this.simplePojoList = simplePojoList;
         }
+
     }
 
     public static class StringMapPojo {
 
         public Map<String, String> stringMap; // checkstyle-disable-line VisibilityModifier
 
-        public StringMapPojo() {}
+        public StringMapPojo() {
+        }
+
     }
 
     public static class SimplePojoMapPojo {
 
         public Map<String, SimplePojo> simplePojoMap; // checkstyle-disable-line VisibilityModifier
 
-        public SimplePojoMapPojo() {}
+        public SimplePojoMapPojo() {
+        }
+
     }
+
 }

@@ -31,7 +31,8 @@ public class RecordTest {
     private static final Value VALUE = new Value("value");
     private static final Value OTHER_VALUE = new Value("other value");
 
-    public RecordTest() {}
+    public RecordTest() {
+    }
 
     @Test
     public void shouldCreateShallowCloneFromEmptyRecord() {
@@ -210,8 +211,7 @@ public class RecordTest {
 
         record.put(FIELD, OTHER_VALUE);
 
-        MetafixTestHelpers.assertEmittedFields(
-                record, Arrays.asList(FIELD), Arrays.asList(OTHER_VALUE));
+        MetafixTestHelpers.assertEmittedFields(record, Arrays.asList(FIELD), Arrays.asList(OTHER_VALUE));
     }
 
     @Test
@@ -276,16 +276,10 @@ public class RecordTest {
 
     private void shouldFindArrayIndexSubfield(final Consumer<Record> consumer) {
         final Record record = new Record();
-        record.put(
-                FIELD,
-                Value.newArray(
-                        a ->
-                                a.add(
-                                        Value.newHash(
-                                                h -> {
-                                                    h.put(FIELD, VALUE);
-                                                    h.put(OTHER_FIELD, OTHER_VALUE);
-                                                }))));
+        record.put(FIELD, Value.newArray(a -> a.add(Value.newHash(h -> {
+            h.put(FIELD, VALUE);
+            h.put(OTHER_FIELD, OTHER_VALUE);
+        }))));
 
         if (consumer != null) {
             consumer.accept(record);
@@ -301,54 +295,45 @@ public class RecordTest {
 
     @Test
     public void shouldFindArrayIndexSubfieldAfterTransformingOtherSubfield() {
-        shouldFindArrayIndexSubfield(
-                record -> {
-                    final String path = String.join(".", FIELD, "1", OTHER_FIELD);
-                    final String value = "transformed value";
+        shouldFindArrayIndexSubfield(record -> {
+            final String path = String.join(".", FIELD, "1", OTHER_FIELD);
+            final String value =  "transformed value";
 
-                    record.transform(path, s -> value);
-                    Assertions.assertEquals(new Value(value), record.get(path));
-                });
+            record.transform(path, s -> value);
+            Assertions.assertEquals(new Value(value), record.get(path));
+        });
     }
 
     @Test
     public void shouldFindArrayIndexSubfieldAfterTransformingOtherSubfieldToNull() {
-        shouldFindArrayIndexSubfield(
-                record -> {
-                    final String path = String.join(".", FIELD, "1", OTHER_FIELD);
-                    final String value = null;
+        shouldFindArrayIndexSubfield(record -> {
+            final String path = String.join(".", FIELD, "1", OTHER_FIELD);
+            final String value = null;
 
-                    record.transform(path, s -> value);
-                    Assertions.assertEquals(value, record.get(path));
-                });
+            record.transform(path, s -> value);
+            Assertions.assertEquals(value, record.get(path));
+        });
     }
 
     @Test
     public void shouldPreserveOrderWhenTransformingArraySubfields() {
         final Record record = new Record();
-        record.put(
-                FIELD,
-                Value.newArray(
-                        a -> {
-                            for (int i = 0; i < 3; ++i) {
-                                a.add(
-                                        Value.newHash(
-                                                h -> {
-                                                    h.put(FIELD, VALUE);
-                                                    h.put(OTHER_FIELD, OTHER_VALUE);
-                                                }));
-                            }
-                        }));
+        record.put(FIELD, Value.newArray(a -> {
+            for (int i = 0; i < 3; ++i) {
+                a.add(Value.newHash(h -> {
+                    h.put(FIELD, VALUE);
+                    h.put(OTHER_FIELD, OTHER_VALUE);
+                }));
+            }
+        }));
 
         final String path = String.join(".", FIELD, "%s", OTHER_FIELD);
 
         final LongAdder counter = new LongAdder();
-        record.transform(
-                String.format(path, "*"),
-                s -> {
-                    counter.increment();
-                    return s + counter;
-                });
+        record.transform(String.format(path, "*"), s -> {
+            counter.increment();
+            return s + counter;
+        });
 
         Assertions.assertEquals(new Value(OTHER_VALUE + "1"), record.get(String.format(path, 1)));
         Assertions.assertEquals(new Value(OTHER_VALUE + "2"), record.get(String.format(path, 2)));
@@ -359,28 +344,16 @@ public class RecordTest {
     public void shouldPreserveOrderWhenTransformingOptionalArraySubfield() {
         final Record record = new Record();
         final String path = String.join(".", FIELD, "%s", OTHER_FIELD);
-        record.put(
-                FIELD,
-                Value.newArray(
-                        a -> {
-                            a.add(
-                                    Value.newHash(
-                                            h -> {
-                                                h.put(FIELD, VALUE);
-                                            }));
-                            a.add(
-                                    Value.newHash(
-                                            h -> {
-                                                h.put(FIELD, VALUE);
-                                                // For proper transformation, we have to explicitly
-                                                // set the path (as in Metafix.java):
-                                                h.put(
-                                                        OTHER_FIELD,
-                                                        OTHER_VALUE.withPathSet(
-                                                                String.format(path, a.size() + 1)),
-                                                        false);
-                                            }));
-                        }));
+        record.put(FIELD, Value.newArray(a -> {
+            a.add(Value.newHash(h -> {
+                h.put(FIELD, VALUE);
+            }));
+            a.add(Value.newHash(h -> {
+                h.put(FIELD, VALUE);
+                // For proper transformation, we have to explicitly set the path (as in Metafix.java):
+                h.put(OTHER_FIELD, OTHER_VALUE.withPathSet(String.format(path, a.size() + 1)), false);
+            }));
+        }));
 
         final String value = "transformed value";
 
@@ -389,4 +362,5 @@ public class RecordTest {
         Assertions.assertEquals(null, record.get(String.format(path, 1)));
         Assertions.assertEquals(new Value(value), record.get(String.format(path, 2)));
     }
+
 }

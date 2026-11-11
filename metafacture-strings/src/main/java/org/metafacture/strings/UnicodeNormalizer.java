@@ -26,11 +26,13 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 import java.text.Normalizer;
 
 /**
- * Normalises Unicode characters in strings. Unicode normalisation converts between precomposed
- * characters and composed characters. There are four different forms of conversion which can be
- * selected using {@link #setNormalizationForm(Normalizer.Form)}.
+ * Normalises Unicode characters in strings. Unicode normalisation converts
+ * between precomposed characters and composed characters. There are four
+ * different forms of conversion which can be selected using
+ * {@link #setNormalizationForm(Normalizer.Form)}.
  *
  * @author Christoph Böhme
+ *
  */
 @Description("Normalizes diacritics in Unicode strings.")
 @In(String.class)
@@ -38,23 +40,29 @@ import java.text.Normalizer;
 @FluxCommand("normalize-unicode-string")
 public final class UnicodeNormalizer extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
-    /** The default value for {@link #setNormalizationForm(Normalizer.Form)}. */
+    /**
+     * The default value for {@link #setNormalizationForm(Normalizer.Form)}.
+     */
     public static final Normalizer.Form DEFAULT_NORMALIZATION_FORM = Normalizer.Form.NFC;
 
     private Normalizer.Form normalizationForm = DEFAULT_NORMALIZATION_FORM;
 
-    /** Creates an instance of {@link UnicodeNormalizer}. */
-    public UnicodeNormalizer() {}
+    /**
+     * Creates an instance of {@link UnicodeNormalizer}.
+     */
+    public UnicodeNormalizer() {
+    }
 
     /**
      * Sets the normalisation form used for normalising strings.
-     *
-     * <p>The default value is NFC.
-     *
-     * <p>This parameter may be set at any time during processing. It becomes effective with the
-     * next string that is received.
+     * <p>
+     * The default value is NFC.
+     * <p>
+     * This parameter may be set at any time during processing. It becomes
+     * effective with the next string that is received.
      *
      * @param normalizationForm the normalisation form to use.
+     *
      */
     public void setNormalizationForm(final Normalizer.Form normalizationForm) {
         this.normalizationForm = normalizationForm;
@@ -75,4 +83,5 @@ public final class UnicodeNormalizer extends DefaultObjectPipe<String, ObjectRec
         assert !isClosed();
         getReceiver().process(Normalizer.normalize(str, normalizationForm));
     }
+
 }

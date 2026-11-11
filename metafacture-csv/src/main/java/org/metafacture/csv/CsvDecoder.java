@@ -38,12 +38,13 @@ import java.io.StringReader;
  *
  * @author Markus Michael Geipel
  * @author Fabian Steeg (fsteeg)
+ *
  */
 @Description("Decodes lines of CSV files. First line may be interpreted as header.")
 @In(String.class)
 @Out(StreamReceiver.class)
 @FluxCommand("decode-csv")
-public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> {
+public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver>  {
 
     public static final char DEFAULT_SEP = ',';
     private char separator = DEFAULT_SEP;
@@ -74,40 +75,47 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
     }
 
     /**
-     * Creates an instance of {@link CsvDecoder}. The default separator is {@value #DEFAULT_SEP}.
+     * Creates an instance of {@link CsvDecoder}. The default separator is
+     * {@value #DEFAULT_SEP}.
      */
     public CsvDecoder() {
         initializeCsvParser();
     }
 
     private void initializeCsvParser() {
-        this.parser = new RFC4180ParserBuilder().withSeparator(separator).build();
+        this.parser = new RFC4180ParserBuilder()
+            .withSeparator(separator)
+            .build();
     }
 
     @Override
     public void process(final String string) {
         assert !isClosed();
-        try (StringReader sr = new StringReader(string);
-                CSVReader reader = new CSVReaderBuilder(sr).withCSVParser(parser).build()) {
+        try (
+            StringReader sr = new StringReader(string);
+            CSVReader reader = new CSVReaderBuilder(sr).withCSVParser(parser).build()
+        ) {
             String[] parts;
             while ((parts = parseCsv(reader)) != null) {
                 if (hasHeader) {
                     if (header.length == 0) {
                         header = parts;
-                    } else if (parts.length == header.length) {
+                    }
+                    else if (parts.length == header.length) {
                         getReceiver().startRecord(String.valueOf(++count));
                         for (int i = 0; i < parts.length; ++i) {
                             getReceiver().literal(header[i], parts[i]);
                         }
                         getReceiver().endRecord();
-                    } else {
+                    }
+                    else {
                         throw new IllegalArgumentException(
                                 String.format(
-                                        "wrong number of columns (expected %s, was %s) in input"
-                                                + " line: %s",
-                                        header.length, parts.length, string));
+                                    "wrong number of columns (expected %s, was %s) in input line: %s",
+                                    header.length, parts.length, string));
                     }
-                } else {
+                }
+                else {
                     getReceiver().startRecord(String.valueOf(++count));
                     for (int i = 0; i < parts.length; ++i) {
                         getReceiver().literal(String.valueOf(i), parts[i]);
@@ -115,7 +123,8 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
                     getReceiver().endRecord();
                 }
             }
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -123,7 +132,8 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
     private String[] parseCsv(final CSVReader reader) {
         try {
             return reader.readNext();
-        } catch (final IOException | CsvException e) {
+        }
+        catch (final IOException | CsvException e) {
             throw new MetafactureException(e);
         }
     }
@@ -140,10 +150,12 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
     /**
      * Sets the separator.
      *
-     * @param separator the separator as a String. The first character is used as the separator.
+     * @param separator the separator as a String. The first character is used as
+     *                  the separator.
      */
     public void setSeparator(final String separator) {
         this.separator = separator.charAt(0);
         initializeCsvParser();
     }
+
 }

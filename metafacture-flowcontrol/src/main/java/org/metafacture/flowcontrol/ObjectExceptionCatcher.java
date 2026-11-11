@@ -28,35 +28,41 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 /**
- * Wraps the call to the process method of the downstream module in a try catch block with Exception
- * as the catch-block's argument type. This module is supposed to stop any exception from downstream
- * modules to travel further upstream. If an exception is caught, a log message with log level
- * "error" is written.
+ * Wraps the call to the process method of the downstream module
+ * in a try catch block with Exception as the catch-block's
+ * argument type. This module is supposed to stop any exception
+ * from downstream modules to travel further upstream. If an
+ * exception is caught, a log message with log level "error" is
+ * written.
  *
  * @param <T> object type
+ *
  * @author Christoph Böhme
  */
 @Description("passes objects through and catches exceptions.")
 @In(Object.class)
 @Out(Object.class)
 @FluxCommand("catch-object-exception")
-public final class ObjectExceptionCatcher<T> extends DefaultObjectPipe<T, ObjectReceiver<T>> {
+public final class ObjectExceptionCatcher<T> extends
+        DefaultObjectPipe<T, ObjectReceiver<T>> {
 
-    private static final MetafactureLogger LOG =
-            new MetafactureLogger(ObjectExceptionCatcher.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(ObjectExceptionCatcher.class);
 
     private String logPrefix;
     private boolean logStackTrace;
     private boolean logExceptionMessage = true;
 
-    /** Creates an instance of {@link ObjectExceptionCatcher} without a log message prefix. */
+    /**
+     * Creates an instance of {@link ObjectExceptionCatcher} without a log message
+     * prefix.
+     */
     public ObjectExceptionCatcher() {
         this("");
     }
 
     /**
-     * Creates an instance of {@link ObjectExceptionCatcher} with a given prefix of the log
-     * messages.
+     * Creates an instance of {@link ObjectExceptionCatcher} with a given prefix of
+     * the log messages.
      *
      * @param logPrefix the prefix of the log messages
      */
@@ -85,7 +91,8 @@ public final class ObjectExceptionCatcher<T> extends DefaultObjectPipe<T, Object
     /**
      * Sets the log messages to stack trace level.
      *
-     * @param logStackTrace true if the log messages should be set to stack trace level.
+     * @param logStackTrace true if the log messages should be set to stack trace
+     *                      level.
      */
     public void setLogStackTrace(final boolean logStackTrace) {
         this.logStackTrace = logStackTrace;
@@ -108,10 +115,10 @@ public final class ObjectExceptionCatcher<T> extends DefaultObjectPipe<T, Object
     public void process(final T obj) {
         try {
             getReceiver().process(obj);
-        } catch (final Exception e) { // checkstyle-disable-line IllegalCatch
+        }
+        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             if (logExceptionMessage) {
-                LOG.externalError(
-                        "{}'{}' while processing object: {}", logPrefix, e.getMessage(), obj);
+                LOG.externalError("{}'{}' while processing object: {}", logPrefix, e.getMessage(), obj);
             }
 
             if (logStackTrace) {
@@ -121,4 +128,5 @@ public final class ObjectExceptionCatcher<T> extends DefaultObjectPipe<T, Object
             }
         }
     }
+
 }

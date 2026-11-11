@@ -30,17 +30,21 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * Decodes a record in formeta format.
  *
  * @author Christoph Böhme
+ *
  */
 @Description("Decodes a record in formeta format.")
 @In(String.class)
 @Out(StreamReceiver.class)
 @FluxCommand("decode-formeta")
-public final class FormetaDecoder extends DefaultObjectPipe<String, StreamReceiver> {
+public final class FormetaDecoder extends
+        DefaultObjectPipe<String, StreamReceiver> {
 
     private final FormetaParser parser = new FormetaParser();
     private final Emitter emitter = new FullRecordEmitter();
 
-    /** Creates an instance of {@link FormetaDecoder}. */
+    /**
+     * Creates an instance of {@link FormetaDecoder}.
+     */
     public FormetaDecoder() {
         parser.setEmitter(emitter);
     }
@@ -54,4 +58,5 @@ public final class FormetaDecoder extends DefaultObjectPipe<String, StreamReceiv
     protected void onSetReceiver() {
         emitter.setReceiver(getReceiver());
     }
+
 }

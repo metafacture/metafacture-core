@@ -30,14 +30,17 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link StreamFlattener}.
  *
  * @author Christoph Böhme
+ *
  */
 public class StreamFlattenerTest {
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
     private StreamFlattener flattener;
 
-    public StreamFlattenerTest() {}
+    public StreamFlattenerTest() {
+    }
 
     @Before
     public void init() {
@@ -123,4 +126,5 @@ public class StreamFlattenerTest {
         flattener.startEntity("mommy");
         Assert.assertEquals("granny-mommy", flattener.getCurrentPath());
     }
+
 }

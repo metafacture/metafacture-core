@@ -43,14 +43,17 @@ public final class WildcardTrie<P> {
     private Set<Node<P>> nodes = new HashSet<Node<P>>();
     private Set<Node<P>> nextNodes = new HashSet<Node<P>>();
 
-    /** Creates an instance of {@link WildcardTrie}. */
-    public WildcardTrie() {}
+    /**
+     * Creates an instance of {@link WildcardTrie}.
+     */
+    public WildcardTrie() {
+    }
 
     /**
-     * Inserts keys into the trie. Use '|' to concatenate. Use '*' (0,inf) and '?' (1,1) to express
-     * wildcards.
+     * Inserts keys into the trie. Use '|' to concatenate. Use '*' (0,inf) and '?'
+     * (1,1) to express wildcards.
      *
-     * @param keys pattern of keys to register
+     * @param keys  pattern of keys to register
      * @param value value to associate with the key pattern
      */
     public void put(final String keys, final P value) {
@@ -59,7 +62,8 @@ public final class WildcardTrie<P> {
             for (final String string : keysSplit) {
                 simplyPut(string, value);
             }
-        } else {
+        }
+        else {
             simplyPut(keys, value);
         }
     }
@@ -146,7 +150,7 @@ public final class WildcardTrie<P> {
      */
     private final class Node<T> {
 
-        private Set<T> values = Collections.emptySet();
+        private Set<T> values =  Collections.emptySet();
         private final CharMap<Node<T>> links = new CharMap<Node<T>>();
 
         protected Node() {
@@ -177,4 +181,5 @@ public final class WildcardTrie<P> {
             return links.get(key);
         }
     }
+
 }

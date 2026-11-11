@@ -22,13 +22,17 @@ import org.metafacture.metamorph.api.helpers.AbstractStatefulFunction;
  * Counts the number of values received.
  *
  * @author Markus Michael Geipel
+ *
  */
 public final class Count extends AbstractStatefulFunction {
 
     private int count;
 
-    /** Creates an instance of {@link Count}. */
-    public Count() {}
+    /**
+     * Creates an instance of {@link Count}.
+     */
+    public Count() {
+    }
 
     @Override
     public String process(final String value) {
@@ -45,4 +49,5 @@ public final class Count extends AbstractStatefulFunction {
     protected boolean doResetOnEntityChange() {
         return false;
     }
+
 }

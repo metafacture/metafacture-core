@@ -26,7 +26,8 @@ import org.junit.Test;
  */
 public class XmlUtilTest {
 
-    public XmlUtilTest() {}
+    public XmlUtilTest() {
+    }
 
     @Test
     public void shouldEscapeXmlSpecialChars() {
@@ -62,4 +63,5 @@ public class XmlUtilTest {
 
         Assert.assertEquals("Smile: &#128521;", result);
     }
+
 }

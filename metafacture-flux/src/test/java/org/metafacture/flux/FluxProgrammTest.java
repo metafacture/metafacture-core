@@ -28,10 +28,12 @@ import java.io.PrintStream;
  * Tests {@link FluxProgramm}
  *
  * @author markus geipel
+ *
  */
 public final class FluxProgrammTest {
 
-    public FluxProgrammTest() {}
+    public FluxProgrammTest() {
+    }
 
     @Test
     public void testCommandRegistration() throws IOException {
@@ -40,12 +42,12 @@ public final class FluxProgrammTest {
     }
 
     private PrintStream discardOutput() {
-        return new PrintStream(
-                new OutputStream() {
-                    @Override
-                    public void write(final int b) throws IOException {
-                        // Do not write any output.
-                    }
-                });
+        return new PrintStream(new OutputStream() {
+            @Override
+            public void write(final int b) throws IOException {
+                // Do not write any output.
+            }
+        });
     }
+
 }

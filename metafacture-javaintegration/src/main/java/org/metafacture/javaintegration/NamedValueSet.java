@@ -25,21 +25,25 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Collects {@link NamedValue}s in a {@link Set}. So there will not be duplicates.
+ * Collects {@link NamedValue}s in a {@link Set}. So there will not be
+ * duplicates.
  *
  * @author Markus Michael Geipel
  */
-public final class NamedValueSet extends DefaultStreamReceiver
-        implements Set<NamedValue>, Collector<Set<NamedValue>> {
+public final class NamedValueSet extends DefaultStreamReceiver implements Set<NamedValue>, Collector<Set<NamedValue>> {
 
     private Collection<Set<NamedValue>> collection;
     private Set<NamedValue> set = new HashSet<>();
 
-    /** Creates an instance of {@link NamedValueSet}. */
-    public NamedValueSet() {}
+    /**
+     * Creates an instance of {@link NamedValueSet}.
+     */
+    public NamedValueSet() {
+    }
 
     /**
-     * Creates a {@code NamedValueSet} receiver which stores the received values in the passed set.
+     * Creates a {@code NamedValueSet} receiver which stores the received values
+     * in the passed set.
      *
      * @param collection is filled with the received results.
      */
@@ -154,4 +158,5 @@ public final class NamedValueSet extends DefaultStreamReceiver
     public void setCollection(final Collection<Set<NamedValue>> collection) {
         this.collection = collection;
     }
+
 }

@@ -29,14 +29,17 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link StreamDeferrer}.
  *
  * @author Christoph Böhme
+ *
  */
 public class StreamDeferrerTest {
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
     private StreamDeferrer streamDeferrer;
 
-    public StreamDeferrerTest() {}
+    public StreamDeferrerTest() {
+    }
 
     @Before
     public void init() {
@@ -92,4 +95,5 @@ public class StreamDeferrerTest {
         ordered.verify(receiver, Mockito.never()).literal("l", "v");
         ordered.verify(receiver).endRecord();
     }
+
 }

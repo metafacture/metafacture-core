@@ -24,19 +24,21 @@ import org.metafacture.metafix.api.FixFunction;
 import java.util.List;
 import java.util.Map;
 
-/** Upcases all characters in a field value. */
+/**
+ * Upcases all characters in a field value.
+ */
 @FixCommand("upcase")
 public class Upcase implements FixFunction {
 
-    /** Creates an instance of {@link Upcase}. */
-    public Upcase() {}
+    /**
+     * Creates an instance of {@link Upcase}.
+     */
+    public Upcase() {
+    }
 
     @Override
-    public void apply(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         record.transform(params.get(0), s -> s.toUpperCase());
     }
+
 }

@@ -32,13 +32,16 @@ public final class SetReplacer {
 
     private final SetMatcher<String> matcher = new SetMatcher<String>();
 
-    /** Creates an instance of {@link SetReplacer}. */
-    public SetReplacer() {}
+    /**
+     * Creates an instance of {@link SetReplacer}.
+     */
+    public SetReplacer() {
+    }
 
     /**
      * Adds a replacement of a String by another String.
      *
-     * @param toReplace String to replace
+     * @param toReplace   String to replace
      * @param replacement String of replacement
      */
     public void addReplacement(final String toReplace, final String replacement) {
@@ -57,7 +60,8 @@ public final class SetReplacer {
     }
 
     /**
-     * Replaces the Strings defined with {@link #addReplacement(String, String)} in the text.
+     * Replaces the Strings defined with {@link #addReplacement(String, String)} in
+     * the text.
      *
      * @param text the text
      * @return the text with the replacements
@@ -67,17 +71,13 @@ public final class SetReplacer {
         final StringBuilder builder = new StringBuilder();
         int lastCut = 0;
 
-        Collections.sort(
-                matches,
-                new Comparator<SetMatcher.Match<String>>() {
-                    @Override
-                    public int compare(final Match<String> o1, final Match<String> o2) {
-                        final int delta = o1.getStart() - o2.getStart();
-                        return delta < 0
-                                ? -1
-                                : delta > 0 ? 1 : o1.getLength() > o2.getLength() ? -1 : 1;
-                    }
-                });
+        Collections.sort(matches, new Comparator<SetMatcher.Match<String>>() {
+            @Override
+            public int compare(final Match<String> o1, final Match<String> o2) {
+                final int delta = o1.getStart() - o2.getStart();
+                return delta < 0 ? -1 : delta > 0 ? 1 : o1.getLength() > o2.getLength() ? -1 : 1;
+            }
+        });
 
         for (final SetMatcher.Match<String> match : matches) {
             if (match.getStart() < lastCut) {
@@ -90,4 +90,5 @@ public final class SetReplacer {
         builder.append(text.substring(lastCut, text.length()));
         return builder.toString();
     }
+
 }

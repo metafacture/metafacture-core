@@ -22,11 +22,15 @@ import org.metafacture.biblio.marc21.MarcXmlHandler;
  * Reads and decodes a <i>MARC-XML</i> document.
  *
  * @author Markus Michael Geipel
+ *
  */
 public class MarcXmlReader extends XmlReaderBase {
 
-    /** Creates an instance of {@link MarcXmlReader}. */
+    /**
+     * Creates an instance of {@link MarcXmlReader}.
+     */
     public MarcXmlReader() {
         super(new MarcXmlHandler());
     }
+
 }

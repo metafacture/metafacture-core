@@ -25,6 +25,7 @@ import java.nio.charset.StandardCharsets;
  * Builds a list of fields in ISO 2709:2008 format.
  *
  * @author Christoph Böhme
+ *
  */
 final class FieldsBuilder {
 
@@ -118,7 +119,8 @@ final class FieldsBuilder {
     void copyToBuffer(final byte[] destBuffer, final int fromIndex) {
         assert !inField;
         final int fieldLength = buffer.getWritePosition();
-        System.arraycopy(buffer.getByteArray(), 0, destBuffer, fromIndex, fieldLength);
+        System.arraycopy(buffer.getByteArray(), 0, destBuffer, fromIndex,
+                fieldLength);
         final int fieldsEnd = fromIndex + fieldLength;
         destBuffer[fieldsEnd] = Iso2709Constants.RECORD_SEPARATOR;
     }
@@ -127,4 +129,5 @@ final class FieldsBuilder {
     public String toString() {
         return buffer.stringAt(0, buffer.getWritePosition(), charset);
     }
+
 }

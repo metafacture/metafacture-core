@@ -29,6 +29,7 @@ import org.mockito.MockitoAnnotations;
  * Tests class {@link UnicodeNormalizer}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class UnicodeNormalizerTest {
 
@@ -40,9 +41,11 @@ public final class UnicodeNormalizerTest {
 
     private UnicodeNormalizer normalizer;
 
-    @Mock private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
 
-    public UnicodeNormalizerTest() {}
+    public UnicodeNormalizerTest() {
+    }
 
     @Before
     public void setup() {
@@ -62,4 +65,5 @@ public final class UnicodeNormalizerTest {
 
         Mockito.verify(receiver).process(STRING_WITH_PRECOMPOSED_CHARS);
     }
+
 }

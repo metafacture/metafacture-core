@@ -27,35 +27,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/** Reverses the character order of a string or the element order of an array. */
+/**
+ * Reverses the character order of a string or the element order of an array.
+ */
 @FixCommand("reverse")
 public class Reverse implements FixFunction {
 
-    /** Creates an instance of {@link Reverse}. */
-    public Reverse() {}
+    /**
+     * Creates an instance of {@link Reverse}.
+     */
+    public Reverse() {
+    }
 
     @Override
-    public void apply(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
-        record.transform(
-                params.get(0),
-                (m, c) ->
-                        m.ifArray(
-                                        a -> {
-                                            final List<Value> list =
-                                                    a.stream().collect(Collectors.toList());
-                                            Collections.reverse(list);
-                                            c.accept(new Value(list));
-                                        })
-                                .ifString(
-                                        s ->
-                                                c.accept(
-                                                        new Value(
-                                                                new StringBuilder(s)
-                                                                        .reverse()
-                                                                        .toString()))));
+    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+        record.transform(params.get(0), (m, c) -> m
+                .ifArray(a -> {
+                    final List<Value> list = a.stream().collect(Collectors.toList());
+                    Collections.reverse(list);
+                    c.accept(new Value(list));
+                })
+                .ifString(s -> c.accept(new Value(new StringBuilder(s).reverse().toString())))
+        );
     }
+
 }

@@ -32,13 +32,16 @@ import java.util.List;
  * Logs the string representation of every object.
  *
  * @param <T> object type
+ *
  * @author Christoph Böhme
+ *
  */
 @Description("logs objects with the toString method")
 @In(Object.class)
 @Out(Object.class)
 @FluxCommand("log-object")
-public final class ObjectLogger<T> extends DefaultObjectPipe<T, ObjectReceiver<T>> {
+public final class ObjectLogger<T>
+        extends DefaultObjectPipe<T, ObjectReceiver<T>> {
 
     public static final String DEFAULT_LEVEL = "INFO";
 
@@ -47,16 +50,21 @@ public final class ObjectLogger<T> extends DefaultObjectPipe<T, ObjectReceiver<T
     private String level = DEFAULT_LEVEL;
     private String logPrefix = "";
 
-    /** Creates an instance of {@link ObjectLogger}. */
-    public ObjectLogger() {}
+    /**
+     * Creates an instance of {@link ObjectLogger}.
+     */
+    public ObjectLogger() {
+    }
 
     /**
-     * Creates an instance of {@link ObjectLogger} by a given prefix of the log messages.
+     * Creates an instance of {@link ObjectLogger} by a given prefix of the log
+     * messages.
      *
      * @deprecated Use {@link #setPrefix} instead.
+     *
      * @param logPrefix the prefix of the log messages
      */
-    @Deprecated /*(since="9.0", forRemoval=true)*/
+    @Deprecated/*(since="9.0", forRemoval=true)*/
     public ObjectLogger(final String logPrefix) {
         this.logPrefix = logPrefix;
     }
@@ -105,4 +113,5 @@ public final class ObjectLogger<T> extends DefaultObjectPipe<T, ObjectReceiver<T
 
         LOG.externalLog(level, "{}" + message, argumentList.toArray());
     }
+
 }

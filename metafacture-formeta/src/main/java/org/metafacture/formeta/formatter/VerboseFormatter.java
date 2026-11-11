@@ -22,6 +22,7 @@ import org.metafacture.formeta.Formeta;
  * A formatter for verbose output.
  *
  * @author Christoph Böhme
+ *
  */
 public final class VerboseFormatter extends AbstractFormatter {
 
@@ -32,8 +33,11 @@ public final class VerboseFormatter extends AbstractFormatter {
 
     private boolean appendItemSeparator;
 
-    /** Creates an instance of {@link VerboseFormatter}. */
-    public VerboseFormatter() {}
+    /**
+     * Creates an instance of {@link VerboseFormatter}.
+     */
+    public VerboseFormatter() {
+    }
 
     @Override
     public void startGroup(final String name) {
@@ -77,4 +81,5 @@ public final class VerboseFormatter extends AbstractFormatter {
         }
         return len == 0;
     }
+
 }

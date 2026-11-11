@@ -22,6 +22,7 @@ import org.metafacture.framework.StreamReceiver;
  * Interface for event emitters.
  *
  * @author Christoph Böhme
+ *
  */
 public interface Emitter {
 
@@ -35,7 +36,7 @@ public interface Emitter {
     /**
      * The startGroup event.
      *
-     * @param name the name of the startGroup event
+     * @param name         the name of the startGroup event
      * @param nestingLevel the nesting level of the startGroup event
      */
     void startGroup(String name, int nestingLevel);
@@ -50,9 +51,10 @@ public interface Emitter {
     /**
      * The literal event.
      *
-     * @param name the name of the literal event
-     * @param value the value of the literal event
+     * @param name         the name of the literal event
+     * @param value        the value of the literal event
      * @param nestingLevel the nesting level of the literal event
      */
     void literal(String name, String value, int nestingLevel);
+
 }

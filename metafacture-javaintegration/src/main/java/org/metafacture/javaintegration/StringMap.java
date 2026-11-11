@@ -27,16 +27,19 @@ import java.util.Set;
  * Collects the received results in a {@link Map}. Duplicate names are thus lost.
  *
  * @author Markus Michael Geipel
+ *
  */
-public final class StringMap extends DefaultStreamReceiver
-        implements Map<String, String>, Collector<Map<String, String>> {
+public final class StringMap extends DefaultStreamReceiver implements Map<String, String>, Collector<Map<String, String>> {
 
     private boolean closed;
     private Collection<Map<String, String>> collection;
     private Map<String, String> map = new HashMap<>();
 
-    /** Creates an instance of {@link StringMap}. */
-    public StringMap() {}
+    /**
+     * Creates an instance of {@link StringMap}.
+     */
+    public StringMap() {
+    }
 
     /**
      * Constructs a StringMap with a given Collection.
@@ -150,6 +153,7 @@ public final class StringMap extends DefaultStreamReceiver
             collection.add(map);
             map = new HashMap<String, String>();
         }
+
     }
 
     @Override
@@ -178,4 +182,5 @@ public final class StringMap extends DefaultStreamReceiver
     public void setCollection(final Collection<Map<String, String>> collection) {
         this.collection = collection;
     }
+
 }

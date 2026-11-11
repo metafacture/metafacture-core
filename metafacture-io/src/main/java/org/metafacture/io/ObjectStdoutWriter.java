@@ -25,21 +25,27 @@ import java.nio.charset.Charset;
 
 /**
  * @param <T> object type
+ *
  * @author Christoph Böhme
+ *
  */
+
 @Description("Writes objects to stdout")
 @In(Object.class)
 @Out(Void.class)
 @FluxCommand("print")
-public final class ObjectStdoutWriter<T> extends AbstractObjectWriter<T> {
+public final class ObjectStdoutWriter<T> extends AbstractObjectWriter<T>  {
 
     private static final String SET_COMPRESSION_ERROR = "Cannot compress standard out";
 
     private boolean firstObject = true;
     private boolean closed;
 
-    /** Creates an instance of {@link ObjectStdoutWriter}. */
-    public ObjectStdoutWriter() {}
+    /**
+     * Creates an instance of {@link ObjectStdoutWriter}.
+     */
+    public ObjectStdoutWriter() {
+    }
 
     @Override
     public String getEncoding() {
@@ -73,7 +79,8 @@ public final class ObjectStdoutWriter<T> extends AbstractObjectWriter<T> {
         if (firstObject) {
             System.out.print(getHeader());
             firstObject = false;
-        } else {
+        }
+        else {
             System.out.print(getSeparator());
         }
         System.out.print(obj);
@@ -91,4 +98,5 @@ public final class ObjectStdoutWriter<T> extends AbstractObjectWriter<T> {
         }
         closed = true;
     }
+
 }

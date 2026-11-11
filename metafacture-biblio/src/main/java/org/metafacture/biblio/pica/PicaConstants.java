@@ -16,12 +16,14 @@
 package org.metafacture.biblio.pica;
 
 /**
- * Useful constants for PICA+. PICA+ comes with two possible serializations: a normalized one and a
- * non-normalized.
+ * Useful constants for PICA+.
+ * PICA+ comes with two possible serializations:
+ * a normalized one and a non-normalized.
  *
  * @author Christoph Böhme (initial implementation)
  * @author Pascal Christoph (dr0i) (add support for non-normalized pica+)
  * @author Fabian Steeg (fsteeg) (switch to enum)
+ *
  */
 enum PicaConstants {
 
@@ -52,4 +54,5 @@ enum PicaConstants {
         }
         return NO_MARKER;
     }
+
 }

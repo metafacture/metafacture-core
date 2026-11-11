@@ -28,11 +28,15 @@ import java.text.Normalizer.Form;
  */
 public final class NormalizeUTF8 extends AbstractSimpleStatelessFunction {
 
-    /** Creates an instance of {@link NormalizeUTF8}. */
-    public NormalizeUTF8() {}
+    /**
+     * Creates an instance of {@link NormalizeUTF8}.
+     */
+    public NormalizeUTF8() {
+    }
 
     @Override
     public String process(final String value) {
         return Normalizer.normalize(value, Form.NFC);
     }
+
 }

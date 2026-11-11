@@ -29,16 +29,19 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Leaves the event stream untouched but logs it to the info log. The {@link StreamReceiver} may be
- * {@code null}. In this case {@link StreamLogger} behaves as a sink, just logging.
+ * Leaves the event stream untouched but logs it to the info log.
+ * The {@link StreamReceiver} may be {@code null}.
+ * In this case {@link StreamLogger} behaves as a sink, just logging.
  *
  * @author Markus Michael Geipel
+ *
  */
 @Description("logs events")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("log-stream")
-public final class StreamLogger extends DefaultStreamPipe<StreamReceiver> {
+public final class StreamLogger
+        extends DefaultStreamPipe<StreamReceiver> {
 
     public static final String DEFAULT_LEVEL = "INFO";
 
@@ -47,16 +50,21 @@ public final class StreamLogger extends DefaultStreamPipe<StreamReceiver> {
     private String level = DEFAULT_LEVEL;
     private String logPrefix = "";
 
-    /** Creates an instance of {@link StreamLogger}. */
-    public StreamLogger() {}
+    /**
+     * Creates an instance of {@link StreamLogger}.
+     */
+    public StreamLogger() {
+    }
 
     /**
-     * Creates an instance of {@link StreamLogger} by a given prefix used when log messages.
+     * Creates an instance of {@link StreamLogger} by a given prefix used when log
+     * messages.
      *
      * @deprecated Use {@link #setPrefix} instead.
+     *
      * @param logPrefix the prefix of the log messages
      */
-    @Deprecated /*(since="9.0", forRemoval=true)*/
+    @Deprecated/*(since="9.0", forRemoval=true)*/
     public StreamLogger(final String logPrefix) {
         setPrefix(logPrefix);
     }
@@ -113,6 +121,7 @@ public final class StreamLogger extends DefaultStreamPipe<StreamReceiver> {
         if (null != getReceiver()) {
             getReceiver().endEntity();
         }
+
     }
 
     @Override
@@ -142,4 +151,5 @@ public final class StreamLogger extends DefaultStreamPipe<StreamReceiver> {
 
         LOG.externalLog(level, "{}" + message, argumentList.toArray());
     }
+
 }

@@ -43,10 +43,11 @@ class FieldValueGetter implements ValueGetter {
     public Object getValue(final Object object) {
         try {
             return field.get(object);
-        } catch (final IllegalArgumentException e) {
-            throw new MetafactureException(
-                    "The given object don't have a field named " + field.getName(), e);
-        } catch (final IllegalAccessException e) {
+        }
+        catch (final IllegalArgumentException e) {
+            throw new MetafactureException("The given object don't have a field named " + field.getName(), e);
+        }
+        catch (final IllegalAccessException e) {
             throw new MetafactureException("Can't access the field named " + field.getName(), e);
         }
     }
@@ -60,4 +61,5 @@ class FieldValueGetter implements ValueGetter {
     public Class<?> getValueType() {
         return field.getType();
     }
+
 }

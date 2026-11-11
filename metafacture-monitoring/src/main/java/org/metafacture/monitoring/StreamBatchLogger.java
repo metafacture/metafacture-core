@@ -60,8 +60,8 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
     private long batchCount;
 
     /**
-     * Creates an instance of {@link StreamBatchLogger} by a given format. The default format:
-     * {@value #DEFAULT_FORMAT}
+     * Creates an instance of {@link StreamBatchLogger} by a given format. The
+     * default format: {@value #DEFAULT_FORMAT}
      */
     public StreamBatchLogger() {
         this.format = DEFAULT_FORMAT;
@@ -80,7 +80,7 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
      * Constructs a StreamBatchLogger with a format and a map of variables.
      *
      * @param format a format
-     * @param vars a map of variables
+     * @param vars   a map of variables
      */
     public StreamBatchLogger(final String format, final Map<String, String> vars) {
         this.format = format;
@@ -158,7 +158,9 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
         vars.put(RECORD_COUNT_VAR, Long.toString(recordCount));
         vars.put(BATCH_COUNT_VAR, Long.toString(batchCount));
         vars.put(BATCH_SIZE_VAR, Long.toString(batchSize));
-        vars.put(TOTAL_RECORD_COUNT_VAR, Long.toString(batchSize * batchCount + recordCount));
+        vars.put(TOTAL_RECORD_COUNT_VAR,
+                Long.toString(batchSize * batchCount + recordCount));
         LOG.externalLog(level, StringUtil.format(format, vars));
     }
+
 }

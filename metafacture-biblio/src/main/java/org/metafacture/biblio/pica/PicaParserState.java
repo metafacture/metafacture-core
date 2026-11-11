@@ -17,24 +17,27 @@
 package org.metafacture.biblio.pica;
 
 /**
- * A parser for PICA+ records. Only single records can be parsed as the parser ignores end of record
- * markers. The initial parser state is FIELD_NAME. All states are valid end states. The parser
- * processes any input, there is no error state.
+ * A parser for PICA+ records. Only single records can be parsed as the parser
+ * ignores end of record markers. The initial parser state is FIELD_NAME. All
+ * states are valid end states. The parser processes any input, there is no
+ * error state.
  *
- * <p>The parser ignores spaces in field names. They are not included in the field name.
+ * The parser ignores spaces in field names. They are not included in the
+ * field name.
  *
- * <p>Empty subfields are skipped. For instance, parsing the following input would NOT produce an
- * empty literal: 003@ \u001f\u001e. The parser also skips unnamed fields without any subfields.
+ * Empty subfields are skipped. For instance, parsing the following input
+ * would NOT produce an empty literal: 003@ \u001f\u001e. The parser also
+ * skips unnamed fields without any subfields.
  *
  * @author Christoph Böhme
  * @author Pascal Christoph (dr0i) (add support for non-normalized pica+)
  * @author Fabian Steeg (fsteeg) (switch to enum)
  */
 enum PicaParserState {
+
     FIELD_NAME {
         @Override
-        protected PicaParserState parseChar(
-                final char ch, final PicaParserContext ctx, final boolean normalized) {
+        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx, final boolean normalized) {
             final PicaParserState next;
             switch (PicaConstants.from(normalized, ch)) {
                 case RECORD_MARKER:
@@ -63,8 +66,7 @@ enum PicaParserState {
     },
     SUBFIELD_NAME {
         @Override
-        protected PicaParserState parseChar(
-                final char ch, final PicaParserContext ctx, final boolean normalized) {
+        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx, final boolean normalized) {
             final PicaParserState next;
             switch (PicaConstants.from(normalized, ch)) {
                 case RECORD_MARKER:
@@ -90,8 +92,7 @@ enum PicaParserState {
     },
     SUBFIELD_VALUE {
         @Override
-        protected PicaParserState parseChar(
-                final char ch, final PicaParserContext ctx, final boolean normalized) {
+        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx, final boolean normalized) {
             final PicaParserState next;
             switch (PicaConstants.from(normalized, ch)) {
                 case RECORD_MARKER:
@@ -119,8 +120,8 @@ enum PicaParserState {
         }
     };
 
-    protected abstract PicaParserState parseChar(
-            char ch, PicaParserContext ctx, boolean normalized);
+    protected abstract PicaParserState parseChar(char ch, PicaParserContext ctx, boolean normalized);
 
     protected abstract void endOfInput(PicaParserContext ctx);
+
 }

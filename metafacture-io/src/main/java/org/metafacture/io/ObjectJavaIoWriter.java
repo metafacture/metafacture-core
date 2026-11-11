@@ -24,6 +24,7 @@ import java.io.Writer;
 
 /**
  * @param <T> object type
+ *
  * @author Christoph Böhme, Markus Geipel
  * @deprecated Use {@link ObjectWriter} or {@link ObjectFileWriter} instead.
  */
@@ -60,7 +61,8 @@ public final class ObjectJavaIoWriter<T> implements ObjectReceiver<T> {
         try {
             writer.write(obj.toString());
             writer.append('\n');
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -68,10 +70,10 @@ public final class ObjectJavaIoWriter<T> implements ObjectReceiver<T> {
     @Override
     public void resetStream() {
         if (writerFactory == null) {
-            throw new UnsupportedOperationException(
-                    "Cannot reset ObjectJavaIoWriter. No IOWriterFactory set.");
+            throw new UnsupportedOperationException("Cannot reset ObjectJavaIoWriter. No IOWriterFactory set.");
         }
         writer = writerFactory.createWriter();
+
     }
 
     @Override
@@ -79,11 +81,15 @@ public final class ObjectJavaIoWriter<T> implements ObjectReceiver<T> {
         if (!closed) {
             try {
                 writer.close();
-            } catch (final IOException e) {
+            }
+            catch (final IOException e) {
                 throw new MetafactureException(e);
-            } finally {
+            }
+            finally {
                 closed = true;
             }
+
         }
     }
+
 }

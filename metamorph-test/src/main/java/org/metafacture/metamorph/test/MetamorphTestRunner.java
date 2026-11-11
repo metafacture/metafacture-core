@@ -29,6 +29,7 @@ import java.util.List;
  *
  * @author Christoph Böhme
  * @author Markus Michael Geipel
+ *
  */
 final class MetamorphTestRunner extends ParentRunner<MetamorphTestCase> {
 
@@ -66,12 +67,15 @@ final class MetamorphTestRunner extends ParentRunner<MetamorphTestCase> {
     }
 
     @Override
-    protected void runChild(final MetamorphTestCase child, final RunNotifier notifier) {
+    protected void runChild(final MetamorphTestCase child,
+            final RunNotifier notifier) {
         final Description description = describeChild(child);
         if (child.isIgnore()) {
             notifier.fireTestIgnored(description);
-        } else {
+        }
+        else {
             runLeaf(child, description, notifier);
         }
     }
+
 }

@@ -31,6 +31,7 @@ import org.slf4j.Logger;
  * Tests for class {@link ObjectBatchLogger}.
  *
  * @author Jens Wille
+ *
  */
 @RunWith(MockitoJUnitRunner.class)
 public final class ObjectBatchLoggerTest extends TestHelpers {
@@ -38,11 +39,13 @@ public final class ObjectBatchLoggerTest extends TestHelpers {
     @Mock(name = "external.org.metafacture.monitoring.ObjectBatchLogger")
     private Logger logger;
 
-    @Mock private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
 
     private ObjectBatchLogger<String> objectBatchLogger;
 
-    public ObjectBatchLoggerTest() {}
+    public ObjectBatchLoggerTest() {
+    }
 
     @Before
     public void setup() {
@@ -70,14 +73,11 @@ public final class ObjectBatchLoggerTest extends TestHelpers {
         ordered.verifyNoMoreInteractions();
         Mockito.verifyNoMoreInteractions(receiver);
 
-        assertLog(
-                logger,
-                "INFO",
-                c -> {
-                    assertLog(c, "records processed: 2");
-                    assertLog(c, "records processed: 4");
-                    assertLog(c, "records processed: 5");
-                });
+        assertLog(logger, "INFO", c -> {
+            assertLog(c, "records processed: 2");
+            assertLog(c, "records processed: 4");
+            assertLog(c, "records processed: 5");
+        });
     }
 
     @Test
@@ -89,32 +89,23 @@ public final class ObjectBatchLoggerTest extends TestHelpers {
 
         Mockito.verifyNoMoreInteractions(receiver);
 
-        assertLog(
-                logger,
-                "INFO",
-                c -> {
-                    assertLog(c, "records processed: 1");
-                });
+        assertLog(logger, "INFO", c -> {
+            assertLog(c, "records processed: 1");
+        });
     }
 
     @Test
     public void shouldLogWithCustomFormat() {
-        objectBatchLogger =
-                new ObjectBatchLogger<>(
-                        "records=${records}, totalRecords=${totalRecords}, batches=${batches},"
-                                + " batchSize=${batchSize}");
+        objectBatchLogger = new ObjectBatchLogger<>("records=${records}, totalRecords=${totalRecords}, batches=${batches}, batchSize=${batchSize}");
 
         objectBatchLogger.process("object");
         objectBatchLogger.closeStream();
 
         Mockito.verifyNoMoreInteractions(receiver);
 
-        assertLog(
-                logger,
-                "INFO",
-                c -> {
-                    assertLog(c, "records=1, totalRecords=1, batches=0, batchSize=1000");
-                });
+        assertLog(logger, "INFO", c -> {
+            assertLog(c, "records=1, totalRecords=1, batches=0, batchSize=1000");
+        });
     }
 
     @Test
@@ -124,11 +115,9 @@ public final class ObjectBatchLoggerTest extends TestHelpers {
         objectBatchLogger.process("object");
         objectBatchLogger.closeStream();
 
-        assertLog(
-                logger,
-                "WARN",
-                c -> {
-                    assertLog(c, "records processed: 1");
-                });
+        assertLog(logger, "WARN", c -> {
+            assertLog(c, "records processed: 1");
+        });
     }
+
 }

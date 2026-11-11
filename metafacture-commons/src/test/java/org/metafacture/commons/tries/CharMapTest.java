@@ -25,12 +25,14 @@ import java.util.Map;
  * tests {@link CharMap}
  *
  * @author Markus Michael Geipel
+ *
  */
 public final class CharMapTest {
 
     private static final String UML = "umlaut";
 
-    public CharMapTest() {}
+    public CharMapTest() {
+    }
 
     @Test
     public void testEmptyMap() {
@@ -75,4 +77,5 @@ public final class CharMapTest {
             Assert.assertEquals(Integer.valueOf(i), map.get(Character.valueOf(i)));
         }
     }
+
 }

@@ -47,48 +47,54 @@ import java.nio.charset.Charset;
 @FluxCommand("open-tar")
 public class TarReader extends DefaultObjectPipe<Reader, ObjectReceiver<Reader>> {
 
-    /** Creates an instance of {@link TarReader}. */
-    public TarReader() {}
+    /**
+     * Creates an instance of {@link TarReader}.
+     */
+    public TarReader() {
+    }
 
     @Override
     public void process(final Reader reader) {
-        try (InputStream stream =
-                        ReaderInputStream.builder()
-                                .setReader(reader)
-                                .setCharset(Charset.defaultCharset())
-                                .get();
-                ArchiveInputStream tarStream = new TarArchiveInputStream(stream)) {
+        try (
+                InputStream stream = ReaderInputStream.builder().setReader(reader).setCharset(Charset.defaultCharset()).get();
+                ArchiveInputStream tarStream = new TarArchiveInputStream(stream)
+        ) {
             ArchiveEntry entry;
             while ((entry = tarStream.getNextEntry()) != null) {
                 if (!entry.isDirectory()) {
                     processFileEntry(tarStream);
                 }
             }
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
 
     private void processFileEntry(final ArchiveInputStream archiveStream) throws IOException {
-        try (InputStream entryStream = new ArchiveEntryInputStream(archiveStream);
-                Reader entryReader = new InputStreamReader(entryStream)) {
+        try (
+                InputStream entryStream = new ArchiveEntryInputStream(archiveStream);
+                Reader entryReader = new InputStreamReader(entryStream)
+        ) {
             getReceiver().process(entryReader);
         }
     }
 
     /**
-     * Wraps an {@link ArchiveInputStream} so that individual archive entries can be read by code
-     * working on arbitrary {@link InputStream}s.
-     *
-     * <p>This is required as the semantics of {@code ArchiveInputStream} differ from standard
-     * {@code InputStream} behaviour. Archive streams must only be closed after reading all entries
-     * and not after reading a single entry. Because of this, it is not possible to pass an {@code
-     * ArchiveInputStream} to code expecting an {@code InputStream} as usually the received stream
-     * will be closed after the code is finished with it. In case of an {@code ArchiveInputStream}
-     * this would not close the stream for the current entry but the complete archive stream which
-     * might not be expected by the caller .
-     *
-     * <p>This class hides this difference by ignoring calls of the {@link #close()} method.
+     * Wraps an {@link ArchiveInputStream} so that individual archive entries
+     * can be read by code working on arbitrary {@link InputStream}s.
+     * <p>
+     * This is required as the semantics of {@code ArchiveInputStream} differ
+     * from standard {@code InputStream} behaviour. Archive streams must only be
+     * closed after reading all entries and not after reading a single entry.
+     * Because of this, it is not possible to pass an {@code ArchiveInputStream}
+     * to code expecting an {@code InputStream} as usually the received stream
+     * will be closed after the code is finished with it. In case of an {@code
+     * ArchiveInputStream} this would not close the stream for the current entry
+     * but the complete archive stream which might not be expected by the caller .
+     * <p>
+     * This class hides this difference by ignoring calls of the
+     * {@link #close()} method.
      *
      * @author Christoph Böhme
      */
@@ -144,5 +150,7 @@ public class TarReader extends DefaultObjectPipe<Reader, ObjectReceiver<Reader>>
         public boolean markSupported() {
             return archiveStream.markSupported();
         }
+
     }
+
 }

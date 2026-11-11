@@ -25,22 +25,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Returns the index position of a substring in a field and replaces the field value with this
- * number.
+ * Returns the index position of a substring in a field and replaces the
+ * field value with this number.
  */
 @FixCommand("index")
 public class Index implements FixFunction {
 
-    /** Creates an instance of {@link Index}. */
-    public Index() {}
+    /**
+     * Creates an instance of {@link Index}.
+     */
+    public Index() {
+    }
 
     @Override
-    public void apply(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         final String search = params.get(1);
         record.transform(params.get(0), s -> String.valueOf(s.indexOf(search))); // TODO: multiple
     }
+
 }

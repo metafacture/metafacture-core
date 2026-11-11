@@ -32,6 +32,7 @@ import java.io.Reader;
  * Opens a resource or file and passes a reader for it to the receiver.
  *
  * @author Christoph Böhme
+ *
  */
 @Description("Opens a resource.")
 @In(String.class)
@@ -41,8 +42,11 @@ public final class ResourceOpener extends DefaultObjectPipe<String, ObjectReceiv
 
     private String encoding = "UTF-8";
 
-    /** Creates an instance of {@link ResourceOpener}. */
-    public ResourceOpener() {}
+    /**
+     * Creates an instance of {@link ResourceOpener}.
+     */
+    public ResourceOpener() {
+    }
 
     /**
      * Returns the encoding used to open the resource.
@@ -66,8 +70,10 @@ public final class ResourceOpener extends DefaultObjectPipe<String, ObjectReceiv
     public void process(final String file) {
         try (Reader reader = ResourceUtil.getReader(file, encoding)) {
             getReceiver().process(reader);
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
+
 }

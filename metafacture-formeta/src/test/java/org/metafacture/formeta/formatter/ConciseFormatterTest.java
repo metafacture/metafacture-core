@@ -24,6 +24,7 @@ import org.junit.Test;
  * Tests for {@link ConciseFormatter}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class ConciseFormatterTest {
 
@@ -34,12 +35,15 @@ public final class ConciseFormatterTest {
             "inner{ lit1: value 1, ent1{ lit2: 'hello worlds\\'s end!' } }";
 
     private static final String OUTER_RECORD =
-            "outer{nested:inner\\{ lit1\\: value 1\\, ent1\\{ lit2\\: \\'hello worlds\\\\\\'s"
-                    + " end!\\' \\} \\},note:nested records}";
+            "outer{" +
+            "nested:inner\\{ lit1\\: value 1\\, ent1\\{ lit2\\: \\'hello worlds\\\\\\'s end!\\' \\} \\}," +
+            "note:nested records" +
+            "}";
 
     private ConciseFormatter conciseFormatter;
 
-    public ConciseFormatterTest() {}
+    public ConciseFormatterTest() {
+    }
 
     @Before
     public void setup() {
@@ -69,4 +73,5 @@ public final class ConciseFormatterTest {
 
         Assert.assertEquals(OUTER_RECORD, conciseFormatter.toString());
     }
+
 }

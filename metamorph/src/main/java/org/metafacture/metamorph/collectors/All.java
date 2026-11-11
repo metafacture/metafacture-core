@@ -36,8 +36,11 @@ public final class All extends AbstractFlushingCollect {
     private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
     private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
 
-    /** Creates an instance of {@link All}. */
-    public All() {}
+    /**
+     * Creates an instance of {@link All}.
+     */
+    public All() {
+    }
 
     @Override
     protected void receive(final String name, final String value, final NamedValueSource source) {
@@ -68,4 +71,5 @@ public final class All extends AbstractFlushingCollect {
         sources.add(namedValueSource);
         sourcesLeft.add(namedValueSource);
     }
+
 }

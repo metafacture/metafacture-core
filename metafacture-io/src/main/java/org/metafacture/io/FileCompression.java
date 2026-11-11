@@ -30,11 +30,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Provides a convenient interface for using stream compressors and decompressors.
+ * Provides a convenient interface for using stream compressors
+ * and decompressors.
  *
  * @author Christoph Böhme
+ *
  */
 public enum FileCompression {
+
     NONE {
         @Override
         public OutputStream createCompressor(final OutputStream writeTo, final String fileName) {
@@ -42,10 +45,9 @@ public enum FileCompression {
         }
 
         @Override
-        public InputStream createDecompressor(
-                final InputStream readFrom, final boolean decompressConcatenated) {
+        public InputStream createDecompressor(final InputStream readFrom, final boolean decompressConcatenated) {
             return new ProxyInputStream(readFrom) {
-                // nothing to do
+                //nothing to do
             };
         }
     },
@@ -54,23 +56,27 @@ public enum FileCompression {
         @Override
         public OutputStream createCompressor(final OutputStream writeTo, final String fileName) {
             if (fileName == null) {
-                throw new IllegalArgumentException(
-                        "fileName is required for auto-selecting compressor");
+                throw new IllegalArgumentException("fileName is required for auto-selecting compressor");
             }
 
             final String extension = FilenameUtils.getExtension(fileName);
             final FileCompression compressor;
             if ("gz".equalsIgnoreCase(extension)) {
                 compressor = GZIP;
-            } else if ("gzip".equalsIgnoreCase(extension)) {
+            }
+            else if ("gzip".equalsIgnoreCase(extension)) {
                 compressor = GZIP;
-            } else if ("bz2".equalsIgnoreCase(extension)) {
+            }
+            else if ("bz2".equalsIgnoreCase(extension)) {
                 compressor = BZIP2;
-            } else if ("bzip2".equalsIgnoreCase(extension)) {
+            }
+            else if ("bzip2".equalsIgnoreCase(extension)) {
                 compressor = BZIP2;
-            } else if ("xz".equalsIgnoreCase(extension)) {
+            }
+            else if ("xz".equalsIgnoreCase(extension)) {
                 compressor = XZ;
-            } else {
+            }
+            else {
                 compressor = NONE;
             }
 
@@ -78,16 +84,14 @@ public enum FileCompression {
         }
 
         @Override
-        public InputStream createDecompressor(
-                final InputStream readFrom, final boolean decompressConcatenated) {
+        public InputStream createDecompressor(final InputStream readFrom, final boolean decompressConcatenated) {
             final InputStream bufferedStream = bufferStream(readFrom);
             try {
-                return decompressConcatenated
-                        ? APACHE_COMPRESSOR_FACTORY_DECOMPRESS_CONCATENATED
-                                .createCompressorInputStream(bufferedStream)
-                        : APACHE_COMPRESSOR_FACTORY_NO_DECOMPRESS_CONCATENATED
-                                .createCompressorInputStream(bufferedStream);
-            } catch (final CompressorException e) {
+                return decompressConcatenated ?
+                    APACHE_COMPRESSOR_FACTORY_DECOMPRESS_CONCATENATED.createCompressorInputStream(bufferedStream) :
+                    APACHE_COMPRESSOR_FACTORY_NO_DECOMPRESS_CONCATENATED.createCompressorInputStream(bufferedStream);
+            }
+            catch (final CompressorException e) {
                 return NONE.createDecompressor(bufferedStream, decompressConcatenated);
             }
         }
@@ -99,20 +103,19 @@ public enum FileCompression {
             try {
                 return APACHE_COMPRESSOR_FACTORY.createCompressorOutputStream(
                         CompressorStreamFactory.BZIP2, bufferStream(writeTo));
-            } catch (final CompressorException e) {
+            }
+            catch (final CompressorException e) {
                 throw new MetafactureException(e);
             }
         }
 
         @Override
-        public InputStream createDecompressor(
-                final InputStream readFrom, final boolean decompressConcatenated) {
+        public InputStream createDecompressor(final InputStream readFrom, final boolean decompressConcatenated) {
             try {
                 return APACHE_COMPRESSOR_FACTORY.createCompressorInputStream(
-                        CompressorStreamFactory.BZIP2,
-                        bufferStream(readFrom),
-                        decompressConcatenated);
-            } catch (final CompressorException e) {
+                        CompressorStreamFactory.BZIP2, bufferStream(readFrom), decompressConcatenated);
+            }
+            catch (final CompressorException e) {
                 throw new MetafactureException(e);
             }
         }
@@ -124,20 +127,19 @@ public enum FileCompression {
             try {
                 return APACHE_COMPRESSOR_FACTORY.createCompressorOutputStream(
                         CompressorStreamFactory.GZIP, bufferStream(writeTo));
-            } catch (final CompressorException e) {
+            }
+            catch (final CompressorException e) {
                 throw new MetafactureException(e);
             }
         }
 
         @Override
-        public InputStream createDecompressor(
-                final InputStream readFrom, final boolean decompressConcatenated) {
+        public InputStream createDecompressor(final InputStream readFrom, final boolean decompressConcatenated) {
             try {
                 return APACHE_COMPRESSOR_FACTORY.createCompressorInputStream(
-                        CompressorStreamFactory.GZIP,
-                        bufferStream(readFrom),
-                        decompressConcatenated);
-            } catch (final CompressorException e) {
+                        CompressorStreamFactory.GZIP, bufferStream(readFrom), decompressConcatenated);
+            }
+            catch (final CompressorException e) {
                 throw new MetafactureException(e);
             }
         }
@@ -149,20 +151,19 @@ public enum FileCompression {
             try {
                 return APACHE_COMPRESSOR_FACTORY.createCompressorOutputStream(
                         CompressorStreamFactory.PACK200, bufferStream(writeTo));
-            } catch (final CompressorException e) {
+            }
+            catch (final CompressorException e) {
                 throw new MetafactureException(e);
             }
         }
 
         @Override
-        public InputStream createDecompressor(
-                final InputStream readFrom, final boolean decompressConcatenated) {
+        public InputStream createDecompressor(final InputStream readFrom, final boolean decompressConcatenated) {
             try {
                 return APACHE_COMPRESSOR_FACTORY.createCompressorInputStream(
-                        CompressorStreamFactory.PACK200,
-                        bufferStream(readFrom),
-                        decompressConcatenated);
-            } catch (final CompressorException e) {
+                        CompressorStreamFactory.PACK200, bufferStream(readFrom), decompressConcatenated);
+            }
+            catch (final CompressorException e) {
                 throw new MetafactureException(e);
             }
         }
@@ -174,18 +175,19 @@ public enum FileCompression {
             try {
                 return APACHE_COMPRESSOR_FACTORY.createCompressorOutputStream(
                         CompressorStreamFactory.XZ, bufferStream(writeTo));
-            } catch (final CompressorException e) {
+            }
+            catch (final CompressorException e) {
                 throw new MetafactureException(e);
             }
         }
 
         @Override
-        public InputStream createDecompressor(
-                final InputStream readFrom, final boolean decompressConcatenated) {
+        public InputStream createDecompressor(final InputStream readFrom, final boolean decompressConcatenated) {
             try {
                 return APACHE_COMPRESSOR_FACTORY.createCompressorInputStream(
                         CompressorStreamFactory.XZ, bufferStream(readFrom), decompressConcatenated);
-            } catch (final CompressorException e) {
+            }
+            catch (final CompressorException e) {
                 throw new MetafactureException(e);
             }
         }
@@ -193,22 +195,17 @@ public enum FileCompression {
 
     public static final boolean DEFAULT_DECOMPRESS_CONCATENATED = false;
 
-    private static final CompressorStreamFactory APACHE_COMPRESSOR_FACTORY_DECOMPRESS_CONCATENATED =
-            new CompressorStreamFactory(true);
-    private static final CompressorStreamFactory
-            APACHE_COMPRESSOR_FACTORY_NO_DECOMPRESS_CONCATENATED =
-                    new CompressorStreamFactory(false);
-    private static final CompressorStreamFactory APACHE_COMPRESSOR_FACTORY =
-            DEFAULT_DECOMPRESS_CONCATENATED
-                    ? APACHE_COMPRESSOR_FACTORY_DECOMPRESS_CONCATENATED
-                    : APACHE_COMPRESSOR_FACTORY_NO_DECOMPRESS_CONCATENATED;
+    private static final CompressorStreamFactory APACHE_COMPRESSOR_FACTORY_DECOMPRESS_CONCATENATED = new CompressorStreamFactory(true);
+    private static final CompressorStreamFactory APACHE_COMPRESSOR_FACTORY_NO_DECOMPRESS_CONCATENATED = new CompressorStreamFactory(false);
+    private static final CompressorStreamFactory APACHE_COMPRESSOR_FACTORY = DEFAULT_DECOMPRESS_CONCATENATED ?
+        APACHE_COMPRESSOR_FACTORY_DECOMPRESS_CONCATENATED : APACHE_COMPRESSOR_FACTORY_NO_DECOMPRESS_CONCATENATED;
 
     private static final int BUFFER_SIZE = 8 * 1024 * 1024;
 
     /**
      * Creates a compressor.
      *
-     * @param writeTo the {@link OutputStream} to write to
+     * @param writeTo  the {@link OutputStream} to write to
      * @param fileName the filename
      * @return the {@link OutputStream}
      */
@@ -217,12 +214,12 @@ public enum FileCompression {
     /**
      * Creates a decompressor.
      *
-     * @param readFrom {the @link InputStream} to read from.
-     * @param decompressConcatenated true if decompress concatenated, otherwise false
+     * @param readFrom               {the @link InputStream} to read from.
+     * @param decompressConcatenated true if decompress concatenated, otherwise
+     *                               false
      * @return the {@link InputStream}
      */
-    public abstract InputStream createDecompressor(
-            InputStream readFrom, boolean decompressConcatenated);
+    public abstract InputStream createDecompressor(InputStream readFrom, boolean decompressConcatenated);
 
     /**
      * Creates a decompressor.
@@ -247,4 +244,5 @@ public enum FileCompression {
         }
         return new BufferedInputStream(stream, BUFFER_SIZE);
     }
+
 }

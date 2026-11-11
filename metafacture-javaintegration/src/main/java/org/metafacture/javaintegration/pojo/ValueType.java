@@ -38,13 +38,16 @@ class ValueType {
     ValueType(final Class<?> clazz, final Type type) {
         rawClass = clazz;
         if (type instanceof ParameterizedType) {
-            final Type[] actualTypeArguments = ((ParameterizedType) type).getActualTypeArguments();
+            final Type[] actualTypeArguments = ((ParameterizedType) type)
+                    .getActualTypeArguments();
             if (Map.class.isAssignableFrom(clazz)) {
                 elementClass = (Class<?>) actualTypeArguments[1];
-            } else {
+            }
+            else {
                 elementClass = (Class<?>) actualTypeArguments[0];
             }
-        } else {
+        }
+        else {
             elementClass = null;
         }
     }
@@ -56,4 +59,5 @@ class ValueType {
     Class<?> getElementClass() {
         return elementClass;
     }
+
 }

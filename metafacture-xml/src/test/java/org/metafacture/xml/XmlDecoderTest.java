@@ -37,7 +37,8 @@ public final class XmlDecoderTest {
     private XmlDecoder xmlDecoder;
     private final Reader reader = new StringReader(TEST_XML_WITH_TWO_ENTITIES);
 
-    public XmlDecoderTest() {}
+    public XmlDecoderTest() {
+    }
 
     @Before
     public void initSystemUnderTest() {
@@ -65,8 +66,10 @@ public final class XmlDecoderTest {
         try {
             xmlDecoder.process(reader);
             reader.close();
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new RuntimeException(e);
         }
     }
+
 }

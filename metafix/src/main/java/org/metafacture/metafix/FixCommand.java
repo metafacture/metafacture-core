@@ -22,7 +22,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/** Annotation to register Fix commands with the given name. */
+/**
+ * Annotation to register Fix commands with the given name.
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -34,4 +36,5 @@ public @interface FixCommand {
      * @return Fix command name
      */
     String value();
+
 }

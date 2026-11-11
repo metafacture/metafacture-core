@@ -30,7 +30,8 @@ class TypeDecoderFactory {
 
     private final Map<Class<?>, TypeDecoder> typeDecoders = new HashMap<>();
 
-    TypeDecoderFactory() {}
+    TypeDecoderFactory() {
+    }
 
     TypeDecoder create(final Class<?> clazz) {
         if (typeDecoders.containsKey(clazz)) {
@@ -39,20 +40,27 @@ class TypeDecoderFactory {
         final TypeDecoder typeDecoder;
         if (SimpleTypeDecoder.supportsType(clazz)) {
             typeDecoder = new SimpleTypeDecoder();
-        } else if (MetafactureSourceTypeDecoder.supportsType(clazz)) {
+        }
+        else if (MetafactureSourceTypeDecoder.supportsType(clazz)) {
             typeDecoder = new MetafactureSourceTypeDecoder();
-        } else if (CollectionTypeDecoder.supportsType(clazz)) {
+        }
+        else if (CollectionTypeDecoder.supportsType(clazz)) {
             typeDecoder = new CollectionTypeDecoder(this);
-        } else if (ArrayTypeDecoder.supportsType(clazz)) {
+        }
+        else if (ArrayTypeDecoder.supportsType(clazz)) {
             typeDecoder = new ArrayTypeDecoder(this);
-        } else if (ComplexTypeDecoder.supportsType(clazz)) {
+        }
+        else if (ComplexTypeDecoder.supportsType(clazz)) {
             typeDecoder = new ComplexTypeDecoder(clazz, this);
-        } else if (MapTypeDecoder.supportsType(clazz)) {
+        }
+        else if (MapTypeDecoder.supportsType(clazz)) {
             typeDecoder = new MapTypeDecoder(this);
-        } else {
+        }
+        else {
             throw new MetafactureException("Can't decode type " + clazz);
         }
         typeDecoders.put(clazz, typeDecoder);
         return typeDecoder;
     }
+
 }

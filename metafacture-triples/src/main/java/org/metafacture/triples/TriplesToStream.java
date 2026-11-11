@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+/**
+ *
+ */
+
 package org.metafacture.triples;
 
 import org.metafacture.formeta.parser.FormetaParser;
@@ -31,17 +35,21 @@ import org.metafacture.framework.objects.Triple.ObjectType;
  * Converts triples into a stream.
  *
  * @author schaeferd
+ *
  */
 @Description("Converts a triple into a record stream")
 @In(Triple.class)
 @Out(StreamReceiver.class)
 @FluxCommand("triples-to-stream")
-public final class TriplesToStream extends DefaultObjectPipe<Triple, StreamReceiver> {
+public final class TriplesToStream extends
+        DefaultObjectPipe<Triple, StreamReceiver> {
 
     private final FormetaParser parser = new FormetaParser();
     private final PartialRecordEmitter emitter = new PartialRecordEmitter();
 
-    /** Creates an instance of {@link TriplesToStream}. */
+    /**
+     * Creates an instance of {@link TriplesToStream}.
+     */
     public TriplesToStream() {
         parser.setEmitter(emitter);
     }
@@ -51,12 +59,13 @@ public final class TriplesToStream extends DefaultObjectPipe<Triple, StreamRecei
         getReceiver().startRecord(triple.getSubject());
         if (triple.getObjectType() == ObjectType.STRING) {
             getReceiver().literal(triple.getPredicate(), triple.getObject());
-        } else if (triple.getObjectType() == ObjectType.ENTITY) {
+        }
+        else if (triple.getObjectType() == ObjectType.ENTITY) {
             emitter.setDefaultName(triple.getPredicate());
             parser.parse(triple.getObject());
-        } else {
-            throw new UnsupportedOperationException(
-                    triple.getObjectType() + " can not yet be decoded");
+        }
+        else {
+            throw new UnsupportedOperationException(triple.getObjectType() + " can not yet be decoded");
         }
         getReceiver().endRecord();
     }
@@ -65,4 +74,5 @@ public final class TriplesToStream extends DefaultObjectPipe<Triple, StreamRecei
     protected void onSetReceiver() {
         emitter.setReceiver(getReceiver());
     }
+
 }

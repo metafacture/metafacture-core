@@ -32,14 +32,17 @@ import java.util.Map;
  * Tests for class {@link MapToStream}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class MapToStreamTest {
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
     private MapToStream mapToStream;
 
-    public MapToStreamTest() {}
+    public MapToStreamTest() {
+    }
 
     @Before
     public void setup() {
@@ -123,4 +126,5 @@ public final class MapToStreamTest {
         Mockito.verify(receiver).literal("1", "11");
         Mockito.verify(receiver).literal("2", "12");
     }
+
 }

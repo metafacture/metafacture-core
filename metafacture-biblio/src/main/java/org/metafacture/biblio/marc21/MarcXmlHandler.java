@@ -28,15 +28,11 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * A marc xml reader. To read marc data without namespace specification set option `namespace=""` or
- * to null when using JAVA code.
- *
+ * A marc xml reader. To read marc data without namespace specification set option `namespace=""` or to null when using JAVA code.
  * @author Markus Michael Geipel
+ *
  */
-@Description(
-        "A MARC XML reader. To read marc data without namespace specification set option"
-                + " `namespace=\"\"`. To ignore namespace specification set option"
-                + " `ignorenamespace=\"true\".")
+@Description("A MARC XML reader. To read marc data without namespace specification set option `namespace=\"\"`. To ignore namespace specification set option `ignorenamespace=\"true\".")
 @In(XmlReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("handle-marcxml")
@@ -57,16 +53,19 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private StringBuilder builder = new StringBuilder();
     private boolean ignoreNamespace;
 
-    /** Creates an instance of {@link MarcXmlHandler}. */
-    public MarcXmlHandler() {}
+    /**
+     * Creates an instance of {@link MarcXmlHandler}.
+     */
+    public MarcXmlHandler() {
+    }
 
     /**
      * Sets the namespace.
      *
-     * <p><strong>Default value: {@value #NAMESPACE}</strong>
+     * <strong>Default value: {@value #NAMESPACE}</strong>
      *
-     * @param namespace the namespace. Set to null if namespace shouldn't be checked. Set to empty
-     *     string if the namespace is missing in the data.
+     * @param namespace the namespace. Set to null if namespace shouldn't be checked. Set to empty string
+     *        if the namespace is missing in the data.
      */
     public void setNamespace(final String namespace) {
         this.namespace = namespace;
@@ -75,7 +74,7 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     /**
      * Sets whether to ignore the namespace.
      *
-     * <p><strong>Default value: false</strong>
+     * <strong>Default value: false</strong>
      *
      * @param ignoreNamespace true if the namespace should be ignored
      */
@@ -90,8 +89,8 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     /**
      * Sets the attribute marker.
      *
-     * <p><strong>Default value: {@value
-     * org.metafacture.framework.helpers.DefaultXmlPipe#DEFAULT_ATTRIBUTE_MARKER}</strong>
+     * <strong>Default value:
+     * {@value org.metafacture.framework.helpers.DefaultXmlPipe#DEFAULT_ATTRIBUTE_MARKER}</strong>
      *
      * @param attributeMarker the attribute marker
      */
@@ -109,52 +108,50 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void startElement(
-            final String uri,
-            final String localName,
-            final String qName,
-            final Attributes attributes)
-            throws SAXException {
+    public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) throws SAXException {
         if (SUBFIELD.equals(localName)) {
             builder = new StringBuilder();
             currentTag = attributes.getValue("code");
-        } else if (DATAFIELD.equals(localName)) {
-            getReceiver()
-                    .startEntity(
-                            attributes.getValue("tag")
-                                    + attributes.getValue("ind1")
-                                    + attributes.getValue("ind2"));
-        } else if (CONTROLFIELD.equals(localName)) {
+        }
+        else if (DATAFIELD.equals(localName)) {
+            getReceiver().startEntity(attributes.getValue("tag") + attributes.getValue("ind1") + attributes.getValue("ind2"));
+        }
+        else if (CONTROLFIELD.equals(localName)) {
             builder = new StringBuilder();
             currentTag = attributes.getValue("tag");
-        } else if (RECORD.equals(localName) && checkNamespace(uri)) {
+        }
+        else if (RECORD.equals(localName) && checkNamespace(uri)) {
             getReceiver().startRecord("");
             getReceiver().literal(attributeMarker + TYPE, attributes.getValue(TYPE));
-        } else if (LEADER.equals(localName)) {
+        }
+        else if (LEADER.equals(localName)) {
             builder = new StringBuilder();
             currentTag = LEADER;
         }
     }
 
     @Override
-    public void endElement(final String uri, final String localName, final String qName)
-            throws SAXException {
+    public void endElement(final String uri, final String localName, final String qName) throws SAXException {
         if (SUBFIELD.equals(localName)) {
             getReceiver().literal(currentTag, builder.toString().trim());
-        } else if (DATAFIELD.equals(localName)) {
+        }
+        else if (DATAFIELD.equals(localName)) {
             getReceiver().endEntity();
-        } else if (CONTROLFIELD.equals(localName)) {
+        }
+        else if (CONTROLFIELD.equals(localName)) {
             getReceiver().literal(currentTag, builder.toString());
-        } else if (RECORD.equals(localName) && checkNamespace(uri)) {
+        }
+        else if (RECORD.equals(localName) && checkNamespace(uri)) {
             getReceiver().endRecord();
-        } else if (LEADER.equals(localName)) {
+        }
+        else if (LEADER.equals(localName)) {
             getReceiver().literal(currentTag, builder.toString());
         }
     }
 
     @Override
-    public void characters(final char[] chars, final int start, final int length)
-            throws SAXException {
+    public void characters(final char[] chars, final int start, final int length) throws SAXException {
         builder.append(chars, start, length);
     }
+
 }

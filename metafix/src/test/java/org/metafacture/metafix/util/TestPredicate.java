@@ -27,15 +27,13 @@ import java.util.Map;
 
 public class TestPredicate implements FixPredicate {
 
-    public TestPredicate() {}
+    public TestPredicate() {
+    }
 
     @Override
-    public boolean test(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
-        return !new Exists().test(metafix, record, params, options)
-                || new AnyEqual().test(metafix, record, params, options);
+    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+        return !new Exists().test(metafix, record, params, options) ||
+            new AnyEqual().test(metafix, record, params, options);
     }
+
 }

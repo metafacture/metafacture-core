@@ -24,12 +24,11 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
 /**
- * Flattens all entities in a stream by prefixing the literals with the entity paths. The stream
- * emitted by this module is guaranteed to not contain any <i>start-entity</i> and <i>end-entity</i>
- * events.
- *
- * <p>For example, take the following sequence of events:
- *
+ * Flattens all entities in a stream by prefixing the literals with the entity
+ * paths. The stream emitted by this module is guaranteed to not contain any
+ * <i>start-entity</i> and <i>end-entity</i> events.
+ * <p>
+ * For example, take the following sequence of events:
  * <pre>{@literal
  * start-record "1"
  * literal "top-level": literal-value
@@ -39,9 +38,8 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
  * end-record
  * }</pre>
  *
- * These events are transformed by the {@code StreamFlattener} into the following sequence of
- * events:
- *
+ * These events are transformed by the {@code StreamFlattener} into the
+ * following sequence of events:
  * <pre>{@literal
  * start-record "1"
  * literal "top-level": literal-value
@@ -52,6 +50,7 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
  * @author Christoph Böhme (rewrite)
  * @author Markus Michael Geipel
  * @see EntityPathTracker
+ *
  */
 @Description("flattens out entities in a stream by introducing dots in literal names")
 @In(StreamReceiver.class)
@@ -63,7 +62,9 @@ public final class StreamFlattener extends DefaultStreamPipe<StreamReceiver> {
 
     private final EntityPathTracker pathTracker = new EntityPathTracker();
 
-    /** Creates an instance of {@link StreamFlattener}. */
+    /**
+     * Creates an instance of {@link StreamFlattener}.
+     */
     public StreamFlattener() {
         setEntityMarker(DEFAULT_ENTITY_MARKER);
     }
@@ -135,4 +136,5 @@ public final class StreamFlattener extends DefaultStreamPipe<StreamReceiver> {
     public String getCurrentPath() {
         return pathTracker.getCurrentPath();
     }
+
 }

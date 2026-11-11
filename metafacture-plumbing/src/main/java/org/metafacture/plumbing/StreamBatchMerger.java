@@ -24,10 +24,12 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
 /**
- * Merges a sequence of {@link #setBatchSize(long)} records. On a <i>close-stream</i> event, a
- * record containing fewer source records may be created.
+ * Merges a sequence of {@link #setBatchSize(long)} records. On a
+ * <i>close-stream</i> event, a record containing fewer source records may be
+ * created.
  *
  * @author Christoph Böhme
+ *
  */
 @Description("Merges a sequence of batchSize records")
 @In(StreamReceiver.class)
@@ -35,21 +37,26 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @FluxCommand("merge-batch-stream")
 public final class StreamBatchMerger extends DefaultStreamPipe<StreamReceiver> {
 
-    /** The default value for {@link #setBatchSize(long)}. */
+    /**
+     * The default value for {@link #setBatchSize(long)}.
+     */
     public static final long DEFAULT_BATCH_SIZE = 1;
 
     private long batchSize = DEFAULT_BATCH_SIZE;
     private long recordCount;
 
-    /** Creates an instance of {@link StreamBatchMerger}. */
-    public StreamBatchMerger() {}
+    /**
+     * Creates an instance of {@link StreamBatchMerger}.
+     */
+    public StreamBatchMerger() {
+    }
 
     /**
      * Sets the number of records that should be merged into a batch.
-     *
-     * <p>The default batch size is 1, wich means that no records are merged.
-     *
-     * <p>This parameter must not be changed during processing.
+     * <p>
+     * The default batch size is 1, wich means that no records are merged.
+     * <p>
+     * This parameter must not be changed during processing.
      *
      * @param batchSize the number of records that should be merged.
      */
@@ -60,10 +67,10 @@ public final class StreamBatchMerger extends DefaultStreamPipe<StreamReceiver> {
 
     /**
      * Sets the number of records that should be merged into a batch.
-     *
-     * <p>The default batch size is 1, wich means that no records are merged.
-     *
-     * <p>This parameter must not be changed during processing.
+     * <p>
+     * The default batch size is 1, wich means that no records are merged.
+     * <p>
+     * This parameter must not be changed during processing.
      *
      * @param batchSize the number of records that should be merged.
      */
@@ -123,4 +130,5 @@ public final class StreamBatchMerger extends DefaultStreamPipe<StreamReceiver> {
             recordCount = 0;
         }
     }
+
 }

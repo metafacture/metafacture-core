@@ -30,15 +30,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * Tests for class {@link ListFixValues}.
  *
  * @author Fabian Steeg
+ *
  */
 @ExtendWith(MockitoExtension.class)
 public final class ListFixValuesTest {
 
     private ListFixValues lister;
 
-    @Mock private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
 
-    public ListFixValuesTest() {}
+    public ListFixValuesTest() {
+    }
 
     @Test
     public void testShouldListPathsSimple() {
@@ -61,32 +64,43 @@ public final class ListFixValuesTest {
     @Test
     public void testShouldListPathsTwoValues() {
         lister = new ListFixValues("b");
-        verify("2\t|\tbB", "1\t|\tbA");
+        verify(
+                "2\t|\tbB",
+                "1\t|\tbA");
     }
 
     @Test
     public void testShouldListPathsTwoValuesWildcard() {
         lister = new ListFixValues("b.*");
-        verify("2\t|\tbB", "1\t|\tbA");
+        verify(
+            "2\t|\tbB",
+            "1\t|\tbA");
     }
 
     @Test
     public void testShouldListPathsTwoValuesIndex() {
         lister = new ListFixValues("b.1");
-        verify("1\t|\tbB");
+        verify(
+            "1\t|\tbB");
     }
 
     @Test
     public void testShouldListPathsSortCount() {
         lister = new ListFixValues("c");
-        verify("3\t|\tcC", "1\t|\tcA", "1\t|\tcB");
+        verify(
+            "3\t|\tcC",
+            "1\t|\tcA",
+            "1\t|\tcB");
     }
 
     @Test
     public void testShouldListPathsDontCount() {
         lister = new ListFixValues("c");
         lister.setCount(false);
-        verify("cA", "cB", "cC");
+        verify(
+            "cA",
+            "cB",
+            "cC");
     }
 
     private void processRecord() {
@@ -116,9 +130,11 @@ public final class ListFixValuesTest {
             ordered.verify(receiver, Mockito.times(2)).closeStream();
             ordered.verifyNoMoreInteractions();
             Mockito.verifyNoMoreInteractions(receiver);
-        } catch (final MockitoAssertionError e) {
+        }
+        catch (final MockitoAssertionError e) {
             System.out.println(Mockito.mockingDetails(receiver).printInvocations());
             throw e;
         }
     }
+
 }

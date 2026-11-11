@@ -51,6 +51,7 @@ import java.util.stream.Collectors;
  * Tests for {@link JsonValidator}.
  *
  * @author Fabian Steeg
+ *
  */
 @RunWith(Parameterized.class)
 public final class JsonValidatorTest {
@@ -64,12 +65,12 @@ public final class JsonValidatorTest {
     private static final String JSON_INVALID_SYNTAX_ERROR = "{\"id1\":\"val\",\"id2\":\"val\"";
 
     @Rule
-    public WireMockRule wireMockRule =
-            new WireMockRule(WireMockConfiguration.wireMockConfig().dynamicPort());
+    public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig().dynamicPort());
 
     private JsonValidator validator;
 
-    @Mock private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
     private InOrder inOrder;
     private Function<Object, String> schemaLocationGetter;
 
@@ -79,18 +80,12 @@ public final class JsonValidatorTest {
 
     @Parameterized.Parameters(name = "{index}")
     public static Collection<Object[]> siteMaps() {
-        return Arrays.asList(
-                (Object[][])
-                        (new Function[][] {
-                            // Pass the schema to each test as path on classpath, file url, and http
-                            // url:
-                            {(Object rule) -> MAIN_SCHEMA},
-                            {
-                                (Object rule) ->
-                                        JsonValidatorTest.class.getResource(MAIN_SCHEMA).toString()
-                            },
-                            {(Object rule) -> ((WireMockRule) rule).baseUrl() + MAIN_SCHEMA}
-                        }));
+        return Arrays.asList((Object[][]) (new Function[][] {
+            // Pass the schema to each test as path on classpath, file url, and http url:
+            {(Object rule) -> MAIN_SCHEMA},
+            {(Object rule) -> JsonValidatorTest.class.getResource(MAIN_SCHEMA).toString()},
+            {(Object rule) -> ((WireMockRule) rule).baseUrl() + MAIN_SCHEMA}
+        }));
     }
 
     @Before
@@ -105,31 +100,21 @@ public final class JsonValidatorTest {
 
     private void wireMock(final String... schemaLocations) throws IOException {
         for (final String schemaLocation : schemaLocations) {
-            WireMock.stubFor(
-                    WireMock.request("GET", WireMock.urlEqualTo(schemaLocation))
-                            .willReturn(
-                                    WireMock.ok()
-                                            .withBody(
-                                                    readToString(
-                                                            getClass().getResource(schemaLocation)))
-                                            .withHeader("Content-type", "application/json")));
+            WireMock.stubFor(WireMock.request("GET", WireMock.urlEqualTo(schemaLocation)).willReturn(
+                    WireMock.ok().withBody(readToString(getClass().getResource(schemaLocation)))
+                            .withHeader("Content-type", "application/json")));
         }
     }
 
     private String readToString(final URL url) throws IOException {
         return new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))
-                .lines()
-                .collect(Collectors.joining("\n"));
+                .lines().collect(Collectors.joining("\n"));
     }
 
     @Test
     public void callWireMockSchema() throws MalformedURLException, IOException {
-        final String schemaContent =
-                readToString(ResourceUtil.toURL(wireMockRule.baseUrl() + MAIN_SCHEMA));
-        MatcherAssert.assertThat(
-                schemaContent,
-                CoreMatchers.both(CoreMatchers.containsString("$schema"))
-                        .and(CoreMatchers.containsString("$ref")));
+        final String schemaContent = readToString(ResourceUtil.toURL(wireMockRule.baseUrl() + MAIN_SCHEMA));
+        MatcherAssert.assertThat(schemaContent, CoreMatchers.both(CoreMatchers.containsString("$schema")).and(CoreMatchers.containsString("$ref")));
     }
 
     @Test
@@ -183,4 +168,5 @@ public final class JsonValidatorTest {
     public void cleanup() {
         validator.closeStream();
     }
+
 }

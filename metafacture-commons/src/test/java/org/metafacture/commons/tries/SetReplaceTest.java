@@ -23,10 +23,12 @@ import org.junit.Test;
  * tests {@link SetReplacer}
  *
  * @author Markus Michael Geipel
+ *
  */
 public final class SetReplaceTest {
 
-    public SetReplaceTest() {}
+    public SetReplaceTest() {
+    }
 
     @Test
     public void testReplace() {
@@ -52,4 +54,5 @@ public final class SetReplaceTest {
         Assert.assertEquals("50 äpfel", setReplace.replaceIn("fünfzig äpfel"));
         Assert.assertEquals("5 äpfel", setReplace.replaceIn("fünf äpfel"));
     }
+
 }

@@ -20,15 +20,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Implementation of {@link Map} that delegates to another map if it does not contain a value for
- * key.
+ * Implementation of {@link Map} that delegates to another map if it does not
+ * contain a value for key.
  *
  * @param <K> type of the keys
  * @param <V> type of the values
  * @author Markus Michael Geipel
  */
-public final class ScopedHashMap<K, V>
-        extends HashMap<K, V> { // checkstyle-disable-line IllegalType
+public final class ScopedHashMap<K, V> extends HashMap<K, V> { // checkstyle-disable-line IllegalType
 
     private static final long serialVersionUID = -7184066609960144713L;
     private final ScopedHashMap<K, V> outerScope;
@@ -42,7 +41,9 @@ public final class ScopedHashMap<K, V>
         this.outerScope = outerScope;
     }
 
-    /** Creates an empty instance of {@link ScopedHashMap}. */
+    /**
+     * Creates an empty instance of {@link ScopedHashMap}.
+     */
     public ScopedHashMap() {
         outerScope = null;
     }
@@ -83,7 +84,7 @@ public final class ScopedHashMap<K, V>
 
     @Override
     public String toString() {
-        return super.toString()
-                + (getOuterScope() == null ? "" : "\n" + getOuterScope().toString());
+        return super.toString() + (getOuterScope() == null ? "" : "\n" + getOuterScope().toString());
     }
+
 }

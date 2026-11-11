@@ -27,14 +27,17 @@ import org.mockito.Mockito;
  *
  * @author Markus M Geipel
  * @author Christoph Böhme (refactored to Mockito)
+ *
  */
 public final class DefaultSenderTest {
 
-    public DefaultSenderTest() {}
+    public DefaultSenderTest() {
+    }
 
     @Test
     public void shouldCallOnCloseStreamOnlyOnce() {
-        final DefaultSender<StreamReceiver> defaultSender = Mockito.spy(new DefaultSender<>());
+        final DefaultSender<StreamReceiver> defaultSender =
+                Mockito.spy(new DefaultSender<>());
 
         Mockito.verify(defaultSender, Mockito.never()).onCloseStream();
         Assert.assertFalse(defaultSender.isClosed());
@@ -49,4 +52,5 @@ public final class DefaultSenderTest {
         Mockito.verify(defaultSender, Mockito.times(1)).onCloseStream();
         Assert.assertTrue(defaultSender.isClosed());
     }
+
 }

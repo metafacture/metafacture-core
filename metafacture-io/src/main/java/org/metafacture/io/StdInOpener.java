@@ -27,19 +27,21 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 /**
- * Helper class to open stdin. In order to use the standard input in a Flux file, utilize the `>`
- * instruction at the beginning of a workflow instead of a string and an opener. Also see example:
- * metafacture-runner/src/main/dist/examples/misc/open-stdin/test.flux.
+ * Helper class to open stdin. In order to use the standard input in a Flux file, utilize the `>` instruction at the beginning of a workflow instead of a string and an opener. Also see example: metafacture-runner/src/main/dist/examples/misc/open-stdin/test.flux.
  *
  * @author Markus Michael Geipel
+ *
  */
 @Description("Opens stdIn.")
 @In(String.class)
 @Out(java.io.Reader.class)
 public final class StdInOpener extends DefaultObjectPipe<Object, ObjectReceiver<java.io.Reader>> {
 
-    /** Creates an instance of {@link StdInOpener}. */
-    public StdInOpener() {}
+    /**
+     * Creates an instance of {@link StdInOpener}.
+     */
+    public StdInOpener() {
+    }
 
     @Override
     public void process(final Object notUsed) {
@@ -47,12 +49,15 @@ public final class StdInOpener extends DefaultObjectPipe<Object, ObjectReceiver<
             final BufferedReader stdin;
             try {
                 stdin = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
-            } catch (final UnsupportedEncodingException e) {
+            }
+            catch (final UnsupportedEncodingException e) {
                 throw new IllegalStateException("UTF-8 not supported", e);
             }
             getReceiver().process(stdin);
-        } else {
+        }
+        else {
             throw new IllegalArgumentException("Parameter not used. Must be null");
         }
     }
+
 }

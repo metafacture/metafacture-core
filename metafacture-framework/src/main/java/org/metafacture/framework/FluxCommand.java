@@ -23,12 +23,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Sets the name of the flux command which is implemented by the annotated class. Annotated classes
- * must implement at least one of the interfaces extending {@link org.metafacture.framework.Receiver
- * Receiver}.
+ * Sets the name of the flux command which is implemented by the annotated
+ * class. Annotated classes must implement at least one of the interfaces
+ * extending {@link org.metafacture.framework.Receiver Receiver}.
  *
  * @author Christoph Böhme
  * @since 3.1.0
+ *
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -41,4 +42,5 @@ public @interface FluxCommand {
      * @return Flux command name
      */
     String value();
+
 }

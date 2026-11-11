@@ -35,6 +35,7 @@ import java.io.ObjectInputStream;
  * Reads triples.
  *
  * @author Christoph Böhme
+ *
  */
 @Description("Reads triples")
 @In(String.class)
@@ -44,26 +45,31 @@ public final class TripleReader extends DefaultObjectPipe<String, ObjectReceiver
 
     public static final int BUFFERSIZE = 2048;
 
-    /** Creates an instance of {@link TripleReader}. */
-    public TripleReader() {}
+    /**
+     * Creates an instance of {@link TripleReader}.
+     */
+    public TripleReader() {
+    }
 
     @Override
     public void process(final String filename) {
         try {
-            final ObjectInputStream in =
-                    new ObjectInputStream(
-                            new BufferedInputStream(new FileInputStream(filename), BUFFERSIZE));
+            final ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename), BUFFERSIZE));
 
             try {
                 while (true) {
                     getReceiver().process(Triple.read(in));
                 }
-            } catch (final EOFException e) {
-            } finally {
+            }
+            catch (final EOFException e) {
+            }
+            finally {
                 in.close();
             }
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
+
 }

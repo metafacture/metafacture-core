@@ -25,21 +25,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Executes the functions if/unless the field value matches the regular expression pattern. If it is
- * an array or a hash, one or more field values must match the regular expression pattern.
+ * Executes the functions if/unless the field value matches the regular
+ * expression pattern. If it is an array or a hash, one or more field
+ * values must match the regular expression pattern.
  */
 @FixCommand("any_match")
 public class AnyMatch implements FixPredicate {
 
-    /** Creates an instance of {@link AnyMatch}. */
-    public AnyMatch() {}
+    /**
+     * Creates an instance of {@link AnyMatch}.
+     */
+    public AnyMatch() {
+    }
 
     @Override
-    public boolean test(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         return testConditional(record, params, ANY, MATCHES);
     }
+
 }

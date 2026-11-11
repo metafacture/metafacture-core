@@ -25,7 +25,9 @@ import java.util.Queue;
  * Collects the objects emitted by an upstream module.
  *
  * @param <T> object type
+ *
  * @author Christoph Böhme
+ *
  */
 public final class ObjectCollector<T> implements ObjectReceiver<T> {
 
@@ -34,7 +36,9 @@ public final class ObjectCollector<T> implements ObjectReceiver<T> {
 
     private boolean closed;
 
-    /** Creates an instance of {@link ObjectCollector}. */
+    /**
+     * Creates an instance of {@link ObjectCollector}.
+     */
     public ObjectCollector() {
         this(-1);
     }
@@ -80,7 +84,9 @@ public final class ObjectCollector<T> implements ObjectReceiver<T> {
         closed = true;
     }
 
-    /** Discards the current content of the buffer. */
+    /**
+     * Discards the current content of the buffer.
+     */
     public void clear() {
         buffer.clear();
     }
@@ -93,4 +99,5 @@ public final class ObjectCollector<T> implements ObjectReceiver<T> {
     public T pop() {
         return buffer.poll();
     }
+
 }

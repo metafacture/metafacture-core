@@ -30,19 +30,18 @@ public final class Split extends AbstractFunction {
 
     private Pattern delimiterPattern;
 
-    /** Creates an instance of {@link Split}. */
-    public Split() {}
+    /**
+     * Creates an instance of {@link Split}.
+     */
+    public Split() {
+    }
 
     @Override
-    public void receive(
-            final String name,
-            final String value,
-            final NamedValueSource source,
-            final int recordCount,
-            final int entityCount) {
+    public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
         final String[] parts = delimiterPattern.split(value);
         for (final String part : parts) {
-            getNamedValueReceiver().receive(name, part, this, recordCount, entityCount);
+            getNamedValueReceiver().receive(name, part, this, recordCount,
+                    entityCount);
         }
     }
 
@@ -54,4 +53,5 @@ public final class Split extends AbstractFunction {
     public void setDelimiter(final String delimiter) {
         this.delimiterPattern = Pattern.compile(delimiter);
     }
+
 }

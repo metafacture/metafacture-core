@@ -31,18 +31,21 @@ import org.xml.sax.helpers.AttributesImpl;
  * Tests for class {@link CGXmlHandler}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class CGXmlHandlerTest {
 
     private static final String CGXML_NS = "http://www.culturegraph.org/cgxml";
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
     private AttributesImpl attributes;
 
     private CGXmlHandler cgXmlHandler;
 
-    public CGXmlHandlerTest() {}
+    public CGXmlHandlerTest() {
+    }
 
     @Before
     public void setup() {
@@ -58,7 +61,8 @@ public final class CGXmlHandlerTest {
 
     @Test
     public void shouldAcceptCgXmlVersion1() {
-        attributes.addAttribute("", "version", "cgxml:version", "CDATA", "1.0");
+        attributes.addAttribute("", "version", "cgxml:version", "CDATA",
+                "1.0");
         cgXmlHandler.startElement(CGXML_NS, "cgxml", "cgxml:cgxml", attributes);
         cgXmlHandler.endElement(CGXML_NS, "cgxml", "cgxml:cgxml");
 
@@ -67,7 +71,8 @@ public final class CGXmlHandlerTest {
 
     @Test(expected = FormatException.class)
     public void shouldThrowFormatExceptionIfVersionIsNot1() {
-        attributes.addAttribute("", "version", "cgxml:version", "CDATA", "2.0");
+        attributes.addAttribute("", "version", "cgxml:version", "CDATA",
+                "2.0");
         cgXmlHandler.startElement(CGXML_NS, "cgxml", "cgxml:cgxml", attributes);
 
         // Exception expected
@@ -134,4 +139,5 @@ public final class CGXmlHandlerTest {
 
         // Exception expected
     }
+
 }

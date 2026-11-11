@@ -30,14 +30,17 @@ import org.mockito.MockitoAnnotations;
  *
  * @author Markus Michael Geipel
  * @author Christoph Böhme (refactored to Mockito)
+ *
  */
 public final class StreamBufferTest {
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
     private StreamBuffer streamBuffer;
 
-    public StreamBufferTest() {}
+    public StreamBufferTest() {
+    }
 
     @Before
     public void setup() {
@@ -103,4 +106,5 @@ public final class StreamBufferTest {
         Mockito.verify(receiver).resetStream();
         Mockito.verifyNoMoreInteractions(receiver);
     }
+
 }

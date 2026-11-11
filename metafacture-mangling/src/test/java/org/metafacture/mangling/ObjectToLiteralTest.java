@@ -30,6 +30,7 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link ObjectToLiteral}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class ObjectToLiteralTest {
 
@@ -38,9 +39,11 @@ public final class ObjectToLiteralTest {
 
     private ObjectToLiteral<String> objectToLiteral;
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-    public ObjectToLiteralTest() {}
+    public ObjectToLiteralTest() {
+    }
 
     @Before
     public void setup() {
@@ -92,4 +95,5 @@ public final class ObjectToLiteralTest {
         ordered.verify(receiver).literal(ObjectToLiteral.DEFAULT_LITERAL_NAME, OBJ_DATA);
         ordered.verify(receiver).endRecord();
     }
+
 }

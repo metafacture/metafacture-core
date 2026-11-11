@@ -27,22 +27,21 @@ import java.util.List;
  * Stores all received values and only releases them on flush.
  *
  * @author Markus Geipel
+ *
  */
 public final class Buffer extends AbstractFunction {
 
     private final List<Receipt> receipts = new ArrayList<Receipt>();
     private int currentRecord;
 
-    /** Creates an instance of {@link Buffer}. */
-    public Buffer() {}
+    /**
+     * Creates an instance of {@link Buffer}.
+     */
+    public Buffer() {
+    }
 
     @Override
-    public void receive(
-            final String name,
-            final String value,
-            final NamedValueSource source,
-            final int recordCount,
-            final int entityCount) {
+    public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
         if (currentRecord != recordCount) {
             receipts.clear();
             currentRecord = recordCount;
@@ -59,7 +58,9 @@ public final class Buffer extends AbstractFunction {
         receipts.clear();
     }
 
-    /** buffer element */
+    /**
+     * buffer element
+     */
     private static final class Receipt {
         private final String name;
         private final String value;
@@ -67,11 +68,8 @@ public final class Buffer extends AbstractFunction {
         private final int recordCount;
         private final int entityCount;
 
-        protected Receipt(
-                final String name,
-                final String value,
-                final NamedValueSource source,
-                final int recordCount,
+        protected Receipt(final String name, final String value,
+                final NamedValueSource source, final int recordCount,
                 final int entityCount) {
             this.name = name;
             this.value = value;
@@ -84,4 +82,5 @@ public final class Buffer extends AbstractFunction {
             receiver.receive(name, value, source, recordCount, entityCount);
         }
     }
+
 }

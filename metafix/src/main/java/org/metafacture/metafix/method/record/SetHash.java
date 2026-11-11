@@ -25,23 +25,24 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Creates a new hash (with optional values), provided that the intermediate structures (i.e. parent
- * fields) exist. To create any missing intermediate structures, use {@link AddHash} instead.
+ * Creates a new hash (with optional values), provided that the intermediate
+ * structures (i.e. parent fields) exist. To create any missing intermediate
+ * structures, use {@link AddHash} instead.
  */
 @FixCommand("set_hash")
 public class SetHash implements FixFunction {
 
-    /** Creates an instance of {@link SetHash}. */
-    public SetHash() {}
+    /**
+     * Creates an instance of {@link SetHash}.
+     */
+    public SetHash() {
+    }
 
     @Override
-    public void apply(
-            final Metafix metafix,
-            final Record record,
-            final List<String> params,
-            final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         if (parentFieldExists(record, params.get(0))) {
             new AddHash().apply(metafix, record, params, options);
         }
     }
+
 }

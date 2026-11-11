@@ -30,6 +30,7 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link PicaMultiscriptRemodeler}.
  *
  * @author Christoph Böhme
+ *
  */
 public class PicaMultiscriptRemodelerTest {
 
@@ -53,9 +54,11 @@ public class PicaMultiscriptRemodelerTest {
 
     private PicaMultiscriptRemodeler remodeler;
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-    public PicaMultiscriptRemodelerTest() {}
+    public PicaMultiscriptRemodelerTest() {
+    }
 
     @Before
     public void setup() {
@@ -104,8 +107,8 @@ public class PicaMultiscriptRemodelerTest {
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
-        verifyMultiscriptField(
-                ordered, FIELD_021A, "01", SCRIPT_LATIN, VALUE_1, SCRIPT_GREEK, VALUE_1_GREEK);
+        verifyMultiscriptField(ordered, FIELD_021A, "01", SCRIPT_LATIN,
+                VALUE_1, SCRIPT_GREEK, VALUE_1_GREEK);
         ordered.verify(receiver).endRecord();
     }
 
@@ -120,10 +123,10 @@ public class PicaMultiscriptRemodelerTest {
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
-        verifyMultiscriptField(
-                ordered, FIELD_021C, "01", SCRIPT_LATIN, VALUE_1, SCRIPT_GREEK, VALUE_1_GREEK);
-        verifyMultiscriptField(
-                ordered, FIELD_021C, "02", SCRIPT_LATIN, VALUE_2, SCRIPT_GREEK, VALUE_2_GREEK);
+        verifyMultiscriptField(ordered, FIELD_021C, "01", SCRIPT_LATIN,
+                VALUE_1, SCRIPT_GREEK, VALUE_1_GREEK);
+        verifyMultiscriptField(ordered, FIELD_021C, "02", SCRIPT_LATIN,
+                VALUE_2, SCRIPT_GREEK, VALUE_2_GREEK);
         ordered.verify(receiver).endRecord();
     }
 
@@ -135,13 +138,13 @@ public class PicaMultiscriptRemodelerTest {
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
-        verifySingleMultiscriptField(ordered, FIELD_021A, "01", SCRIPT_LATIN, VALUE_1);
+        verifySingleMultiscriptField(ordered, FIELD_021A, "01", SCRIPT_LATIN,
+                VALUE_1);
         ordered.verify(receiver).endRecord();
     }
 
     @Test
-    public void
-            shouldPassThroughSingleMultiscriptFieldFollowedByCompleteMultiscriptFieldWithTheSameName() {
+    public void shouldPassThroughSingleMultiscriptFieldFollowedByCompleteMultiscriptFieldWithTheSameName() {
         remodeler.startRecord(RECORD_ID);
         emitMultscriptField(FIELD_021C, "01", SCRIPT_LATIN, VALUE_1);
         emitMultscriptField(FIELD_021C, "02", SCRIPT_LATIN, VALUE_2);
@@ -150,15 +153,15 @@ public class PicaMultiscriptRemodelerTest {
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
-        verifySingleMultiscriptField(ordered, FIELD_021C, "01", SCRIPT_LATIN, VALUE_1);
-        verifyMultiscriptField(
-                ordered, FIELD_021C, "02", SCRIPT_LATIN, VALUE_2, SCRIPT_GREEK, VALUE_2_GREEK);
+        verifySingleMultiscriptField(ordered, FIELD_021C, "01", SCRIPT_LATIN,
+                VALUE_1);
+        verifyMultiscriptField(ordered, FIELD_021C, "02", SCRIPT_LATIN,
+                VALUE_2, SCRIPT_GREEK, VALUE_2_GREEK);
         ordered.verify(receiver).endRecord();
     }
 
     @Test
-    public void
-            shouldPassThroughSingleMultiscriptFieldFollowedByCompleteMultiscriptFieldWithDifferentName() {
+    public void shouldPassThroughSingleMultiscriptFieldFollowedByCompleteMultiscriptFieldWithDifferentName() {
         remodeler.startRecord(RECORD_ID);
         emitMultscriptField(FIELD_021A, "01", SCRIPT_LATIN, VALUE_1);
         emitMultscriptField(FIELD_021C, "01", SCRIPT_LATIN, VALUE_2);
@@ -167,9 +170,10 @@ public class PicaMultiscriptRemodelerTest {
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
-        verifySingleMultiscriptField(ordered, FIELD_021A, "01", SCRIPT_LATIN, VALUE_1);
-        verifyMultiscriptField(
-                ordered, FIELD_021C, "01", SCRIPT_LATIN, VALUE_2, SCRIPT_GREEK, VALUE_2_GREEK);
+        verifySingleMultiscriptField(ordered, FIELD_021A, "01", SCRIPT_LATIN,
+                VALUE_1);
+        verifyMultiscriptField(ordered, FIELD_021C, "01", SCRIPT_LATIN,
+                VALUE_2, SCRIPT_GREEK, VALUE_2_GREEK);
         ordered.verify(receiver).endRecord();
     }
 
@@ -184,7 +188,8 @@ public class PicaMultiscriptRemodelerTest {
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
-        verifySingleMultiscriptField(ordered, FIELD_021A, "01", SCRIPT_LATIN, VALUE_1);
+        verifySingleMultiscriptField(ordered, FIELD_021A, "01", SCRIPT_LATIN,
+                VALUE_1);
         ordered.verify(receiver).startEntity(FIELD_033A);
         ordered.verify(receiver).literal("n", VALUE_2);
         ordered.verify(receiver).endEntity();
@@ -226,8 +231,8 @@ public class PicaMultiscriptRemodelerTest {
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
-        verifyMultiscriptField(
-                ordered, FIELD_021A, "01", SCRIPT_LATIN, VALUE_1, SCRIPT_ARABIC, VALUE_1_ARABIC);
+        verifyMultiscriptField(ordered, FIELD_021A, "01", SCRIPT_LATIN,
+                VALUE_1, SCRIPT_ARABIC, VALUE_1_ARABIC);
         ordered.verify(receiver).endRecord();
     }
 
@@ -240,8 +245,8 @@ public class PicaMultiscriptRemodelerTest {
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
-        verifyMultiscriptField(
-                ordered, FIELD_021A, "01", SCRIPT_LATIN, VALUE_1, SCRIPT_HEBREW, VALUE_1_HEBREW);
+        verifyMultiscriptField(ordered, FIELD_021A, "01", SCRIPT_LATIN,
+                VALUE_1, SCRIPT_HEBREW, VALUE_1_HEBREW);
         ordered.verify(receiver).endRecord();
     }
 
@@ -262,8 +267,8 @@ public class PicaMultiscriptRemodelerTest {
         ordered.verify(receiver).endRecord();
     }
 
-    private void emitMultscriptField(
-            final String field, final String groupNumber, final String script, final String value) {
+    private void emitMultscriptField(final String field,
+            final String groupNumber, final String script, final String value) {
 
         remodeler.startEntity(field);
         remodeler.literal("T", groupNumber);
@@ -272,15 +277,9 @@ public class PicaMultiscriptRemodelerTest {
         remodeler.endEntity();
     }
 
-    @SuppressWarnings("checkstyle:ParameterNumber")
-    private void verifyMultiscriptField(
-            final InOrder ordered,
-            final String field,
-            final String groupNumber,
-            final String script1,
-            final String value1,
-            final String script2,
-            final String value2) {
+    private void verifyMultiscriptField(final InOrder ordered, // checkstyle-disable-line ParameterNumber
+            final String field, final String groupNumber, final String script1,
+            final String value1, final String script2, final String value2) {
 
         ordered.verify(receiver).startEntity(field);
         ordered.verify(receiver).startEntity(mapScriptToEntityName(script1));
@@ -295,11 +294,8 @@ public class PicaMultiscriptRemodelerTest {
         ordered.verify(receiver, Mockito.times(2)).endEntity();
     }
 
-    private void verifySingleMultiscriptField(
-            final InOrder ordered,
-            final String field,
-            final String groupNumber,
-            final String script,
+    private void verifySingleMultiscriptField(final InOrder ordered,
+            final String field, final String groupNumber, final String script,
             final String value) {
 
         ordered.verify(receiver).startEntity(field);
@@ -310,10 +306,9 @@ public class PicaMultiscriptRemodelerTest {
     }
 
     private String mapScriptToEntityName(final String script) {
-        return SCRIPT_LATIN.equals(script)
-                ? PicaMultiscriptRemodeler.ENTITY_NAME_FOR_LATIN
-                : SCRIPT_ARABIC.equals(script) || SCRIPT_HEBREW.equals(script)
-                        ? PicaMultiscriptRemodeler.ENTITY_NAME_FOR_NON_LATIN_RL
-                        : PicaMultiscriptRemodeler.ENTITY_NAME_FOR_NON_LATIN_LR;
+        return SCRIPT_LATIN.equals(script) ? PicaMultiscriptRemodeler.ENTITY_NAME_FOR_LATIN :
+            SCRIPT_ARABIC.equals(script) || SCRIPT_HEBREW.equals(script) ? PicaMultiscriptRemodeler.ENTITY_NAME_FOR_NON_LATIN_RL :
+            PicaMultiscriptRemodeler.ENTITY_NAME_FOR_NON_LATIN_LR;
     }
+
 }

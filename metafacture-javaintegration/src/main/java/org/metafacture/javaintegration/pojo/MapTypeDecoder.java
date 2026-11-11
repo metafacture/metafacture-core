@@ -38,8 +38,7 @@ class MapTypeDecoder implements TypeDecoder {
     }
 
     @Override
-    public void decodeToStream(
-            final StreamReceiver streamReceiver, final String name, final Object object) {
+    public void decodeToStream(final StreamReceiver streamReceiver, final String name, final Object object) {
         final Map<?, ?> map = (Map<?, ?>) object;
         if (name != null) {
             streamReceiver.startEntity(name);
@@ -54,4 +53,5 @@ class MapTypeDecoder implements TypeDecoder {
             streamReceiver.endEntity();
         }
     }
+
 }

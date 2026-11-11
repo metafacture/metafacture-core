@@ -38,9 +38,11 @@ public final class ObjectSleeperTest {
     private static final int MILLISECONDS_PER_SECOND = 1_000;
     private static final int NANOSECONDS_PER_MILLISECOND = 1_000_000;
 
-    @Mock private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
 
-    public ObjectSleeperTest() {}
+    public ObjectSleeperTest() {
+    }
 
     @Before
     public void setup() {
@@ -56,23 +58,19 @@ public final class ObjectSleeperTest {
     @Test
     public void shouldTestIfClockedTimeExceedsDurationInMilliseconds() {
         final int sleepTime = 567;
-        assertSleep(
-                sleepTime,
-                s -> {
-                    s.setSleepTime(sleepTime);
-                    s.setTimeUnit("MILLISECONDS");
-                });
+        assertSleep(sleepTime, s -> {
+            s.setSleepTime(sleepTime);
+            s.setTimeUnit("MILLISECONDS");
+        });
     }
 
     @Test
     public void shouldTestIfClockedTimeExceedsDurationInSeconds() {
         final int sleepTime = 1;
-        assertSleep(
-                sleepTime * MILLISECONDS_PER_SECOND,
-                s -> {
-                    s.setSleepTime(sleepTime);
-                    s.setTimeUnit("SECOND");
-                });
+        assertSleep(sleepTime * MILLISECONDS_PER_SECOND, s -> {
+            s.setSleepTime(sleepTime);
+            s.setTimeUnit("SECOND");
+        });
     }
 
     private void assertSleep(final long expectedMillis, final Consumer<ObjectSleeper> consumer) {
@@ -85,8 +83,7 @@ public final class ObjectSleeperTest {
         final long actualMillis = (System.nanoTime() - startTime) / NANOSECONDS_PER_MILLISECOND;
 
         Assert.assertTrue("sleep time too short: " + actualMillis, actualMillis >= expectedMillis);
-        Assert.assertTrue(
-                "sleep time too long: " + actualMillis,
-                actualMillis < expectedMillis + PROCESS_OVERHEAD_MILLISECONDS);
+        Assert.assertTrue("sleep time too long: " + actualMillis, actualMillis < expectedMillis + PROCESS_OVERHEAD_MILLISECONDS);
     }
+
 }

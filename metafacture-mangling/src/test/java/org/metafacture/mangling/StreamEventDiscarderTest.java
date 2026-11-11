@@ -32,14 +32,17 @@ import java.util.EnumSet;
  * Tests for class {@link StreamEventDiscarder}.
  *
  * @author Christoph Böhme
+ *
  */
 public class StreamEventDiscarderTest {
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
     private StreamEventDiscarder discarder;
 
-    public StreamEventDiscarderTest() {}
+    public StreamEventDiscarderTest() {
+    }
 
     @Before
     public void init() {
@@ -184,4 +187,5 @@ public class StreamEventDiscarderTest {
 
         Mockito.verify(receiver).startRecord("1");
     }
+
 }

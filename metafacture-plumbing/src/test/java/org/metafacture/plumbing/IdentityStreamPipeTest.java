@@ -30,6 +30,7 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link IdentityStreamPipe}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class IdentityStreamPipeTest {
 
@@ -43,9 +44,11 @@ public final class IdentityStreamPipeTest {
 
     private IdentityStreamPipe identityPipe;
 
-    @Mock private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-    public IdentityStreamPipeTest() {}
+    public IdentityStreamPipeTest() {
+    }
 
     @Before
     public void setup() {
@@ -83,4 +86,5 @@ public final class IdentityStreamPipeTest {
         ordered.verify(receiver, Mockito.times(2)).literal(LITERAL_NAME1, LITERAL_VALUE1);
         ordered.verify(receiver).endRecord();
     }
+
 }
