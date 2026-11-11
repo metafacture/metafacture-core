@@ -119,7 +119,9 @@ public final class HelpPrinter {
         }
     }
 
+// @formatter:off
     private static <T> void describe(final String name, final ObjectFactory<T> factory, final PrintWriter out) { // checkstyle-disable-line ExecutableStatementCount
+// @formatter:on
         final ConfigurableClass<? extends T> configurableClass = factory.get(name);
         final Class<? extends T> moduleClass = configurableClass.getPlainClass();
         final Description desc = moduleClass.getAnnotation(Description.class);

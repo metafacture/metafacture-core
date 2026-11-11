@@ -42,7 +42,9 @@ import java.io.StringReader;
  * @author Christoph Böhme
  *
  */
+// @formatter:off
 final class MetamorphTestCase extends Statement { // checkstyle-disable-line ClassDataAbstractionCoupling
+// @formatter:on
 
     private static final String NO_DATA_FOUND = "Please specify either element content or a src attribute";
 
@@ -117,7 +119,9 @@ final class MetamorphTestCase extends Statement { // checkstyle-disable-line Cla
         return new MultiFormatReader(mimeType);
     }
 
+// @formatter:off
     private StreamPipe getTransformation() throws InitializationError { // checkstyle-disable-line ReturnCount
+// @formatter:on
         final NodeList nodes = config.getElementsByTagName(TRANSFORMATION_TAG);
         if (nodes.getLength() == 0) {
             return null;

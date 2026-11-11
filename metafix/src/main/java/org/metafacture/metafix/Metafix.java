@@ -61,7 +61,9 @@ import java.util.function.Function;
  * @author Christoph Böhme (Metamorph)
  * @author Fabian Steeg (Metafix)
  */
+// @formatter:off
 @Description("Applies a fix transformation to the event stream, given as the path to a fix file or the fixes themselves.") // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
+// @formatter:on
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("fix")

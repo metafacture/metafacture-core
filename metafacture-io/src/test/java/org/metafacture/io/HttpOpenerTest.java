@@ -297,7 +297,9 @@ public final class HttpOpenerTest {
                 q -> Arrays.stream(headers).forEach(h -> q.withHeader(h, TEST_VALUE)), null);
     }
 
+    // @formatter:off
     private void shouldPerformRequest(final String input, final HttpOpener.Method method, final BiConsumer<HttpOpener, String> consumer, final Consumer<MappingBuilder> stubConsumer, final Consumer<RequestPatternBuilder> requestConsumer, final Consumer<ResponseDefinitionBuilder> responseConsumer) throws IOException { // checkstyle-disable-line ParameterNumber
+    // @formatter:on
         final ResponseDefinitionBuilder response = WireMock.ok().withBody(RESPONSE_BODY);
         if (responseConsumer != null) {
             responseConsumer.accept(response);
@@ -308,7 +310,9 @@ public final class HttpOpenerTest {
                 response, method.getResponseHasBody() ? RESPONSE_BODY : "");
     }
 
+    // @formatter:off
     private void shouldPerformRequest(final String input, final HttpOpener.Method method, final BiConsumer<HttpOpener, String> consumer, final Consumer<MappingBuilder> stubConsumer, final Consumer<RequestPatternBuilder> requestConsumer, final ResponseDefinitionBuilder response, final String responseBody) throws IOException { // checkstyle-disable-line ParameterNumber
+    // @formatter:on
         final String baseUrl = wireMockRule.baseUrl();
         final String url = String.format(TEST_URL, baseUrl);
 

@@ -52,7 +52,9 @@ import javax.xml.validation.SchemaFactory;
  * @author Christoph Böhme
  *
  */
+// @formatter:off
 public final class DomLoader { // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
+// @formatter:on
 
     private static final ErrorHandler SAX_ERROR_HANDLER = new SaxErrorHandler();
 

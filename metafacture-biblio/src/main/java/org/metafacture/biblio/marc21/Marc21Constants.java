@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
  */
 final class Marc21Constants {
 
+    // @formatter:off
     static final RecordFormat MARC21_FORMAT = RecordFormat.create()
         .withIndicatorLength(2)
         .withIdentifierLength(2)
@@ -35,6 +36,7 @@ final class Marc21Constants {
         .withFieldStartLength(5) // checkstyle-disable-line MagicNumber
         .withImplDefinedPartLength(0)
         .build();
+    // @formatter:on
 
     static final Charset MARC21_CHARSET = StandardCharsets.UTF_8;
 

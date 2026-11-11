@@ -277,7 +277,9 @@ public class PicaMultiscriptRemodelerTest {
         remodeler.endEntity();
     }
 
+// @formatter:off
     private void verifyMultiscriptField(final InOrder ordered, // checkstyle-disable-line ParameterNumber
+// @formatter:on
             final String field, final String groupNumber, final String script1,
             final String value1, final String script2, final String value2) {
 

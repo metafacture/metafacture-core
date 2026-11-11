@@ -46,12 +46,14 @@ import javax.xml.parsers.ParserConfigurationException;
  *
  * @author Pascal Christoph (dr0i)
  */
+// @formatter:off
 @Description(// checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
         "Opens a SRU stream and passes a reader to the receiver. The input is the base URL of the SRU service " +
                 "to be retrieved from. Mandatory argument is: QUERY.\n" +
                 "The output is an XML document holding the user defined \"maximumRecords\" as documents - or all, if not set." +
                 " If there are more documents than defined by \"maximumRecords\" and there are more documents wanted (defined by " +
                 "\"totalRecords\") there will be consecutive XML documents output as it pages through the SRU.")
+// @formatter:on
 @In(String.class)
 @Out(java.io.Reader.class)
 @FluxCommand("open-sru")

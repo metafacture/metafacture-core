@@ -177,7 +177,9 @@ public final class ConfigurableClass<T> {
                 "no appropriate constructor found for class " + plainClass);
     }
 
+// @formatter:off
     private boolean checkArgumentTypes(final Constructor<?> constructor, final Object[] constructorArgs) { // checkstyle-disable-line ReturnCount
+// @formatter:on
         final Class<?>[] argTypes = constructor.getParameterTypes();
         if (argTypes.length != constructorArgs.length) {
             return false;

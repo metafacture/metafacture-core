@@ -29,7 +29,9 @@ import java.io.UncheckedIOException;
 /**
  * Base class for Metafix benchmarks.
  */
+// @formatter:off
 public abstract class AbstractMetafixBenchmark extends FixParseBenchmark { // checkstyle-disable-line ClassDataAbstractionCoupling
+// @formatter:on
 
     // TODO: Need to inject system properties into JMHTask's JavaExec process.
     //private static final boolean DEBUG_OUTPUT = Boolean.parseBoolean(System.getProperty("org.metafacture.metafix.debugBenchmarkOutput"));

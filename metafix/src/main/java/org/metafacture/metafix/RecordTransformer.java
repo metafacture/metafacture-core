@@ -242,7 +242,9 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         }
     }
 
+// @formatter:off
     private MetafactureException tryRun(final Runnable runnable) { // checkstyle-disable-line ReturnCount
+// @formatter:on
         try {
             runnable.run();
         }

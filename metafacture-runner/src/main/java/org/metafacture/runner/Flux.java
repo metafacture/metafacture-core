@@ -52,6 +52,7 @@ import java.util.regex.Pattern;
  * @author Markus Michael Geipel
  * @author Christoph Böhme
  */
+// @formatter:off
 @Command( // checkstyle-disable-line ClassFanOutComplexity|ParenPad
     name = "flux",
     description = "Runs the Flux.",
@@ -63,6 +64,7 @@ import java.util.regex.Pattern;
     optionListHeading = "%nOptions:%n",
     exitCodeListHeading = "%nExit codes:%n",
     exitCodeList = { "0:Successful program execution", "1:Internal software error", "2:Usage error" }
+// @formatter:on
 )
 public class Flux implements Callable<Integer> {
 

@@ -61,7 +61,9 @@ import java.util.function.Consumer;
  * @author Markus Michael Geipel
  * @author Christoph Böhme
  */
+// @formatter:off
 @Description("Applies a metamorph transformation to the event stream. Metamorph definition is given in brackets.") // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
+// @formatter:on
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("morph")

@@ -27,7 +27,9 @@ import java.util.Map;
  * @param <V> type of the values
  * @author Markus Michael Geipel
  */
+// @formatter:off
 public final class ScopedHashMap<K, V> extends HashMap<K, V> { // checkstyle-disable-line IllegalType
+// @formatter:on
 
     private static final long serialVersionUID = -7184066609960144713L;
     private final ScopedHashMap<K, V> outerScope;
