@@ -44,12 +44,14 @@ public final class AllTest {
     @Test
     public void shouldFireOnlyIfAllElementsFire() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <all>" +
                 "    <data source='data1' />" +
                 "    <data source='data2' />" +
                 "  </all>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "A");
@@ -72,12 +74,14 @@ public final class AllTest {
     @Test
     public void shouldSupportUserdefinedNameAndValue() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <all name='ALL' value='found all'>" +
                 "    <data source='data1' />" +
                 "    <data source='data2' />" +
                 "  </all>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "A");
@@ -95,12 +99,14 @@ public final class AllTest {
     @Test
     public void shouldFireAgainIfValueChangesAndResetIsFalse() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <all>" +
                 "    <data source='entity.data1' />" +
                 "    <data source='entity.data2' />" +
                 "  </all>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -123,12 +129,14 @@ public final class AllTest {
     @Test
     public void shouldNotFireAgainIfOnlyOneValueChangesAndResetIsTrue() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <all reset='true'>" +
                 "    <data source='entity.data1' />" +
                 "    <data source='entity.data2' />" +
                 "  </all>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -151,12 +159,14 @@ public final class AllTest {
     @Test
     public void shouldNotFireIfFlushingAnIncompleteCollection() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <all flushWith='entity'>" +
                 "    <data source='entity.data1' />" +
                 "    <data source='entity.data2' />" +
                 "  </all>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -174,12 +184,14 @@ public final class AllTest {
     @Test
     public void shouldResetWhenEntityChangesIfSameEntity() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <all sameEntity='true'>" +
                 "    <data source='entity.data2' />" +
                 "    <data source='entity.data1' />" +
                 "  </all>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");

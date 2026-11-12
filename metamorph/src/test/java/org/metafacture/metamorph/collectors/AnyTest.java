@@ -44,12 +44,14 @@ public final class AnyTest {
     @Test
     public void shouldFireOnlyIfAtLeastOneElementFires() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <any>" +
                 "    <data source='data1' />" +
                 "    <data source='data2' />" +
                 "  </any>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "A");
@@ -77,12 +79,14 @@ public final class AnyTest {
     @Test
     public void shouldSupportUserdefinedNameAndValue() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <any name='ANY' value='found one'>" +
                 "    <data source='data1' />" +
                 "    <data source='data2' />" +
                 "  </any>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "A");
@@ -99,12 +103,14 @@ public final class AnyTest {
     @Test
     public void shouldNotFireAgainIfAdditionalValueIsReceivedAndResetIsFalse() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <any>" +
                 "    <data source='data1' />" +
                 "    <data source='data2' />" +
                 "  </any>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "A");
@@ -123,12 +129,14 @@ public final class AnyTest {
     @Test
     public void shouldFireAgainIfAdditionalValueIsReceivedAndResetIsTrue() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <any reset='true'>" +
                 "    <data source='data1' />" +
                 "    <data source='data2' />" +
                 "  </any>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "A");
@@ -147,12 +155,14 @@ public final class AnyTest {
     @Test
     public void shouldFireAgainAfterFlushing() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <any flushWith='entity'>" +
                 "    <data source='entity.data1' />" +
                 "    <data source='entity.data2' />" +
                 "  </any>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -174,12 +184,14 @@ public final class AnyTest {
     @Test
     public void shouldNotFireIfFlushingAnUntriggeredCollection() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <any flushWith='entity'>" +
                 "    <data source='entity.data1' />" +
                 "    <data source='entity.data2' />" +
                 "  </any>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");

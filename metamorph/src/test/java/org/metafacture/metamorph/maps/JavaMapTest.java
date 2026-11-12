@@ -46,6 +46,7 @@ public final class JavaMapTest {
     @Test
     public void shouldLookupValuesInJavaBackedMap() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='1'>" +
                 "    <lookup in='map1' />" +
@@ -54,6 +55,7 @@ public final class JavaMapTest {
                 "<maps>" +
                 "  <javamap name='map1' class='org.metafacture.metamorph.maps.FileMap' files='org/metafacture/metamorph/maps/java-map-test.txt' />" +
                 "</maps>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");

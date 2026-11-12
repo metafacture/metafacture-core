@@ -45,6 +45,7 @@ public final class TuplesTest {
     @Test
     public void shouldEmitTwoAndThreeTuples() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <tuples name='product'>" +
                 "    <data source='1' />" +
@@ -52,6 +53,7 @@ public final class TuplesTest {
                 "    <data source='2' />" +
                 "  </tuples>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "a");
@@ -92,6 +94,7 @@ public final class TuplesTest {
     @Test
     public void shouldOnlyEmitTriplesWithMoreThanMinNValues() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <tuples name='product' minN='3'>" +
                 "    <data source='1' />" +
@@ -99,6 +102,7 @@ public final class TuplesTest {
                 "    <data source='2' />" +
                 "  </tuples>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "a");
@@ -135,6 +139,7 @@ public final class TuplesTest {
     @Test
     public void shouldEmitTuplesWithMinNIfNotAllStatementsFired() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <tuples name='product' minN='1'>" +
                 "    <data source='1' />" +
@@ -142,6 +147,7 @@ public final class TuplesTest {
                 "    <data source='2' />" +
                 "  </tuples>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "a");

@@ -47,6 +47,7 @@ public final class TestCollectorBasics {
     @Test
     public void shouldSupportNestedCollectors() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='d' value='${1}${c}'>" +
                 "    <data source='d1' name='1' />" +
@@ -59,6 +60,7 @@ public final class TestCollectorBasics {
                 "    </combine>" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("d1", "a");
@@ -77,6 +79,7 @@ public final class TestCollectorBasics {
     @Test
     public void shouldSupportNestedSameEntity() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='result' value='${value}${ch}' sameEntity='true'>" +
                 "    <data source='rel.value' name='value' />" +
@@ -88,6 +91,7 @@ public final class TestCollectorBasics {
                 "    </choose>" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("rel");
@@ -119,11 +123,13 @@ public final class TestCollectorBasics {
     @Test
     public void shouldAllowUsingAnArbitraryLiteralForFlush() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <concat delimiter='' name='d' flushWith='f'>" +
                 "    <data source='d' />" +
                 "  </concat>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("d", "1");
@@ -148,12 +154,14 @@ public final class TestCollectorBasics {
     @Test
     public void shouldReceiveFlushingLiteralBeforeFlushEvent() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <concat delimiter='' name='d' flushWith='f'>" +
                 "    <data source='d' />" +
                 "    <data source='f' />" +
                 "  </concat>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("f", "1");

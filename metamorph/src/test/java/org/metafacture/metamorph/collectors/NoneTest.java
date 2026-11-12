@@ -44,12 +44,14 @@ public final class NoneTest {
     @Test
     public void shouldFireOnlyifNoElementFired() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <none>" +
                 "    <data source='data1' />" +
                 "    <data source='data2' />" +
                 "  </none>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "A");
@@ -76,12 +78,14 @@ public final class NoneTest {
     @Test
     public void shouldSupportUserdefinedNameAndValue() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <none name='NONE' value='found none'>" +
                 "    <data source='data1' />" +
                 "    <data source='data2' />" +
                 "  </none>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data3", "A");
@@ -98,11 +102,13 @@ public final class NoneTest {
     @Test
     public void shouldNotFireAgainIfFlushedTwoTimesAndResetIsFalse() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <none flushWith='entity'>" +
                 "    <data source='data2' />" +
                 "  </none>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -124,11 +130,13 @@ public final class NoneTest {
     @Test
     public void shouldFireAgainIfFlushedTwoTimesAndTesetIsTrue() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <none flushWith='entity' reset='true'>" +
                 "    <data source='data2' />" +
                 "  </none>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -150,11 +158,13 @@ public final class NoneTest {
     @Test
     public void shouldResetWhenEntityChangesIfSameEntity() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <none sameEntity='true'>" +
                 "    <data source='entity.data2' />" +
                 "  </none>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");

@@ -45,12 +45,14 @@ public final class SquareTest {
     @Test
     public void shouldEmitSquaresOfInputValues() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <square delimiter=',' name='square' prefix='{' postfix='}'>" +
                 "    <data source='data1' />" +
                 "    <data source='data2' />" +
                 "  </square>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "b");
@@ -103,11 +105,13 @@ public final class SquareTest {
     @Test
     public void shouldEmitSquaresOnFlushEvent() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <square delimiter=',' name='square' prefix='{' postfix='}' flushWith='d'>" +
                 "    <data source='d.1' />" +
                 "  </square>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("d");

@@ -42,6 +42,7 @@ public final class FileMapTest {
     private static final String MAPS = "org/metafacture/metamorph/maps/";
 
     private static final String MORPH =
+// @formatter:off
         "<rules>" +
         "  <data source='1'>" +
         "    <%s='map1' />" +
@@ -50,6 +51,7 @@ public final class FileMapTest {
         "<maps>" +
         "  <filemap name='map1' files='" + MAPS + "%s' %s/>" +
         "</maps>";
+// @formatter:on
 
     @Rule
     public final MockitoRule mockitoRule = MockitoJUnit.rule();

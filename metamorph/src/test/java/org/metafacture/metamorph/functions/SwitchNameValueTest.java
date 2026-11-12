@@ -44,6 +44,7 @@ public final class SwitchNameValueTest {
     @Test
     public void issue265_shouldWorkIfLastFunctionInCombineStatement() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='out' value='val'>" +
                 "    <data source='in'>" +
@@ -51,6 +52,7 @@ public final class SwitchNameValueTest {
                 "    </data>" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("in", "val");

@@ -45,6 +45,7 @@ public final class UniqueTest {
     @Test
     public void shouldAllowSelectingTheUniqueScope() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='data' name='inRecord'>" +
                 "    <unique />" +
@@ -53,6 +54,7 @@ public final class UniqueTest {
                 "    <unique in='entity' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("e");
@@ -97,6 +99,7 @@ public final class UniqueTest {
     @Test
     public void shouldAllowSelectingTheUniquePart() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <group name='name'>" +
                 "    <group>" +
@@ -126,6 +129,7 @@ public final class UniqueTest {
                 "    </group>" +
                 "  </group>" +
                 "</rules>",
+// @formatter:on
             i -> {
                 i.startRecord("1");
                 i.literal("data1", "d1");

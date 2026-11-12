@@ -45,6 +45,7 @@ public final class RegexpTest {
     @Test
     public void shouldMatchAndReplaceUsingRegularExpressions() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='001.' name='subject'>" +
                 "    <regexp match='.*' format='resource:P${0}' />" +
@@ -56,6 +57,7 @@ public final class RegexpTest {
                 "    <regexp match='.*' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("001");
@@ -76,11 +78,13 @@ public final class RegexpTest {
     @Test
     public void shouldIgnoreEmptyMatchGroups() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='s'>" +
                 "    <regexp match='aa(bb*)?(cc*)(dd*)' format='${1}${2}${3}' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("s", "aaccdd");
@@ -98,11 +102,13 @@ public final class RegexpTest {
     @Test
     public void shouldIgnoreNullValues() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='s'>" +
                 "    <regexp match='a.*' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("s", "aaccdd");

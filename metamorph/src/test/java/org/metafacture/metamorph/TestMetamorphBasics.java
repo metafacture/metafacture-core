@@ -43,12 +43,14 @@ public final class TestMetamorphBasics {
     @Test
     public void shouldUseCustomEntityMarker() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<metamorph version='1' entityMarker='~'" +
                 "    xmlns='http://www.culturegraph.org/metamorph'>" +
                 "  <rules>" +
                 "    <data source='entity~literal' name='data' />" +
                 "  </rules>" +
                 "</metamorph>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -67,10 +69,12 @@ public final class TestMetamorphBasics {
     @Test
     public void shouldHandleUnmatchedLiteralsInElseSource() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='Sylt' name='Hawaii' />" +
                 "  <data source='_else' />" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("Langeoog", "Moin");
@@ -100,6 +104,7 @@ public final class TestMetamorphBasics {
 
     private void testElseData(final String elseKeyword) {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <entity name='Germany'>" +
                 "    <data source='Germany.Sylt' name='Hawaii' />" +
@@ -107,6 +112,7 @@ public final class TestMetamorphBasics {
                 "  </entity>" +
                 "  <data source='" + elseKeyword + "'/>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("@id", "123");
@@ -141,9 +147,11 @@ public final class TestMetamorphBasics {
     @Test // checkstyle-disable-line JavaNCSS
     public void issue338_shouldPreserveSameEntitiesInElseNestedSource() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='_elseNested' />" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("lit1", "val1");
@@ -222,9 +230,11 @@ public final class TestMetamorphBasics {
     @Test
     public void issue374_shouldPropagateArrayMarkersInElseNestedSource() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='_elseNested' />" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("author[]");
@@ -274,9 +284,11 @@ public final class TestMetamorphBasics {
     @Test // checkstyle-disable-line JavaNCSS
     public void issue378_shouldOutputMoreThanTwoLevelsInElseNestedSource() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='_elseNested' />" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("mods");
@@ -356,6 +368,7 @@ public final class TestMetamorphBasics {
     @Test // checkstyle-disable-line JavaNCSS
     public void shouldOutputMoreThanTwoLevelsInElseNestedSourceWithModifications() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <entity name='name' flushWith='record'>" +
                 "    <data source='mods.name.displayForm.value' name='displayForm' />" +
@@ -363,6 +376,7 @@ public final class TestMetamorphBasics {
                 "  </entity>" +
                 "  <data source='_elseNested' />" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("mods");
@@ -442,12 +456,14 @@ public final class TestMetamorphBasics {
     @Test
     public void shouldHandleUnmatchedLiteralsAndEntitiesInElseNestedSource() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <entity name='USA' >" +
                 "    <data source='USA.Sylt' name='Hawaii' />" +
                 "  </entity>" +
                 "  <data source='_elseNested' />" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("@id", "123");
@@ -482,6 +498,7 @@ public final class TestMetamorphBasics {
     @Test // checkstyle-disable-line JavaNCSS
     public void shouldHandlePartiallyUnmatchedLiteralsAndEntitiesInElseNestedSource() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <entity name='USA1'>" +
                 "    <data source='USA1.Sylt' name='Hawaii' />" +
@@ -497,6 +514,7 @@ public final class TestMetamorphBasics {
                 "  </entity>" +
                 "  <data source='_elseNested' />" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("Shikotan", "Aekap");
@@ -593,6 +611,7 @@ public final class TestMetamorphBasics {
     @Test
     public void shouldNotHandleDataByElseNestedSourceIfDataBelongingToEntityIsRuledByMorph() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <entity name='USA1'>" +
                 "    <data source='USA1.Sylt' name='Hawaii' />" +
@@ -606,6 +625,7 @@ public final class TestMetamorphBasics {
                 "  </entity>" +
                 "  <data source='_elseNested' />" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("Shikotan", "Aekap");
@@ -656,6 +676,7 @@ public final class TestMetamorphBasics {
     @Test // checkstyle-disable-line JavaNCSS
     public void shouldHandleUseCaseSandboxElseNestedEntities() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                     "<entity name='85640' flushWith='85640.3' reset='true'>" +
                         "<data source='85640.u' name='u'>" +
@@ -685,6 +706,7 @@ public final class TestMetamorphBasics {
                     "</entity>" +
                     "<data source='_elseNested' />" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("ID1687931");
                     i.literal("leader", "00564nam a2200024 c 4500");
@@ -763,9 +785,11 @@ public final class TestMetamorphBasics {
     @Test
     public void shouldMatchCharacterWithQuestionMarkWildcard() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='lit-?' />" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("lit", "Moin");
@@ -785,9 +809,11 @@ public final class TestMetamorphBasics {
     @Test
     public void shouldMatchCharactersInCharacterClass() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='lit-[AB]' />" +
                 "</rules>",
+// @formatter:on
                 i ->  {
                     i.startRecord("1");
                     i.literal("lit-A", "Hawaii");
@@ -807,6 +833,7 @@ public final class TestMetamorphBasics {
     @Test
     public void shouldReplaceVariables() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<vars>" +
                 "  <var name='in' value='Honolulu' />" +
                 "  <var name='out' value='Hawaii' />" +
@@ -814,6 +841,7 @@ public final class TestMetamorphBasics {
                 "<rules>" +
                 "  <data source='$[in]' name='$[out]' />" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("Honolulu", "Aloha");
@@ -830,11 +858,13 @@ public final class TestMetamorphBasics {
     @Test
     public void shouldAllowTreatingEntityEndEventsAsLiterals() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='e1' />" +
                 "  <data source='e1.e2' />" +
                 "  <data source='e1.e2.d' />" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("entity end info");
                     i.startEntity("e1");
@@ -857,11 +887,13 @@ public final class TestMetamorphBasics {
     @Test
     public void shouldUrlencodeWithEscapeSpaceAsPlusAsDefault() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='d' >" +
                 "    <urlencode />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.literal("d", "café ");
                 },
@@ -874,11 +906,13 @@ public final class TestMetamorphBasics {
     @Test
     public void shouldUrlencodeAndNotEscapingSpaceAsPlus() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
             "<rules>" +
                 "  <data source='d' >" +
                 "    <urlencode plusforspace='false' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
             i -> {
                 i.literal("d", "café ");
             },

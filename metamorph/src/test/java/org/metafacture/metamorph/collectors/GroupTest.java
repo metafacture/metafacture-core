@@ -45,6 +45,7 @@ public final class GroupTest {
     @Test
     public void shouldGroupToOverwriteNameAndValueOfContaintStatements() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <group name='group' value='constant'>" +
                 "    <data source='data1' />" +
@@ -52,6 +53,7 @@ public final class GroupTest {
                 "  </group>" +
                 "  <data source='data3' />" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "skjdfh");

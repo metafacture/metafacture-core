@@ -44,6 +44,7 @@ public final class SplitTest {
     @Test
     public void issue265_shouldWorkIfLastFunctionInCombineStatement() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='out' value='${v}'>" +
                 "    <data source='in' name='v'>" +
@@ -51,6 +52,7 @@ public final class SplitTest {
                 "    </data>" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("in", "1 2");

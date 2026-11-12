@@ -45,12 +45,14 @@ public final class CombineTest {
     @Test
     public void shouldCombineTwoValues() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='combination' value='${one}${two}'>" +
                 "    <data source='data2' name='one' />" +
                 "    <data source='data1' name='two' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "a");
@@ -70,12 +72,14 @@ public final class CombineTest {
     @Test
     public void shouldOnlyCombineValuesFromTheSameEntityIfSet() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='combination' value='${A}${B}' sameEntity='true'>" +
                 "    <data source='entity.data1' name='B' />" +
                 "    <data source='entity.data2' name='A' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -107,12 +111,14 @@ public final class CombineTest {
     @Test
     public void shouldResetCombinedValueIfResetIsTrue() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='combination' value='${A}${B}' reset='true'>" +
                 "    <data source='data1' name='B' />" +
                 "    <data source='data2' name='A' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "b");
@@ -134,12 +140,14 @@ public final class CombineTest {
     @Test
     public void shouldEmitCurrentValueOnFlushEvent() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='combi' value='${one}${two}' flushWith='e' reset='true'>" +
                 "    <data source='e.l' name='one' />" +
                 "    <data source='e.m' name='two' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("e");
@@ -167,12 +175,14 @@ public final class CombineTest {
     @Test
     public void shouldNotEmitCurrentValueOnFlushEventIfIncomplete() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='combi' value='${one}${two}' flushWith='e' flushIncomplete='false' reset='true'>" +
                 "    <data source='e.l' name='one' />" +
                 "    <data source='e.m' name='two' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("e");
@@ -198,6 +208,7 @@ public final class CombineTest {
     @Test
     public void shouldPostprocessCombinedValue() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='outLit' value='${V}' flushWith='record'>" +
                 "    <data name='V' source='inLit' />" +
@@ -206,6 +217,7 @@ public final class CombineTest {
                 "    </postprocess>" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("inLit", "value");

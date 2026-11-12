@@ -235,12 +235,14 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.endRecord();
         simpleXmlEncoder.closeStream();
 
+// @formatter:off
         Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record>" +
                 "value" +
                 "</record>" +
                 "</records>",
+// @formatter:on
                 getResultXml());
     }
 
@@ -254,12 +256,14 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.closeStream();
 
         // SimpleXmlEncoder.Element.writeElement() does not write child elements with empty name
+// @formatter:off
         Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record>" +
                 "value" +
                 "</record>" +
                 "</records>",
+// @formatter:on
                 getResultXml());
     }
 
@@ -272,12 +276,14 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.endRecord();
         simpleXmlEncoder.closeStream();
 
+// @formatter:off
         Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record>" +
                 "<tag>value</tag>" +
                 "</record>" +
                 "</records>",
+// @formatter:on
                 getResultXml());
     }
 
@@ -291,12 +297,14 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.endRecord();
         simpleXmlEncoder.closeStream();
 
+// @formatter:off
         Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record>" +
                 "value" +
                 "</record>" +
                 "</records>",
+// @formatter:on
                 getResultXml());
     }
 
@@ -307,12 +315,14 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.endRecord();
         simpleXmlEncoder.closeStream();
 
+// @formatter:off
         Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record>" +
                 "<value>value</value>" +
                 "</record>" +
                 "</records>",
+// @formatter:on
                 getResultXml());
     }
 
@@ -324,12 +334,14 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.endRecord();
         simpleXmlEncoder.closeStream();
 
+// @formatter:off
         Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record attr=\"value\">" +
                 "<tag>value</tag>" +
                 "</record>" +
                 "</records>",
+// @formatter:on
                 getResultXml());
     }
 
@@ -344,6 +356,7 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.endRecord();
         simpleXmlEncoder.closeStream();
 
+// @formatter:off
         Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record>" +
@@ -352,6 +365,7 @@ public final class SimpleXmlEncoderTest {
                 "</~entity>" +
                 "</record>" +
                 "</records>",
+// @formatter:on
                 getResultXml());
     }
 
@@ -365,6 +379,7 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.endRecord();
         simpleXmlEncoder.closeStream();
 
+// @formatter:off
         Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record>" +
@@ -372,6 +387,7 @@ public final class SimpleXmlEncoderTest {
                 "<~attr>value</~attr>" +
                 "</record>" +
                 "</records>",
+// @formatter:on
                 getResultXml());
     }
 
@@ -386,12 +402,14 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.endRecord();
         simpleXmlEncoder.closeStream();
 
+// @formatter:off
         Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record attr=\"value\">" +
                 "<tag>value</tag>" +
                 "</record>" +
                 "</records>",
+// @formatter:on
                 getResultXml());
     }
 

@@ -44,12 +44,14 @@ public final class RangeTest {
     @Test
     public void shouldOutputAllnNmbersbBetweenFirstAndLastInclusive() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <range name='range' flushWith='record'>" +
                 "    <data source='first' />" +
                 "    <data source='last' />" +
                 "  </range>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1789");
@@ -72,12 +74,14 @@ public final class RangeTest {
     @Test
     public void shouldOutputFirstIfLastEqualsFirst() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <range name='range' flushWith='record'>" +
                 "    <data source='first' />" +
                 "    <data source='last' />" +
                 "  </range>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1989");
@@ -95,12 +99,14 @@ public final class RangeTest {
     @Test
     public void shouldOutputMultipleRanges() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <range name='range' flushWith='record'>" +
                 "    <data source='first' />" +
                 "    <data source='last' />" +
                 "  </range>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1789");
@@ -129,12 +135,14 @@ public final class RangeTest {
     @Test
     public void shouldRemoveDuplicateNumbersFromOverlappingRanges() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <range name='range' flushWith='record'>" +
                 "    <data source='first' />" +
                 "    <data source='last' />" +
                 "  </range>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1789");
@@ -157,12 +165,14 @@ public final class RangeTest {
     @Test
     public void shouldUseUserdefinedIncrement() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <range name='range' increment='3' flushWith='record'>" +
                 "    <data source='first' />" +
                 "    <data source='last' />" +
                 "  </range>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1789");
@@ -183,12 +193,14 @@ public final class RangeTest {
     @Test
     public void shouldAllowNegativeIncrements() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <range name='range' increment='-3' flushWith='record'>" +
                 "    <data source='first' />" +
                 "    <data source='last' />" +
                 "  </range>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1799");

@@ -43,6 +43,7 @@ public class TestMetamorphMacros {
     @Test
     public void shouldReplaceCallMacroWithMacro() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<macros>" +
                 "  <macro name='simple-macro'>" +
                 "    <data source='$[in]' name='$[out]' />" +
@@ -52,6 +53,7 @@ public class TestMetamorphMacros {
                 "  <call-macro name='simple-macro' in='in1' out='out1' />" +
                 "  <call-macro name='simple-macro' in='in2' out='out2' />" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("in1", "Hawaii");
@@ -70,6 +72,7 @@ public class TestMetamorphMacros {
     @Test
     public void shouldAllowCallMacroInEntities() {
         testSingleLiteral(true,
+// @formatter:off
                 "<macros>" +
                 "  <macro name='simple-macro'>" +
                 "    <data source='Honolulu' name='Honolulu' />" +
@@ -80,12 +83,14 @@ public class TestMetamorphMacros {
                 "    <call-macro name='simple-macro' />" +
                 "  </entity>" +
                 "</rules>"
+// @formatter:on
         );
     }
 
     @Test
     public void shouldAllowNestedMacros() {
         testSingleLiteral(true,
+// @formatter:off
                 "<macros>" +
                 "  <macro name='inner-macro'>" +
                 "    <data source='$[literal]' />" +
@@ -99,12 +104,14 @@ public class TestMetamorphMacros {
                 "<rules>" +
                 "  <call-macro name='outer-macro' entity='Hawaii' />" +
                 "</rules>"
+// @formatter:on
         );
     }
 
     @Test
     public void shouldAllowoForwardReferencingMacros() {
         testSingleLiteral(true,
+// @formatter:off
                 "<macros>" +
                 "  <macro name='referencing'>" +
                 "    <entity name='Hawaii'>" +
@@ -118,12 +125,14 @@ public class TestMetamorphMacros {
                 "<rules>" +
                 "  <call-macro name='referencing' />" +
                 "</rules>"
+// @formatter:on
         );
     }
 
     @Test
     public void shouldSupportVariablesInMacroParameters() {
         testSingleLiteral(true,
+// @formatter:off
                 "<macros>" +
                 "  <macro name='inner-macro'>" +
                 "    <data source='$[source]' />" +
@@ -137,29 +146,34 @@ public class TestMetamorphMacros {
                 "<rules>" +
                 "  <call-macro name='outer-macro' literal='Honolulu' />" +
                 "</rules>"
+// @formatter:on
         );
     }
 
     @Test
     public void issue227_shouldSupportXincludeForMacros() {
         testSingleLiteral(false,
+// @formatter:off
                 "<include href='issue227_should-support-xinclude-for-macros.xml'" +
                 "    xmlns='http://www.w3.org/2001/XInclude' />" +
                 "<rules>" +
                 "  <call-macro name='included-macro' />" +
                 "</rules>"
+// @formatter:on
         );
     }
 
     @Test
     public void shouldSupportXPointer() {
         testSingleLiteral(false,
+// @formatter:off
                 "<include href='should-support-xpointer.xml'" +
                 "    xmlns='http://www.w3.org/2001/XInclude'" +
                 "    xpointer='element(/1/1)' />" +
                 "<rules>" +
                 "  <call-macro name='included-macro' />" +
                 "</rules>"
+// @formatter:on
         );
     }
 

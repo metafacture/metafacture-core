@@ -45,6 +45,7 @@ public final class TestFunctionBasics {
     @Test
     public void shouldSupportFunctionChainingInDataStatements() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='data'>" +
                 "    <trim />" +
@@ -53,6 +54,7 @@ public final class TestFunctionBasics {
                 "    <regexp match='Abc' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data", " abc ");
@@ -75,6 +77,7 @@ public final class TestFunctionBasics {
     @Test
     public void shouldSupportFunctionChainingInEntities() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <choose>" +
                 "    <data source='data'>" +
@@ -85,6 +88,7 @@ public final class TestFunctionBasics {
                 "    </data>" +
                 "  </choose>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data", " abc ");
@@ -107,11 +111,13 @@ public final class TestFunctionBasics {
     @Test
     public void shouldUseJavaClassesAsFunctions() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='data'>" +
                 "    <java class='org.metafacture.metamorph.functions.Compose' prefix='Hula ' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data", "Aloha");
