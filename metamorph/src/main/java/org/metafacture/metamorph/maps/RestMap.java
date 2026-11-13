@@ -72,10 +72,11 @@ public final class RestMap extends AbstractReadOnlyMap<String, String> {
     }
 
     private String readFromUrl(final String targetUrl) throws IOException, URISyntaxException {
-        final InputStream inputStream = ResourceUtil.toURL(targetUrl.replace(" ", "%20")).openConnection()
-                .getInputStream();
+        final InputStream inputStream = ResourceUtil.toURL(targetUrl.replace(" ", "%20"))
+                .openConnection().getInputStream();
         try {
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName(charsetName)));
+            final BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(inputStream, Charset.forName(charsetName)));
             final StringBuilder stringBuffer = new StringBuilder();
             int value;
             while ((value = reader.read()) != -1) {

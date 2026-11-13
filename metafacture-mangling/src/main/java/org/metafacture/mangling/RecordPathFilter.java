@@ -183,7 +183,8 @@ public final class RecordPathFilter extends DefaultStreamPipe<StreamReceiver> {
 
     private void startRecordIfNeeded() {
         if (!recordStarted) {
-            getReceiver().startRecord(String.format(recordIdFormat, recordIdentifier, ++recordCount));
+            getReceiver()
+                    .startRecord(String.format(recordIdFormat, recordIdentifier, ++recordCount));
             recordStarted = true;
         }
     }

@@ -39,7 +39,8 @@ public class Isbn implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         final ISBN isbn = new ISBN();
 
         withOption(options, ERROR_STRING_OPTION, isbn::setErrorString);

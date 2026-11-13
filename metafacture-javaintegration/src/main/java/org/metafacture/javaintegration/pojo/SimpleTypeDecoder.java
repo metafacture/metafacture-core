@@ -33,7 +33,8 @@ class SimpleTypeDecoder implements TypeDecoder {
     }
 
     @Override
-    public void decodeToStream(final StreamReceiver streamReceiver, final String name, final Object object) {
+    public void decodeToStream(final StreamReceiver streamReceiver, final String name,
+            final Object object) {
         streamReceiver.literal(name, object.toString());
     }
 

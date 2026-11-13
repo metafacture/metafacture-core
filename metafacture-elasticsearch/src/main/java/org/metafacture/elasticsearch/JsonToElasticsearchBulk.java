@@ -46,7 +46,7 @@ import java.util.regex.Pattern;
 public class JsonToElasticsearchBulk extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
     private ObjectMapper mapper = new ObjectMapper();
-    private String[] idPath = new String[] {};
+    private String[] idPath = new String[]{};
     private String type;
     private String index;
 
@@ -64,14 +64,14 @@ public class JsonToElasticsearchBulk extends DefaultObjectPipe<String, ObjectRec
      * @param index The Elasticsearch index name
      */
     public JsonToElasticsearchBulk(final String type, final String index) {
-        this(new String[] {}, type, index);
+        this(new String[]{}, type, index);
     }
 
     /**
      * Creates an instance of {@link JsonToElasticsearchBulk}.
      *
      * @param idPath the key path of the JSON value to be used as the ID for the
-     *               record
+     *                   record
      * @param type   the Elasticsearch index type
      * @param index  the Elasticsearch index name
      */
@@ -97,12 +97,13 @@ public class JsonToElasticsearchBulk extends DefaultObjectPipe<String, ObjectRec
      * Creates an instance of {@link JsonToElasticsearchBulk}.
      *
      * @param idKey           the key of the JSON value to be used as the ID for the
-     *                        record
+     *                            record
      * @param type            the Elasticsearch index type
      * @param index           the Elasticsearch index name
      * @param entitySeparator the separator between entity names in idKey
      */
-    public JsonToElasticsearchBulk(final String idKey, final String type, final String index, final String entitySeparator) {
+    public JsonToElasticsearchBulk(final String idKey, final String type, final String index,
+            final String entitySeparator) {
         this(idKey.split(Pattern.quote(entitySeparator)), type, index);
     }
 
@@ -207,6 +208,7 @@ public class JsonToElasticsearchBulk extends DefaultObjectPipe<String, ObjectRec
 
             return super.put(key, newValue);
         }
+
     }
 
 }

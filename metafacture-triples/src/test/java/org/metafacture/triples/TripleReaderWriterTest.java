@@ -31,8 +31,8 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Tests for classes {@link TripleReader} and {@link TripleWriter}.
- * TODO: This test class should be split into two separated test classes.
+ * Tests for classes {@link TripleReader} and {@link TripleWriter}. TODO: This
+ * test class should be split into two separated test classes.
  *
  * @author Christoph Böhme
  *

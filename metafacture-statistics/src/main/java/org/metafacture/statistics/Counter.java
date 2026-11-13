@@ -23,7 +23,6 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
-
 /**
  * Counts the number of records and fields read. Used mainly for test cases and
  * debugging.
@@ -121,7 +120,8 @@ public final class Counter extends DefaultStreamPipe<StreamReceiver> {
     @Override
     public String toString() {
         final String streamClosed = isClosed() ? " Stream has been closed." : "";
-        return "counted " + numRecords + " records, " + numEntities + " entities, " + numLiterals + " literals." + streamClosed;
+        return "counted " + numRecords + " records, " + numEntities + " entities, " + numLiterals
+                + " literals." + streamClosed;
     }
 
 }

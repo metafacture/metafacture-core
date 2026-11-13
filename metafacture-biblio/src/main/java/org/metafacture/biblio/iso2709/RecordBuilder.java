@@ -33,10 +33,9 @@ public final class RecordBuilder {
 
     private static final char[] EMPTY_IDENTIFIER = new char[0];
     private static final char[] ID_FIELD_TAG = {'0', '0', '1'};
-    private static final Pattern REFERENCE_FIELD_TAG_PATTERN = Pattern.compile(
-            "^00[1-9a-zA-Z]$");
-    private static final Pattern DATA_FIELD_TAG_PATTERN = Pattern.compile(
-            "^(0[1-9a-zA-Z][0-9a-zA-Z])|([1-9a-zA-Z][0-9a-zA-Z]{2})$");
+    private static final Pattern REFERENCE_FIELD_TAG_PATTERN = Pattern.compile("^00[1-9a-zA-Z]$");
+    private static final Pattern DATA_FIELD_TAG_PATTERN = Pattern
+            .compile("^(0[1-9a-zA-Z][0-9a-zA-Z])|([1-9a-zA-Z][0-9a-zA-Z]{2})$");
 
     private final LabelBuilder label;
     private final DirectoryBuilder directory;
@@ -225,14 +224,15 @@ public final class RecordBuilder {
     }
 
     /**
-     * Appends a reference field in dependency of the current tag and of the
-     * current impl defined part.
+     * Appends a reference field in dependency of the current tag and of the current
+     * impl defined part.
      *
      * @param currentTag             char array of the current tag
      * @param currentImplDefinedPart char array of the current impl defined part
      * @param value                  String that is appended as a reference field
      */
-    public void appendReferenceField(final char[] currentTag, final char[] currentImplDefinedPart, final String value) {
+    public void appendReferenceField(final char[] currentTag, final char[] currentImplDefinedPart,
+            final String value) {
         requireNotInDataField();
         requireNotAppendingDataFields();
         Require.notNull(currentTag);
@@ -289,7 +289,8 @@ public final class RecordBuilder {
      * @param indicators             char array of the current indicators
      * @param currentImplDefinedPart char array of the current impl defined part
      */
-    public void startDataField(final char[] currentTag, final char[] indicators, final char[] currentImplDefinedPart) {
+    public void startDataField(final char[] currentTag, final char[] indicators,
+            final char[] currentImplDefinedPart) {
         requireNotInDataField();
         Require.notNull(currentTag);
         Require.notNull(indicators);
@@ -426,16 +427,12 @@ public final class RecordBuilder {
 
     @Override
     public String toString() {
-        return "label: " + label.toString() + "\n" +
-            "directory: " + directory.toString() + "\n" +
-            "fields: " + fields.toString();
+        return "label: " + label.toString() + "\n" + "directory: " + directory.toString() + "\n"
+                + "fields: " + fields.toString();
     }
 
     private enum AppendState {
-        ID_FIELD,
-        REFERENCE_FIELD,
-        DATA_FIELD,
-        IN_DATA_FIELD
+        ID_FIELD, REFERENCE_FIELD, DATA_FIELD, IN_DATA_FIELD
     }
 
 }

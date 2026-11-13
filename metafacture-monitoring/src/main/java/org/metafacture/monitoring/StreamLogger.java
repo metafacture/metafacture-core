@@ -29,9 +29,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Leaves the event stream untouched but logs it to the info log.
- * The {@link StreamReceiver} may be {@code null}.
- * In this case {@link StreamLogger} behaves as a sink, just logging.
+ * Leaves the event stream untouched but logs it to the info log. The
+ * {@link StreamReceiver} may be {@code null}. In this case {@link StreamLogger}
+ * behaves as a sink, just logging.
  *
  * @author Markus Michael Geipel
  *
@@ -40,8 +40,7 @@ import java.util.List;
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("log-stream")
-public final class StreamLogger
-        extends DefaultStreamPipe<StreamReceiver> {
+public final class StreamLogger extends DefaultStreamPipe<StreamReceiver> {
 
     public static final String DEFAULT_LEVEL = "INFO";
 
@@ -64,7 +63,7 @@ public final class StreamLogger
      *
      * @param logPrefix the prefix of the log messages
      */
-    @Deprecated/*(since="9.0", forRemoval=true)*/
+    @Deprecated /* (since="9.0", forRemoval=true) */
     public StreamLogger(final String logPrefix) {
         setPrefix(logPrefix);
     }

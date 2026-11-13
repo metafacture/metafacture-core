@@ -32,7 +32,9 @@ import java.util.regex.Pattern;
  *
  * @author Markus Michael Geipel
  */
-public abstract class AbstractCountProcessor extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
+public abstract class AbstractCountProcessor
+        extends
+            DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
 
     private static final Pattern KEY_SPLIT_PATTERN = Pattern.compile("&", Pattern.LITERAL);
 
@@ -85,7 +87,8 @@ public abstract class AbstractCountProcessor extends DefaultObjectPipe<Triple, O
         }
     }
 
-    protected abstract void processCount(String varA, String varB, int countA, int countB, int countAandB);
+    protected abstract void processCount(String varA, String varB, int countA, int countB,
+            int countAandB);
 
     private int getMarginal(final String string) {
         final Integer value = marginals.get(string);

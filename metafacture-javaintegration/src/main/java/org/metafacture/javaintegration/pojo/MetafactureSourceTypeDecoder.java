@@ -33,7 +33,8 @@ class MetafactureSourceTypeDecoder implements TypeDecoder {
     }
 
     @Override
-    public void decodeToStream(final StreamReceiver streamReceiver, final String name, final Object object) {
+    public void decodeToStream(final StreamReceiver streamReceiver, final String name,
+            final Object object) {
         final MetafactureSource metafactureSource = (MetafactureSource) object;
         streamReceiver.startEntity(name);
         metafactureSource.sendToStream(streamReceiver);

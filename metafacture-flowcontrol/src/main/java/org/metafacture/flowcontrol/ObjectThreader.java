@@ -83,7 +83,8 @@ public class ObjectThreader<T> implements Tee<ObjectReceiver<T>>, ObjectPipe<T, 
     }
 
     @Override
-    public <R extends ObjectReceiver<T>> R setReceivers(final R receiver, final ObjectReceiver<T> lateralReceiver) {
+    public <R extends ObjectReceiver<T>> R setReceivers(final R receiver,
+            final ObjectReceiver<T> lateralReceiver) {
         receivers.clear();
         addReceiver(receiver);
         addReceiver(lateralReceiver);

@@ -77,8 +77,8 @@ public final class Square extends AbstractFlushingCollect {
             final String last = values.remove(values.size() - 1);
             for (final String value : values) {
                 getNamedValueReceiver().receive(getName(),
-                        prefix + value + delimiter + last + postfix, this,
-                        getRecordCount(), getEntityCount());
+                        prefix + value + delimiter + last + postfix, this, getRecordCount(),
+                        getEntityCount());
             }
         }
     }

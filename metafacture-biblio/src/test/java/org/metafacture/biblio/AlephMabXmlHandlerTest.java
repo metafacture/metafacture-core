@@ -63,7 +63,7 @@ public final class AlephMabXmlHandlerTest {
         mabXmlHandler.endElement(null, "leader", "");
         mabXmlHandler.endElement(null, "ListRecords", "");
 
-        final InOrder ordered    = Mockito.inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).endRecord();
         ordered.verifyNoMoreInteractions();
@@ -81,7 +81,7 @@ public final class AlephMabXmlHandlerTest {
         mabXmlHandler.endElement(null, "controlfield", "");
         mabXmlHandler.endElement(null, "ListRecords", "");
 
-        final InOrder ordered    = Mockito.inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("FMT");
         ordered.verify(receiver).literal("", data);
@@ -108,7 +108,7 @@ public final class AlephMabXmlHandlerTest {
         mabXmlHandler.endElement(null, "datafield", "");
         mabXmlHandler.endElement(null, "ListRecords", "");
 
-        final InOrder ordered    = Mockito.inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("001ab");
         ordered.verify(receiver).literal("a", data);

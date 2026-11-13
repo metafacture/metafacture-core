@@ -59,7 +59,8 @@ public interface FixFunction {
      * @param key      the option name
      * @param consumer the consumer to perform
      */
-    default void withOption(final Map<String, String> options, final String key, final Consumer<String> consumer) {
+    default void withOption(final Map<String, String> options, final String key,
+            final Consumer<String> consumer) {
         withOption(options, key, consumer, Map::get);
     }
 
@@ -72,23 +73,25 @@ public interface FixFunction {
      * @param consumer the consumer to perform
      * @param function the function to retrieve the option
      */
-    default <T> void withOption(final Map<String, String> options, final String key, final Consumer<T> consumer, final BiFunction<Map<String, String>, String, T> function) {
+    default <T> void withOption(final Map<String, String> options, final String key,
+            final Consumer<T> consumer, final BiFunction<Map<String, String>, String, T> function) {
         if (options.containsKey(key)) {
             consumer.accept(function.apply(options, key));
         }
     }
 
     /**
-     * Performs the consumer on an object writer configured with the given
-     * options.
+     * Performs the consumer on an object writer configured with the given options.
      *
      * @param options  the options
      * @param operator the optional operator to transform the destination
      * @param consumer the consumer to perform
      */
-    default void withWriter(final Map<String, String> options, final UnaryOperator<String> operator, final Consumer<ObjectWriter<String>> consumer) {
+    default void withWriter(final Map<String, String> options, final UnaryOperator<String> operator,
+            final Consumer<ObjectWriter<String>> consumer) {
         final String destination = options.getOrDefault("destination", ObjectWriter.STDOUT);
-        final ObjectWriter<String> writer = new ObjectWriter<>(operator != null ? operator.apply(destination) : destination);
+        final ObjectWriter<String> writer = new ObjectWriter<>(
+                operator != null ? operator.apply(destination) : destination);
 
         withOption(options, "append", writer::setAppendIfFileExists, this::getBoolean);
         withOption(options, "compression", writer::setCompression);
@@ -106,8 +109,8 @@ public interface FixFunction {
     }
 
     /**
-     * Performs the consumer on an object writer configured with the given
-     * options and format directives in the destination.
+     * Performs the consumer on an object writer configured with the given options
+     * and format directives in the destination.
      *
      * @param metafix       the Metafix instance
      * @param record        the record
@@ -115,14 +118,16 @@ public interface FixFunction {
      * @param scopedCounter the counter
      * @param consumer      the consumer to perform
      */
-    default void withWriter(final Metafix metafix, final Record record, final Map<String, String> options, final Map<Metafix, LongAdder> scopedCounter, final Consumer<Consumer<String>> consumer) {
+    default void withWriter(final Metafix metafix, final Record record,
+            final Map<String, String> options, final Map<Metafix, LongAdder> scopedCounter,
+            final Consumer<Consumer<String>> consumer) {
         final Value idValue = record.get(options.getOrDefault("id", StandardEventNames.ID));
 
         final LongAdder counter = scopedCounter.computeIfAbsent(metafix, k -> new LongAdder());
         counter.increment();
 
-        final UnaryOperator<String> formatter = s -> String.format(s,
-                counter.sum(), Value.isNull(idValue) ? "" : idValue.toString());
+        final UnaryOperator<String> formatter = s -> String.format(s, counter.sum(),
+                Value.isNull(idValue) ? "" : idValue.toString());
 
         final String prefix = formatter.apply(options.getOrDefault("prefix", ""));
         withWriter(options, formatter, w -> consumer.accept(s -> w.process(prefix + s)));
@@ -131,8 +136,8 @@ public interface FixFunction {
     /**
      * Parses the specified option as a Boolean.
      *
-     * @param options  the options
-     * @param key      the option name
+     * @param options the options
+     * @param key     the option name
      *
      * @return the Boolean
      */
@@ -143,8 +148,8 @@ public interface FixFunction {
     /**
      * Parses the specified option as an Integer.
      *
-     * @param options  the options
-     * @param key      the option name
+     * @param options the options
+     * @param key     the option name
      *
      * @return the Integer
      */
@@ -196,22 +201,21 @@ public interface FixFunction {
      */
     default Stream<Value> flatten(final Stream<Value> stream) {
         return stream.flatMap(v -> v.extractType((m, c) -> m
-                    .ifArray(a -> c.accept(flatten(a.stream())))
-                    .orElse(w -> c.accept(Stream.of(w)))
-        ));
+                .ifArray(a -> c.accept(flatten(a.stream()))).orElse(w -> c.accept(Stream.of(w)))));
     }
 
     /**
      * Checks whether the given field's parent field exists in the record.
      *
      * @param record the record
-     * @param field the field
+     * @param field  the field
      *
      * @return true if the given field's parent field exists in the record
      */
     default boolean parentFieldExists(final Record record, final String field) {
         final FixPath parentPath = new FixPath(field).getParentPath();
-        return parentPath == null || !parentPath.isAddingToArray() && record.containsPath(parentPath.toString());
+        return parentPath == null
+                || !parentPath.isAddingToArray() && record.containsPath(parentPath.toString());
     }
 
 }

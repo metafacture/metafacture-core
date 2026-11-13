@@ -69,8 +69,7 @@ public final class TuplesTest {
                     i.literal("3", "Y");
                     i.literal("2", "D");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("product", "aA");
                     o.get().literal("product", "bA");
@@ -87,8 +86,7 @@ public final class TuplesTest {
                     o.get().literal("product", "cDY");
                     o.get().literal("product", "dDY");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -118,8 +116,7 @@ public final class TuplesTest {
                     i.literal("3", "Y");
                     i.literal("2", "D");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().endRecord();
                     o.get().startRecord("2");
@@ -132,8 +129,7 @@ public final class TuplesTest {
                     o.get().literal("product", "cDY");
                     o.get().literal("product", "dDY");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -153,14 +149,12 @@ public final class TuplesTest {
                     i.literal("1", "a");
                     i.literal("1", "b");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("product", "a");
                     o.get().literal("product", "b");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

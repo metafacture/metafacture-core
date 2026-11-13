@@ -74,7 +74,8 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 
         final String mapDefault = resolvedAttribute(mapNode, AttributeName.DEFAULT);
 
-        for (Node entryNode = mapNode.getFirstChild(); entryNode != null; entryNode = entryNode.getNextSibling()) {
+        for (Node entryNode = mapNode.getFirstChild(); entryNode != null; entryNode = entryNode
+                .getNextSibling()) {
             final String entryName = resolvedAttribute(entryNode, AttributeName.NAME);
             final String entryValue = resolvedAttribute(entryNode, AttributeName.VALUE);
             metamorph.putValue(mapName, entryName, entryValue);
@@ -94,8 +95,8 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
         if (mapNode.getLocalName().equals(JAVAMAP)) {
             final String className = resolvedAttribute(mapNode, AttributeName.CLASS);
             attributes.remove(AttributeName.CLASS.getString());
-            final ConfigurableClass<? extends Map> mapClass =
-                    ReflectionUtil.loadClass(className, Map.class);
+            final ConfigurableClass<? extends Map> mapClass = ReflectionUtil.loadClass(className,
+                    Map.class);
             map = mapClass.newInstance(attributes);
         }
         else if (getMapFactory().containsKey(mapNode.getLocalName())) {
@@ -121,7 +122,8 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
             throw new MorphBuildException("Function " + className + NOT_FOUND, e);
         }
         if (Function.class.isAssignableFrom(clazz)) {
-            getFunctionFactory().registerClass(resolvedAttribute(functionDefNode, AttributeName.NAME),
+            getFunctionFactory().registerClass(
+                    resolvedAttribute(functionDefNode, AttributeName.NAME),
                     (Class<Function>) clazz);
         }
         else {
@@ -196,8 +198,8 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 
     @Override
     protected void enterName(final Node nameNode) {
-        assert stack.peek().getPipe() instanceof Entity :
-                "statement `name` is only allowed in `entity` statements";
+        assert stack.peek().getPipe() instanceof Entity
+                : "statement `name` is only allowed in `entity` statements";
 
         stack.peek().setInEntityName(true);
     }
@@ -209,8 +211,8 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 
     @Override
     protected void enterIf(final Node nameNode) {
-        assert stack.peek().getPipe() instanceof ConditionAware :
-                "statement `if` is not allowed in the current element";
+        assert stack.peek().getPipe() instanceof ConditionAware
+                : "statement `if` is not allowed in the current element";
 
         stack.peek().setInCondition(true);
     }
@@ -228,13 +230,11 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
         attributes.remove(AttributeName.FLUSH_WITH.getString());
 
         if (!getCollectFactory().containsKey(node.getLocalName())) {
-            throw new MorphBuildException("Collector " + node.getLocalName() +
-                    NOT_FOUND);
+            throw new MorphBuildException("Collector " + node.getLocalName() + NOT_FOUND);
         }
         final Collect collect;
         if (ENTITY.equals(node.getLocalName())) {
-            collect = getCollectFactory().newInstance(node.getLocalName(), attributes,
-                    metamorph);
+            collect = getCollectFactory().newInstance(node.getLocalName(), attributes, metamorph);
         }
         else {
             collect = getCollectFactory().newInstance(node.getLocalName(), attributes);
@@ -291,7 +291,8 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
     private void registerFlush(final String flushWith, final FlushListener flushListener) {
         final String[] keysSplit = OR_PATTERN.split(flushWith);
         for (final String key : keysSplit) {
-            final FlushListener interceptor = interceptorFactory.createFlushInterceptor(flushListener);
+            final FlushListener interceptor = interceptorFactory
+                    .createFlushInterceptor(flushListener);
             final FlushListener delegate;
             if (interceptor == null) {
                 delegate = flushListener;
@@ -313,11 +314,10 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
         final Function function;
         final Map<String, String> attributes = resolvedAttributeMap(functionNode);
         if (functionNode.getLocalName().equals(JAVA)) {
-            final String className = resolvedAttribute(functionNode,
-                    AttributeName.CLASS);
+            final String className = resolvedAttribute(functionNode, AttributeName.CLASS);
             attributes.remove(AttributeName.CLASS.getString());
-            final ConfigurableClass<? extends Function> functionClass =
-                    ReflectionUtil.loadClass(className, Function.class);
+            final ConfigurableClass<? extends Function> functionClass = ReflectionUtil
+                    .loadClass(className, Function.class);
             function = functionClass.newInstance(attributes);
         }
         else if (getFunctionFactory().containsKey(functionNode.getLocalName())) {
@@ -336,8 +336,9 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
         function.setMaps(metamorph);
 
         // add key value entries...
-        for (Node mapEntryNode = functionNode.getFirstChild(); mapEntryNode != null; mapEntryNode = mapEntryNode
-                .getNextSibling()) {
+        for (Node mapEntryNode = functionNode
+                .getFirstChild(); mapEntryNode != null; mapEntryNode = mapEntryNode
+                        .getNextSibling()) {
             final String entryName = resolvedAttribute(mapEntryNode, AttributeName.NAME);
             final String entryValue = resolvedAttribute(mapEntryNode, AttributeName.VALUE);
             function.putValue(entryName, entryValue);
@@ -360,8 +361,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
     }
 
     private XmlSourceLocation getSourceLocation(final Node node) {
-        return new XmlSourceLocation((Location) node.getUserData(
-                Location.USER_DATA_ID));
+        return new XmlSourceLocation((Location) node.getUserData(Location.USER_DATA_ID));
     }
 
     private static final class StackFrame {

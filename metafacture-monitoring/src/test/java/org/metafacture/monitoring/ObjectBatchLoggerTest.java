@@ -96,7 +96,8 @@ public final class ObjectBatchLoggerTest extends TestHelpers {
 
     @Test
     public void shouldLogWithCustomFormat() {
-        objectBatchLogger = new ObjectBatchLogger<>("records=${records}, totalRecords=${totalRecords}, batches=${batches}, batchSize=${batchSize}");
+        objectBatchLogger = new ObjectBatchLogger<>(
+                "records=${records}, totalRecords=${totalRecords}, batches=${batches}, batchSize=${batchSize}");
 
         objectBatchLogger.process("object");
         objectBatchLogger.closeStream();

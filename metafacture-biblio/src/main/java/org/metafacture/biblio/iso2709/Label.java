@@ -35,17 +35,16 @@ class Label {
     }
 
     RecordFormat getRecordFormat() {
-        return RecordFormat.create()
-                .withIndicatorLength(getIndicatorLength())
+        return RecordFormat.create().withIndicatorLength(getIndicatorLength())
                 .withIdentifierLength(getIdentifierLength())
                 .withFieldLengthLength(getFieldLengthLength())
                 .withFieldStartLength(getFieldStartLength())
-                .withImplDefinedPartLength(getImplDefinedPartLength())
-                .build();
+                .withImplDefinedPartLength(getImplDefinedPartLength()).build();
     }
 
     int getRecordLength() {
-        return buffer.parseIntAt(Iso2709Constants.RECORD_LENGTH_START, Iso2709Constants.RECORD_LENGTH_LENGTH);
+        return buffer.parseIntAt(Iso2709Constants.RECORD_LENGTH_START,
+                Iso2709Constants.RECORD_LENGTH_LENGTH);
     }
 
     char getRecordStatus() {
@@ -53,7 +52,8 @@ class Label {
     }
 
     char[] getImplCodes() {
-        return buffer.charsAt(Iso2709Constants.IMPL_CODES_START, Iso2709Constants.IMPL_CODES_LENGTH);
+        return buffer.charsAt(Iso2709Constants.IMPL_CODES_START,
+                Iso2709Constants.IMPL_CODES_LENGTH);
     }
 
     int getIndicatorLength() {
@@ -65,11 +65,13 @@ class Label {
     }
 
     int getBaseAddress() {
-        return buffer.parseIntAt(Iso2709Constants.BASE_ADDRESS_START, Iso2709Constants.BASE_ADDRESS_LENGTH);
+        return buffer.parseIntAt(Iso2709Constants.BASE_ADDRESS_START,
+                Iso2709Constants.BASE_ADDRESS_LENGTH);
     }
 
     char[] getSystemChars() {
-        return buffer.charsAt(Iso2709Constants.SYSTEM_CHARS_START, Iso2709Constants.SYSTEM_CHARS_LENGTH);
+        return buffer.charsAt(Iso2709Constants.SYSTEM_CHARS_START,
+                Iso2709Constants.SYSTEM_CHARS_LENGTH);
     }
 
     int getFieldLengthLength() {

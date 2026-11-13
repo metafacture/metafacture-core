@@ -43,6 +43,7 @@ public final class Occurrence extends AbstractStatefulFunction {
         public boolean accept(final int value) {
             return true;
         }
+
     };
 
     private final Map<String, String> variables = new HashMap<>();
@@ -142,6 +143,7 @@ public final class Occurrence extends AbstractStatefulFunction {
             public boolean accept(final int value) {
                 return value == number;
             }
+
         };
     }
 
@@ -151,6 +153,7 @@ public final class Occurrence extends AbstractStatefulFunction {
             public boolean accept(final int value) {
                 return value < number;
             }
+
         };
     }
 
@@ -160,6 +163,7 @@ public final class Occurrence extends AbstractStatefulFunction {
             public boolean accept(final int value) {
                 return value > number;
             }
+
         };
     }
 
@@ -168,6 +172,7 @@ public final class Occurrence extends AbstractStatefulFunction {
      */
     private interface IntFilter {
         boolean accept(int value);
+
     }
 
 }

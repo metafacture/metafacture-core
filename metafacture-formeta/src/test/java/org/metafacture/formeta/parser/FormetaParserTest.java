@@ -34,39 +34,25 @@ import org.mockito.MockitoAnnotations;
  */
 public final class FormetaParserTest {
 
-    private static final String CONCISE_RECORD =
-            "1{lit1:value 1,' ent1'{lit2:value \\{x\\},lit\\\\3:'value 2 '}lit4:value \\'3\\'}";
+    private static final String CONCISE_RECORD = "1{lit1:value 1,' ent1'{lit2:value \\{x\\},lit\\\\3:'value 2 '}lit4:value \\'3\\'}";
 
-    private static final String VERBOSE_RECORD =
-            "1{ lit1: 'value 1', ' ent1'{ lit2: 'value {x}', 'lit\\\\3': 'value 2 ' }, lit4: 'value \\'3\\'' }";
+    private static final String VERBOSE_RECORD = "1{ lit1: 'value 1', ' ent1'{ lit2: 'value {x}', 'lit\\\\3': 'value 2 ' }, lit4: 'value \\'3\\'' }";
 
-    private static final String MULTILINE_RECORD =
-            "1{\n" +
-            "  lit1: 'value 1',\n" +
-            "  ' ent1'{\n" +
-            "    lit2: 'value {x}',\n" +
-            "    'lit\\\\3': 'value 2 '\n" +
-            "  },\n" +
-            "  lit4: 'value \\'3\\''\n" +
-            "}";
+    private static final String MULTILINE_RECORD = "1{\n" + "  lit1: 'value 1',\n" + "  ' ent1'{\n"
+            + "    lit2: 'value {x}',\n" + "    'lit\\\\3': 'value 2 '\n" + "  },\n"
+            + "  lit4: 'value \\'3\\''\n" + "}";
 
-    private static final String BROKEN_RECORD =
-            "1 { lit1: 'value 1',";
+    private static final String BROKEN_RECORD = "1 { lit1: 'value 1',";
 
-    private static final String INNER_RECORD =
-            "inner{ lit1: value 1, ent1{ lit2: 'hello worlds\\'s end!' } }";
+    private static final String INNER_RECORD = "inner{ lit1: value 1, ent1{ lit2: 'hello worlds\\'s end!' } }";
 
-    private static final String OUTER_RECORD =
-            "outer{" +
-            "nested:inner\\{ lit1\\: value 1\\, ent1\\{ lit2\\: \\'hello worlds\\\\\\'s end!\\' \\} \\}," +
-            "note:I can has nezted records" +
-            "}";
+    private static final String OUTER_RECORD = "outer{"
+            + "nested:inner\\{ lit1\\: value 1\\, ent1\\{ lit2\\: \\'hello worlds\\\\\\'s end!\\' \\} \\},"
+            + "note:I can has nezted records" + "}";
 
-    private static final String PARTIAL_RECORD =
-            "lit1: 'value 1', ' ent1'{ lit2: 'value {x}', 'lit\\\\3': 'value 2 ' }, lit4: 'value \\'3\\'' ";
+    private static final String PARTIAL_RECORD = "lit1: 'value 1', ' ent1'{ lit2: 'value {x}', 'lit\\\\3': 'value 2 ' }, lit4: 'value \\'3\\'' ";
 
-    private static final String BROKEN_PARTIAL_RECORD =
-            "lit1: 'value 1', ' ent1'{ lit2: 'value {x}'";
+    private static final String BROKEN_PARTIAL_RECORD = "lit1: 'value 1', ' ent1'{ lit2: 'value {x}'";
 
     private FormetaParser parser;
 

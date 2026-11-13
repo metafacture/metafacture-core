@@ -296,13 +296,16 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         init();
     }
 
-    private void buildPipeline(final InputSource inputSource, final Map<String, String> vars, final InterceptorFactory interceptorFactory) {
+    private void buildPipeline(final InputSource inputSource, final Map<String, String> vars,
+            final InterceptorFactory interceptorFactory) {
         try {
             final MorphBuilder builder = new MorphBuilder(this, interceptorFactory);
             builder.walk(inputSource, vars);
         }
         catch (final RuntimeException e) { // checkstyle-disable-line IllegalCatch
-            throw new MetamorphException("Error while building the Metamorph transformation pipeline: " + e.getMessage(), e);
+            throw new MetamorphException(
+                    "Error while building the Metamorph transformation pipeline: " + e.getMessage(),
+                    e);
         }
     }
 
@@ -321,6 +324,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
             public void literal(final String name, final String value) {
                 dispatch(name, value, getElseSources(), false);
             }
+
         });
     }
 
@@ -351,7 +355,8 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
                 elseSources.add(data);
             }
             else {
-                LOG.externalWarn("Only one of '_else', '_elseFlattened' and '_elseNested' is allowed. Ignoring the superflous ones.");
+                LOG.externalWarn(
+                        "Only one of '_else', '_elseFlattened' and '_elseNested' is allowed. Ignoring the superflous ones.");
             }
         }
         else {
@@ -442,18 +447,21 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         outputStreamReceiver.closeStream();
     }
 
-    private void dispatch(final String path, final String value, final List<NamedValueReceiver> fallbackReceiver, final boolean endEntity) {
+    private void dispatch(final String path, final String value,
+            final List<NamedValueReceiver> fallbackReceiver, final boolean endEntity) {
         final List<NamedValueReceiver> matchingData = getData(path);
 
         if (matchingData != null) {
             send(path, value, matchingData);
         }
         else if (fallbackReceiver != null) {
-            dispatchFallback(path, endEntity, k -> send(escapeFeedbackChar(k), value, fallbackReceiver));
+            dispatchFallback(path, endEntity,
+                    k -> send(escapeFeedbackChar(k), value, fallbackReceiver));
         }
     }
 
-    private void dispatchFallback(final String path, final boolean endEntity, final Consumer<String> consumer) {
+    private void dispatchFallback(final String path, final boolean endEntity,
+            final Consumer<String> consumer) {
         final EntityEntry entityEntry = elseNested ? elseNestedEntities.peek() : null;
 
         if (endEntity) {
@@ -488,7 +496,8 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         return matchingData != null && !matchingData.isEmpty() ? matchingData : null;
     }
 
-    private void send(final String path, final String value, final List<NamedValueReceiver> dataList) {
+    private void send(final String path, final String value,
+            final List<NamedValueReceiver> dataList) {
         for (final NamedValueReceiver data : dataList) {
             try {
                 data.receive(path, value, null, recordCount, currentEntityCount);
@@ -508,8 +517,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     }
 
     /**
-     * @param streamReceiver
-     *            the outputHandler to set
+     * @param streamReceiver the outputHandler to set
      */
     @Override
     public <R extends StreamReceiver> R setReceiver(final R streamReceiver) {
@@ -530,9 +538,11 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     }
 
     @Override
-    public void receive(final String name, final String value, final NamedValueSource source, final int unusedRecordCount, final int unusedEntityCount) {
+    public void receive(final String name, final String value, final NamedValueSource source,
+            final int unusedRecordCount, final int unusedEntityCount) {
         if (null == name) {
-            throw new IllegalArgumentException("encountered literal with name='null'. This indicates a bug in a function or a collector.");
+            throw new IllegalArgumentException(
+                    "encountered literal with name='null'. This indicates a bug in a function or a collector.");
         }
 
         if (startsWithFeedbackChar(name)) {
@@ -541,7 +551,8 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         }
 
         String unescapedName = name;
-        if (name.length() > 1 && name.charAt(0) == ESCAPE_CHAR && (name.charAt(1) == FEEDBACK_CHAR || name.charAt(1) == ESCAPE_CHAR)) {
+        if (name.length() > 1 && name.charAt(0) == ESCAPE_CHAR
+                && (name.charAt(1) == FEEDBACK_CHAR || name.charAt(1) == ESCAPE_CHAR)) {
             unescapedName = name.substring(1);
         }
         outputStreamReceiver.literal(unescapedName, value);
@@ -596,7 +607,8 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 
     @Override
     public void setNamedValueReceiver(final NamedValueReceiver receiver) {
-        throw new UnsupportedOperationException("The Metamorph object cannot act as a NamedValueSender");
+        throw new UnsupportedOperationException(
+                "The Metamorph object cannot act as a NamedValueSender");
     }
 
     @Override

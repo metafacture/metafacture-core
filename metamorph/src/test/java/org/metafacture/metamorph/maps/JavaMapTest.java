@@ -61,14 +61,12 @@ public final class JavaMapTest {
                     i.literal("1", "gw");
                     i.literal("1", "fj");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("1", "Germany");
                     o.get().literal("1", "Fiji");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

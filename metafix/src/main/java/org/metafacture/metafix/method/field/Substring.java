@@ -38,14 +38,17 @@ public class Substring implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         final int offset = getInteger(params, 1);
         final Integer end = params.size() > 2 ? offset + getInteger(params, 2) : null;
         // TODO: final String replacement = params.size() > 3 ? params.get(3) : null;
 
         record.transform(params.get(0), s -> {
             final int length = s.length();
-            return offset > length ? s : end == null || end > length ? s.substring(offset) : s.substring(offset, end);
+            return offset > length
+                    ? s
+                    : end == null || end > length ? s.substring(offset) : s.substring(offset, end);
         });
     }
 

@@ -24,17 +24,17 @@ package org.metafacture.biblio.marc21;
 public final class Marc21EventNames {
 
     /**
-     * Name of the <i>literal</i> event which contains the value of the
-     * <i>type</i> attribute of the <i>record</i> element.
+     * Name of the <i>literal</i> event which contains the value of the <i>type</i>
+     * attribute of the <i>record</i> element.
      */
     public static final String MARCXML_TYPE_LITERAL = "type";
 
     /**
-     * Name of the <i>entity</i> event which contains the bibliographic
-     * information in the record leader.
+     * Name of the <i>entity</i> event which contains the bibliographic information
+     * in the record leader.
      *
      * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-     * Standard: Record Leader</a>
+     *      Standard: Record Leader</a>
      */
     public static final String LEADER_ENTITY = "leader";
 
@@ -46,20 +46,19 @@ public final class Marc21EventNames {
      * The record status is specified at position 5 in the record leader.
      *
      * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-     * Standard: Record Leader</a>
+     *      Standard: Record Leader</a>
      */
     public static final String RECORD_STATUS_LITERAL = "status";
 
     /**
-     * Name of the <i>literal</i> event emitted for the bibliographic level
-     * field.
+     * Name of the <i>literal</i> event emitted for the bibliographic level field.
      * <p>
      * The name of the literal is {@value #BIBLIOGRAPHIC_LEVEL_LITERAL}.
      * <p>
      * The bibliographic level is specified at position 7 in the record leader.
      *
      * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-     * Standard: Record Leader</a>
+     *      Standard: Record Leader</a>
      */
     public static final String BIBLIOGRAPHIC_LEVEL_LITERAL = "bibliographicLevel";
 
@@ -71,7 +70,7 @@ public final class Marc21EventNames {
      * The type of control is specified at position 8 in the record leader.
      *
      * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-     * Standard: Record Leader</a>
+     *      Standard: Record Leader</a>
      */
     public static final String TYPE_OF_CONTROL_LITERAL = "typeOfControl";
 
@@ -81,11 +80,10 @@ public final class Marc21EventNames {
      * <p>
      * The name of the literal is {@value #CHARACTER_CODING_LITERAL}.
      * <p>
-     * The character coding scheme is specified at position 9 in the record
-     * leader.
+     * The character coding scheme is specified at position 9 in the record leader.
      *
      * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-     * Standard: Record Leader</a>
+     *      Standard: Record Leader</a>
      */
     public static final String CHARACTER_CODING_LITERAL = "characterCodingScheme";
 
@@ -97,13 +95,13 @@ public final class Marc21EventNames {
      * The encoding level is specified at position 17 in the record leader.
      *
      * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-     * Standard: Record Leader</a>
+     *      Standard: Record Leader</a>
      */
     public static final String ENCODING_LEVEL_LITERAL = "encodingLevel";
 
     /**
-     * Name of the <i>literal</i> event emitted for the descriptive cataloging
-     * form field.
+     * Name of the <i>literal</i> event emitted for the descriptive cataloging form
+     * field.
      * <p>
      * The name of the literal is {@value #CATALOGING_FORM_LITERAL}.
      * <p>
@@ -111,21 +109,21 @@ public final class Marc21EventNames {
      * leader.
      *
      * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-     * Standard: Record Leader</a>
+     *      Standard: Record Leader</a>
      */
     public static final String CATALOGING_FORM_LITERAL = "catalogingForm";
 
     /**
-     * Name of the <i>literal</i> event emitted for the multipart resource
-     * record level field.
+     * Name of the <i>literal</i> event emitted for the multipart resource record
+     * level field.
      * <p>
      * The name of the literal is {@value #MULTIPART_LEVEL_LITERAL}.
      * <p>
-     * The multipart resource record level is specified at position 19 in the
-     * record leader.
+     * The multipart resource record level is specified at position 19 in the record
+     * leader.
      *
      * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-     * Standard: Record Leader</a>
+     *      Standard: Record Leader</a>
      */
     public static final String MULTIPART_LEVEL_LITERAL = "multipartLevel";
 
@@ -137,7 +135,7 @@ public final class Marc21EventNames {
      * The type of record is specified at position 6 in the record leader.
      *
      * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-     * Standard: Record Leader</a>
+     *      Standard: Record Leader</a>
      */
     public static final String RECORD_TYPE_LITERAL = "type";
 

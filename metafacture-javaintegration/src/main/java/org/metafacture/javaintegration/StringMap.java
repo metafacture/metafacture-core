@@ -24,12 +24,16 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Collects the received results in a {@link Map}. Duplicate names are thus lost.
+ * Collects the received results in a {@link Map}. Duplicate names are thus
+ * lost.
  *
  * @author Markus Michael Geipel
  *
  */
-public final class StringMap extends DefaultStreamReceiver implements Map<String, String>, Collector<Map<String, String>> {
+public final class StringMap extends DefaultStreamReceiver
+        implements
+            Map<String, String>,
+            Collector<Map<String, String>> {
 
     private boolean closed;
     private Collection<Map<String, String>> collection;

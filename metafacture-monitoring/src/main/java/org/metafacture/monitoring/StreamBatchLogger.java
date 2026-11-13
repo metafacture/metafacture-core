@@ -158,8 +158,7 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
         vars.put(RECORD_COUNT_VAR, Long.toString(recordCount));
         vars.put(BATCH_COUNT_VAR, Long.toString(batchCount));
         vars.put(BATCH_SIZE_VAR, Long.toString(batchSize));
-        vars.put(TOTAL_RECORD_COUNT_VAR,
-                Long.toString(batchSize * batchCount + recordCount));
+        vars.put(TOTAL_RECORD_COUNT_VAR, Long.toString(batchSize * batchCount + recordCount));
         LOG.externalLog(level, StringUtil.format(format, vars));
     }
 

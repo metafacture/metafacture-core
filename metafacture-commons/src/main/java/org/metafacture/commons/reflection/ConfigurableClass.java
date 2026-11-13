@@ -96,7 +96,8 @@ public final class ConfigurableClass<T> {
             if (isSetter(method)) {
                 final String setterName = method.getName().substring(SETTER_PREFIX.length());
                 settersCache.put(setterName.toLowerCase(), method);
-                originalSettersCache.put(setterName.substring(0, 1).toLowerCase() + setterName.substring(1), method);
+                originalSettersCache.put(
+                        setterName.substring(0, 1).toLowerCase() + setterName.substring(1), method);
             }
         }
     }
@@ -159,22 +160,19 @@ public final class ConfigurableClass<T> {
             return instance;
         }
         catch (final ReflectiveOperationException e) {
-            throw new ReflectionException("class could not be instantiated: " +
-                    plainClass, e);
+            throw new ReflectionException("class could not be instantiated: " + plainClass, e);
         }
     }
 
     private Constructor<T> findConstructor(final Object... arguments) throws NoSuchMethodException {
-        @SuppressWarnings("unchecked")  // getConstructors() returns correct types
-        final Constructor<T>[] constructors =
-                (Constructor<T>[]) plainClass.getConstructors();
+        @SuppressWarnings("unchecked") // getConstructors() returns correct types
+        final Constructor<T>[] constructors = (Constructor<T>[]) plainClass.getConstructors();
         for (final Constructor<T> constructor : constructors) {
             if (checkArgumentTypes(constructor, arguments)) {
                 return constructor;
             }
         }
-        throw new NoSuchMethodException(
-                "no appropriate constructor found for class " + plainClass);
+        throw new NoSuchMethodException("no appropriate constructor found for class " + plainClass);
     }
 
 // @formatter:off
@@ -197,8 +195,8 @@ public final class ConfigurableClass<T> {
             final String setterName = setterValue.getKey().toLowerCase();
             final Method setter = getSetters().get(setterName);
             if (setter == null) {
-                throw new ReflectionException("Method " + target.getClass()
-                        .getSimpleName() + "." + setterName + " does not exist");
+                throw new ReflectionException("Method " + target.getClass().getSimpleName() + "."
+                        + setterName + " does not exist");
             }
             final Class<?> valueType = setter.getParameterTypes()[0];
             final Object value = convertValue(setterValue.getValue(), valueType);
@@ -206,8 +204,8 @@ public final class ConfigurableClass<T> {
                 setter.invoke(target, value);
             }
             catch (final ReflectiveOperationException e) {
-                throw new ReflectionException("Cannot set " + setterName +
-                        " on class " + target.getClass().getSimpleName(), e);
+                throw new ReflectionException("Cannot set " + setterName + " on class "
+                        + target.getClass().getSimpleName(), e);
             }
         }
     }
@@ -222,7 +220,7 @@ public final class ConfigurableClass<T> {
             result = Integer.valueOf(value);
         }
         else if (type.isEnum()) {
-            @SuppressWarnings("unchecked")  // protected by type.isEnum() check
+            @SuppressWarnings("unchecked") // protected by type.isEnum() check
             final Class<T> enumType = (Class<T>) type;
             result = Enum.valueOf(enumType, value.toUpperCase());
         }

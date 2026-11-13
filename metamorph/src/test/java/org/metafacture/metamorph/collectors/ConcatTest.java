@@ -64,16 +64,14 @@ public final class ConcatTest {
                     i.literal("data1", "e");
                     i.literal("data2", "f");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("concat", "{a, b, c}");
                     o.get().endRecord();
                     o.get().startRecord("2");
                     o.get().literal("concat", "{d, e, f}");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -100,14 +98,12 @@ public final class ConcatTest {
                     i.literal("2", "e");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("concat", "{a, b}");
                     o.get().literal("concat", "{e, f}");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -127,13 +123,11 @@ public final class ConcatTest {
                     i.literal("litB", "a");
                     i.literal("litA", "b");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("concat", ", a, b");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -153,13 +147,11 @@ public final class ConcatTest {
                     i.literal("litB", "2");
                     i.literal("litA", "3");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("concat", "3, 2, 1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -179,13 +171,11 @@ public final class ConcatTest {
                     i.literal("litB", "2");
                     i.literal("litA", "3");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("concat", "(3, 2, 1)");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -203,13 +193,11 @@ public final class ConcatTest {
                     i.literal("lit", "data1");
                     i.literal("lit", "data2");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("concat", "data1data2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

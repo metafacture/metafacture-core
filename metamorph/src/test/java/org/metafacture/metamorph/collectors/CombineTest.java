@@ -59,14 +59,12 @@ public final class CombineTest {
                     i.literal("data2", "b");
                     i.literal("data2", "c");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("combination", "ba");
                     o.get().literal("combination", "ca");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -98,14 +96,12 @@ public final class CombineTest {
                     i.literal("data1", "g");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("combination", "ab");
                     o.get().literal("combination", "fg");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -127,14 +123,12 @@ public final class CombineTest {
                     i.literal("data2", "d");
                     i.literal("data1", "e");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("combination", "ab");
                     o.get().literal("combination", "de");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -161,15 +155,13 @@ public final class CombineTest {
                     i.literal("l", "3");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("combi", "1");
                     o.get().literal("combi", "22");
                     o.get().literal("combi", "3");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -196,13 +188,11 @@ public final class CombineTest {
                     i.literal("l", "3");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("combi", "22");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -222,13 +212,11 @@ public final class CombineTest {
                     i.startRecord("1");
                     i.literal("inLit", "value");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("outLit", "VALUE");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

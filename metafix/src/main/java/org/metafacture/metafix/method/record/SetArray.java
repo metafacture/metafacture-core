@@ -39,7 +39,8 @@ public class SetArray implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         if (parentFieldExists(record, params.get(0))) {
             new AddArray().apply(metafix, record, params, options);
         }

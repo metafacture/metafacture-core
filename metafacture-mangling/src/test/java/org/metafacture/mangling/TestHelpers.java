@@ -32,17 +32,20 @@ public final class TestHelpers {
     private TestHelpers() {
     }
 
-    public static void assertProcess(final StreamReceiver receiver, final Runnable process, final Consumer<Supplier<StreamReceiver>> out) {
+    public static void assertProcess(final StreamReceiver receiver, final Runnable process,
+            final Consumer<Supplier<StreamReceiver>> out) {
         assertProcess(receiver, process, (s, f) -> out.accept(s));
     }
 
-    public static void assertProcess(final StreamReceiver receiver, final Runnable process, final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out) {
+    public static void assertProcess(final StreamReceiver receiver, final Runnable process,
+            final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out) {
         final InOrder ordered = Mockito.inOrder(receiver);
 
         process.run();
 
         try {
-            out.accept(() -> ordered.verify(receiver), i -> ordered.verify(receiver, Mockito.times(i)));
+            out.accept(() -> ordered.verify(receiver),
+                    i -> ordered.verify(receiver, Mockito.times(i)));
 
             ordered.verifyNoMoreInteractions();
             Mockito.verifyNoMoreInteractions(receiver);

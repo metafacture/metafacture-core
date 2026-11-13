@@ -39,7 +39,8 @@ public class ReplaceAll implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         final String search = params.get(1);
         final String replace = params.get(2);
 

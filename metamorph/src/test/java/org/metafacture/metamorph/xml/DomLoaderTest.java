@@ -39,8 +39,7 @@ import java.net.URL;
  */
 public final class DomLoaderTest {
 
-    private static final String BASE_PATH =
-            "org/metafacture/metamorph/xml/dom-loader/";
+    private static final String BASE_PATH = "org/metafacture/metamorph/xml/dom-loader/";
 
     private static final String SCHEMA_FILE = BASE_PATH + "test-schema.xsd";
 
@@ -96,8 +95,7 @@ public final class DomLoaderTest {
     }
 
     @Test
-    public void domShouldNotContainComments()
-            throws FileNotFoundException, MalformedURLException {
+    public void domShouldNotContainComments() throws FileNotFoundException, MalformedURLException {
 
         final String inputFile = "dom-should-not-contain-comments.xml";
 
@@ -128,8 +126,7 @@ public final class DomLoaderTest {
     }
 
     @Test
-    public void shouldBeXIncludeAware()
-            throws FileNotFoundException, MalformedURLException {
+    public void shouldBeXIncludeAware() throws FileNotFoundException, MalformedURLException {
 
         final String inputFile = "should-be-xinclude-aware1.xml";
 

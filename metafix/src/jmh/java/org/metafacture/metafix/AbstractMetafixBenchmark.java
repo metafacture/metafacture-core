@@ -34,7 +34,8 @@ public abstract class AbstractMetafixBenchmark extends FixParseBenchmark { // ch
 // @formatter:on
 
     // TODO: Need to inject system properties into JMHTask's JavaExec process.
-    //private static final boolean DEBUG_OUTPUT = Boolean.parseBoolean(System.getProperty("org.metafacture.metafix.debugBenchmarkOutput"));
+    // private static final boolean DEBUG_OUTPUT =
+    // Boolean.parseBoolean(System.getProperty("org.metafacture.metafix.debugBenchmarkOutput"));
     private static final boolean DEBUG_OUTPUT = false;
 
     private static final String INPUT = BASE + "/input/%s.json";
@@ -63,20 +64,15 @@ public abstract class AbstractMetafixBenchmark extends FixParseBenchmark { // ch
         }
 
         if (DEBUG_OUTPUT) {
-            metafix
-                .setReceiver(new JsonEncoder())
-                .setReceiver(new ObjectStdoutWriter<String>());
+            metafix.setReceiver(new JsonEncoder()).setReceiver(new ObjectStdoutWriter<String>());
         }
         else {
-            metafix
-                .setReceiver(new DefaultStreamReceiver());
+            metafix.setReceiver(new DefaultStreamReceiver());
         }
 
         fileOpener = new FileOpener();
-        fileOpener
-            .setReceiver(new RecordReader())
-            .setReceiver(new JsonDecoder())
-            .setReceiver(metafix);
+        fileOpener.setReceiver(new RecordReader()).setReceiver(new JsonDecoder())
+                .setReceiver(metafix);
     }
 
     @Override

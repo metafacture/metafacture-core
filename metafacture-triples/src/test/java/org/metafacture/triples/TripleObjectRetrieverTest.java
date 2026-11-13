@@ -91,8 +91,7 @@ public final class TripleObjectRetrieverTest {
 
     @Test
     public void shouldSkipTriplesWithObjectTypeEntity() {
-        tripleObjectRetriever.process(
-                new Triple(SUBJECT, PREDICATE, ENTITY, ObjectType.ENTITY));
+        tripleObjectRetriever.process(new Triple(SUBJECT, PREDICATE, ENTITY, ObjectType.ENTITY));
 
         Mockito.verifyZeroInteractions(receiver);
     }

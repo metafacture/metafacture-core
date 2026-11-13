@@ -28,7 +28,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * A marc xml reader. To read marc data without namespace specification set option `namespace=""` or to null when using JAVA code.
+ * A marc xml reader. To read marc data without namespace specification set
+ * option `namespace=""` or to null when using JAVA code.
+ * 
  * @author Markus Michael Geipel
  *
  */
@@ -64,8 +66,9 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
      *
      * <strong>Default value: {@value #NAMESPACE}</strong>
      *
-     * @param namespace the namespace. Set to null if namespace shouldn't be checked. Set to empty string
-     *        if the namespace is missing in the data.
+     * @param namespace the namespace. Set to null if namespace shouldn't be
+     *                      checked. Set to empty string if the namespace is missing
+     *                      in the data.
      */
     public void setNamespace(final String namespace) {
         this.namespace = namespace;
@@ -108,13 +111,15 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) throws SAXException {
+    public void startElement(final String uri, final String localName, final String qName,
+            final Attributes attributes) throws SAXException {
         if (SUBFIELD.equals(localName)) {
             builder = new StringBuilder();
             currentTag = attributes.getValue("code");
         }
         else if (DATAFIELD.equals(localName)) {
-            getReceiver().startEntity(attributes.getValue("tag") + attributes.getValue("ind1") + attributes.getValue("ind2"));
+            getReceiver().startEntity(attributes.getValue("tag") + attributes.getValue("ind1")
+                    + attributes.getValue("ind2"));
         }
         else if (CONTROLFIELD.equals(localName)) {
             builder = new StringBuilder();
@@ -131,7 +136,8 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void endElement(final String uri, final String localName, final String qName) throws SAXException {
+    public void endElement(final String uri, final String localName, final String qName)
+            throws SAXException {
         if (SUBFIELD.equals(localName)) {
             getReceiver().literal(currentTag, builder.toString().trim());
         }
@@ -150,7 +156,8 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void characters(final char[] chars, final int start, final int length) throws SAXException {
+    public void characters(final char[] chars, final int start, final int length)
+            throws SAXException {
         builder.append(chars, start, length);
     }
 

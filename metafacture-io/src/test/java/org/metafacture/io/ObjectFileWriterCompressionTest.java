@@ -70,8 +70,7 @@ public final class ObjectFileWriterCompressionTest {
 
     @Parameters
     public static Iterable<Object[]> data() {
-        return Arrays.asList(new Object[][] {
-                {FILENAME_NONE, FileCompression.AUTO, MAGIC_BYTES_NONE},
+        return Arrays.asList(new Object[][]{{FILENAME_NONE, FileCompression.AUTO, MAGIC_BYTES_NONE},
                 {FILENAME_BZ2, FileCompression.AUTO, MAGIC_BYTES_BZIP2},
                 {FILENAME_BZIP2, FileCompression.AUTO, MAGIC_BYTES_BZIP2},
                 {FILENAME_GZ, FileCompression.AUTO, MAGIC_BYTES_GZIP},
@@ -82,8 +81,7 @@ public final class ObjectFileWriterCompressionTest {
                 {FILENAME_BZ2, FileCompression.BZIP2, MAGIC_BYTES_BZIP2},
                 {FILENAME_GZ, FileCompression.GZIP, MAGIC_BYTES_GZIP},
                 {FILENAME_GZ_NOAUTO, FileCompression.GZIP, MAGIC_BYTES_GZIP},
-                {FILENAME_XZ, FileCompression.XZ, MAGIC_BYTES_XZ}
-            });
+                {FILENAME_XZ, FileCompression.XZ, MAGIC_BYTES_XZ}});
     }
 
     @Test
@@ -93,7 +91,8 @@ public final class ObjectFileWriterCompressionTest {
 
         final File file = tempFolder.newFile(fileName);
 
-        final ObjectFileWriter<String> writer = new ObjectFileWriter<String>(file.getAbsolutePath());
+        final ObjectFileWriter<String> writer = new ObjectFileWriter<String>(
+                file.getAbsolutePath());
         writer.setCompression(compression);
         writer.process(DATA);
         writer.closeStream();
@@ -101,8 +100,7 @@ public final class ObjectFileWriterCompressionTest {
         Assert.assertArrayEquals(magicBytes, readMagicBytes(file, magicBytes.length));
     }
 
-    private byte[] readMagicBytes(final File file, final int magicBytesLength)
-            throws IOException {
+    private byte[] readMagicBytes(final File file, final int magicBytesLength) throws IOException {
         final byte[] fileContents = Files.readAllBytes(file.toPath());
         return Arrays.copyOf(fileContents, magicBytesLength);
     }

@@ -83,7 +83,8 @@ public final class ObjectSleeperTest {
         final long actualMillis = (System.nanoTime() - startTime) / NANOSECONDS_PER_MILLISECOND;
 
         Assert.assertTrue("sleep time too short: " + actualMillis, actualMillis >= expectedMillis);
-        Assert.assertTrue("sleep time too long: " + actualMillis, actualMillis < expectedMillis + PROCESS_OVERHEAD_MILLISECONDS);
+        Assert.assertTrue("sleep time too long: " + actualMillis,
+                actualMillis < expectedMillis + PROCESS_OVERHEAD_MILLISECONDS);
     }
 
 }

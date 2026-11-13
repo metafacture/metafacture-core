@@ -32,11 +32,11 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 /**
- * Annotates a DOM with information about the location of
- * the elements in the input file.
+ * Annotates a DOM with information about the location of the elements in the
+ * input file.
  *
- * This class is intended to be used with a transformer which
- * reads a SAX source and writes to a DOM.
+ * This class is intended to be used with a transformer which reads a SAX source
+ * and writes to a DOM.
  *
  * @author Christoph Böhme
  *
@@ -75,13 +75,15 @@ final class LocationAnnotator extends XMLFilterImpl {
     }
 
     @Override
-    public void startElement(final String uri, final String localName, final String qName, final Attributes atts) throws SAXException {
+    public void startElement(final String uri, final String localName, final String qName,
+            final Attributes atts) throws SAXException {
         super.startElement(uri, localName, qName, atts);
         locatorsAtElementStart.push(new LocatorImpl(locator));
     }
 
     @Override
-    public void endElement(final String uri, final String localName, final String qName) throws SAXException {
+    public void endElement(final String uri, final String localName, final String qName)
+            throws SAXException {
         super.endElement(uri, localName, qName);
 
         final Locator elementStartLocator = locatorsAtElementStart.pop();

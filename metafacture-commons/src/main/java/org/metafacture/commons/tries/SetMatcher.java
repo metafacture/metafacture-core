@@ -105,12 +105,14 @@ public final class SetMatcher<T> {
         return matches;
     }
 
-    private void collectMatches(final ACNode<T> node, final int index, final List<Match<T>> matches) {
-        //direct hit or hit in chain of failure links?
+    private void collectMatches(final ACNode<T> node, final int index,
+            final List<Match<T>> matches) {
+        // direct hit or hit in chain of failure links?
         ACNode<T> tempNode = node;
         do {
             if (tempNode.getValue() != null) {
-                matches.add(new Match<T>(tempNode.getValue(), index - tempNode.getDepth(), tempNode.getDepth()));
+                matches.add(new Match<T>(tempNode.getValue(), index - tempNode.getDepth(),
+                        tempNode.getDepth()));
             }
             tempNode = tempNode.getFailure();
         } while (tempNode != root);
@@ -151,8 +153,8 @@ public final class SetMatcher<T> {
     }
 
     /**
-     * Prints dot description of the automaton to the PrintStream for
-     * visualization in GraphViz. Used for debugging and education.
+     * Prints dot description of the automaton to the PrintStream for visualization
+     * in GraphViz. Used for debugging and education.
      *
      * @param out the stream to which the description is written
      */
@@ -174,7 +176,8 @@ public final class SetMatcher<T> {
             out.println(node.hashCode() + " -> " + node.getFailure().hashCode() + "[color=gray]");
         }
         for (final Entry<Character, ACNode<T>> link : node.getLinks()) {
-            out.println(node.hashCode() + "  -> " + link.getValue().hashCode() + " [label=\"" + link.getKey() + "\"]");
+            out.println(node.hashCode() + "  -> " + link.getValue().hashCode() + " [label=\""
+                    + link.getKey() + "\"]");
             printDebug(out, link.getValue());
         }
     }
@@ -192,8 +195,8 @@ public final class SetMatcher<T> {
         /**
          * Constructs a Match.
          *
-         * @param value the value
-         * @param start the position
+         * @param value  the value
+         * @param start  the position
          * @param length the length
          */
         public Match(final T value, final int start, final int length) {

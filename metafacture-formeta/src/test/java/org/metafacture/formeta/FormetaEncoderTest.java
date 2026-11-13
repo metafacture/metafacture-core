@@ -34,21 +34,13 @@ import org.mockito.MockitoAnnotations;
  */
 public final class FormetaEncoderTest {
 
-    private static final String CONCISE_RECORD =
-            "1{lit1:value 1,' ent1'{lit2:value \\{x\\},lit\\\\3:'value 2 '}lit4:value \\'3\\'}";
+    private static final String CONCISE_RECORD = "1{lit1:value 1,' ent1'{lit2:value \\{x\\},lit\\\\3:'value 2 '}lit4:value \\'3\\'}";
 
-    private static final String VERBOSE_RECORD =
-            "1{ lit1: 'value 1', ' ent1'{ lit2: 'value {x}', 'lit\\\\3': 'value 2 ' }, lit4: 'value \\'3\\'' }";
+    private static final String VERBOSE_RECORD = "1{ lit1: 'value 1', ' ent1'{ lit2: 'value {x}', 'lit\\\\3': 'value 2 ' }, lit4: 'value \\'3\\'' }";
 
-    private static final String MULTILINE_RECORD =
-            "'1' {\n" +
-            "\t'lit1': 'value 1',\n" +
-            "\t' ent1' {\n" +
-            "\t\t'lit2': 'value {x}',\n" +
-            "\t\t'lit\\\\3': 'value 2 '\n" +
-            "\t},\n" +
-            "\t'lit4': 'value \\'3\\''\n" +
-            "}";
+    private static final String MULTILINE_RECORD = "'1' {\n" + "\t'lit1': 'value 1',\n"
+            + "\t' ent1' {\n" + "\t\t'lit2': 'value {x}',\n" + "\t\t'lit\\\\3': 'value 2 '\n"
+            + "\t},\n" + "\t'lit4': 'value \\'3\\''\n" + "}";
 
     @Mock
     private ObjectReceiver<String> receiver;

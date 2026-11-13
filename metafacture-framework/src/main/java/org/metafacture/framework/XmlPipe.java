@@ -19,9 +19,9 @@ package org.metafacture.framework;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
 
 /**
- * A {@link XmlReceiver} that also implements the {@link Sender} interface.
- * This interface should be implemented by all modules which receive XML
- * events and invoke methods on a downstream receiver.
+ * A {@link XmlReceiver} that also implements the {@link Sender} interface. This
+ * interface should be implemented by all modules which receive XML events and
+ * invoke methods on a downstream receiver.
  *
  * @param <R> receiver type of the downstream module
  *

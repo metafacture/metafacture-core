@@ -25,8 +25,7 @@ import java.util.Locale;
 import java.util.Set;
 
 /**
- * Changes the the received value from upper to lower case
- * or vice versa.
+ * Changes the the received value from upper to lower case or vice versa.
  *
  * @author Markus Michael Geipel
  */

@@ -59,14 +59,12 @@ public class TestMetamorphMacros {
                     i.literal("in1", "Hawaii");
                     i.literal("in2", "Maui");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("out1", "Hawaii");
                     o.get().literal("out2", "Maui");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -178,28 +176,25 @@ public class TestMetamorphMacros {
     }
 
     private void testSingleLiteral(final boolean withEntity, final String morphDef) {
-        TestHelpers.assertMorph(receiver, morphDef,
-                i -> {
-                    i.startRecord("1");
-                    i.literal("Honolulu", "Aloha");
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1");
+        TestHelpers.assertMorph(receiver, morphDef, i -> {
+            i.startRecord("1");
+            i.literal("Honolulu", "Aloha");
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1");
 
-                    if (withEntity) {
-                        o.get().startEntity("Hawaii");
-                    }
+            if (withEntity) {
+                o.get().startEntity("Hawaii");
+            }
 
-                    o.get().literal("Honolulu", "Aloha");
+            o.get().literal("Honolulu", "Aloha");
 
-                    if (withEntity) {
-                        o.get().endEntity();
-                    }
+            if (withEntity) {
+                o.get().endEntity();
+            }
 
-                    o.get().endRecord();
-                }
-        );
+            o.get().endRecord();
+        });
     }
 
 }

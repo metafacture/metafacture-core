@@ -21,11 +21,11 @@ import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 import com.google.common.net.PercentEscaper;
 
 /**
- * URL encodes the received value.
- * Default is to convert a whitespace " "to a plus sign "+". This can be set so that a whitespace " " is escaped to
- * "%20".
- * Safe characters for this escaper are the ranges 0..9, a..z and A..Z. These are always safe and should not be
- * specified. Default safe characters are also ".", "-", "*", and "_", following URLEncoder.
+ * URL encodes the received value. Default is to convert a whitespace " "to a
+ * plus sign "+". This can be set so that a whitespace " " is escaped to "%20".
+ * Safe characters for this escaper are the ranges 0..9, a..z and A..Z. These
+ * are always safe and should not be specified. Default safe characters are also
+ * ".", "-", "*", and "_", following URLEncoder.
  *
  * @see java.net.URLEncoder
  *
@@ -50,10 +50,11 @@ public final class URLEncode extends AbstractSimpleStatelessFunction {
     }
 
     /**
-     * Sets a URI escaper with the specified safe characters. The ranges 0..9, a..z and A..Z are always safe
-     * and should not be specified.
+     * Sets a URI escaper with the specified safe characters. The ranges 0..9, a..z
+     * and A..Z are always safe and should not be specified.
      *
-     * Default is also ".", "-", "*", and "_" , mimicking {@link java.net.URLEncoder}.
+     * Default is also ".", "-", "*", and "_" , mimicking
+     * {@link java.net.URLEncoder}.
      *
      * @param safeChars the chars which will not be escaped
      */
@@ -63,11 +64,13 @@ public final class URLEncode extends AbstractSimpleStatelessFunction {
     }
 
     /**
-     * Sets if a space should be converted into a plus sign "+" or percent escaped as "%20".
+     * Sets if a space should be converted into a plus sign "+" or percent escaped
+     * as "%20".
      * <p>
      * Default is "true", i.e. to escape the space character as "+".
      *
-     * @param plusForSpace true if space character " " should be converted into a plus sign "+"
+     * @param plusForSpace true if space character " " should be converted into a
+     *                         plus sign "+"
      */
     public void setPlusForSpace(final boolean plusForSpace) {
         this.plusForSpace = plusForSpace;

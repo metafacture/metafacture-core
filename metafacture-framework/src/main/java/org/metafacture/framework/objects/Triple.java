@@ -42,8 +42,7 @@ public final class Triple implements Comparable<Triple> {
      * @param predicate the predicate
      * @param object    the object
      */
-    public Triple(final String subject, final String predicate,
-            final String object) {
+    public Triple(final String subject, final String predicate, final String object) {
         this(subject, predicate, object, ObjectType.STRING);
     }
 
@@ -55,8 +54,8 @@ public final class Triple implements Comparable<Triple> {
      * @param object     the object
      * @param objectType the ObjectType
      */
-    public Triple(final String subject, final String predicate,
-            final String object, final ObjectType objectType) {
+    public Triple(final String subject, final String predicate, final String object,
+            final ObjectType objectType) {
         this.subject = subject;
         this.predicate = predicate;
         this.object = object;
@@ -148,11 +147,9 @@ public final class Triple implements Comparable<Triple> {
             return false;
         }
         final Triple other = (Triple) obj;
-        return other.preCompHashCode == preCompHashCode &&
-                other.predicate.equals(predicate) &&
-                other.object.equals(object) &&
-                other.subject.equals(subject) &&
-                other.objectType == objectType;
+        return other.preCompHashCode == preCompHashCode && other.predicate.equals(predicate)
+                && other.object.equals(object) && other.subject.equals(subject)
+                && other.objectType == objectType;
     }
 
     @Override

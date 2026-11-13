@@ -29,10 +29,11 @@ import org.xml.sax.SAXException;
 
 import java.text.Normalizer;
 
-
 /**
- * A Pica XML reader. To read marc data without namespace specification set option `namespace=""` or to null when using JAVA code.
- * The handler reuses some code from M. Geipels MarcXmlHandler
+ * A Pica XML reader. To read marc data without namespace specification set
+ * option `namespace=""` or to null when using JAVA code. The handler reuses
+ * some code from M. Geipels MarcXmlHandler
+ * 
  * @author Tobias Bülte
  * @author Markus Michael Geipel
  *
@@ -66,8 +67,9 @@ public final class PicaXmlHandler extends DefaultXmlPipe<StreamReceiver> {
      *
      * <strong>Default value: {@value #NAMESPACE}</strong>
      *
-     * @param namespace the namespace. Set to null if namespace shouldn't be checked. Set to empty string
-     *        if the namespace is missing in the data.
+     * @param namespace the namespace. Set to null if namespace shouldn't be
+     *                      checked. Set to empty string if the namespace is missing
+     *                      in the data.
      */
     public void setNamespace(final String namespace) {
         this.namespace = namespace;
@@ -110,7 +112,8 @@ public final class PicaXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) throws SAXException {
+    public void startElement(final String uri, final String localName, final String qName,
+            final Attributes attributes) throws SAXException {
         if (SUBFIELD.equals(localName)) {
             builder = new StringBuilder();
             currentTag = attributes.getValue("code");
@@ -131,9 +134,11 @@ public final class PicaXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void endElement(final String uri, final String localName, final String qName) throws SAXException {
+    public void endElement(final String uri, final String localName, final String qName)
+            throws SAXException {
         if (SUBFIELD.equals(localName)) {
-            getReceiver().literal(currentTag, Normalizer.normalize(builder.toString().trim(), Normalizer.Form.NFC));
+            getReceiver().literal(currentTag,
+                    Normalizer.normalize(builder.toString().trim(), Normalizer.Form.NFC));
         }
         else if (DATAFIELD.equals(localName)) {
             getReceiver().endEntity();
@@ -144,7 +149,8 @@ public final class PicaXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void characters(final char[] chars, final int start, final int length) throws SAXException {
+    public void characters(final char[] chars, final int start, final int length)
+            throws SAXException {
         builder.append(chars, start, length);
     }
 

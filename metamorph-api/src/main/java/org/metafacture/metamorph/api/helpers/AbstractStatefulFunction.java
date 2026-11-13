@@ -67,7 +67,8 @@ public abstract class AbstractStatefulFunction extends AbstractFunction {
             return;
         }
 
-        getNamedValueReceiver().receive(currentName, processedValue, this, currentRecordCount, currentEntityCount);
+        getNamedValueReceiver().receive(currentName, processedValue, this, currentRecordCount,
+                currentEntityCount);
     }
 
     private boolean entityClearNeeded(final int currentEntityCount) {

@@ -29,10 +29,10 @@ import java.util.Map;
 
 /**
  * Iterates over each <i>named</i> element of an array (like
- * {@link org.metafacture.metafix.bind.List} with a variable name). If
- * multiple arrays are given, iterates over the <i>corresponding</i>
- * elements from each array (i.e., all elements with the same array
- * index, skipping elements whose arrays have already been exhausted).
+ * {@link org.metafacture.metafix.bind.List} with a variable name). If multiple
+ * arrays are given, iterates over the <i>corresponding</i> elements from each
+ * array (i.e., all elements with the same array index, skipping elements whose
+ * arrays have already been exhausted).
  */
 @FixCommand("list_as")
 public class ListAs implements FixContext {
@@ -44,7 +44,8 @@ public class ListAs implements FixContext {
     }
 
     @Override
-    public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final RecordTransformer recordTransformer) {
+    public void execute(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options, final RecordTransformer recordTransformer) {
         final Map<String, Value.Array> lists = new HashMap<>();
         options.forEach((k, v) -> Value.asList(record.get(v), a -> lists.put(k, a)));
 

@@ -60,14 +60,12 @@ public final class GroupTest {
                     i.literal("data2", "slkdjf");
                     i.literal("data3", "A");
                     i.endRecord();
-                },
-                (o, f) -> {
+                }, (o, f) -> {
                     o.get().startRecord("1");
                     f.apply(2).literal("group", "constant");
                     o.get().literal("data3", "A");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

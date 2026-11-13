@@ -31,8 +31,7 @@ import java.util.Map;
 /**
  * Writes log info for every BATCHSIZE records.
  *
- * @param <T>
- *            object type
+ * @param <T> object type
  *
  * @author Markus Geipel
  *

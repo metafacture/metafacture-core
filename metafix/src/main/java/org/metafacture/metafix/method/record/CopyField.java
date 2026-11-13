@@ -38,18 +38,17 @@ public class CopyField implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         final String oldName = params.get(0);
         final String newName = params.get(1);
 
         final Value oldValue = record.get(oldName);
         if (!Value.isNull(oldValue)) {
-            oldValue.matchType()
-                .ifArray(a -> {
-                    record.remove(newName);
-                    a.forEach(v -> record.addNested(newName, v.withPathSet(null)));
-                })
-                .orElse(v -> record.set(newName, v.withPathSet(null)));
+            oldValue.matchType().ifArray(a -> {
+                record.remove(newName);
+                a.forEach(v -> record.addNested(newName, v.withPathSet(null)));
+            }).orElse(v -> record.set(newName, v.withPathSet(null)));
         }
     }
 

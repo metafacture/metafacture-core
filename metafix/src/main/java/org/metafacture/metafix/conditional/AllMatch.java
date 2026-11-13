@@ -26,8 +26,8 @@ import java.util.Map;
 
 /**
  * Executes the functions if/unless the field value matches the regular
- * expression pattern. If it is an array or a hash, all field values
- * must match the regular expression pattern.
+ * expression pattern. If it is an array or a hash, all field values must match
+ * the regular expression pattern.
  */
 @FixCommand("all_match")
 public class AllMatch implements FixPredicate {
@@ -39,7 +39,8 @@ public class AllMatch implements FixPredicate {
     }
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public boolean test(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         return testConditional(record, params, ALL, MATCHES);
     }
 

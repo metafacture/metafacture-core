@@ -82,8 +82,7 @@ public final class UniqueTest {
                     i.literal("data", "d");
                     i.literal("data", "d");
                     i.endRecord();
-                },
-                (o, f) -> {
+                }, (o, f) -> {
                     o.get().startRecord("1");
                     f.apply(2).literal("inEntity", "d");
                     o.get().literal("inRecord", "d");
@@ -92,8 +91,7 @@ public final class UniqueTest {
                     f.apply(2).literal("inEntity", "d");
                     o.get().literal("inRecord", "d");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -130,28 +128,26 @@ public final class UniqueTest {
                 "  </group>" +
                 "</rules>",
 // @formatter:on
-            i -> {
-                i.startRecord("1");
-                i.literal("data1", "d1");
-                i.literal("data1", "d1");
-                i.literal("data1", "d2");
-                i.literal("data1", "d2");
-                i.literal("data2", "d2");
-                i.literal("data2", "d2");
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().literal("name", "d1");
-                o.get().literal("value", "d1");
-                o.get().literal("both", "d1");
-                o.get().literal("value", "d2");
-                o.get().literal("both", "d2");
-                o.get().literal("name", "d2");
-                o.get().literal("both", "d2");
-                o.get().endRecord();
-            }
-        );
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data1", "d1");
+                    i.literal("data1", "d1");
+                    i.literal("data1", "d2");
+                    i.literal("data1", "d2");
+                    i.literal("data2", "d2");
+                    i.literal("data2", "d2");
+                    i.endRecord();
+                }, o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("name", "d1");
+                    o.get().literal("value", "d1");
+                    o.get().literal("both", "d1");
+                    o.get().literal("value", "d2");
+                    o.get().literal("both", "d2");
+                    o.get().literal("name", "d2");
+                    o.get().literal("both", "d2");
+                    o.get().endRecord();
+                });
     }
 
 }

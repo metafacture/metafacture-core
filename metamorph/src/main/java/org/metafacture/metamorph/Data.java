@@ -33,8 +33,10 @@ final class Data extends AbstractNamedValuePipe {
     }
 
     @Override
-    public void receive(final String recName, final String recValue, final NamedValueSource source, final int recordCount, final int entityCount) {
-        getNamedValueReceiver().receive(StringUtil.fallback(name, recName), recValue, this, recordCount, entityCount);
+    public void receive(final String recName, final String recValue, final NamedValueSource source,
+            final int recordCount, final int entityCount) {
+        getNamedValueReceiver().receive(StringUtil.fallback(name, recName), recValue, this,
+                recordCount, entityCount);
     }
 
     public void setName(final String name) {

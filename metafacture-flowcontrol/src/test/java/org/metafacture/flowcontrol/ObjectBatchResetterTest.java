@@ -74,8 +74,7 @@ public class ObjectBatchResetterTest {
         systemUnderTest.process("1");
         systemUnderTest.process("2");
 
-        Assertions.assertThat(systemUnderTest.getObjectCount())
-                .isEqualTo(2);
+        Assertions.assertThat(systemUnderTest.getObjectCount()).isEqualTo(2);
     }
 
     @Test
@@ -85,8 +84,7 @@ public class ObjectBatchResetterTest {
         systemUnderTest.process("1");
         systemUnderTest.process("2");
 
-        Assertions.assertThat(systemUnderTest.getObjectCount())
-                .isZero();
+        Assertions.assertThat(systemUnderTest.getObjectCount()).isZero();
     }
 
     @Test
@@ -98,8 +96,7 @@ public class ObjectBatchResetterTest {
         systemUnderTest.process("3");
         systemUnderTest.process("4");
 
-        Assertions.assertThat(systemUnderTest.getBatchCount())
-                .isEqualTo(2);
+        Assertions.assertThat(systemUnderTest.getBatchCount()).isEqualTo(2);
     }
 
     @Test
@@ -111,10 +108,8 @@ public class ObjectBatchResetterTest {
         systemUnderTest.process("3");
         systemUnderTest.resetStream();
 
-        Assertions.assertThat(systemUnderTest.getBatchCount())
-                .isZero();
-        Assertions.assertThat(systemUnderTest.getObjectCount())
-                .isZero();
+        Assertions.assertThat(systemUnderTest.getBatchCount()).isZero();
+        Assertions.assertThat(systemUnderTest.getObjectCount()).isZero();
     }
 
     @Test
@@ -126,6 +121,7 @@ public class ObjectBatchResetterTest {
                 Assertions.assertThat(systemUnderTest.getObjectCount()).isZero();
                 Assertions.assertThat(systemUnderTest.getBatchCount()).isEqualTo(1);
             }
+
         });
 
         systemUnderTest.process("1");

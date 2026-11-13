@@ -58,8 +58,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      * @return an input stream for reading the opened file, resource or URL
      * @throws FileNotFoundException if all attempts fail
      */
-    public static InputStream getStream(final String name)
-            throws FileNotFoundException {
+    public static InputStream getStream(final String name) throws FileNotFoundException {
         if (name == null) {
             throw new IllegalArgumentException("'name' must not be null");
         }
@@ -93,13 +92,12 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      * @return the InputStream
      * @throws FileNotFoundException if the File couldn't be found
      */
-    public static InputStream getStream(final File file)
-            throws FileNotFoundException {
+    public static InputStream getStream(final File file) throws FileNotFoundException {
         return new FileInputStream(file);
     }
 
-    private static void throwFileNotFoundException(final String name,
-            final Throwable t) throws FileNotFoundException {
+    private static void throwFileNotFoundException(final String name, final Throwable t)
+            throws FileNotFoundException {
         final FileNotFoundException e = new FileNotFoundException(
                 "No file, resource or URL found: " + name);
         if (t != null) {
@@ -116,8 +114,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      * @return the Reader
      * @throws FileNotFoundException if the File couldn't be found
      */
-    public static Reader getReader(final String name)
-            throws FileNotFoundException {
+    public static Reader getReader(final String name) throws FileNotFoundException {
         return new InputStreamReader(getStream(name));
     }
 
@@ -142,8 +139,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      * @return the Reader
      * @throws IOException if an I/O error occurs
      */
-    public static Reader getReader(final String name, final String encoding)
-            throws IOException {
+    public static Reader getReader(final String name, final String encoding) throws IOException {
         return new InputStreamReader(getStream(name), encoding);
     }
 
@@ -155,17 +151,15 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      * @return the Reader
      * @throws IOException if an I/O error occurs
      */
-    public static Reader getReader(final File file, final String encoding)
-            throws IOException {
+    public static Reader getReader(final File file, final String encoding) throws IOException {
         return new InputStreamReader(getStream(file), encoding);
     }
 
     /**
-     * Attempts to return a URL for a file or resource. First, it is
-     * checked whether {@code name} refers to an existing local file.
-     * If not, the context class loader of the current thread is asked
-     * if {@code name} refers to a resource. Finally, the method
-     * attempts to interpret {@code name} as a URL.
+     * Attempts to return a URL for a file or resource. First, it is checked whether
+     * {@code name} refers to an existing local file. If not, the context class
+     * loader of the current thread is asked if {@code name} refers to a resource.
+     * Finally, the method attempts to interpret {@code name} as a URL.
      *
      * @param name reference to a file or resource maybe a URL
      * @return a URL referring to a file or resource
@@ -177,8 +171,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
             return getUrl(file);
         }
 
-        final URL resourceUrl =
-                Thread.currentThread().getContextClassLoader().getResource(name);
+        final URL resourceUrl = Thread.currentThread().getContextClassLoader().getResource(name);
         return resourceUrl != null ? resourceUrl : toURL(name);
     }
 
@@ -197,7 +190,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      * Creates a URL by parsing the given spec within a specified context.
      *
      * @param context the context in which to parse the specification
-     * @param spec the String to parse as a URL
+     * @param spec    the String to parse as a URL
      *
      * @return the resolved URL
      *
@@ -248,8 +241,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      * @return the Properties
      * @throws IOException if an I/O error occurs
      */
-    public static Properties loadProperties(final String location)
-            throws IOException {
+    public static Properties loadProperties(final String location) throws IOException {
         try (InputStream stream = getStream(location)) {
             return loadProperties(stream);
         }
@@ -262,8 +254,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      * @return the Properties
      * @throws IOException if an I/O error occurs
      */
-    public static Properties loadProperties(final InputStream stream)
-            throws IOException {
+    public static Properties loadProperties(final InputStream stream) throws IOException {
         final Properties properties;
         properties = new Properties();
         properties.load(stream);
@@ -298,16 +289,18 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      * * Loads a text file.
      *
      * @param location the filename
-     * @param list a List of Strings to append the lines of the file to
+     * @param list     a List of Strings to append the lines of the file to
      * @return the List of Strings with the lines of the file appended
      * @throws IOException if an I/O error occurs
      */
-    public static List<String> loadTextFile(final String location, final List<String> list) throws IOException {
+    public static List<String> loadTextFile(final String location, final List<String> list)
+            throws IOException {
         loadTextFile(location, list::add);
         return list;
     }
 
-    private static void loadTextFile(final String location, final Consumer<String> consumer) throws IOException {
+    private static void loadTextFile(final String location, final Consumer<String> consumer)
+            throws IOException {
         try (BufferedReader reader = new BufferedReader(getReader(location))) {
             String line = reader.readLine();
             while (line != null) {

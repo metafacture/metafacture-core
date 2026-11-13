@@ -33,8 +33,7 @@ import org.mockito.MockitoAnnotations;
  */
 public final class StringMatcherTest {
 
-    private static final String INPUT_STRING =
-            "The pattern is not part of the input";
+    private static final String INPUT_STRING = "The pattern is not part of the input";
 
     private StringMatcher matcher;
 

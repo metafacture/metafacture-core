@@ -62,16 +62,14 @@ public final class TestFunctionBasics {
                     i.startRecord("2");
                     i.literal("data", " abc ");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data", "Abc");
                     o.get().endRecord();
                     o.get().startRecord("2");
                     o.get().literal("data", "Abc");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -96,16 +94,14 @@ public final class TestFunctionBasics {
                     i.startRecord("2");
                     i.literal("data", " abc ");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data", "Abc");
                     o.get().endRecord();
                     o.get().startRecord("2");
                     o.get().literal("data", "Abc");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -122,13 +118,11 @@ public final class TestFunctionBasics {
                     i.startRecord("1");
                     i.literal("data", "Aloha");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data", "Hula Aloha");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

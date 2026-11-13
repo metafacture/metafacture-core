@@ -37,10 +37,10 @@ public class Flatten implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-        record.transform(params.get(0), (m, c) -> m
-                .ifArray(a -> c.accept(newArray(flatten(a.stream()))))
-        );
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
+        record.transform(params.get(0),
+                (m, c) -> m.ifArray(a -> c.accept(newArray(flatten(a.stream())))));
     }
 
 }

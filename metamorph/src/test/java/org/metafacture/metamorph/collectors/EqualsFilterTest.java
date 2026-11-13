@@ -61,13 +61,11 @@ public final class EqualsFilterTest {
                     i.literal("data2", "a");
                     i.literal("data3", "a");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("equalsFiltered", "a");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -88,13 +86,12 @@ public final class EqualsFilterTest {
                     i.literal("data2", "a");
                     i.literal("data3", "b");
                     i.endRecord();
-                },
-                (o, f) -> {
+                }, (o, f) -> {
                     o.get().startRecord("1");
-                    f.apply(0).literal(ArgumentMatchers.eq("equalsFiltered"), ArgumentMatchers.any());
+                    f.apply(0).literal(ArgumentMatchers.eq("equalsFiltered"),
+                            ArgumentMatchers.any());
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -111,13 +108,11 @@ public final class EqualsFilterTest {
                     i.startRecord("1");
                     i.literal("data1", "a");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("equalsFiltered", "a");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -137,13 +132,11 @@ public final class EqualsFilterTest {
                     i.literal("data2", "a");
                     i.literal("data3", "b");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("equalsFiltered", "a");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -166,13 +159,11 @@ public final class EqualsFilterTest {
                     i.literal("data3", "a");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("equalsFiltered", "a");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -195,12 +186,10 @@ public final class EqualsFilterTest {
                     i.literal("data3", "b");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -231,8 +220,7 @@ public final class EqualsFilterTest {
                     i.literal("data2", "a");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().endRecord();
                     o.get().startRecord("2");
@@ -240,8 +228,7 @@ public final class EqualsFilterTest {
                     o.get().startRecord("3");
                     o.get().literal("equalsFiltered", "a");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -272,8 +259,7 @@ public final class EqualsFilterTest {
                     i.literal("data2", "a");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().endRecord();
                     o.get().startRecord("2");
@@ -282,8 +268,7 @@ public final class EqualsFilterTest {
                     o.get().startRecord("3");
                     o.get().literal("equalsFiltered", "a");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -314,8 +299,7 @@ public final class EqualsFilterTest {
                     i.literal("data2", "a");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().endRecord();
                     o.get().startRecord("2");
@@ -323,8 +307,7 @@ public final class EqualsFilterTest {
                     o.get().startRecord("3");
                     o.get().literal("equalsFiltered", "a");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

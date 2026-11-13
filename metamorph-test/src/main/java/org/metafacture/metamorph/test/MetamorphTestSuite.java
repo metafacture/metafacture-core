@@ -47,13 +47,13 @@ public final class MetamorphTestSuite extends ParentRunner<Runner> {
      * @param suiteRoot the {@code @TestClass}
      * @throws InitializationError if definitions couldn't be loaded
      */
-    public MetamorphTestSuite(final Class<?> suiteRoot)
-            throws InitializationError {
+    public MetamorphTestSuite(final Class<?> suiteRoot) throws InitializationError {
         super(suiteRoot);
         runners = loadDefinitions(suiteRoot);
     }
 
-    private static List<Runner> loadDefinitions(final Class<?> suiteRoot) throws InitializationError {
+    private static List<Runner> loadDefinitions(final Class<?> suiteRoot)
+            throws InitializationError {
         final List<Runner> runners = new ArrayList<>();
         for (final String testDef : getTestDefinitionNames(suiteRoot)) {
             runners.add(new MetamorphTestRunner(suiteRoot, testDef));
@@ -99,6 +99,7 @@ public final class MetamorphTestSuite extends ParentRunner<Runner> {
          * @return the files containing the test case definitions
          */
         String[] value();
+
     }
 
 }

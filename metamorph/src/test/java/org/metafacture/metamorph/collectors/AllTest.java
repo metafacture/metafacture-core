@@ -60,15 +60,13 @@ public final class AllTest {
                     i.startRecord("2");
                     i.literal("data2", "C");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("", "true");
                     o.get().endRecord();
                     o.get().startRecord("2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -87,13 +85,11 @@ public final class AllTest {
                     i.literal("data1", "A");
                     i.literal("data2", "B");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("ALL", "found all");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -117,13 +113,11 @@ public final class AllTest {
                     i.literal("data2", "C");
                     i.endEntity();
                     i.endRecord();
-                },
-                (o, f) -> {
+                }, (o, f) -> {
                     o.get().startRecord("1");
                     f.apply(2).literal("", "true");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -147,13 +141,11 @@ public final class AllTest {
                     i.literal("data2", "B");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("", "true");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -173,12 +165,10 @@ public final class AllTest {
                     i.literal("data1", "A");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -201,12 +191,10 @@ public final class AllTest {
                     i.literal("data1", "A");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

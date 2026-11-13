@@ -40,8 +40,7 @@ import java.util.Random;
 @In(Object.class)
 @Out(Object.class)
 @FluxCommand("draw-uniform-sample")
-public final class UniformSampler<T> extends
-        DefaultObjectPipe<T, ObjectReceiver<T>> {
+public final class UniformSampler<T> extends DefaultObjectPipe<T, ObjectReceiver<T>> {
 
     private final int sampleSize;
     private final List<T> sample;

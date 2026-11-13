@@ -45,9 +45,9 @@ import java.net.URL;
  *
  * @author Fabian Steeg (fsteeg)
  */
-@Description("Validate JSON against a given schema, send only valid input to the receiver. Pass the schema location to validate against. " +
-        "Write valid and/or invalid output to locations specified with `writeValid` and `writeInvalid`. " +
-        "Set the JSON key for the record ID value with `idKey` (for logging output, defaults to `id`).")
+@Description("Validate JSON against a given schema, send only valid input to the receiver. Pass the schema location to validate against. "
+        + "Write valid and/or invalid output to locations specified with `writeValid` and `writeInvalid`. "
+        + "Set the JSON key for the record ID value with `idKey` (for logging output, defaults to `id`).")
 @In(String.class)
 @Out(String.class)
 @FluxCommand("validate-json")
@@ -163,7 +163,8 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
 
     private void handleInvalid(final String json, final JSONObject object,
             final String errorMessage) {
-        LOG.externalInfo("Invalid JSON: {} in {}", errorMessage, object != null ? object.opt(idKey) : json);
+        LOG.externalInfo("Invalid JSON: {} in {}", errorMessage,
+                object != null ? object.opt(idKey) : json);
         ++fail;
         write(json, writeInvalid);
     }

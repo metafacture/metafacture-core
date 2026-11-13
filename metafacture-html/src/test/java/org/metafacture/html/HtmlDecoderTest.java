@@ -102,7 +102,8 @@ public final class HtmlDecoderTest {
 
     @Test
     public void htmlScriptElementData() {
-        htmlDecoder.process(new StringReader("<script type=application/ld+json>{\"id\":\"theId\"}</script>"));
+        htmlDecoder.process(
+                new StringReader("<script type=application/ld+json>{\"id\":\"theId\"}</script>"));
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startEntity("script");
         ordered.verify(receiver).literal("type", "application/ld+json");
@@ -125,7 +126,8 @@ public final class HtmlDecoderTest {
     @Test
     public void htmlAttributesAsSubfieldsCustom() {
         htmlDecoder.setAttrValsAsSubfields("mods:url.access");
-        htmlDecoder.process(new StringReader("<mods:url access=\"preview\">file:///img.png</mods:url>"));
+        htmlDecoder.process(
+                new StringReader("<mods:url access=\"preview\">file:///img.png</mods:url>"));
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startEntity("mods:url");
         ordered.verify(receiver).literal("preview", "file:///img.png");
@@ -136,8 +138,8 @@ public final class HtmlDecoderTest {
     @Test
     public void htmlAttributesAsSubfieldsDefaultPlusCustom() {
         htmlDecoder.setAttrValsAsSubfields("&mods:url.access");
-        htmlDecoder.process(new StringReader("<meta name=\"language\" content=\"DE\"/>" +
-                "<mods:url access=\"preview\">file:///img.png</mods:url>"));
+        htmlDecoder.process(new StringReader("<meta name=\"language\" content=\"DE\"/>"
+                + "<mods:url access=\"preview\">file:///img.png</mods:url>"));
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startEntity("meta");
         ordered.verify(receiver).literal("language", "DE");

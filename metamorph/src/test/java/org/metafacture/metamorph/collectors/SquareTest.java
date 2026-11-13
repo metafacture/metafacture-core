@@ -68,8 +68,7 @@ public final class SquareTest {
                     i.literal("data2", "6");
                     i.literal("data2", "7");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("square", "{a,c}");
                     o.get().literal("square", "{b,c}");
@@ -98,8 +97,7 @@ public final class SquareTest {
                     o.get().literal("square", "{2,3}");
                     o.get().literal("square", "{1,2}");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -126,14 +124,12 @@ public final class SquareTest {
                     i.literal("2", "e");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("square", "{a,b}");
                     o.get().literal("square", "{e,f}");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

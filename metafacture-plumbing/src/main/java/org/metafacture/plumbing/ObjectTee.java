@@ -36,7 +36,9 @@ import org.metafacture.framework.helpers.DefaultTee;
 @In(Object.class)
 @Out(Object.class)
 @FluxCommand("object-tee")
-public final class ObjectTee<T> extends DefaultTee<ObjectReceiver<T>> implements ObjectPipe<T, ObjectReceiver<T>> {
+public final class ObjectTee<T> extends DefaultTee<ObjectReceiver<T>>
+        implements
+            ObjectPipe<T, ObjectReceiver<T>> {
 
     /**
      * Creates an instance of {@link ObjectTee}.

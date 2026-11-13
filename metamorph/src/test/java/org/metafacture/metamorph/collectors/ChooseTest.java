@@ -65,8 +65,7 @@ public final class ChooseTest {
                     i.startRecord("3");
                     i.literal("data2", "C");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data1", "A");
                     o.get().endRecord();
@@ -76,8 +75,7 @@ public final class ChooseTest {
                     o.get().startRecord("3");
                     o.get().literal("data2", "C");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -108,15 +106,13 @@ public final class ChooseTest {
                     i.literal("dataX", "X");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("entity.data1", "A");
                     o.get().literal("entity.data1", "B");
                     o.get().literal("entity.data2", "C");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -134,13 +130,11 @@ public final class ChooseTest {
                     i.startRecord("1");
                     i.literal("L", "V");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("chosen", "V");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -159,13 +153,11 @@ public final class ChooseTest {
                     i.literal("flush", "first");
                     i.literal("flush", "second");
                     i.endRecord();
-                },
-                (o, f) -> {
+                }, (o, f) -> {
                     o.get().startRecord("1");
                     f.apply(2).literal("lit1", "data1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -184,13 +176,11 @@ public final class ChooseTest {
                     i.literal("flush", "first");
                     i.literal("flush", "second");
                     i.endRecord();
-                },
-                (o, f) -> {
+                }, (o, f) -> {
                     o.get().startRecord("1");
                     f.apply(1).literal("lit1", "data1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -209,13 +199,11 @@ public final class ChooseTest {
                     i.literal("flush", "first");
                     i.literal("flush", "second");
                     i.endRecord();
-                },
-                (o, f) -> {
+                }, (o, f) -> {
                     o.get().startRecord("1");
                     f.apply(1).literal("lit1", "data1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -238,13 +226,11 @@ public final class ChooseTest {
                     i.literal("lit2", "data2");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("entity.lit2", "data2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -267,13 +253,11 @@ public final class ChooseTest {
                     i.literal("lit2", "data2");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("entity.lit1", "data1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -296,13 +280,11 @@ public final class ChooseTest {
                     i.literal("lit2", "data2");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("entity.lit1", "data1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

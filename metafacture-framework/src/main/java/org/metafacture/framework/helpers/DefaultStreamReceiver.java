@@ -20,10 +20,9 @@ import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
 
 /**
- * Default implementation of {@link StreamReceiver} which
- * simply does nothing. Do not use this class as a base class
- * for modules which are implement {@link StreamPipe}; use
- * {@link DefaultStreamPipe} for that.
+ * Default implementation of {@link StreamReceiver} which simply does nothing.
+ * Do not use this class as a base class for modules which are implement
+ * {@link StreamPipe}; use {@link DefaultStreamPipe} for that.
  *
  * @see DefaultStreamPipe
  *

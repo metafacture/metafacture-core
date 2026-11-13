@@ -45,9 +45,9 @@ import java.util.TreeMap;
  * entity for each of the original fields is created. These entities are named
  * depending on the type of script used. Three scripts are distinguished:
  * <ul>
- *   <li>Latin
- *   <li>NonLatinLR
- *   <li>NonLatinRL
+ * <li>Latin
+ * <li>NonLatinLR
+ * <li>NonLatinRL
  * </ul>
  *
  * The following example shows how the input
@@ -86,9 +86,9 @@ import java.util.TreeMap;
  * {@code PicaMultiscriptRemodeler} is undefined.
  * <p>
  * The order of the output is determined by the order of the second occurrences
- * of the multiscript fields. Multiscript fields without a second occurrences are
- * output when the second occurrence of a field with a greater group number is
- * encountered.
+ * of the multiscript fields. Multiscript fields without a second occurrences
+ * are output when the second occurrence of a field with a greater group number
+ * is encountered.
  * <p>
  * If a field contains only $U or $T but not both, the field is simply passed
  * through.
@@ -164,7 +164,8 @@ public final class PicaMultiscriptRemodeler extends DefaultStreamPipe<StreamRece
         else {
             if (bufferedFields.containsKey(currentField.getGroup())) {
                 emitAsSingleMultiscriptFields(getSingleMultiscriptFieldsBeforeCurrentField());
-                emitRemodeledMultiscriptField(bufferedFields.remove(currentField.getGroup()), currentField);
+                emitRemodeledMultiscriptField(bufferedFields.remove(currentField.getGroup()),
+                        currentField);
             }
             else {
                 bufferMultiscriptField(currentField);
@@ -201,7 +202,8 @@ public final class PicaMultiscriptRemodeler extends DefaultStreamPipe<StreamRece
         getReceiver().endEntity();
     }
 
-    private void emitRemodeledMultiscriptField(final BufferedField firstField, final BufferedField secondField) {
+    private void emitRemodeledMultiscriptField(final BufferedField firstField,
+            final BufferedField secondField) {
         getReceiver().startEntity(firstField.getName());
 
         getReceiver().startEntity(mapScriptToEntityName(firstField.getScript()));
@@ -225,8 +227,11 @@ public final class PicaMultiscriptRemodeler extends DefaultStreamPipe<StreamRece
     }
 
     private String mapScriptToEntityName(final String script) {
-        return LATIN_SCRIPT.equals(script)                                 ? ENTITY_NAME_FOR_LATIN :
-            (ARABIC_SCRIPT.equals(script) || HEBREW_SCRIPT.equals(script)) ? ENTITY_NAME_FOR_NON_LATIN_RL : ENTITY_NAME_FOR_NON_LATIN_LR;
+        return LATIN_SCRIPT.equals(script)
+                ? ENTITY_NAME_FOR_LATIN
+                : (ARABIC_SCRIPT.equals(script) || HEBREW_SCRIPT.equals(script))
+                        ? ENTITY_NAME_FOR_NON_LATIN_RL
+                        : ENTITY_NAME_FOR_NON_LATIN_LR;
     }
 
     private static class BufferedField {

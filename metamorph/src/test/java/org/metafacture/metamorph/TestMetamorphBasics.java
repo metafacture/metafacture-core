@@ -57,13 +57,11 @@ public final class TestMetamorphBasics {
                     i.literal("literal", "Aloha");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data", "Aloha");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -81,15 +79,13 @@ public final class TestMetamorphBasics {
                     i.literal("Sylt", "Aloha");
                     i.literal("Baltrum", "Moin Moin");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("Langeoog", "Moin");
                     o.get().literal("Hawaii", "Aloha");
                     o.get().literal("Baltrum", "Moin Moin");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -127,8 +123,7 @@ public final class TestMetamorphBasics {
                     i.literal("Baltrum", "Moin Moin");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("@id", "123");
                     o.get().literal("Shikotan", "Aekap");
@@ -140,8 +135,7 @@ public final class TestMetamorphBasics {
                     o.get().literal("Germany.@foo", "bar");
                     o.get().literal("Germany.Baltrum", "Moin Moin");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test // checkstyle-disable-line JavaNCSS
@@ -187,8 +181,7 @@ public final class TestMetamorphBasics {
                     i.endEntity();
                     i.literal("lit9", "val9");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("lit1", "val1");
                     o.get().startEntity("ent1");
@@ -223,8 +216,7 @@ public final class TestMetamorphBasics {
                     o.get().endEntity();
                     o.get().literal("lit9", "val9");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -256,8 +248,7 @@ public final class TestMetamorphBasics {
                     i.endEntity();
                     i.endEntity();
                     i.endRecord();
-                },
-                (o, f) -> {
+                }, (o, f) -> {
                     o.get().startRecord("1");
                     o.get().startEntity("author[]");
                     o.get().startEntity("");
@@ -277,8 +268,7 @@ public final class TestMetamorphBasics {
                     o.get().literal("name", "Claudia Vogeler");
                     f.apply(2).endEntity();
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test // checkstyle-disable-line JavaNCSS
@@ -326,8 +316,7 @@ public final class TestMetamorphBasics {
                     i.endEntity();
                     i.endEntity();
                     i.endRecord();
-                },
-                (o, f) -> {
+                }, (o, f) -> {
                     o.get().startRecord("1");
                     o.get().startEntity("mods");
                     o.get().literal("ID", "duepublico_mods_00074526");
@@ -361,8 +350,7 @@ public final class TestMetamorphBasics {
                     o.get().literal("value", "André");
                     f.apply(3).endEntity();
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test // checkstyle-disable-line JavaNCSS
@@ -414,8 +402,7 @@ public final class TestMetamorphBasics {
                     i.endEntity();
                     i.endEntity();
                     i.endRecord();
-                },
-                (o, f) -> {
+                }, (o, f) -> {
                     o.get().startRecord("1");
                     o.get().startEntity("mods");
                     o.get().literal("ID", "duepublico_mods_00074526");
@@ -449,8 +436,7 @@ public final class TestMetamorphBasics {
                     o.get().literal("mods.name.namePart.value", "André");
                     o.get().endEntity();
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -477,8 +463,7 @@ public final class TestMetamorphBasics {
                     i.literal("Sylt", "Aloha");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("@id", "123");
                     o.get().literal("Shikotan", "Aekap");
@@ -491,8 +476,7 @@ public final class TestMetamorphBasics {
                     o.get().literal("Hawaii", "Aloha");
                     o.get().endEntity();
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test // checkstyle-disable-line JavaNCSS
@@ -541,12 +525,12 @@ public final class TestMetamorphBasics {
                     i.literal("Sylt", "Aloha");
                     i.endEntity();
                     i.endRecord();
-                },
-                (o, f) -> {
+                }, (o, f) -> {
                     // Pass-through coordinates with morph whether to start/end an entity
                     final boolean coordinatesWithEntity = false;
 
-                    // Pass-through and morph entities are separated (one ends when the other starts)
+                    // Pass-through and morph entities are separated (one ends when the other
+                    // starts)
                     final boolean separatesFromEntity = false;
 
                     o.get().startRecord("1");
@@ -604,8 +588,7 @@ public final class TestMetamorphBasics {
                         o.get().endEntity();
                     }
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -649,8 +632,7 @@ public final class TestMetamorphBasics {
                     i.literal("Baltrum", "Moin Moin");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("Shikotan", "Aekap");
                     o.get().startEntity("Germany");
@@ -668,8 +650,7 @@ public final class TestMetamorphBasics {
                     o.get().literal("Langeoog", "Moin");
                     o.get().endEntity();
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     // https://github.com/hagbeck/metafacture-sandbox/tree/master/else-nested-entities
@@ -742,8 +723,7 @@ public final class TestMetamorphBasics {
                     i.startEntity("9984 ");
                     i.literal("z", "Freie Internetressource");
                     i.endEntity();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("ID1687931");
                     o.get().literal("leader", "00564nam a2200024 c 4500");
                     o.get().literal("001", "1687931");
@@ -778,8 +758,7 @@ public final class TestMetamorphBasics {
                     o.get().startEntity("9984 ");
                     o.get().literal("z", "Freie Internetressource");
                     o.get().endEntity();
-                }
-        );
+                });
     }
 
     @Test
@@ -796,14 +775,12 @@ public final class TestMetamorphBasics {
                     i.literal("lit-A", "Aloha");
                     i.literal("lit-B", "Aloha 'oe");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("lit-A", "Aloha");
                     o.get().literal("lit-B", "Aloha 'oe");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -814,20 +791,18 @@ public final class TestMetamorphBasics {
                 "  <data source='lit-[AB]' />" +
                 "</rules>",
 // @formatter:on
-                i ->  {
+                i -> {
                     i.startRecord("1");
                     i.literal("lit-A", "Hawaii");
                     i.literal("lit-B", "Oahu");
                     i.literal("lit-C", "Fehmarn");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("lit-A", "Hawaii");
                     o.get().literal("lit-B", "Oahu");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -846,13 +821,11 @@ public final class TestMetamorphBasics {
                     i.startRecord("1");
                     i.literal("Honolulu", "Aloha");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("Hawaii", "Aloha");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -873,15 +846,13 @@ public final class TestMetamorphBasics {
                     i.endEntity();
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("entity end info");
                     o.get().literal("e1.e2.d", "a");
                     o.get().literal("e1.e2", "");
                     o.get().literal("e1", "");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -896,11 +867,9 @@ public final class TestMetamorphBasics {
 // @formatter:on
                 i -> {
                     i.literal("d", "café ");
-                },
-                o -> {
+                }, o -> {
                     o.get().literal("d", "caf%C3%A9+");
-                }
-        );
+                });
     }
 
     @Test
@@ -913,13 +882,11 @@ public final class TestMetamorphBasics {
                 "  </data>" +
                 "</rules>",
 // @formatter:on
-            i -> {
-                i.literal("d", "café ");
-            },
-            o -> {
-                o.get().literal("d", "caf%C3%A9%20");
-            }
-        );
+                i -> {
+                    i.literal("d", "café ");
+                }, o -> {
+                    o.get().literal("d", "caf%C3%A9%20");
+                });
     }
 
 }

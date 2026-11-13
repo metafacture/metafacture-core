@@ -49,8 +49,7 @@ final class MetamorphTestLoader {
         // No instances allowed
     }
 
-    static List<MetamorphTestCase> load(final URL testDef)
-            throws InitializationError {
+    static List<MetamorphTestCase> load(final URL testDef) throws InitializationError {
         final InputSource inputSource = new InputSource(testDef.toExternalForm());
         return load(inputSource);
     }
@@ -59,8 +58,8 @@ final class MetamorphTestLoader {
             throws InitializationError {
 
         try {
-            final SchemaFactory schemaFactory = SchemaFactory.newInstance(
-                    XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            final SchemaFactory schemaFactory = SchemaFactory
+                    .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             final URL schemaUrl = Thread.currentThread().getContextClassLoader()
                     .getResource(SCHEMA_FILE);
             if (schemaUrl == null) {

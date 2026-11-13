@@ -40,408 +40,373 @@ public final class RecordPathFilterTest {
 
     @Test
     public void shouldFilterRootPath() {
-        assertFilter(
-                i -> {
-                    i.startRecord("1");
-                    i.startEntity("data");
-                    i.literal("lit", "record 1");
-                    i.endEntity();
-                    i.endRecord();
-                    i.startRecord("2");
-                    i.startEntity("data");
-                    i.literal("lit", "record 2");
-                    i.endEntity();
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1[1]");
-                    o.get().startEntity("data");
-                    o.get().literal("lit", "record 1");
-                    o.get().endEntity();
-                    o.get().endRecord();
-                    o.get().startRecord("2[1]");
-                    o.get().startEntity("data");
-                    o.get().literal("lit", "record 2");
-                    o.get().endEntity();
-                    o.get().endRecord();
-                }
-        );
+        assertFilter(i -> {
+            i.startRecord("1");
+            i.startEntity("data");
+            i.literal("lit", "record 1");
+            i.endEntity();
+            i.endRecord();
+            i.startRecord("2");
+            i.startEntity("data");
+            i.literal("lit", "record 2");
+            i.endEntity();
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1[1]");
+            o.get().startEntity("data");
+            o.get().literal("lit", "record 1");
+            o.get().endEntity();
+            o.get().endRecord();
+            o.get().startRecord("2[1]");
+            o.get().startEntity("data");
+            o.get().literal("lit", "record 2");
+            o.get().endEntity();
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void shouldFilterSimplePathWithLiterals() {
-        assertFilter(
-                i -> {
-                    i.setPath("data");
+        assertFilter(i -> {
+            i.setPath("data");
 
-                    i.startRecord("1");
-                    i.startEntity("data");
-                    i.literal("lit", "record 1");
-                    i.endEntity();
-                    i.endRecord();
-                    i.startRecord("2");
-                    i.startEntity("junk");
-                    i.literal("lit", "skipped");
-                    i.endEntity();
-                    i.startEntity("data");
-                    i.literal("lit", "record 2");
-                    i.endEntity();
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1[1]");
-                    o.get().literal("lit", "record 1");
-                    o.get().endRecord();
-                    o.get().startRecord("2[1]");
-                    o.get().literal("lit", "record 2");
-                    o.get().endRecord();
-                }
-        );
+            i.startRecord("1");
+            i.startEntity("data");
+            i.literal("lit", "record 1");
+            i.endEntity();
+            i.endRecord();
+            i.startRecord("2");
+            i.startEntity("junk");
+            i.literal("lit", "skipped");
+            i.endEntity();
+            i.startEntity("data");
+            i.literal("lit", "record 2");
+            i.endEntity();
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1[1]");
+            o.get().literal("lit", "record 1");
+            o.get().endRecord();
+            o.get().startRecord("2[1]");
+            o.get().literal("lit", "record 2");
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void shouldFilterNestedPathWithLiterals() {
-        assertFilter(
-                i -> {
-                    i.setPath("nested.data");
+        assertFilter(i -> {
+            i.setPath("nested.data");
 
-                    i.startRecord("1");
-                    i.startEntity("nested");
-                    i.startEntity("data");
-                    i.literal("lit", "record 1");
-                    i.endEntity();
-                    i.endEntity();
-                    i.endRecord();
-                    i.startRecord("2");
-                    i.startEntity("nested");
-                    i.startEntity("junk");
-                    i.literal("lit", "skipped");
-                    i.endEntity();
-                    i.startEntity("data");
-                    i.literal("lit", "record 2");
-                    i.endEntity();
-                    i.endEntity();
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1[1]");
-                    o.get().literal("lit", "record 1");
-                    o.get().endRecord();
-                    o.get().startRecord("2[1]");
-                    o.get().literal("lit", "record 2");
-                    o.get().endRecord();
-                }
-        );
+            i.startRecord("1");
+            i.startEntity("nested");
+            i.startEntity("data");
+            i.literal("lit", "record 1");
+            i.endEntity();
+            i.endEntity();
+            i.endRecord();
+            i.startRecord("2");
+            i.startEntity("nested");
+            i.startEntity("junk");
+            i.literal("lit", "skipped");
+            i.endEntity();
+            i.startEntity("data");
+            i.literal("lit", "record 2");
+            i.endEntity();
+            i.endEntity();
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1[1]");
+            o.get().literal("lit", "record 1");
+            o.get().endRecord();
+            o.get().startRecord("2[1]");
+            o.get().literal("lit", "record 2");
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void shouldFilterSimplePathWithEntities() {
-        assertFilter(
-                i -> {
-                    i.setPath("data");
+        assertFilter(i -> {
+            i.setPath("data");
 
-                    i.startRecord("1");
-                    i.startEntity("data");
-                    i.startEntity("ent1");
-                    i.literal("lit", "record 1.1");
-                    i.endEntity();
-                    i.startEntity("ent2");
-                    i.literal("lit", "record 1.2");
-                    i.endEntity();
-                    i.endEntity();
-                    i.endRecord();
-                    i.startRecord("2");
-                    i.startEntity("junk");
-                    i.literal("lit", "skipped");
-                    i.endEntity();
-                    i.startEntity("data");
-                    i.literal("lit", "record 2");
-                    i.endEntity();
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1[1]");
-                    o.get().startEntity("ent1");
-                    o.get().literal("lit", "record 1.1");
-                    o.get().endEntity();
-                    o.get().startEntity("ent2");
-                    o.get().literal("lit", "record 1.2");
-                    o.get().endEntity();
-                    o.get().endRecord();
-                    o.get().startRecord("2[1]");
-                    o.get().literal("lit", "record 2");
-                    o.get().endRecord();
-                }
-        );
+            i.startRecord("1");
+            i.startEntity("data");
+            i.startEntity("ent1");
+            i.literal("lit", "record 1.1");
+            i.endEntity();
+            i.startEntity("ent2");
+            i.literal("lit", "record 1.2");
+            i.endEntity();
+            i.endEntity();
+            i.endRecord();
+            i.startRecord("2");
+            i.startEntity("junk");
+            i.literal("lit", "skipped");
+            i.endEntity();
+            i.startEntity("data");
+            i.literal("lit", "record 2");
+            i.endEntity();
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1[1]");
+            o.get().startEntity("ent1");
+            o.get().literal("lit", "record 1.1");
+            o.get().endEntity();
+            o.get().startEntity("ent2");
+            o.get().literal("lit", "record 1.2");
+            o.get().endEntity();
+            o.get().endRecord();
+            o.get().startRecord("2[1]");
+            o.get().literal("lit", "record 2");
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void shouldFilterNestedPathWithEntities() {
-        assertFilter(
-                i -> {
-                    i.setPath("nested.data");
+        assertFilter(i -> {
+            i.setPath("nested.data");
 
-                    i.startRecord("1");
-                    i.startEntity("nested");
-                    i.startEntity("data");
-                    i.startEntity("ent1");
-                    i.literal("lit", "record 1.1");
-                    i.endEntity();
-                    i.startEntity("ent2");
-                    i.literal("lit", "record 1.2");
-                    i.endEntity();
-                    i.endEntity();
-                    i.endEntity();
-                    i.endRecord();
-                    i.startRecord("2");
-                    i.startEntity("nested");
-                    i.startEntity("junk");
-                    i.literal("lit", "skipped");
-                    i.endEntity();
-                    i.startEntity("data");
-                    i.literal("lit", "record 2");
-                    i.endEntity();
-                    i.endEntity();
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1[1]");
-                    o.get().startEntity("ent1");
-                    o.get().literal("lit", "record 1.1");
-                    o.get().endEntity();
-                    o.get().startEntity("ent2");
-                    o.get().literal("lit", "record 1.2");
-                    o.get().endEntity();
-                    o.get().endRecord();
-                    o.get().startRecord("2[1]");
-                    o.get().literal("lit", "record 2");
-                    o.get().endRecord();
-                }
-        );
+            i.startRecord("1");
+            i.startEntity("nested");
+            i.startEntity("data");
+            i.startEntity("ent1");
+            i.literal("lit", "record 1.1");
+            i.endEntity();
+            i.startEntity("ent2");
+            i.literal("lit", "record 1.2");
+            i.endEntity();
+            i.endEntity();
+            i.endEntity();
+            i.endRecord();
+            i.startRecord("2");
+            i.startEntity("nested");
+            i.startEntity("junk");
+            i.literal("lit", "skipped");
+            i.endEntity();
+            i.startEntity("data");
+            i.literal("lit", "record 2");
+            i.endEntity();
+            i.endEntity();
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1[1]");
+            o.get().startEntity("ent1");
+            o.get().literal("lit", "record 1.1");
+            o.get().endEntity();
+            o.get().startEntity("ent2");
+            o.get().literal("lit", "record 1.2");
+            o.get().endEntity();
+            o.get().endRecord();
+            o.get().startRecord("2[1]");
+            o.get().literal("lit", "record 2");
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void shouldFilterMultiplePathMatches() {
-        assertFilter(
-                i -> {
-                    i.setPath("data");
+        assertFilter(i -> {
+            i.setPath("data");
 
-                    i.startRecord("1");
-                    i.startEntity("data");
-                    i.literal("lit", "record 1.1");
-                    i.endEntity();
-                    i.startEntity("data");
-                    i.literal("lit", "record 1.2");
-                    i.endEntity();
-                    i.startEntity("junk");
-                    i.literal("lit", "skipped");
-                    i.endEntity();
-                    i.startEntity("data");
-                    i.literal("lit", "record 1.3");
-                    i.startEntity("ent1");
-                    i.literal("lit", "record 1.3");
-                    i.endEntity();
-                    i.endEntity();
-                    i.endRecord();
-                    i.startRecord("2");
-                    i.startEntity("data");
-                    i.startEntity("ent1");
-                    i.literal("lit", "record 2.1");
-                    i.endEntity();
-                    i.endEntity();
-                    i.startEntity("data");
-                    i.literal("lit", "record 2.2");
-                    i.endEntity();
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1[1]");
-                    o.get().literal("lit", "record 1.1");
-                    o.get().endRecord();
-                    o.get().startRecord("1[2]");
-                    o.get().literal("lit", "record 1.2");
-                    o.get().endRecord();
-                    o.get().startRecord("1[3]");
-                    o.get().literal("lit", "record 1.3");
-                    o.get().startEntity("ent1");
-                    o.get().literal("lit", "record 1.3");
-                    o.get().endEntity();
-                    o.get().endRecord();
-                    o.get().startRecord("2[1]");
-                    o.get().startEntity("ent1");
-                    o.get().literal("lit", "record 2.1");
-                    o.get().endEntity();
-                    o.get().endRecord();
-                    o.get().startRecord("2[2]");
-                    o.get().literal("lit", "record 2.2");
-                    o.get().endRecord();
-                }
-        );
+            i.startRecord("1");
+            i.startEntity("data");
+            i.literal("lit", "record 1.1");
+            i.endEntity();
+            i.startEntity("data");
+            i.literal("lit", "record 1.2");
+            i.endEntity();
+            i.startEntity("junk");
+            i.literal("lit", "skipped");
+            i.endEntity();
+            i.startEntity("data");
+            i.literal("lit", "record 1.3");
+            i.startEntity("ent1");
+            i.literal("lit", "record 1.3");
+            i.endEntity();
+            i.endEntity();
+            i.endRecord();
+            i.startRecord("2");
+            i.startEntity("data");
+            i.startEntity("ent1");
+            i.literal("lit", "record 2.1");
+            i.endEntity();
+            i.endEntity();
+            i.startEntity("data");
+            i.literal("lit", "record 2.2");
+            i.endEntity();
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1[1]");
+            o.get().literal("lit", "record 1.1");
+            o.get().endRecord();
+            o.get().startRecord("1[2]");
+            o.get().literal("lit", "record 1.2");
+            o.get().endRecord();
+            o.get().startRecord("1[3]");
+            o.get().literal("lit", "record 1.3");
+            o.get().startEntity("ent1");
+            o.get().literal("lit", "record 1.3");
+            o.get().endEntity();
+            o.get().endRecord();
+            o.get().startRecord("2[1]");
+            o.get().startEntity("ent1");
+            o.get().literal("lit", "record 2.1");
+            o.get().endEntity();
+            o.get().endRecord();
+            o.get().startRecord("2[2]");
+            o.get().literal("lit", "record 2.2");
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void shouldNotFilterNonMatchingRecord() {
-        assertFilter(
-                i -> {
-                    i.setPath("data");
+        assertFilter(i -> {
+            i.setPath("data");
 
-                    i.startRecord("1");
-                    i.startEntity("data");
-                    i.literal("lit", "record 1");
-                    i.endEntity();
-                    i.endRecord();
-                    i.startRecord("2");
-                    i.startEntity("other-data");
-                    i.literal("lit", "record 2");
-                    i.endEntity();
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1[1]");
-                    o.get().literal("lit", "record 1");
-                    o.get().endRecord();
-                }
-        );
+            i.startRecord("1");
+            i.startEntity("data");
+            i.literal("lit", "record 1");
+            i.endEntity();
+            i.endRecord();
+            i.startRecord("2");
+            i.startEntity("other-data");
+            i.literal("lit", "record 2");
+            i.endEntity();
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1[1]");
+            o.get().literal("lit", "record 1");
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void shouldFilterPathWithEntitySeparator() {
-        assertFilter(
-                i -> {
-                    i.setPath("dotted.data");
+        assertFilter(i -> {
+            i.setPath("dotted.data");
 
-                    i.startRecord("1");
-                    i.startEntity("dotted.data");
-                    i.literal("lit", "record 1.1");
-                    i.endEntity();
-                    i.startEntity("dotted");
-                    i.startEntity("data");
-                    i.literal("lit", "record 1.2");
-                    i.endEntity();
-                    i.endEntity();
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1[1]");
-                    o.get().literal("lit", "record 1.1");
-                    o.get().endRecord();
-                    o.get().startRecord("1[2]");
-                    o.get().literal("lit", "record 1.2");
-                    o.get().endRecord();
-                }
-        );
+            i.startRecord("1");
+            i.startEntity("dotted.data");
+            i.literal("lit", "record 1.1");
+            i.endEntity();
+            i.startEntity("dotted");
+            i.startEntity("data");
+            i.literal("lit", "record 1.2");
+            i.endEntity();
+            i.endEntity();
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1[1]");
+            o.get().literal("lit", "record 1.1");
+            o.get().endRecord();
+            o.get().startRecord("1[2]");
+            o.get().literal("lit", "record 1.2");
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void shouldFilterPathWithSpecifiedEntitySeparator() {
-        assertFilter(
-                i -> {
-                    i.setPath("dotted.data");
-                    i.setEntitySeparator("/");
+        assertFilter(i -> {
+            i.setPath("dotted.data");
+            i.setEntitySeparator("/");
 
-                    i.startRecord("1");
-                    i.startEntity("dotted.data");
-                    i.literal("lit", "record 1.1");
-                    i.endEntity();
-                    i.startEntity("dotted");
-                    i.startEntity("data");
-                    i.literal("lit", "record 1.2");
-                    i.endEntity();
-                    i.endEntity();
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1[1]");
-                    o.get().literal("lit", "record 1.1");
-                    o.get().endRecord();
-                }
-        );
+            i.startRecord("1");
+            i.startEntity("dotted.data");
+            i.literal("lit", "record 1.1");
+            i.endEntity();
+            i.startEntity("dotted");
+            i.startEntity("data");
+            i.literal("lit", "record 1.2");
+            i.endEntity();
+            i.endEntity();
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1[1]");
+            o.get().literal("lit", "record 1.1");
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void shouldFilterNestedPathWithSpecifiedEntitySeparator() {
-        assertFilter(
-                i -> {
-                    i.setPath("nested/dotted.data");
-                    i.setEntitySeparator("/");
+        assertFilter(i -> {
+            i.setPath("nested/dotted.data");
+            i.setEntitySeparator("/");
 
-                    i.startRecord("1");
-                    i.startEntity("nested");
-                    i.startEntity("dotted.data");
-                    i.literal("lit", "record 1.1");
-                    i.endEntity();
-                    i.startEntity("dotted");
-                    i.startEntity("data");
-                    i.literal("lit", "record 1.2");
-                    i.endEntity();
-                    i.endEntity();
-                    i.endEntity();
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1[1]");
-                    o.get().literal("lit", "record 1.1");
-                    o.get().endRecord();
-                }
-        );
+            i.startRecord("1");
+            i.startEntity("nested");
+            i.startEntity("dotted.data");
+            i.literal("lit", "record 1.1");
+            i.endEntity();
+            i.startEntity("dotted");
+            i.startEntity("data");
+            i.literal("lit", "record 1.2");
+            i.endEntity();
+            i.endEntity();
+            i.endEntity();
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1[1]");
+            o.get().literal("lit", "record 1.1");
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void shouldRespectRecordIdFormat() {
-        assertFilter(
-                i -> {
-                    i.setRecordIdFormat("%s.%d");
+        assertFilter(i -> {
+            i.setRecordIdFormat("%s.%d");
 
-                    i.startRecord("1");
-                    i.startEntity("data");
-                    i.literal("lit", "record 1");
-                    i.endEntity();
-                    i.endRecord();
-                    i.startRecord("2");
-                    i.startEntity("data");
-                    i.literal("lit", "record 2");
-                    i.endEntity();
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1.1");
-                    o.get().startEntity("data");
-                    o.get().literal("lit", "record 1");
-                    o.get().endEntity();
-                    o.get().endRecord();
-                    o.get().startRecord("2.1");
-                    o.get().startEntity("data");
-                    o.get().literal("lit", "record 2");
-                    o.get().endEntity();
-                    o.get().endRecord();
-                }
-        );
+            i.startRecord("1");
+            i.startEntity("data");
+            i.literal("lit", "record 1");
+            i.endEntity();
+            i.endRecord();
+            i.startRecord("2");
+            i.startEntity("data");
+            i.literal("lit", "record 2");
+            i.endEntity();
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1.1");
+            o.get().startEntity("data");
+            o.get().literal("lit", "record 1");
+            o.get().endEntity();
+            o.get().endRecord();
+            o.get().startRecord("2.1");
+            o.get().startEntity("data");
+            o.get().literal("lit", "record 2");
+            o.get().endEntity();
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void shouldNotFilterLiteralPath() {
-        assertFilter(
-                i -> {
-                    i.setPath("data");
+        assertFilter(i -> {
+            i.setPath("data");
 
-                    i.startRecord("1");
-                    i.startEntity("data");
-                    i.literal("lit", "record 1");
-                    i.endEntity();
-                    i.endRecord();
-                    i.startRecord("2");
-                    i.literal("data", "record 2");
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1[1]");
-                    o.get().literal("lit", "record 1");
-                    o.get().endRecord();
-                }
-        );
+            i.startRecord("1");
+            i.startEntity("data");
+            i.literal("lit", "record 1");
+            i.endEntity();
+            i.endRecord();
+            i.startRecord("2");
+            i.literal("data", "record 2");
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1[1]");
+            o.get().literal("lit", "record 1");
+            o.get().endRecord();
+        });
     }
 
-    private void assertFilter(final Consumer<RecordPathFilter> in, final Consumer<Supplier<StreamReceiver>> out) {
+    private void assertFilter(final Consumer<RecordPathFilter> in,
+            final Consumer<Supplier<StreamReceiver>> out) {
         final RecordPathFilter recordPathFilter = new RecordPathFilter();
         recordPathFilter.setReceiver(receiver);
 

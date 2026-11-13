@@ -70,7 +70,8 @@ public final class ObjectJavaIoWriter<T> implements ObjectReceiver<T> {
     @Override
     public void resetStream() {
         if (writerFactory == null) {
-            throw new UnsupportedOperationException("Cannot reset ObjectJavaIoWriter. No IOWriterFactory set.");
+            throw new UnsupportedOperationException(
+                    "Cannot reset ObjectJavaIoWriter. No IOWriterFactory set.");
         }
         writer = writerFactory.createWriter();
 

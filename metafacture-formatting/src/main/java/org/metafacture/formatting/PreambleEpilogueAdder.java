@@ -24,8 +24,8 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 /**
- * Emits a <i>preamble</i> string before the first string object in the
- * stream and an <i>epilogue</i> string before the end of the stream.
+ * Emits a <i>preamble</i> string before the first string object in the stream
+ * and an <i>epilogue</i> string before the end of the stream.
  * <p>
  * The preamble and epilogue strings are only emitted if an object is received.
  * If the preamble or epilogue string is empty, the respective string is not
@@ -55,8 +55,8 @@ public final class PreambleEpilogueAdder extends DefaultObjectPipe<String, Objec
     /**
      * Sets the <i>preamble</i> string which is emitted before the first object.
      * <p>
-     * The default preamble is an empty string. That means by default no
-     * preamble is emitted.
+     * The default preamble is an empty string. That means by default no preamble is
+     * emitted.
      * <p>
      * The parameter may only be changed before the first object is processed
      * otherwise the change has no effect.

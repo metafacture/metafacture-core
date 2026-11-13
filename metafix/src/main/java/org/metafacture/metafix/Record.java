@@ -29,8 +29,8 @@ import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 /**
- * Represents a metadata record, i.e., a {@link Value.Hash Hash} of fields
- * and values.
+ * Represents a metadata record, i.e., a {@link Value.Hash Hash} of fields and
+ * values.
  */
 public class Record extends Value.Hash {
 
@@ -82,7 +82,8 @@ public class Record extends Value.Hash {
      *
      * @param field the field name
      *
-     * @return true if this record contains the <i>virtual</i> field, otherwise false
+     * @return true if this record contains the <i>virtual</i> field, otherwise
+     *         false
      */
     public boolean containsVirtualField(final String field) {
         return virtualFields.containsKey(field);
@@ -90,8 +91,8 @@ public class Record extends Value.Hash {
 
     /**
      * Adds a <i>virtual</i> field/value pair to this record, provided it's not
-     * {@link Value#isNull(Value) null}. Virtual fields can be
-     * {@link #get(String) accessed} like regular metadata fields, but aren't
+     * {@link Value#isNull(Value) null}. Virtual fields can be {@link #get(String)
+     * accessed} like regular metadata fields, but aren't
      * {@link #forEach(BiConsumer) emitted} by default.
      *
      * @param field the field name
@@ -107,7 +108,8 @@ public class Record extends Value.Hash {
 
     @Override
     public String toString() {
-        // TODO: Improve string representation? Include reject status, virtual fields, etc.?
+        // TODO: Improve string representation? Include reject status, virtual fields,
+        // etc.?
         return super.toString();
     }
 
@@ -167,8 +169,8 @@ public class Record extends Value.Hash {
     }
 
     /**
-     * Sets a field/value pair to this record, replacing
-     * any previous association of the field with a value.
+     * Sets a field/value pair to this record, replacing any previous association of
+     * the field with a value.
      *
      * @param field    the field name
      * @param newValue the new metadata value
@@ -179,8 +181,8 @@ public class Record extends Value.Hash {
     }
 
     /**
-     * Retains only the given field/value pairs in this record. Turns
-     * <i>virtual</i> fields into regular metadata fields if they're not already
+     * Retains only the given field/value pairs in this record. Turns <i>virtual</i>
+     * fields into regular metadata fields if they're not already
      * {@link #containsField(String) present}.
      *
      * @param fields the field names
@@ -199,7 +201,8 @@ public class Record extends Value.Hash {
     }
 
     /**
-     * Transform this record by applying the given operator to all matching values for the given field.
+     * Transform this record by applying the given operator to all matching values
+     * for the given field.
      *
      * @param field    the field
      * @param operator the operator
@@ -225,12 +228,14 @@ public class Record extends Value.Hash {
     }
 
     /**
-     * Transform this record by consuming all matching values for the given field with the given consumer.
+     * Transform this record by consuming all matching values for the given field
+     * with the given consumer.
      *
      * @param field    the field
      * @param consumer the consumer
      */
-    public void transform(final String field, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
+    public void transform(final String field,
+            final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
         final FixPath path = new FixPath(field);
         final Value oldValue = path.findIn(this);
 

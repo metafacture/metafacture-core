@@ -44,8 +44,7 @@ public final class PpXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private static final String SUBFIELD = "subf";
     private static final String DATAFIELD = "tag";
     private static final String RECORD = "record";
-    private static final String NAMESPACE =
-            "http://www.oclcpica.org/xmlns/ppxml-1.0";
+    private static final String NAMESPACE = "http://www.oclcpica.org/xmlns/ppxml-1.0";
     private static final String LEADER = "global";
     private String currentTag = "";
     private StringBuilder builder = new StringBuilder();
@@ -57,8 +56,8 @@ public final class PpXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void startElement(final String uri, final String localName,
-            final String qName, final Attributes attributes) throws SAXException {
+    public void startElement(final String uri, final String localName, final String qName,
+            final Attributes attributes) throws SAXException {
         if (SUBFIELD.equals(localName)) {
             builder = new StringBuilder();
             currentTag = attributes.getValue("id");
@@ -86,8 +85,8 @@ public final class PpXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void endElement(final String uri, final String localName,
-            final String qName) throws SAXException {
+    public void endElement(final String uri, final String localName, final String qName)
+            throws SAXException {
         if (SUBFIELD.equals(localName)) {
             getReceiver().literal(currentTag,
                     Normalizer.normalize(builder.toString().trim(), Normalizer.Form.NFC));

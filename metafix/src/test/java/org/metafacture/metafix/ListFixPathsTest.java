@@ -45,52 +45,31 @@ public final class ListFixPathsTest {
 
     @Test
     public void testShouldListPaths() {
-        verify(
-            "3\t|\tb.*",
-            "2\t|\tc.*",
-            "1\t|\ta");
+        verify("3\t|\tb.*", "2\t|\tc.*", "1\t|\ta");
     }
 
     @Test
     public void testShouldListPathsNoCount() {
         lister.setCount(false);
-        verify(
-            "a",
-            "b.*",
-            "c.*");
+        verify("a", "b.*", "c.*");
     }
 
     @Test
     public void testShouldListPathsUseIndex() {
         lister.setIndex(true);
-        verify(
-            "1\t|\ta",
-            "1\t|\tb.1",
-            "1\t|\tb.2",
-            "1\t|\tb.3",
-            "1\t|\tc.1",
-            "1\t|\tc.2");
+        verify("1\t|\ta", "1\t|\tb.1", "1\t|\tb.2", "1\t|\tb.3", "1\t|\tc.1", "1\t|\tc.2");
     }
 
     @Test
     public void testShouldListPathsNoCountUseIndex() {
         lister.setCount(false);
         lister.setIndex(true);
-        verify(
-            "a",
-            "b.1",
-            "b.2",
-            "b.3",
-            "c.1",
-            "c.2");
+        verify("a", "b.1", "b.2", "b.3", "c.1", "c.2");
     }
 
     @Test
     public void testShouldListPathsSortedByFrequency() {
-        verify(
-            "3\t|\tb.*",
-            "2\t|\tc.*",
-            "1\t|\ta");
+        verify("3\t|\tb.*", "2\t|\tc.*", "1\t|\ta");
     }
 
     private void processRecord() {

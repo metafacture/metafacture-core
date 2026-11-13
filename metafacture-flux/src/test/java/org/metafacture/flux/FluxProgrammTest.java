@@ -47,6 +47,7 @@ public final class FluxProgrammTest {
             public void write(final int b) throws IOException {
                 // Do not write any output.
             }
+
         });
     }
 

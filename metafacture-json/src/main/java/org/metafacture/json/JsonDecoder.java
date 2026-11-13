@@ -42,8 +42,8 @@ import java.util.stream.Stream;
  * @author Jens Wille
  *
  */
-@Description("Decodes JSON to metadata events. The \'recordPath\' option can be used to set a JsonPath " +
-    "to extract a path as JSON - or to split the data into multiple JSON documents.")
+@Description("Decodes JSON to metadata events. The \'recordPath\' option can be used to set a JsonPath "
+        + "to extract a path as JSON - or to split the data into multiple JSON documents.")
 @In(String.class)
 @Out(StreamReceiver.class)
 @FluxCommand("decode-json")
@@ -298,12 +298,9 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
         }
 
         if (jsonParser.currentToken() != null) {
-            throw new MetafactureException(new StringBuilder()
-                    .append("Unexpected token '")
-                    .append(jsonParser.currentToken())
-                    .append("' at ")
-                    .append(jsonParser.currentLocation())
-                    .toString());
+            throw new MetafactureException(new StringBuilder().append("Unexpected token '")
+                    .append(jsonParser.currentToken()).append("' at ")
+                    .append(jsonParser.currentLocation()).toString());
         }
     }
 

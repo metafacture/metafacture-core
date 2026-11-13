@@ -119,8 +119,7 @@ class LabelBuilder {
     }
 
     void copyToBuffer(final byte[] destBuffer) {
-        System.arraycopy(buffer.getByteArray(), 0, destBuffer, 0,
-                buffer.getLength());
+        System.arraycopy(buffer.getByteArray(), 0, destBuffer, 0, buffer.getLength());
     }
 
     @Override

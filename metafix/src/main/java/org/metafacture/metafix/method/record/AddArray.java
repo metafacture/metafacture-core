@@ -38,11 +38,13 @@ public class AddArray implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         final String field = params.get(0);
         final Value newValue = newArray(params.subList(1, params.size()).stream().map(Value::new));
         record.set(field, newValue);
-        newValue.asArray().forEach(value -> value.withPathSet(newValue.getPath() + Value.FIELD_PATH_SEPARATOR + value.getPath()));
+        newValue.asArray().forEach(value -> value
+                .withPathSet(newValue.getPath() + Value.FIELD_PATH_SEPARATOR + value.getPath()));
     }
 
 }

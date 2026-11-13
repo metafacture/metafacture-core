@@ -27,8 +27,7 @@ import org.metafacture.framework.annotations.Out;
  * Blocks {@link #closeStream()} events until {@code n} <i>close-stream</i>
  * events have been received.
  *
- * @param <T>
- *            object type
+ * @param <T> object type
  *
  * @author Markus Geipel
  *
@@ -37,8 +36,7 @@ import org.metafacture.framework.annotations.Out;
 @In(Object.class)
 @Out(Object.class)
 @FluxCommand("wait-for-inputs")
-public final class CloseSuppressor<T>
-        implements ObjectPipe<T, ObjectReceiver<T>> {
+public final class CloseSuppressor<T> implements ObjectPipe<T, ObjectReceiver<T>> {
 
     private ObjectReceiver<T> receiver;
     private final int numCloses;
@@ -49,7 +47,7 @@ public final class CloseSuppressor<T>
      * number of events to block before closing the stream.
      *
      * @param numCloses the number of events to block before closing the stream. The
-     *                  String is parsed to an integer.
+     *                      String is parsed to an integer.
      */
     public CloseSuppressor(final String numCloses) {
         this(Integer.parseInt(numCloses));

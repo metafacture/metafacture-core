@@ -109,7 +109,8 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
     @Override
     public <R extends ObjectReceiver<T>> R setReceiver(final R newReceiver) {
         if (null != thread) {
-            throw new IllegalStateException("Receiver cannot be changed while processing thread is running.");
+            throw new IllegalStateException(
+                    "Receiver cannot be changed while processing thread is running.");
         }
 
         receiver = newReceiver;
@@ -178,6 +179,7 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
                 return;
             }
         }
+
     }
 
 }

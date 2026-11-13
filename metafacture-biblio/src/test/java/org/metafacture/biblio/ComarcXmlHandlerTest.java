@@ -70,14 +70,12 @@ public final class ComarcXmlHandlerTest {
         attributes.addAttribute(NAMESPACE, "tag", "tag", "CDATA", "000");
         attributes.addAttribute(NAMESPACE, "ind1", "ind1", "CDATA", " ");
         attributes.addAttribute(NAMESPACE, "ind2", "ind2", "CDATA", " ");
-        this.comarcXmlHandler
-                .startElement(NAMESPACE, DATAFIELD, "", attributes);
+        this.comarcXmlHandler.startElement(NAMESPACE, DATAFIELD, "", attributes);
 
         attributes = new AttributesImpl();
         attributes.addAttribute(NAMESPACE, "code", "code", "CDATA", "x");
         this.comarcXmlHandler.startElement(NAMESPACE, SUBFIELD, "", attributes);
-        this.comarcXmlHandler.characters(fieldValue.toCharArray(), 0,
-                fieldValue.length());
+        this.comarcXmlHandler.characters(fieldValue.toCharArray(), 0, fieldValue.length());
         this.comarcXmlHandler.endElement(NAMESPACE, SUBFIELD, "");
 
         this.comarcXmlHandler.endElement(NAMESPACE, DATAFIELD, "");
@@ -99,19 +97,16 @@ public final class ComarcXmlHandlerTest {
         attributes.addAttribute(NAMESPACE, "tag", "tag", "CDATA", "000");
         attributes.addAttribute(NAMESPACE, "ind1", "ind1", "CDATA", " ");
         attributes.addAttribute(NAMESPACE, "ind2", "ind2", "CDATA", " ");
-        this.comarcXmlHandler
-                .startElement(NAMESPACE, DATAFIELD, "", attributes);
+        this.comarcXmlHandler.startElement(NAMESPACE, DATAFIELD, "", attributes);
 
         attributes = new AttributesImpl();
         attributes.addAttribute(NAMESPACE, "code", "code", "CDATA", "x");
         this.comarcXmlHandler.startElement(NAMESPACE, SUBFIELD, "", attributes);
-        this.comarcXmlHandler.characters(fieldValue1.toCharArray(), 0,
-                fieldValue1.length());
+        this.comarcXmlHandler.characters(fieldValue1.toCharArray(), 0, fieldValue1.length());
         this.comarcXmlHandler.endElement(NAMESPACE, SUBFIELD, "");
 
         this.comarcXmlHandler.startElement(NAMESPACE, SUBFIELD, "", attributes);
-        this.comarcXmlHandler.characters(fieldValue2.toCharArray(), 0,
-                fieldValue2.length());
+        this.comarcXmlHandler.characters(fieldValue2.toCharArray(), 0, fieldValue2.length());
         this.comarcXmlHandler.endElement(NAMESPACE, SUBFIELD, "");
 
         this.comarcXmlHandler.endElement(NAMESPACE, DATAFIELD, "");
@@ -130,26 +125,22 @@ public final class ComarcXmlHandlerTest {
         AttributesImpl attributes = new AttributesImpl();
 
         // initialise the record
-        this.comarcXmlHandler.startElement(NAMESPACE, RECORD, RECORD,
-                attributes);
+        this.comarcXmlHandler.startElement(NAMESPACE, RECORD, RECORD, attributes);
 
-        // create datafield "000  "
+        // create datafield "000 "
         attributes.addAttribute(NAMESPACE, "tag", "tag", "CDATA", "000");
         attributes.addAttribute(NAMESPACE, "ind1", "ind1", "CDATA", " ");
         attributes.addAttribute(NAMESPACE, "ind2", "ind2", "CDATA", " ");
-        this.comarcXmlHandler
-                .startElement(NAMESPACE, DATAFIELD, "", attributes);
+        this.comarcXmlHandler.startElement(NAMESPACE, DATAFIELD, "", attributes);
 
         attributes = new AttributesImpl();
         attributes.addAttribute(NAMESPACE, "code", "code", "CDATA", "x");
         this.comarcXmlHandler.startElement(NAMESPACE, SUBFIELD, "", attributes);
-        this.comarcXmlHandler.characters(fieldValue1.toCharArray(), 0,
-                fieldValue1.length());
+        this.comarcXmlHandler.characters(fieldValue1.toCharArray(), 0, fieldValue1.length());
         this.comarcXmlHandler.endElement(NAMESPACE, SUBFIELD, "");
 
         this.comarcXmlHandler.startElement(NAMESPACE, SUBFIELD, "", attributes);
-        this.comarcXmlHandler.characters(fieldValue2.toCharArray(), 0,
-                fieldValue2.length());
+        this.comarcXmlHandler.characters(fieldValue2.toCharArray(), 0, fieldValue2.length());
         this.comarcXmlHandler.endElement(NAMESPACE, SUBFIELD, "");
 
         this.comarcXmlHandler.endElement(NAMESPACE, DATAFIELD, "");
@@ -159,14 +150,12 @@ public final class ComarcXmlHandlerTest {
         attributes.addAttribute(NAMESPACE, "tag", "tag", "CDATA", "001");
         attributes.addAttribute(NAMESPACE, "ind1", "ind1", "CDATA", " ");
         attributes.addAttribute(NAMESPACE, "ind2", "ind2", "CDATA", "2");
-        this.comarcXmlHandler
-                .startElement(NAMESPACE, DATAFIELD, "", attributes);
+        this.comarcXmlHandler.startElement(NAMESPACE, DATAFIELD, "", attributes);
 
         attributes = new AttributesImpl();
         attributes.addAttribute(NAMESPACE, "code", "code", "CDATA", "a");
         this.comarcXmlHandler.startElement(NAMESPACE, SUBFIELD, "", attributes);
-        this.comarcXmlHandler.characters(fieldValue1.toCharArray(), 0,
-                fieldValue1.length());
+        this.comarcXmlHandler.characters(fieldValue1.toCharArray(), 0, fieldValue1.length());
         this.comarcXmlHandler.endElement(NAMESPACE, SUBFIELD, "");
 
         this.comarcXmlHandler.endElement(NAMESPACE, DATAFIELD, "");

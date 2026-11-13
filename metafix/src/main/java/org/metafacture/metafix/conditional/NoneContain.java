@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Executes the functions if/unless the field does not contain the value. If
- * it is an array or a hash, none of the field values may contain the string.
+ * Executes the functions if/unless the field does not contain the value. If it
+ * is an array or a hash, none of the field values may contain the string.
  */
 @FixCommand("none_contain")
 public class NoneContain implements FixPredicate {
@@ -38,7 +38,8 @@ public class NoneContain implements FixPredicate {
     }
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public boolean test(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         return !new AnyContain().test(metafix, record, params, options);
     }
 

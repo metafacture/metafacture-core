@@ -74,8 +74,7 @@ public class XmlFilenameWriterTest {
     }
 
     private String createXml(final String id) {
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xmldata id=\"" + id +
-                "\" />";
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xmldata id=\"" + id + "\" />";
     }
 
 }

@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Counts the number of elements in an array or a hash and replaces the
- * field value with this number.
+ * Counts the number of elements in an array or a hash and replaces the field
+ * value with this number.
  */
 @FixCommand("count")
 public class Count implements FixFunction {
@@ -39,11 +39,10 @@ public class Count implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-        record.transform(params.get(0), (m, c) -> m
-                .ifArray(a -> c.accept(new Value(a.size())))
-                .ifHash(h -> c.accept(new Value(h.size())))
-        );
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
+        record.transform(params.get(0), (m, c) -> m.ifArray(a -> c.accept(new Value(a.size())))
+                .ifHash(h -> c.accept(new Value(h.size()))));
     }
 
 }

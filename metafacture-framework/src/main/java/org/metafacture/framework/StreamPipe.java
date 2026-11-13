@@ -20,8 +20,8 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 
 /**
  * A {@link StreamReceiver} that also implements the {@link Sender} interface.
- * This interface should be implemented by all modules which receive streams
- * and invoke methods on a downstream receiver.
+ * This interface should be implemented by all modules which receive streams and
+ * invoke methods on a downstream receiver.
  *
  * @param <R> receiver type of the downstream module
  *

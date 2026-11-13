@@ -33,8 +33,7 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @In(Object.class)
 @Out(StreamReceiver.class)
 @FluxCommand("object-to-literal")
-public final class ObjectToLiteral<T> extends
-        DefaultObjectPipe<T, StreamReceiver> {
+public final class ObjectToLiteral<T> extends DefaultObjectPipe<T, StreamReceiver> {
 
     public static final String DEFAULT_LITERAL_NAME = "obj";
     public static final String DEFAULT_RECORD_ID = "";

@@ -36,8 +36,7 @@ public interface FilenameExtractor extends RecordIdentifier {
     /**
      * Sets the encoding used to open the resource.
      *
-     * @param encoding
-     *            new encoding
+     * @param encoding new encoding
      */
     void setEncoding(String encoding);
 
@@ -45,39 +44,35 @@ public interface FilenameExtractor extends RecordIdentifier {
      * Sets the end of the index in the filename to extract the name of the
      * subfolder.
      *
-     * @param endIndex
-     *            This marks the index' end.
+     * @param endIndex This marks the index' end.
      */
     void setEndIndex(int endIndex);
 
     /**
      * Sets the file's suffix.
      *
-     * @param fileSuffix
-     *            the suffix used for the to be generated files
+     * @param fileSuffix the suffix used for the to be generated files
      */
     void setFileSuffix(String fileSuffix);
 
     /**
-     * Sets the beginning of the index in the filename to extract the name of
-     * the subfolder.
+     * Sets the beginning of the index in the filename to extract the name of the
+     * subfolder.
      *
-     * @param startIndex
-     *            This marks the index' beginning.
+     * @param startIndex This marks the index' beginning.
      */
     void setStartIndex(int startIndex);
 
     /**
      * Sets the target path.
      *
-     * @param target
-     *            the basis directory in which the files are stored
+     * @param target the basis directory in which the files are stored
      */
     void setTarget(String target);
 
     /**
-     * Provides functions and fields that all {@link FilenameExtractor}
-     * implementing classes may found useful.
+     * Provides functions and fields that all {@link FilenameExtractor} implementing
+     * classes may found useful.
      *
      * @author Pascal Christoph (dr0i)
      *
@@ -101,8 +96,7 @@ public interface FilenameExtractor extends RecordIdentifier {
         /**
          * Ensures that path exists. If not, make it.
          *
-         * @param path
-         *            the path of the to be stored file
+         * @param path the path of the to be stored file
          */
         public void ensurePathExists(final File path) {
             final File parent = path.getAbsoluteFile().getParentFile();
@@ -112,8 +106,7 @@ public interface FilenameExtractor extends RecordIdentifier {
         /**
          * Sets the encoding used to open the resource.
          *
-         * @param encoding
-         *            new encoding
+         * @param encoding new encoding
          */
         public void setEncoding(final String encoding) {
             this.encoding = encoding;
@@ -131,8 +124,7 @@ public interface FilenameExtractor extends RecordIdentifier {
         /**
          * Sets the suffix of the files.
          *
-         * @param fileSuffix
-         *              the suffix of the files
+         * @param fileSuffix the suffix of the files
          */
         public void setFileSuffix(final String fileSuffix) {
             this.fileSuffix = fileSuffix;
@@ -150,8 +142,7 @@ public interface FilenameExtractor extends RecordIdentifier {
         /**
          * Sets the filename.
          *
-         * @param filename
-         *              the name of the file
+         * @param filename the name of the file
          */
         public void setFilename(final String filename) {
             this.filename = filename;
@@ -168,11 +159,10 @@ public interface FilenameExtractor extends RecordIdentifier {
         }
 
         /**
-         * Sets the property which is used as the base of the filename.
-         * Recommended properties are identifiers.
+         * Sets the property which is used as the base of the filename. Recommended
+         * properties are identifiers.
          *
-         * @param property
-         *              the property which will be used for the base name of the file
+         * @param property the property which will be used for the base name of the file
          */
         public void setProperty(final String property) {
             this.property = property;
@@ -190,8 +180,7 @@ public interface FilenameExtractor extends RecordIdentifier {
         /**
          * Sets the target path.
          *
-         * @param target
-         *            the basis directory in which the files are stored
+         * @param target the basis directory in which the files are stored
          */
         public void setTarget(final String target) {
             this.target = target;
@@ -207,19 +196,16 @@ public interface FilenameExtractor extends RecordIdentifier {
         }
 
         /**
-         * Sets the end of the index in the filename to extract the name of a
-         * subfolder.
+         * Sets the end of the index in the filename to extract the name of a subfolder.
          *
-         * @param endIndex
-         *            this marks the index' end
+         * @param endIndex this marks the index' end
          */
         public void setEndIndex(final int endIndex) {
             this.endIndex = endIndex;
         }
 
         /**
-         * Gets the end of the index in the filename to extract the name of a
-         * subfolder.
+         * Gets the end of the index in the filename to extract the name of a subfolder.
          *
          * @return the marker of the index' end
          */
@@ -228,19 +214,18 @@ public interface FilenameExtractor extends RecordIdentifier {
         }
 
         /**
-         * Sets the beginning of the index in the filename to extract the name of
-         * the subfolder.
+         * Sets the beginning of the index in the filename to extract the name of the
+         * subfolder.
          *
-         * @param startIndex
-         *            This marks the index' beginning
+         * @param startIndex This marks the index' beginning
          */
         public void setStartIndex(final int startIndex) {
             this.startIndex = startIndex;
         }
 
         /**
-         * Gets the beginning of the index in the filename to extract the name of
-         * the subfolder.
+         * Gets the beginning of the index in the filename to extract the name of the
+         * subfolder.
          *
          * @return the marker of the index' beginning
          */

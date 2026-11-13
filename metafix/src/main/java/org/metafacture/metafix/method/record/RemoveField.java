@@ -37,7 +37,8 @@ public class RemoveField implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         params.forEach(p -> record.remove(p));
     }
 

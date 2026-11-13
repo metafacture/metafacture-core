@@ -38,7 +38,8 @@ public class PutVar implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         metafix.getVars().put(params.get(0), params.get(1));
     }
 

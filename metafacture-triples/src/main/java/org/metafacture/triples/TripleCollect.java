@@ -84,7 +84,8 @@ public final class TripleCollect extends DefaultObjectPipe<Triple, StreamReceive
             parser.parse(triple.getObject());
         }
         else {
-            throw new UnsupportedOperationException(triple.getObjectType() + " can not yet be decoded");
+            throw new UnsupportedOperationException(
+                    triple.getObjectType() + " can not yet be decoded");
         }
     }
 

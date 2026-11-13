@@ -38,6 +38,7 @@ public interface FixContext {
      * @param options           the options
      * @param recordTransformer the record transformer
      */
-    void execute(Metafix metafix, Record record, List<String> params, Map<String, String> options, RecordTransformer recordTransformer);
+    void execute(Metafix metafix, Record record, List<String> params, Map<String, String> options,
+            RecordTransformer recordTransformer);
 
 }

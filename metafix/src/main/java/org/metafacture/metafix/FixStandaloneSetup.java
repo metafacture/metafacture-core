@@ -10,7 +10,8 @@ import java.io.Reader;
 import java.io.UncheckedIOException;
 
 /**
- * Initialization support for running Xtext languages without Equinox extension registry.
+ * Initialization support for running Xtext languages without Equinox extension
+ * registry.
  */
 public class FixStandaloneSetup extends FixStandaloneSetupGenerated {
 
@@ -21,8 +22,8 @@ public class FixStandaloneSetup extends FixStandaloneSetupGenerated {
     }
 
     /**
-     * {@link XtextValidator#validate(String, ISetup) Validates} the Fix file.
-     * Exits with error code {@code 1} if validation fails.
+     * {@link XtextValidator#validate(String, ISetup) Validates} the Fix file. Exits
+     * with error code {@code 1} if validation fails.
      *
      * @param args the pathname of the Fix file to validate
      */
@@ -31,24 +32,27 @@ public class FixStandaloneSetup extends FixStandaloneSetupGenerated {
             System.exit(XtextValidator.validate(args[0], new FixStandaloneSetup()) ? 0 : 1);
         }
 
-        throw new IllegalArgumentException(String.format("Usage: %s <fix-file>", FixStandaloneSetup.class.getName()));
+        throw new IllegalArgumentException(
+                String.format("Usage: %s <fix-file>", FixStandaloneSetup.class.getName()));
     }
 
     /**
-     * {@link XtextValidator#getValidatedResource(String, ISetup) Parses and validates}
-     * the Fix file.
+     * {@link XtextValidator#getValidatedResource(String, ISetup) Parses and
+     * validates} the Fix file.
      *
      * @param path the pathname of the Fix file to parse
      *
      * @return the Fix instance
      */
     public static Fix parseFix(final String path) {
-        return (Fix) XtextValidator.getValidatedResource(path, new FixStandaloneSetup()).getContents().get(0);
+        return (Fix) XtextValidator.getValidatedResource(path, new FixStandaloneSetup())
+                .getContents().get(0);
     }
 
     /**
-     * {@link XtextValidator#getValidatedResource(String, ISetup) Parses and validates}
-     * the Fix definition after storing it in a {@link #absPathToTempFile temporary file}.
+     * {@link XtextValidator#getValidatedResource(String, ISetup) Parses and
+     * validates} the Fix definition after storing it in a {@link #absPathToTempFile
+     * temporary file}.
      *
      * @param fixDef the Fix definition to parse
      *
@@ -73,7 +77,8 @@ public class FixStandaloneSetup extends FixStandaloneSetupGenerated {
      *
      * @throws IOException if an I/O error occurs
      */
-    public static String absPathToTempFile(final Reader fixDef, final String suffix) throws IOException {
+    public static String absPathToTempFile(final Reader fixDef, final String suffix)
+            throws IOException {
         // TODO: avoid temp file creation
         final File file = File.createTempFile("metafix", suffix);
         file.deleteOnExit();

@@ -34,7 +34,8 @@ public final class DefaultErrorHandler implements MorphErrorHandler {
 
     @Override
     public void error(final Exception exception) {
-        throw new MetamorphException("Error while executing the Metamorph transformation pipeline: " + exception.getMessage(), exception);
+        throw new MetamorphException("Error while executing the Metamorph transformation pipeline: "
+                + exception.getMessage(), exception);
     }
 
 }

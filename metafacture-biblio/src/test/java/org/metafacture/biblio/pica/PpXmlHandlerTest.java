@@ -62,8 +62,7 @@ public final class PpXmlHandlerTest {
     }
 
     @Test
-    public void shouldLabelDataFieldWithoutOccurrenceAttribute()
-            throws SAXException {
+    public void shouldLabelDataFieldWithoutOccurrenceAttribute() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
         final String fieldValue = "1234";
@@ -80,7 +79,7 @@ public final class PpXmlHandlerTest {
         ppXmlHandler.endElement(null, DATAFIELD, "");
         ppXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-        final InOrder ordered    = Mockito.inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("003@");
         ordered.verify(receiver).literal("0", fieldValue);
@@ -90,8 +89,7 @@ public final class PpXmlHandlerTest {
     }
 
     @Test
-    public void shouldLabelDataFieldWithOneDigitOccurrenceAttribute()
-            throws SAXException {
+    public void shouldLabelDataFieldWithOneDigitOccurrenceAttribute() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
         final String fieldValue = "utf-8";
@@ -108,7 +106,7 @@ public final class PpXmlHandlerTest {
         ppXmlHandler.endElement(null, DATAFIELD, "");
         ppXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-        final InOrder ordered    = Mockito.inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("201U/01");
         ordered.verify(receiver).literal("0", fieldValue);
@@ -118,8 +116,7 @@ public final class PpXmlHandlerTest {
     }
 
     @Test
-    public void shouldLabelDataFieldWithTwoDigitOccurrenceAttribute()
-            throws SAXException {
+    public void shouldLabelDataFieldWithTwoDigitOccurrenceAttribute() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
         final String fieldValue = "utf-8";
@@ -136,7 +133,7 @@ public final class PpXmlHandlerTest {
         ppXmlHandler.endElement(null, DATAFIELD, "");
         ppXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-        final InOrder ordered    = Mockito.inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("201U/01");
         ordered.verify(receiver).literal("0", fieldValue);

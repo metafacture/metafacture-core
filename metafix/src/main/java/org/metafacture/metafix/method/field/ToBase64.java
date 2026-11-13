@@ -38,7 +38,8 @@ public class ToBase64 implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         final boolean urlSafe = getBoolean(options, "url_safe");
         final Base64.Encoder encoder = urlSafe ? Base64.getUrlEncoder() : Base64.getEncoder();
 

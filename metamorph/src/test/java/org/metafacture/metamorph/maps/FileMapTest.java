@@ -67,112 +67,96 @@ public final class FileMapTest {
 
     @Test
     public void shouldLookupValuesInFileBasedMap() {
-        TestHelpers.assertMorph(receiver, buildMorph("lookup in", ""),
-                i -> {
-                    i.startRecord("1");
-                    i.literal("1", "gw");
-                    i.literal("1", "fj");
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1");
-                    o.get().literal("1", "Germany");
-                    o.get().literal("1", "Fiji");
-                    o.get().endRecord();
-                }
-        );
+        TestHelpers.assertMorph(receiver, buildMorph("lookup in", ""), i -> {
+            i.startRecord("1");
+            i.literal("1", "gw");
+            i.literal("1", "fj");
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1");
+            o.get().literal("1", "Germany");
+            o.get().literal("1", "Fiji");
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void shouldLookupValuesInFileBasedMapWithColumnOptions() {
-        TestHelpers.assertMorph(receiver, buildMorph("lookup in", "keyColumn=\"1\" valueColumn=\"0\" expectedColumns=\"2\""),
+        TestHelpers.assertMorph(receiver,
+                buildMorph("lookup in", "keyColumn=\"1\" valueColumn=\"0\" expectedColumns=\"2\""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "Germany");
                     i.literal("1", "Fiji");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("1", "gw");
                     o.get().literal("1", "fj");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldLookupValuesInFileBasedMapWithIgnorePattern() {
-        TestHelpers.assertMorph(receiver, buildMorph("lookup in", "ignorePattern=\"g.*\""),
-                i -> {
-                    i.startRecord("1");
-                    i.literal("1", "gw");
-                    i.literal("1", "fj");
-                    i.literal("1", "hk");
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1");
-                    o.get().literal("1", "Fiji");
-                    o.get().literal("1", "HongKong");
-                    o.get().endRecord();
-                }
-        );
+        TestHelpers.assertMorph(receiver, buildMorph("lookup in", "ignorePattern=\"g.*\""), i -> {
+            i.startRecord("1");
+            i.literal("1", "gw");
+            i.literal("1", "fj");
+            i.literal("1", "hk");
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1");
+            o.get().literal("1", "Fiji");
+            o.get().literal("1", "HongKong");
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void shouldWhitelistValuesInFileBasedMap() {
-        TestHelpers.assertMorph(receiver, buildMorph("whitelist map", ""),
-                i -> {
-                    i.startRecord("1");
-                    i.literal("1", "gw");
-                    i.literal("1", "fj");
-                    i.literal("1", "bla");
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1");
-                    o.get().literal("1", "gw");
-                    o.get().literal("1", "fj");
-                    o.get().endRecord();
-                }
-        );
+        TestHelpers.assertMorph(receiver, buildMorph("whitelist map", ""), i -> {
+            i.startRecord("1");
+            i.literal("1", "gw");
+            i.literal("1", "fj");
+            i.literal("1", "bla");
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1");
+            o.get().literal("1", "gw");
+            o.get().literal("1", "fj");
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void shouldReplaceValuesUsingFileBasedMap() {
-        TestHelpers.assertMorph(receiver, buildMorph("setreplace map", ""),
-                i -> {
-                    i.startRecord("1");
-                    i.literal("1", "gw-fj: 1:1");
-                    i.literal("1", "fj-gw: 0:0");
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1");
-                    o.get().literal("1", "Germany-Fiji: 1:1");
-                    o.get().literal("1", "Fiji-Germany: 0:0");
-                    o.get().endRecord();
-                }
-        );
+        TestHelpers.assertMorph(receiver, buildMorph("setreplace map", ""), i -> {
+            i.startRecord("1");
+            i.literal("1", "gw-fj: 1:1");
+            i.literal("1", "fj-gw: 0:0");
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1");
+            o.get().literal("1", "Germany-Fiji: 1:1");
+            o.get().literal("1", "Fiji-Germany: 0:0");
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void shouldReplaceCommaSeparatedValuesUsingFileBasedMapSetting() {
-        TestHelpers.assertMorph(receiver, buildMorph("setreplace map", "separator=\",\""),
-                i -> {
-                    i.startRecord("1");
-                    i.literal("1", "gw");
-                    i.literal("1", "ry\tRyukyuIslands");
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1");
-                    o.get().literal("1", "gw");
-                    o.get().literal("1", "Southern");
-                    o.get().endRecord();
-                }
-        );
+        TestHelpers.assertMorph(receiver, buildMorph("setreplace map", "separator=\",\""), i -> {
+            i.startRecord("1");
+            i.literal("1", "gw");
+            i.literal("1", "ry\tRyukyuIslands");
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1");
+            o.get().literal("1", "gw");
+            o.get().literal("1", "Southern");
+            o.get().endRecord();
+        });
     }
 
     @Test
@@ -182,29 +166,24 @@ public final class FileMapTest {
                     i.startRecord("1");
                     i.literal("1", "zz");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("1", "");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldNotReplaceEmptyValuesUsingFileBasedMapSetting() {
-        TestHelpers.assertMorph(receiver, buildMorph("setreplace map", ""),
-                i -> {
-                    i.startRecord("1");
-                    i.literal("1", "zz");
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1");
-                    o.get().literal("1", "zz");
-                    o.get().endRecord();
-                }
-        );
+        TestHelpers.assertMorph(receiver, buildMorph("setreplace map", ""), i -> {
+            i.startRecord("1");
+            i.literal("1", "zz");
+            i.endRecord();
+        }, o -> {
+            o.get().startRecord("1");
+            o.get().literal("1", "zz");
+            o.get().endRecord();
+        });
     }
 
     @Test
@@ -215,14 +194,12 @@ public final class FileMapTest {
                     i.literal("1", "gw");
                     i.literal("1", "fj");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("1", "Germany");
                     o.get().literal("1", "Fiji");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -233,30 +210,26 @@ public final class FileMapTest {
                     i.literal("1", "gw");
                     i.literal("1", "fj");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldLookupValuesInBlockedGzipFileMap() {
-        TestHelpers.assertMorph(receiver, buildMorph("lookup in", "file-map-test.txt.bgzf", "decompressConcatenated=\"true\""),
-                i -> {
+        TestHelpers.assertMorph(receiver, buildMorph("lookup in", "file-map-test.txt.bgzf",
+                "decompressConcatenated=\"true\""), i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
                     i.literal("1", "fj");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("1", "Germany");
                     o.get().literal("1", "Fiji");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -397,7 +370,8 @@ public final class FileMapTest {
 
     @Test
     public void shouldNotProvideMapIfAnyFileMissing() {
-        Assert.assertThrows(MorphExecutionException.class, () -> assertMap(-1, i -> i.setFile("missing")));
+        Assert.assertThrows(MorphExecutionException.class,
+                () -> assertMap(-1, i -> i.setFile("missing")));
     }
 
     @Test
@@ -411,7 +385,8 @@ public final class FileMapTest {
     }
 
     private void assertLog() {
-        final Object[] arguments = new Object[]{"filemap: cannot read map file", "File not found: missing"};
+        final Object[] arguments = new Object[]{"filemap: cannot read map file",
+                "File not found: missing"};
         Mockito.verify(logger).warn("{}: {}", arguments);
         Mockito.verifyNoMoreInteractions(logger);
     }

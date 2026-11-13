@@ -37,7 +37,8 @@ public class IsContainedIn implements FixPredicate {
     }
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public boolean test(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         return new In().test(metafix, record, params, options);
     }
 

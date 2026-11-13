@@ -34,8 +34,7 @@ import org.mockito.MockitoAnnotations;
  */
 public final class FormetaDecoderTest {
 
-    private static final String RECORD =
-            "1{lit1:value 1,' ent1'{lit2:value \\{x\\},lit\\\\3:'value 2 '}lit4:value \\'3\\'}";
+    private static final String RECORD = "1{lit1:value 1,' ent1'{lit2:value \\{x\\},lit\\\\3:'value 2 '}lit4:value \\'3\\'}";
 
     private FormetaDecoder decoder;
 

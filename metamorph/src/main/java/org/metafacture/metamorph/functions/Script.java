@@ -82,8 +82,8 @@ public final class Script extends AbstractSimpleStatelessFunction {
             return obj.toString();
         }
         catch (final ScriptException e) {
-            throw new MorphExecutionException(
-                    "Error in script while evaluating 'process' method", e);
+            throw new MorphExecutionException("Error in script while evaluating 'process' method",
+                    e);
         }
         catch (final NoSuchMethodException e) {
             throw new MorphExecutionException("'process' method is missing in script", e);

@@ -68,15 +68,13 @@ public final class TestCollectorIf {
                     i.literal("data2", "b");
                     i.literal("data4", "c");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("combined", "a-b");
                     o.get().endRecord();
                     o.get().startRecord("2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -104,15 +102,13 @@ public final class TestCollectorIf {
                     i.literal("data1", "a");
                     i.literal("data2", "c");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("combined", "a-b");
                     o.get().endRecord();
                     o.get().startRecord("2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -148,8 +144,7 @@ public final class TestCollectorIf {
                     i.literal("data2", "b");
                     i.literal("data5", "c");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("combined", "a-b");
                     o.get().endRecord();
@@ -158,8 +153,7 @@ public final class TestCollectorIf {
                     o.get().endRecord();
                     o.get().startRecord("3");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -186,13 +180,11 @@ public final class TestCollectorIf {
                     i.literal("data3", "X");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("result", "output");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -220,13 +212,11 @@ public final class TestCollectorIf {
                     i.literal("data3", "X");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("result", "output");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -255,12 +245,10 @@ public final class TestCollectorIf {
                     i.literal("data4", "extra-output");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -290,13 +278,11 @@ public final class TestCollectorIf {
                     i.literal("literal2", "value2");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("result", "value2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

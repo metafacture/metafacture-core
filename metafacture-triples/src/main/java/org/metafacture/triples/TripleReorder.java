@@ -39,13 +39,15 @@ public final class TripleReorder extends DefaultObjectPipe<Triple, ObjectReceive
     /**
      * Names of the elements in the triple
      */
-    public enum TripleElement { SUBJECT, PREDICATE, OBJECT }
+    public enum TripleElement {
+        SUBJECT, PREDICATE, OBJECT
+    }
     // Do not change the item order because the process method
     // uses ordinal().
 
     private TripleElement subjectFrom = TripleElement.SUBJECT;
     private TripleElement predicateFrom = TripleElement.PREDICATE;
-    private TripleElement objectFrom =  TripleElement.OBJECT;
+    private TripleElement objectFrom = TripleElement.OBJECT;
 
     /**
      * Creates an instance of {@link TripleReorder}.
@@ -109,17 +111,10 @@ public final class TripleReorder extends DefaultObjectPipe<Triple, ObjectReceive
 
     @Override
     public void process(final Triple triple) {
-        final String[] elements = {
-                triple.getSubject(),
-                triple.getPredicate(),
-                triple.getObject()
-        };
+        final String[] elements = {triple.getSubject(), triple.getPredicate(), triple.getObject()};
 
-        getReceiver().process(new Triple(
-                elements[subjectFrom.ordinal()],
-                elements[predicateFrom.ordinal()],
-                elements[objectFrom.ordinal()]
-        ));
+        getReceiver().process(new Triple(elements[subjectFrom.ordinal()],
+                elements[predicateFrom.ordinal()], elements[objectFrom.ordinal()]));
     }
 
 }

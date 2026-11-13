@@ -69,7 +69,8 @@ public final class Choose extends AbstractFlushingCollect {
     }
 
     @Override
-    protected void receive(final String newName, final String newValue, final NamedValueSource source) {
+    protected void receive(final String newName, final String newValue,
+            final NamedValueSource source) {
         final int sourcePriority = priorities.get(source).intValue();
         if (sourcePriority <= priority) {
             name = newName;

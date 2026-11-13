@@ -30,7 +30,10 @@ import java.util.Set;
  * @author Markus Michael Geipel
  *
  */
-public final class StringListMap extends DefaultStreamReceiver implements Collector<ListMap<String, String>>, Map<String, List<String>> {
+public final class StringListMap extends DefaultStreamReceiver
+        implements
+            Collector<ListMap<String, String>>,
+            Map<String, List<String>> {
 
     private boolean closed;
     private Collection<ListMap<String, String>> collection;

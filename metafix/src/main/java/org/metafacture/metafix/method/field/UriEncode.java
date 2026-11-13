@@ -38,7 +38,8 @@ public class UriEncode implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         final URLEncode urlEncoder = new URLEncode();
         withOption(options, "safe_chars", urlEncoder::setSafeChars);
         withOption(options, "plus_for_space", urlEncoder::setPlusForSpace, this::getBoolean);

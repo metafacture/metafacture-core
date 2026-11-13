@@ -109,7 +109,8 @@ public interface JsonValue {
             final Value value;
 
             if (node.isObject()) {
-                value = Value.newHash(h -> node.properties().forEach(e -> h.put(e.getKey(), parse(e.getValue()))));
+                value = Value.newHash(h -> node.properties()
+                        .forEach(e -> h.put(e.getKey(), parse(e.getValue()))));
             }
             else if (node.isArray()) {
                 value = Value.newArray(a -> node.elements().forEachRemaining(v -> a.add(parse(v))));

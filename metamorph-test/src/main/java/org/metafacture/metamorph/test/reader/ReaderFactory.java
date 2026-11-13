@@ -32,7 +32,8 @@ final class ReaderFactory extends ObjectFactory<Reader> {
 
     ReaderFactory() {
         try {
-            loadClassesFromMap(ResourceUtil.loadProperties("test-readers.properties"), Reader.class);
+            loadClassesFromMap(ResourceUtil.loadProperties("test-readers.properties"),
+                    Reader.class);
         }
         catch (final IOException e) {
             throw new MetafactureException("Failed to load readers list", e);

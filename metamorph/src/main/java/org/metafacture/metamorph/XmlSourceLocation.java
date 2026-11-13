@@ -50,6 +50,7 @@ final class XmlSourceLocation implements SourceLocation {
             public int getColumnNumber() {
                 return location.getElementStart().getColumnNumber();
             }
+
         };
     }
 
@@ -65,6 +66,7 @@ final class XmlSourceLocation implements SourceLocation {
             public int getColumnNumber() {
                 return location.getElementEnd().getColumnNumber();
             }
+
         };
     }
 

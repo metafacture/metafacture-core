@@ -95,18 +95,17 @@ public class DefaultTee<T extends Receiver> implements Tee<T> {
     }
 
     /**
-     * Invoked when the list of receivers connected to this tee is changed.
-     * This method is called after the receiver has been updated. Hence,
-     * {@code getReceivers} will return a reference to the new list of
-     * receivers.
+     * Invoked when the list of receivers connected to this tee is changed. This
+     * method is called after the receiver has been updated. Hence,
+     * {@code getReceivers} will return a reference to the new list of receivers.
      */
     protected void onChangeReceivers() {
         // Default implementation does nothing
     }
 
     /**
-     * Invoked when the {@code resetStream()} method is called.
-     * Override this method to perform a reset of the module.
+     * Invoked when the {@code resetStream()} method is called. Override this method
+     * to perform a reset of the module.
      *
      * Do not call the {@code resetStream()} method of the next modules downstream.
      * This is handled by the implementation of {@code resetStream()} in
@@ -120,15 +119,15 @@ public class DefaultTee<T extends Receiver> implements Tee<T> {
     }
 
     /**
-     * Invoked when the {@code closeStream()} method is called. Override
-     * this method to close any resources used by the module.
+     * Invoked when the {@code closeStream()} method is called. Override this method
+     * to close any resources used by the module.
      *
-     * Do not call the {@code closeStream()} method of the next modules
-     * downstream. This is handled by the implementation of
-     * {@code closeStream()} in {@code DefaultTee}.
+     * Do not call the {@code closeStream()} method of the next modules downstream.
+     * This is handled by the implementation of {@code closeStream()} in
+     * {@code DefaultTee}.
      *
-     * {@code onCloseStream()} is called before {@code DefaultTee} calls
-     * the {@code closeStream()} method of the downstream modules.
+     * {@code onCloseStream()} is called before {@code DefaultTee} calls the
+     * {@code closeStream()} method of the downstream modules.
      */
     protected void onCloseStream() {
         // Default implementation does nothing

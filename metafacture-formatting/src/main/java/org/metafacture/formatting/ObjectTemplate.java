@@ -35,20 +35,19 @@ import java.util.regex.Pattern;
  * the place where the object is to be inserted. If the received object is an
  * instance of Triple`${s}`, `${p}` and `${o}` are used instead.
  *
- * @param <T>
- *            object type
+ * @param <T> object type
  *
  * @author Markus Geipel
  *
  */
-@Description("Builds a String from a template and an Object. Provide template in brackets. `${o}` marks the place where the object is to be inserted. " +
-        "If the object is an instance of Triple `${s}`, `${p}` and `${o}` are used instead.")
+@Description("Builds a String from a template and an Object. Provide template in brackets. `${o}` marks the place where the object is to be inserted. "
+        + "If the object is an instance of Triple `${s}`, `${p}` and `${o}` are used instead.")
 @In(Object.class)
 @Out(String.class)
 @FluxCommand("template")
 public final class ObjectTemplate<T> extends DefaultObjectPipe<T, ObjectReceiver<String>> {
 
-    //TODO: make replace more efficient
+    // TODO: make replace more efficient
     private static final Pattern OBJ_PATTERN = Pattern.compile("${o}", Pattern.LITERAL);
     private final Map<String, String> vars = new HashMap<>();
     private final String template;

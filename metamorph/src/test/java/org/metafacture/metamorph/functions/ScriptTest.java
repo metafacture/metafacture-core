@@ -60,14 +60,12 @@ public final class ScriptTest {
                     i.literal("data1", "ABC");
                     i.literal("data2", "ABC");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data1", "ABC!");
                     o.get().literal("data2", "ABCABC");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

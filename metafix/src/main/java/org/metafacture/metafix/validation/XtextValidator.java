@@ -28,17 +28,17 @@ public class XtextValidator {
     }
 
     private static boolean validate(final XtextResource resource, final ISetup setup) {
-        final List<Issue> issues = resource.getResourceServiceProvider()
-            .getResourceValidator().validate(resource, CheckMode.ALL, CancelIndicator.NullImpl);
+        final List<Issue> issues = resource.getResourceServiceProvider().getResourceValidator()
+                .validate(resource, CheckMode.ALL, CancelIndicator.NullImpl);
 
         final int count = issues.size();
 
         if (count > 0) {
-            LOG.externalWarn("The {} file '{}' has {} issue{}:",
-                    resourceType(setup), resource.getURI().toFileString(), count, count > 1 ? "s" : "");
+            LOG.externalWarn("The {} file '{}' has {} issue{}:", resourceType(setup),
+                    resource.getURI().toFileString(), count, count > 1 ? "s" : "");
 
-            issues.forEach(i -> LOG.externalWarn("- {}: {} ({}:{})",
-                        i.getSeverity(), i.getMessage(), i.getLineNumber(), i.getColumn()));
+            issues.forEach(i -> LOG.externalWarn("- {}: {} ({}:{})", i.getSeverity(),
+                    i.getMessage(), i.getLineNumber(), i.getColumn()));
 
             return false;
         }
@@ -70,7 +70,8 @@ public class XtextValidator {
         }
 
         return (XtextResource) setup.createInjectorAndDoEMFRegistration()
-            .getInstance(XtextResourceSet.class).getResource(URI.createFileURI(absolutePath), true);
+                .getInstance(XtextResourceSet.class)
+                .getResource(URI.createFileURI(absolutePath), true);
     }
 
     /**
@@ -109,7 +110,8 @@ public class XtextValidator {
             System.exit(validate(args[0], new XtextStandaloneSetup()) ? 0 : 1);
         }
 
-        throw new IllegalArgumentException(String.format("Usage: %s <xtext-file>", XtextValidator.class.getName()));
+        throw new IllegalArgumentException(
+                String.format("Usage: %s <xtext-file>", XtextValidator.class.getName()));
     }
 
 }

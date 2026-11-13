@@ -62,8 +62,7 @@ public final class PicaXmlHandlerTest {
     }
 
     @Test
-    public void shouldLabelDataFieldWithoutOccurrenceAttribute()
-            throws SAXException {
+    public void shouldLabelDataFieldWithoutOccurrenceAttribute() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
         final String fieldValue = "1234";
@@ -79,7 +78,7 @@ public final class PicaXmlHandlerTest {
         picaXmlHandler.endElement(null, DATAFIELD, "");
         picaXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-        final InOrder ordered    = Mockito.inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("003@");
         ordered.verify(receiver).literal("0", fieldValue);
@@ -89,8 +88,7 @@ public final class PicaXmlHandlerTest {
     }
 
     @Test
-    public void shouldLabelDataFieldWithOccurrenceAttribute()
-            throws SAXException {
+    public void shouldLabelDataFieldWithOccurrenceAttribute() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
         final String fieldValue = "utf-8";
@@ -107,7 +105,7 @@ public final class PicaXmlHandlerTest {
         picaXmlHandler.endElement(null, DATAFIELD, "");
         picaXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-        final InOrder ordered    = Mockito.inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("201U/01");
         ordered.verify(receiver).literal("0", fieldValue);
@@ -117,8 +115,7 @@ public final class PicaXmlHandlerTest {
     }
 
     @Test
-    public void shouldRecognizeRecordsWithNamespace()
-            throws SAXException {
+    public void shouldRecognizeRecordsWithNamespace() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
         picaXmlHandler.startElement(NAMESPACE, RECORD, "", attributes);
@@ -131,8 +128,7 @@ public final class PicaXmlHandlerTest {
     }
 
     @Test
-    public void shouldNotRecognizeRecordsWithoutNamespace()
-            throws SAXException {
+    public void shouldNotRecognizeRecordsWithoutNamespace() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
         picaXmlHandler.startElement(null, RECORD, "", attributes);
@@ -142,8 +138,7 @@ public final class PicaXmlHandlerTest {
     }
 
     @Test
-    public void shouldRecognizeRecordsWithoutNamespace()
-            throws SAXException {
+    public void shouldRecognizeRecordsWithoutNamespace() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
         picaXmlHandler.setNamespace("");
@@ -169,8 +164,7 @@ public final class PicaXmlHandlerTest {
     }
 
     @Test
-    public void issue569ShouldRecognizeRecordsWithAndWithoutNamespace()
-            throws SAXException {
+    public void issue569ShouldRecognizeRecordsWithAndWithoutNamespace() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
         picaXmlHandler.setIgnoreNamespace(true);
@@ -200,8 +194,7 @@ public final class PicaXmlHandlerTest {
     }
 
     @Test
-    public void issue569ShouldNotRecognizeRecordsWithAndWithoutNamespace()
-            throws SAXException {
+    public void issue569ShouldNotRecognizeRecordsWithAndWithoutNamespace() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
 
         picaXmlHandler.setIgnoreNamespace(false);

@@ -167,7 +167,8 @@ public final class CsvEncoderTest {
             i.literal(LITERAL1, VALUE4);
             i.literal(LITERAL2, VALUE5);
             i.endRecord();
-        }, "\"column 1\",\"column 2\",\"column 2\",\"column 1\",\"column 2\"", "\"a\",\"b\",\"c\",\"d\",\"e\"");
+        }, "\"column 1\",\"column 2\",\"column 2\",\"column 1\",\"column 2\"",
+                "\"a\",\"b\",\"c\",\"d\",\"e\"");
     }
 
     private void assertEncode(final Consumer<CsvEncoder> in, final String... out) {

@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Executes the functions if/unless the string matches the regular
- * expression pattern.
+ * Executes the functions if/unless the string matches the regular expression
+ * pattern.
  */
 @FixCommand("str_match")
 public class StrMatch implements FixPredicate {
@@ -38,7 +38,8 @@ public class StrMatch implements FixPredicate {
     }
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public boolean test(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         return testConditional(params, MATCHES);
     }
 

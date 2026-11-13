@@ -28,7 +28,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Filters triples. The patterns for subject, predicate and object are disjunctive.
+ * Filters triples. The patterns for subject, predicate and object are
+ * disjunctive.
  *
  * @author Christoph Böhme
  *
@@ -132,7 +133,8 @@ public final class TripleFilter extends DefaultObjectPipe<Triple, ObjectReceiver
         predicateMatcher.reset(obj.getPredicate());
         objectMatcher.reset(obj.getObject());
 
-        final boolean matches = subjectMatcher.matches() || predicateMatcher.matches() || objectMatcher.matches();
+        final boolean matches = subjectMatcher.matches() || predicateMatcher.matches()
+                || objectMatcher.matches();
 
         if (matches == passMatches) {
             getReceiver().process(obj);

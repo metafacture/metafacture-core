@@ -29,15 +29,14 @@ import java.util.Set;
 import java.util.TimeZone;
 
 /**
- * This function creates a timestamp. By default it returns a unix
- * timestamp. Other formats are and different
- * timezones can be specified.
+ * This function creates a timestamp. By default it returns a unix timestamp.
+ * Other formats are and different timezones can be specified.
  *
  * Examples for using the function in Metamorph:
  * <ul>
- *     <li>Generate a default unix timestamp: <code>&lt;timestamp /&gt;</code></li>
- *     <li>Generate a nicely formatted timestamp using central european time:
- *     <code>&lt;timestamp format="yyyy-MM-dd'T'HH:mmZ" timezone="Europe/Berlin" /&gt;</code></li>
+ * <li>Generate a default unix timestamp: <code>&lt;timestamp /&gt;</code></li>
+ * <li>Generate a nicely formatted timestamp using central european time:
+ * <code>&lt;timestamp format="yyyy-MM-dd'T'HH:mmZ" timezone="Europe/Berlin" /&gt;</code></li>
  * </ul>
  *
  * @author Michael Büchner
@@ -78,7 +77,8 @@ public final class Timestamp extends AbstractSimpleStatelessFunction {
             dateFormat = new SimpleDateFormat(format, locale);
         }
         catch (final IllegalArgumentException e) {
-            throw new MorphBuildException("The date/time format '" + format + "' is not supported. ", e);
+            throw new MorphBuildException(
+                    "The date/time format '" + format + "' is not supported. ", e);
         }
         dateFormat.setTimeZone(TimeZone.getTimeZone(timezone));
         return dateFormat.format(new Date());

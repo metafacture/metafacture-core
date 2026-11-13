@@ -37,7 +37,8 @@ public class MoveField implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         new CopyField().apply(metafix, record, params, options);
         record.remove(params.get(0));
     }

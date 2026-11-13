@@ -93,13 +93,18 @@ public final class StringUtilTest {
         final String varEnd = "VAR_END";
         Assert.assertEquals(ALOHA_HAWAII,
                 StringUtil.format("VAR_STARTaVAR_END VAR_STARTbVAR_END", varStart, varEnd, vars));
-        Assert.assertEquals(ALOHAHAWAII, StringUtil.format("VAR_STARTaVAR_ENDVAR_STARTbVAR_END", varStart, varEnd, vars));
-        Assert.assertEquals("AlohaVAR_STARTb", StringUtil.format("VAR_STARTaVAR_ENDVAR_STARTb", varStart, varEnd, vars));
-        Assert.assertEquals("XAlohaVAR_STARTb", StringUtil.format("XVAR_STARTaVAR_ENDVAR_STARTb", varStart, varEnd, vars));
-        Assert.assertEquals("XX", StringUtil.format("XVAR_STARTabVAR_ENDX", varStart, varEnd, vars));
-        Assert.assertEquals(XHULAXHULAX,
-                StringUtil.format("XVAR_STARTbbVAR_ENDXVAR_STARTbbVAR_ENDX", varStart, varEnd, vars));
-        Assert.assertEquals("{aVAR_ENDHawaii", StringUtil.format("{aVAR_ENDVAR_STARTbVAR_END", varStart, varEnd, vars));
+        Assert.assertEquals(ALOHAHAWAII,
+                StringUtil.format("VAR_STARTaVAR_ENDVAR_STARTbVAR_END", varStart, varEnd, vars));
+        Assert.assertEquals("AlohaVAR_STARTb",
+                StringUtil.format("VAR_STARTaVAR_ENDVAR_STARTb", varStart, varEnd, vars));
+        Assert.assertEquals("XAlohaVAR_STARTb",
+                StringUtil.format("XVAR_STARTaVAR_ENDVAR_STARTb", varStart, varEnd, vars));
+        Assert.assertEquals("XX",
+                StringUtil.format("XVAR_STARTabVAR_ENDX", varStart, varEnd, vars));
+        Assert.assertEquals(XHULAXHULAX, StringUtil
+                .format("XVAR_STARTbbVAR_ENDXVAR_STARTbbVAR_ENDX", varStart, varEnd, vars));
+        Assert.assertEquals("{aVAR_ENDHawaii",
+                StringUtil.format("{aVAR_ENDVAR_STARTbVAR_END", varStart, varEnd, vars));
     }
 
     @Test(expected = IllegalArgumentException.class)

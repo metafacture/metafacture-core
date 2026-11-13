@@ -53,12 +53,14 @@ final class MemoryWarningSystem {
 
             @Override
             public void handleNotification(final Notification notification, final Object handback) {
-                if (notification.getType().equals(MemoryNotificationInfo.MEMORY_THRESHOLD_EXCEEDED)) {
+                if (notification.getType()
+                        .equals(MemoryNotificationInfo.MEMORY_THRESHOLD_EXCEEDED)) {
                     for (final Listener listener : getListeners()) {
                         listener.memoryLow(getUsedMemory(), getMaxMemory());
                     }
                 }
             }
+
         }, null, null);
     }
 
@@ -90,8 +92,8 @@ final class MemoryWarningSystem {
     }
 
     /**
-     * Tenured Space Pool can be determined by it being of type HEAP and by it
-     * being possible to set the usage threshold.
+     * Tenured Space Pool can be determined by it being of type HEAP and by it being
+     * possible to set the usage threshold.
      *
      * @return MXBean for the Tenured Space Pool
      */
@@ -111,6 +113,7 @@ final class MemoryWarningSystem {
      */
     interface Listener {
         void memoryLow(long usedMemory, long maxMemory);
+
     }
 
 }

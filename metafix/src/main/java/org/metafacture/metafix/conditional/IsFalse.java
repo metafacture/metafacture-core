@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Executes the functions if/unless the field value equals {@code false}
- * or {@code 0}.
+ * Executes the functions if/unless the field value equals {@code false} or
+ * {@code 0}.
  */
 @FixCommand("is_false")
 public class IsFalse implements FixPredicate {
@@ -38,7 +38,8 @@ public class IsFalse implements FixPredicate {
     }
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public boolean test(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         return testStringConditional(record, params, IS_FALSE); // TODO: strict=false
     }
 

@@ -25,8 +25,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 /**
- * A class loader which allows adding directories to the class
- * path instead of class-files or jar-files.
+ * A class loader which allows adding directories to the class path instead of
+ * class-files or jar-files.
  *
  * @author Christoph Böhme
  *
@@ -36,14 +36,14 @@ public final class DirectoryClassLoader extends URLClassLoader {
     private static final String JAR_FILE_EXTENSION = ".jar";
     private static final String CLASS_FILE_EXTENSION = ".class";
 
-    private static final FilenameFilter JAR_AND_CLASS_FILTER =
-        new FilenameFilter() {
+    private static final FilenameFilter JAR_AND_CLASS_FILTER = new FilenameFilter() {
 
-            @Override
-            public boolean accept(final File dir, final String name) {
-                return name.endsWith(JAR_FILE_EXTENSION) || name.endsWith(CLASS_FILE_EXTENSION);
-            }
-        };
+        @Override
+        public boolean accept(final File dir, final String name) {
+            return name.endsWith(JAR_FILE_EXTENSION) || name.endsWith(CLASS_FILE_EXTENSION);
+        }
+
+    };
 
     /**
      * Creates an instance of {@link DirectoryClassLoader} by a given parent

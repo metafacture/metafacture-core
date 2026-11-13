@@ -48,14 +48,8 @@ public abstract class AbstractMetamorphDomWalker {
      * XML attributes
      */
     public enum AttributeName {
-        VERSION("version"),
-        SOURCE("source"),
-        VALUE("value"),
-        NAME("name"),
-        CLASS("class"),
-        DEFAULT("default"),
-        ENTITY_MARKER("entityMarker"),
-        FLUSH_WITH("flushWith");
+        VERSION("version"), SOURCE("source"), VALUE("value"), NAME("name"), CLASS("class"), DEFAULT(
+                "default"), ENTITY_MARKER("entityMarker"), FLUSH_WITH("flushWith");
 
         private final String string;
 
@@ -71,6 +65,7 @@ public abstract class AbstractMetamorphDomWalker {
         public String getString() {
             return string;
         }
+
     }
 
     protected static final String ENTITY = "entity";
@@ -190,8 +185,9 @@ public abstract class AbstractMetamorphDomWalker {
         return attributes;
     }
 
-    protected  final String resolveVars(final String string) {
-        return StringUtil.format(string, Metamorph.VAR_START, Metamorph.VAR_END, ignoreMissingVars, vars);
+    protected final String resolveVars(final String string) {
+        return StringUtil.format(string, Metamorph.VAR_START, Metamorph.VAR_END, ignoreMissingVars,
+                vars);
     }
 
     protected final void setIgnoreMissingVars(final boolean ignoreMissingVars) {
@@ -219,22 +215,25 @@ public abstract class AbstractMetamorphDomWalker {
     }
 
     private void handleMeta(final Node node) {
-        for (Node metaEntryNode = node.getFirstChild(); metaEntryNode != null; metaEntryNode = metaEntryNode
-                .getNextSibling()) {
+        for (Node metaEntryNode = node
+                .getFirstChild(); metaEntryNode != null; metaEntryNode = metaEntryNode
+                        .getNextSibling()) {
 
             handleMetaEntry(metaEntryNode.getLocalName(), metaEntryNode.getTextContent());
         }
     }
 
     private void handleFunctionDefinitions(final Node node) {
-        for (Node functionDefNode = node.getFirstChild(); functionDefNode != null; functionDefNode = functionDefNode
-                .getNextSibling()) {
+        for (Node functionDefNode = node
+                .getFirstChild(); functionDefNode != null; functionDefNode = functionDefNode
+                        .getNextSibling()) {
             handleFunctionDefinition(functionDefNode);
         }
     }
 
     private void handleRules(final Node node) {
-        for (Node ruleNode = node.getFirstChild(); ruleNode != null; ruleNode = ruleNode.getNextSibling()) {
+        for (Node ruleNode = node.getFirstChild(); ruleNode != null; ruleNode = ruleNode
+                .getNextSibling()) {
             handleRule(ruleNode);
         }
     }
@@ -285,13 +284,16 @@ public abstract class AbstractMetamorphDomWalker {
     }
 
     private void handlePostprocess(final Node node) {
-        for (Node functionNode = node.getFirstChild(); functionNode != null; functionNode = functionNode.getNextSibling()) {
+        for (Node functionNode = node
+                .getFirstChild(); functionNode != null; functionNode = functionNode
+                        .getNextSibling()) {
             handleFunction(functionNode);
         }
     }
 
     private void handleMaps(final Node node) {
-        for (Node mapNode = node.getFirstChild(); mapNode != null; mapNode = mapNode.getNextSibling()) {
+        for (Node mapNode = node.getFirstChild(); mapNode != null; mapNode = mapNode
+                .getNextSibling()) {
             if (MAP.equals(mapNode.getLocalName())) {
                 handleInternalMap(mapNode);
             }
@@ -302,7 +304,8 @@ public abstract class AbstractMetamorphDomWalker {
     }
 
     private void handleVars(final Node varsNode) {
-        for (Node varNode = varsNode.getFirstChild(); varNode != null; varNode = varNode.getNextSibling()) {
+        for (Node varNode = varsNode.getFirstChild(); varNode != null; varNode = varNode
+                .getNextSibling()) {
             final String varName = attribute(varNode, AttributeName.NAME);
             final String varValue = attribute(varNode, AttributeName.VALUE);
             vars.put(varName, varValue);
@@ -311,7 +314,8 @@ public abstract class AbstractMetamorphDomWalker {
     }
 
     private void handleMacros(final Node node) {
-        for (Node macroNode = node.getFirstChild(); macroNode != null; macroNode = macroNode.getNextSibling()) {
+        for (Node macroNode = node.getFirstChild(); macroNode != null; macroNode = macroNode
+                .getNextSibling()) {
             final String name = attribute(macroNode, AttributeName.NAME);
             macros.put(name, macroNode);
         }
@@ -319,12 +323,14 @@ public abstract class AbstractMetamorphDomWalker {
 
     private void checkVersionCompatibility(final int version) {
         if (version < LOWEST_COMPATIBLE_VERSION || version > CURRENT_VERSION) {
-            throw new MorphBuildException("Version " + version + " of definition file not supported by metamorph version " + CURRENT_VERSION);
+            throw new MorphBuildException("Version " + version
+                    + " of definition file not supported by metamorph version " + CURRENT_VERSION);
         }
     }
 
     protected final void illegalChild(final Node child) {
-        throw new MorphBuildException("Schema mismatch: illegal tag " + child.getLocalName() + " in node " + child.getParentNode().getLocalName());
+        throw new MorphBuildException("Schema mismatch: illegal tag " + child.getLocalName()
+                + " in node " + child.getParentNode().getLocalName());
     }
 
     protected abstract void init();

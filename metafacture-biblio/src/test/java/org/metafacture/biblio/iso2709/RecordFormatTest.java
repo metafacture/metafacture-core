@@ -32,13 +32,9 @@ public final class RecordFormatTest {
 
     @Test
     public void shouldCreateRecordFormatFromValidValues() {
-        final RecordFormat recordFormat = RecordFormat.create()
-                .withIndicatorLength(1)
-                .withIdentifierLength(1)
-                .withFieldLengthLength(1)
-                .withFieldStartLength(1)
-                .withImplDefinedPartLength(1)
-                .build();
+        final RecordFormat recordFormat = RecordFormat.create().withIndicatorLength(1)
+                .withIdentifierLength(1).withFieldLengthLength(1).withFieldStartLength(1)
+                .withImplDefinedPartLength(1).build();
         Assert.assertEquals(1, recordFormat.getIndicatorLength());
         Assert.assertEquals(1, recordFormat.getIdentifierLength());
         Assert.assertEquals(1, recordFormat.getFieldLengthLength());

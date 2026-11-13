@@ -34,7 +34,8 @@ public interface NamedValueReceiver extends KnowsSourceLocation {
      * @param recordCount the record count
      * @param entityCount the entity count
      */
-    void receive(String name, String value, NamedValueSource source, int recordCount, int entityCount);
+    void receive(String name, String value, NamedValueSource source, int recordCount,
+            int entityCount);
 
     /**
      * Adds a named value source.

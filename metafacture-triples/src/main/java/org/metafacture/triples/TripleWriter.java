@@ -71,7 +71,8 @@ public final class TripleWriter extends DefaultObjectReceiver<Triple> {
             if (outputStream != null) {
                 outputStream.close();
             }
-            outputStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename), BUFFERSIZE));
+            outputStream = new ObjectOutputStream(
+                    new BufferedOutputStream(new FileOutputStream(filename), BUFFERSIZE));
         }
         catch (final IOException e) {
             throw new MetafactureException(e);

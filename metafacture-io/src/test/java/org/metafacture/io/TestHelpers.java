@@ -34,7 +34,8 @@ public final class TestHelpers {
     private TestHelpers() {
     }
 
-    public static void assertFile(final ObjectReceiver<Reader> receiver, final String expected, final File file, final Consumer<FileOpener> consumer) {
+    public static void assertFile(final ObjectReceiver<Reader> receiver, final String expected,
+            final File file, final Consumer<FileOpener> consumer) {
         assertReader(receiver, () -> {
             final FileOpener opener = new FileOpener();
             if (consumer != null) {
@@ -47,9 +48,11 @@ public final class TestHelpers {
         }, expected);
     }
 
-    public static void assertReader(final ObjectReceiver<Reader> receiver, final Runnable runnable, final String... expected) {
+    public static void assertReader(final ObjectReceiver<Reader> receiver, final Runnable runnable,
+            final String... expected) {
         final List<String> actual = new ArrayList<>();
-        Mockito.doAnswer(i -> actual.add(ResourceUtil.readAll(i.getArgument(0)))).when(receiver).process(Mockito.any(Reader.class));
+        Mockito.doAnswer(i -> actual.add(ResourceUtil.readAll(i.getArgument(0)))).when(receiver)
+                .process(Mockito.any(Reader.class));
 
         runnable.run();
 

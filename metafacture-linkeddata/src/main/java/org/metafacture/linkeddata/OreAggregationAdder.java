@@ -146,7 +146,8 @@ public final class OreAggregationAdder extends DefaultStreamPipe<StreamReceiver>
             return;
         }
 
-        if (entityStack.size() == 1 && RDF_ABOUT.equals(name) && AGGREGATED_ENTITIES.containsKey(entityStack.peek())) {
+        if (entityStack.size() == 1 && RDF_ABOUT.equals(name)
+                && AGGREGATED_ENTITIES.containsKey(entityStack.peek())) {
             aggregation.add(entityStack.peek(), value);
         }
         getReceiver().literal(name, value);

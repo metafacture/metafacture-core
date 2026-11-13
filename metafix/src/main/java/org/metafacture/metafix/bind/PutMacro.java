@@ -39,7 +39,8 @@ public class PutMacro implements FixContext {
     }
 
     @Override
-    public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final RecordTransformer recordTransformer) {
+    public void execute(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options, final RecordTransformer recordTransformer) {
         recordTransformer.setVars(options);
         metafix.putMacro(params.get(0), recordTransformer);
     }

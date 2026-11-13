@@ -53,6 +53,7 @@ public final class AbstractFormatterTest { // checkstyle-disable-line AbstractCl
             protected boolean shouldQuoteText(final char[] buffer, final int len) {
                 return false;
             }
+
         };
     }
 

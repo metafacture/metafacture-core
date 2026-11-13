@@ -57,13 +57,11 @@ public final class SwitchNameValueTest {
                     i.startRecord("1");
                     i.literal("in", "val");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("out", "val");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

@@ -34,7 +34,7 @@ import java.nio.charset.Charset;
 @In(Object.class)
 @Out(Void.class)
 @FluxCommand("print")
-public final class ObjectStdoutWriter<T> extends AbstractObjectWriter<T>  {
+public final class ObjectStdoutWriter<T> extends AbstractObjectWriter<T> {
 
     private static final String SET_COMPRESSION_ERROR = "Cannot compress standard out";
 

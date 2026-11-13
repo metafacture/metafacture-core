@@ -108,8 +108,8 @@ public final class Iso646ByteBufferTest {
     @Test
     public void stringAtShouldReturnStringDecodedAsUtf8() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tüx Tox"));
-        Assert.assertEquals("Tüx Tox", byteBuffer.stringAt(0, byteBuffer.getLength(),
-                StandardCharsets.UTF_8));
+        Assert.assertEquals("Tüx Tox",
+                byteBuffer.stringAt(0, byteBuffer.getLength(), StandardCharsets.UTF_8));
     }
 
     @Test
@@ -196,8 +196,7 @@ public final class Iso646ByteBufferTest {
         byteBuffer.setWritePosition(1);
         byteBuffer.writeChar('c');
 
-        Assert.assertArrayEquals(new byte[]{0x00, 0x63, 0x00},
-                byteBuffer.getByteArray());
+        Assert.assertArrayEquals(new byte[]{0x00, 0x63, 0x00}, byteBuffer.getByteArray());
         Assert.assertEquals(2, byteBuffer.getWritePosition());
     }
 
@@ -207,8 +206,7 @@ public final class Iso646ByteBufferTest {
         byteBuffer.setWritePosition(1);
         byteBuffer.writeChars(new char[]{'c', 'b'});
 
-        Assert.assertArrayEquals(new byte[]{0x00, 0x63, 0x62, 0x00},
-                byteBuffer.getByteArray());
+        Assert.assertArrayEquals(new byte[]{0x00, 0x63, 0x62, 0x00}, byteBuffer.getByteArray());
         Assert.assertEquals(3, byteBuffer.getWritePosition());
     }
 
@@ -218,8 +216,7 @@ public final class Iso646ByteBufferTest {
         byteBuffer.setWritePosition(1);
         byteBuffer.writeByte((byte) 0x61);
 
-        Assert.assertArrayEquals(new byte[]{0x00, 0x61, 0x00},
-                byteBuffer.getByteArray());
+        Assert.assertArrayEquals(new byte[]{0x00, 0x61, 0x00}, byteBuffer.getByteArray());
         Assert.assertEquals(2, byteBuffer.getWritePosition());
     }
 
@@ -229,8 +226,7 @@ public final class Iso646ByteBufferTest {
         byteBuffer.setWritePosition(1);
         byteBuffer.writeBytes(asBytes("cb"));
 
-        Assert.assertArrayEquals(new byte[]{0x00, 0x63, 0x62, 0x00},
-                byteBuffer.getByteArray());
+        Assert.assertArrayEquals(new byte[]{0x00, 0x63, 0x62, 0x00}, byteBuffer.getByteArray());
         Assert.assertEquals(3, byteBuffer.getWritePosition());
     }
 
@@ -240,8 +236,7 @@ public final class Iso646ByteBufferTest {
         byteBuffer.setWritePosition(1);
         byteBuffer.writeInt(3);
 
-        Assert.assertArrayEquals(new byte[]{0x00, 0x33, 0x00},
-                byteBuffer.getByteArray());
+        Assert.assertArrayEquals(new byte[]{0x00, 0x33, 0x00}, byteBuffer.getByteArray());
         Assert.assertEquals(2, byteBuffer.getWritePosition());
     }
 

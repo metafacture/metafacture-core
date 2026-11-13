@@ -39,11 +39,11 @@ public class JoinField implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         final String joinChar = params.size() > 1 ? params.get(1) : "";
-        record.transform(params.get(0), (m, c) -> m
-                .ifArray(a -> c.accept(new Value(a.stream().map(Value::asString).collect(Collectors.joining(joinChar)))))
-        );
+        record.transform(params.get(0), (m, c) -> m.ifArray(a -> c.accept(
+                new Value(a.stream().map(Value::asString).collect(Collectors.joining(joinChar))))));
     }
 
 }

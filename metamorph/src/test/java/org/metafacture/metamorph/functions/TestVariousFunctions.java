@@ -63,16 +63,14 @@ public final class TestVariousFunctions {
                     i.literal("data", "Oahu island, Hawaii island, Maui island");
                     i.literal("data", "year 1960!");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("island", "Oahu");
                     o.get().literal("island", "Hawaii");
                     o.get().literal("island", "Maui");
                     o.get().literal("year", "1960");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -92,13 +90,11 @@ public final class TestVariousFunctions {
                     i.startRecord("1");
                     i.literal("isbn", "123 invalid");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("withError", "error");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -115,15 +111,13 @@ public final class TestVariousFunctions {
                     i.startRecord("1");
                     i.literal("data", "Oahu,Hawaii,Maui");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("island", "Oahu");
                     o.get().literal("island", "Hawaii");
                     o.get().literal("island", "Maui");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -140,13 +134,11 @@ public final class TestVariousFunctions {
                     i.startRecord("1");
                     i.literal("a", "012345");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("a", "34");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -163,13 +155,11 @@ public final class TestVariousFunctions {
                     i.startRecord("1");
                     i.literal("data", "Aloha");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data", "Hawaii");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -190,13 +180,11 @@ public final class TestVariousFunctions {
                     i.startRecord("1");
                     i.literal("data", "dt., frz. und eng.");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data", "deutsch, französich und englisch");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -216,14 +204,12 @@ public final class TestVariousFunctions {
                     i.startRecord("1");
                     i.literal("data", "Aloha");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data", "ALOHA");
                     o.get().literal("data", "aloha");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -244,14 +230,12 @@ public final class TestVariousFunctions {
                     i.literal("data", "Aloha");
                     i.literal("data", "Hawaii");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data1", "Aloha");
                     o.get().literal("data2", "Hawaii");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -272,14 +256,12 @@ public final class TestVariousFunctions {
                     i.literal("data", "1990 Periodical MultiVolumeBook");
                     i.literal("data", "2013 BibliographicResource Book Series");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data1", "1990 Periodical MultiVolumeBook");
                     o.get().literal("data2", "2013 BibliographicResource Book Series");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -313,8 +295,7 @@ public final class TestVariousFunctions {
                     i.literal("d2", "to all");
                     i.literal("d1", "Aloha");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("0");
                     o.get().endRecord();
                     o.get().startRecord("1");
@@ -328,8 +309,7 @@ public final class TestVariousFunctions {
                     o.get().startRecord("4");
                     o.get().literal("greeting", "Aloha to all");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -359,8 +339,7 @@ public final class TestVariousFunctions {
                     i.literal("data", "2");
                     i.literal("data", "3");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("l2", "1");
                     o.get().literal("2", "2");
@@ -371,8 +350,7 @@ public final class TestVariousFunctions {
                     o.get().literal("2", "2");
                     o.get().literal("g2", "3");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -404,8 +382,7 @@ public final class TestVariousFunctions {
                     i.literal("data", "3");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("l2", "1");
                     o.get().literal("2", "2");
@@ -414,8 +391,7 @@ public final class TestVariousFunctions {
                     o.get().literal("2", "2");
                     o.get().literal("g2", "3");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -449,8 +425,7 @@ public final class TestVariousFunctions {
                     i.endEntity();
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("l2", "1");
                     o.get().literal("2", "2");
@@ -459,8 +434,7 @@ public final class TestVariousFunctions {
                     o.get().literal("2", "2");
                     o.get().literal("g2", "3");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -496,8 +470,7 @@ public final class TestVariousFunctions {
                     i.literal("datax", "1");
                     i.literal("datax", "2");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("0");
                     o.get().literal("count", "2");
                     o.get().endRecord();
@@ -513,8 +486,7 @@ public final class TestVariousFunctions {
                     o.get().startRecord("3");
                     o.get().literal("count", "2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -540,16 +512,14 @@ public final class TestVariousFunctions {
                     i.literal("data", "1");
                     i.literal("data", "2");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("count", "3");
                     o.get().endRecord();
                     o.get().startRecord("2");
                     o.get().literal("count", "2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

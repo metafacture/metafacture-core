@@ -38,6 +38,7 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
  * <p>
  * The example shows how this module operates in its default configuration:
  * Given the following sequence of events:
+ * 
  * <pre>{@literal
  * start-record "old-id"
  * start-entity "author"
@@ -49,6 +50,7 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
  * }</pre>
  *
  * the {@code RecordIdChanger} emits the following event stream:
+ * 
  * <pre>{@literal
  * start-record "new-id-2"
  * start-entity "author"
@@ -86,19 +88,19 @@ public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
     }
 
     /**
-     * Sets the name of the literal that contains the new record ID. This must be
-     * a qualified literal name including the entities in which the literal is
+     * Sets the name of the literal that contains the new record ID. This must be a
+     * qualified literal name including the entities in which the literal is
      * contained.
      * <p>
-     * For instance, the ID literal &ldquo;metadata.id&rdquo; matches only
-     * literals named &ldquo;id&rdquo; which are part of an entity named
+     * For instance, the ID literal &ldquo;metadata.id&rdquo; matches only literals
+     * named &ldquo;id&rdquo; which are part of an entity named
      * &ldquo;metadata&rdquo;.
      * <p>
      * The default value is
      * {@value org.metafacture.framework.StandardEventNames#ID}.
      * <p>
-     * This parameter must only be changed between records otherwise the
-     * behaviour of the module is undefined.
+     * This parameter must only be changed between records otherwise the behaviour
+     * of the module is undefined.
      *
      * @param idLiteral a qualified literal name
      */
@@ -121,14 +123,13 @@ public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
      * <p>
      * By default records without an ID literal are kept in the stream.
      * <p>
-     * This parameter may be changed at any time it becomes effective with the
-     * next <i>end-record</i> event.
+     * This parameter may be changed at any time it becomes effective with the next
+     * <i>end-record</i> event.
      *
-     * @param keepRecordsWithoutIdLiteral true to keep records without ID
-     * literal, false to remove them
+     * @param keepRecordsWithoutIdLiteral true to keep records without ID literal,
+     *                                        false to remove them
      */
-    public void setKeepRecordsWithoutIdLiteral(
-            final boolean keepRecordsWithoutIdLiteral) {
+    public void setKeepRecordsWithoutIdLiteral(final boolean keepRecordsWithoutIdLiteral) {
         this.keepRecordsWithoutIdLiteral = keepRecordsWithoutIdLiteral;
     }
 
@@ -148,11 +149,11 @@ public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
      * <p>
      * By default the ID literal is removed from the stream.
      * <p>
-     * This parameter must only be changed between records otherwise the
-     * behaviour of the module is undefined.
+     * This parameter must only be changed between records otherwise the behaviour
+     * of the module is undefined.
      *
-     * @param keepIdLiteral true to keep ID literals in records, false to
-     * remove them
+     * @param keepIdLiteral true to keep ID literals in records, false to remove
+     *                          them
      */
     public void setKeepIdLiteral(final boolean keepIdLiteral) {
         this.keepIdLiteral = keepIdLiteral;

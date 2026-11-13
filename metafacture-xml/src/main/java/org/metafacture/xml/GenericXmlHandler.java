@@ -34,11 +34,11 @@ import java.util.regex.Pattern;
  * @author Markus Michael Geipel
  *
  */
-@Description("A generic XML reader. Separates XML data in distinct records with the defined record tag name (default: `recordtagname=\"record\"`) " +
-        "If no matching record tag is found, the output will be empty. " +
-        "The handler breaks down XML elements with simple string values and optional attributes " +
-        "into entities with a value subfield (name configurable) and additional subfields for each attribute. " +
-        "Record tag and value tag names can be configured. Attributes can get an attributeMarker.")
+@Description("A generic XML reader. Separates XML data in distinct records with the defined record tag name (default: `recordtagname=\"record\"`) "
+        + "If no matching record tag is found, the output will be empty. "
+        + "The handler breaks down XML elements with simple string values and optional attributes "
+        + "into entities with a value subfield (name configurable) and additional subfields for each attribute. "
+        + "Record tag and value tag names can be configured. Attributes can get an attributeMarker.")
 @In(XmlReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("handle-generic-xml")
@@ -60,8 +60,8 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private boolean emitNamespace = EMIT_NAMESPACE;
 
     /**
-     * Constructs a GenericXmlHandler. Sets the record tag name to the value of
-     * the system property {@value #RECORD_TAG_PROPERTY} if it's present.
+     * Constructs a GenericXmlHandler. Sets the record tag name to the value of the
+     * system property {@value #RECORD_TAG_PROPERTY} if it's present.
      */
     public GenericXmlHandler() {
         final String recordTagNameProperty = System.getProperty(RECORD_TAG_PROPERTY);
@@ -71,11 +71,11 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     /**
-     * Creates a new {@code GenericXmlReader} with the given tag name as
-     * marker for records.
+     * Creates a new {@code GenericXmlReader} with the given tag name as marker for
+     * records.
      *
-     * @deprecated Use default constructor and set the tag name later
-     * with {@link #setRecordTagName(String)}.
+     * @deprecated Use default constructor and set the tag name later with
+     *             {@link #setRecordTagName(String)}.
      *
      * @param recordTagName tag name marking the start of a record.
      */
@@ -87,10 +87,11 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     /**
      * Sets the tag name which marks the start of a record.
      * <p>
-     * This value may only be changed between records. If it is changed
-     * while processing a record the behaviour of this module is undefined.
+     * This value may only be changed between records. If it is changed while
+     * processing a record the behaviour of this module is undefined.
      * <p>
-     * <strong>Default value: {@value org.metafacture.framework.helpers.DefaultXmlPipe#DEFAULT_RECORD_TAG}</strong>
+     * <strong>Default value:
+     * {@value org.metafacture.framework.helpers.DefaultXmlPipe#DEFAULT_RECORD_TAG}</strong>
      *
      * @param recordTagName the tag name which marks the start of a record.
      */
@@ -126,14 +127,14 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     /**
-     * Triggers namespace awareness. If set to "true" input data like "foo:bar"
-     * will be passed through as "foo:bar". For backward compatibility the default
-     * is set to "false", thus only "bar" is emitted.
+     * Triggers namespace awareness. If set to "true" input data like "foo:bar" will
+     * be passed through as "foo:bar". For backward compatibility the default is set
+     * to "false", thus only "bar" is emitted.
      * <p>
      * <strong>Default value: {@value #EMIT_NAMESPACE}</strong>
      *
      * @param emitNamespace set to "true" if namespace should be emitted. Defaults
-     *                      to "false".
+     *                          to "false".
      */
     public void setEmitNamespace(final boolean emitNamespace) {
         this.emitNamespace = emitNamespace;
@@ -167,7 +168,8 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) {
+    public void startElement(final String uri, final String localName, final String qName,
+            final Attributes attributes) {
         if (inRecord) {
             writeValue();
             if (emitNamespace) {

@@ -30,7 +30,8 @@ import java.util.TreeSet;
  */
 public final class Range extends AbstractFlushingCollect {
 
-    private final SortedSet<Integer> values = new TreeSet<Integer>(new IncrementDependingComparator());
+    private final SortedSet<Integer> values = new TreeSet<Integer>(
+            new IncrementDependingComparator());
 
     private int increment;
     private Integer first;
@@ -61,8 +62,9 @@ public final class Range extends AbstractFlushingCollect {
 
     @Override
     protected void emit() {
-        for (final Integer i: values) {
-            getNamedValueReceiver().receive(getName(), i.toString(), this, getRecordCount(), getEntityCount());
+        for (final Integer i : values) {
+            getNamedValueReceiver().receive(getName(), i.toString(), this, getRecordCount(),
+                    getEntityCount());
         }
     }
 

@@ -151,7 +151,7 @@ public final class MetamorphTest {
         metamorph.startEntity("testEntity");
         metamorph.startEntity("testEntity");
         metamorph.endEntity();
-        metamorph.endRecord();  // Exception expected
+        metamorph.endRecord(); // Exception expected
     }
 
     private void assertNamedValue(final boolean matching, final Consumer<Metamorph> in) {
@@ -169,9 +169,9 @@ public final class MetamorphTest {
 
         try {
             if (matching) {
-                Mockito.verify(receiver).receive(
-                        ArgumentMatchers.eq("outName"), ArgumentMatchers.eq("testValue"),
-                        ArgumentMatchers.any(), ArgumentMatchers.eq(1), ArgumentMatchers.anyInt());
+                Mockito.verify(receiver).receive(ArgumentMatchers.eq("outName"),
+                        ArgumentMatchers.eq("testValue"), ArgumentMatchers.any(),
+                        ArgumentMatchers.eq(1), ArgumentMatchers.anyInt());
             }
 
             Mockito.verifyNoMoreInteractions(receiver);

@@ -43,10 +43,8 @@ import java.util.regex.Pattern;
 public final class MabDecoder extends DefaultObjectPipe<String, StreamReceiver> {
 
     private static final String FIELD_END = "\u001e";
-    private static final Pattern FIELD_PATTERN =
-            Pattern.compile(FIELD_END, Pattern.LITERAL);
-    private static final Pattern SUBFIELD_PATTERN =
-            Pattern.compile("\u001f", Pattern.LITERAL);
+    private static final Pattern FIELD_PATTERN = Pattern.compile(FIELD_END, Pattern.LITERAL);
+    private static final Pattern SUBFIELD_PATTERN = Pattern.compile("\u001f", Pattern.LITERAL);
     private static final String RECORD_END = "\u001d";
 
     private static final int FIELD_NAME_SIZE = 4;

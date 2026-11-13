@@ -41,18 +41,20 @@ public class SplitField implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         final String splitChar = params.size() > 1 ? params.get(1) : "\\s+";
         final Pattern splitPattern = Pattern.compile(splitChar);
 
-        final Function<String, Value> splitFunction = s ->
-            newArray(Arrays.stream(splitPattern.split(s)).map(Value::new));
+        final Function<String, Value> splitFunction = s -> newArray(
+                Arrays.stream(splitPattern.split(s)).map(Value::new));
 
         record.transform(params.get(0), (m, c) -> m
-                .ifArray(a -> c.accept(newArray(a.stream().map(Value::asString).map(splitFunction))))
-                .ifHash(h -> c.accept(Value.newHash(n -> h.forEach((f, w) -> n.put(f, splitFunction.apply(w.asString()))))))
-                .ifString(s -> c.accept(splitFunction.apply(s)))
-        );
+                .ifArray(
+                        a -> c.accept(newArray(a.stream().map(Value::asString).map(splitFunction))))
+                .ifHash(h -> c.accept(Value.newHash(
+                        n -> h.forEach((f, w) -> n.put(f, splitFunction.apply(w.asString()))))))
+                .ifString(s -> c.accept(splitFunction.apply(s))));
     }
 
 }

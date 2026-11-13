@@ -63,7 +63,7 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
      * Enriched constructor setting the top level element and the Element name
      *
      * @param topLevelElement the name of the top level XML tag
-     * @param elementName the name of the tag defining a new Element to be split
+     * @param elementName     the name of the tag defining a new Element to be split
      */
     public XmlElementSplitter(final String topLevelElement, final String elementName) {
         setTopLevelElement(topLevelElement);
@@ -71,8 +71,8 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     }
 
     /**
-     * Sets the name of the Element. All these elements in the XML stream will
-     * be XML documents on their own.
+     * Sets the name of the Element. All these elements in the XML stream will be
+     * XML documents on their own.
      *
      * @param name Identifies the elements
      */
@@ -83,8 +83,8 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     /**
      * Sets the top-level XML document element.
      *
-     * @param newRoot the top level element. Leave at default to omit the
-     *                top-level element.
+     * @param newRoot the top level element. Leave at default to omit the top-level
+     *                    element.
      */
     public void setTopLevelElement(final String newRoot) {
         root = newRoot;
@@ -112,7 +112,8 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) throws SAXException {
+    public void startElement(final String uri, final String localName, final String qName,
+            final Attributes attributes) throws SAXException {
         if (!inElement) {
             if (element.equals(localName)) {
                 builder = new StringBuilder();
@@ -135,7 +136,8 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
         this.builder.append("<" + qName);
         if (attributes.getLength() > 0) {
             for (int i = 0; i < attributes.getLength(); ++i) {
-                builder.append(" " + attributes.getQName(i) + "=\"" + XmlUtil.escape(attributes.getValue(i)) + "\"");
+                builder.append(" " + attributes.getQName(i) + "=\""
+                        + XmlUtil.escape(attributes.getValue(i)) + "\"");
             }
         }
 
@@ -143,7 +145,8 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void endElement(final String uri, final String localName, final String qName) throws SAXException {
+    public void endElement(final String uri, final String localName, final String qName)
+            throws SAXException {
         if (inElement) {
             builder.append("</" + qName + ">");
             if (element.equals(localName)) {
@@ -167,7 +170,8 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void characters(final char[] chars, final int start, final int length) throws SAXException {
+    public void characters(final char[] chars, final int start, final int length)
+            throws SAXException {
         try {
             builder.append(XmlUtil.escape(new String(chars, start, length)));
         }

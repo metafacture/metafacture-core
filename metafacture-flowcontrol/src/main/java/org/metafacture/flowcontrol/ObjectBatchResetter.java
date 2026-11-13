@@ -24,7 +24,8 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 /**
- * Resets the downstream modules every {@link #setBatchSize(int) batch-size} objects.
+ * Resets the downstream modules every {@link #setBatchSize(int) batch-size}
+ * objects.
  *
  * @param <T> object type
  * @author Christoph Böhme
@@ -58,7 +59,7 @@ public class ObjectBatchResetter<T> extends DefaultObjectPipe<T, ObjectReceiver<
      * emitted when the next object is received.
      *
      * @param batchSize number of objects before a <i>reset-stream</i> event is
-     *                  triggered
+     *                      triggered
      */
     public void setBatchSize(final int batchSize) {
         this.batchSize = batchSize;
@@ -87,7 +88,8 @@ public class ObjectBatchResetter<T> extends DefaultObjectPipe<T, ObjectReceiver<
     /**
      * Returns the number of objects in the current batch.
      * <p>
-     * This counter is reset after each batch and also when the module receives a <i>reset-stream</i> event.
+     * This counter is reset after each batch and also when the module receives a
+     * <i>reset-stream</i> event.
      *
      * @return number of objects in the current batch
      */

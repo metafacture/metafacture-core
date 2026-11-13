@@ -166,7 +166,8 @@ public class MetafixTest {
     // See issue metafacture-fix#79
     public void shouldThrowExceptionForInvalidFixFile() {
         final String fixFile = "src/test/resources/org/metafacture/metafix/fixes/invalid.fix";
-        MetafixTestHelpers.assertThrows(FixParseException.class, "Invalid FixStandaloneSetup resource: " + fixFile, () -> new Metafix(fixFile));
+        MetafixTestHelpers.assertThrows(FixParseException.class,
+                "Invalid FixStandaloneSetup resource: " + fixFile, () -> new Metafix(fixFile));
 
         // TODO: Test logging statements
     }
@@ -219,7 +220,8 @@ public class MetafixTest {
         final FixRegistry registry = new Metafix().getRegistry();
         final Class<?> clazz = TestCommand2.class;
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> registry.registerCommand(clazz));
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> registry.registerCommand(clazz));
     }
 
     @Test
@@ -228,7 +230,8 @@ public class MetafixTest {
         final String name = "bla";
         final Class<?> clazz = MetafixTest.class;
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> registry.registerCommand(name, clazz));
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> registry.registerCommand(name, clazz));
     }
 
     @Test
@@ -282,7 +285,8 @@ public class MetafixTest {
         final Class<?> clazz2 = ListAs.class;
 
         Assertions.assertTrue(registry.registerCommand(name, clazz1));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> registry.registerCommand(name, clazz2));
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> registry.registerCommand(name, clazz2));
     }
 
     @Test
@@ -303,7 +307,8 @@ public class MetafixTest {
         final String name = null;
         final Class<?> clazz = Once.class;
 
-        Assertions.assertThrows(NullPointerException.class, () -> registry.registerCommand(name, clazz));
+        Assertions.assertThrows(NullPointerException.class,
+                () -> registry.registerCommand(name, clazz));
     }
 
     @Test
@@ -312,7 +317,8 @@ public class MetafixTest {
         final String name = "bla";
         final Class<?> clazz = null;
 
-        Assertions.assertThrows(NullPointerException.class, () -> registry.registerCommand(name, clazz));
+        Assertions.assertThrows(NullPointerException.class,
+                () -> registry.registerCommand(name, clazz));
     }
 
     @Test
@@ -340,7 +346,8 @@ public class MetafixTest {
         }
 
         @Override
-        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+        public void apply(final Metafix metafix, final Record record, final List<String> params,
+                final Map<String, String> options) {
             // nothing to do
         }
 

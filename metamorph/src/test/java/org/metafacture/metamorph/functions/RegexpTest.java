@@ -64,15 +64,13 @@ public final class RegexpTest {
                     i.literal("", "184000");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("subject", "resource:P184000");
                     o.get().literal("subject", "");
                     o.get().literal("subject", "184000");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -90,13 +88,11 @@ public final class RegexpTest {
                     i.literal("s", "aaccdd");
                     i.literal("s", "ax");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("s", "ccdd");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -114,13 +110,11 @@ public final class RegexpTest {
                     i.literal("s", "aaccdd");
                     i.literal("s", null);
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("s", "aaccdd");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

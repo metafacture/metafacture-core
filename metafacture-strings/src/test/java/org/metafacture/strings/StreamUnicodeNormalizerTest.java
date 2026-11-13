@@ -41,10 +41,8 @@ public final class StreamUnicodeNormalizerTest {
     private static final String LITERAL_NAME = "literal-name";
     private static final String LITERAL_VALUE = "literal-value";
 
-    private static final String VALUE_WITH_DIACRITICS =
-            "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
-    private static final String VALUE_WITH_PRECOMPOSED_CHARS =
-            "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
+    private static final String VALUE_WITH_DIACRITICS = "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
+    private static final String VALUE_WITH_PRECOMPOSED_CHARS = "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
 
     private static final String ID_WITH_DIACRITICS = "id-Üä";
     private static final String ID_WITH_PRECOMPOSED_CHARS = "id-Üä";
@@ -162,8 +160,7 @@ public final class StreamUnicodeNormalizerTest {
     public void shouldNormalizeToNFDIfConfigured() {
         streamUnicodeNormalizer.setNormalizationForm(Normalizer.Form.NFD);
         streamUnicodeNormalizer.startRecord(RECORD_ID);
-        streamUnicodeNormalizer.literal(LITERAL_NAME,
-                KEY_WITH_PRECOMPOSED_CHARS);
+        streamUnicodeNormalizer.literal(LITERAL_NAME, KEY_WITH_PRECOMPOSED_CHARS);
         streamUnicodeNormalizer.endRecord();
 
         Mockito.verify(receiver).literal(LITERAL_NAME, KEY_WITH_DIACRITICS);

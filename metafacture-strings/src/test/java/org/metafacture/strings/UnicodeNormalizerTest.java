@@ -33,11 +33,9 @@ import org.mockito.MockitoAnnotations;
  */
 public final class UnicodeNormalizerTest {
 
-    private static final String STRING_WITH_DIACRITICS =
-            "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
+    private static final String STRING_WITH_DIACRITICS = "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
 
-    private static final String STRING_WITH_PRECOMPOSED_CHARS =
-            "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
+    private static final String STRING_WITH_PRECOMPOSED_CHARS = "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
 
     private UnicodeNormalizer normalizer;
 

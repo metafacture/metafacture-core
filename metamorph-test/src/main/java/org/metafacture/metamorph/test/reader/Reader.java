@@ -25,7 +25,7 @@ import org.metafacture.framework.StreamReceiver;
  *
  * @author Markus Michael Geipel
  */
-public interface Reader extends ObjectPipe<java.io.Reader, StreamReceiver>  {
+public interface Reader extends ObjectPipe<java.io.Reader, StreamReceiver> {
 
     // Marker interface
 

@@ -54,70 +54,59 @@ public final class SplitterTest {
 
     @Test
     public void shouldPassRecordToReceiverWithMatchingKey() {
-        assertSplitter(
-                i -> {
-                    i.startRecord("1");
-                    i.startEntity("data");
-                    i.literal("forward-to", "receiver-1");
-                    i.endEntity();
-                    i.endRecord();
-                    i.startRecord("2");
-                    i.literal("forward-to", "receiver-2");
-                    i.endRecord();
-                },
-                (o1, o2) -> {
-                    o1.get().startRecord("1");
-                    o1.get().startEntity("data");
-                    o1.get().literal("forward-to", "receiver-1");
-                    o1.get().endEntity();
-                    o1.get().endRecord();
-                    o2.get().startRecord("2");
-                    o2.get().literal("forward-to", "receiver-2");
-                    o2.get().endRecord();
-                }
-        );
+        assertSplitter(i -> {
+            i.startRecord("1");
+            i.startEntity("data");
+            i.literal("forward-to", "receiver-1");
+            i.endEntity();
+            i.endRecord();
+            i.startRecord("2");
+            i.literal("forward-to", "receiver-2");
+            i.endRecord();
+        }, (o1, o2) -> {
+            o1.get().startRecord("1");
+            o1.get().startEntity("data");
+            o1.get().literal("forward-to", "receiver-1");
+            o1.get().endEntity();
+            o1.get().endRecord();
+            o2.get().startRecord("2");
+            o2.get().literal("forward-to", "receiver-2");
+            o2.get().endRecord();
+        });
     }
 
     @Test
     public void shouldDiscardNonMatchingRecords() {
-        assertSplitter(
-                i -> {
-                    i.startRecord("1");
-                    i.literal("forward-to", "none");
-                    i.endRecord();
-                },
-                (o1, o2) -> {
-                }
-        );
+        assertSplitter(i -> {
+            i.startRecord("1");
+            i.literal("forward-to", "none");
+            i.endRecord();
+        }, (o1, o2) -> {
+        });
     }
 
     @Test
     public void shouldPassResetStreamToAllReceivers() {
-        assertSplitter(
-                i -> {
-                    i.resetStream();
-                },
-                (o1, o2) -> {
-                    o1.get().resetStream();
-                    o2.get().resetStream();
-                }
-        );
+        assertSplitter(i -> {
+            i.resetStream();
+        }, (o1, o2) -> {
+            o1.get().resetStream();
+            o2.get().resetStream();
+        });
     }
 
     @Test
     public void shouldPassCloseStreamToAllReceivers() {
-        assertSplitter(
-                i -> {
-                    i.closeStream();
-                },
-                (o1, o2) -> {
-                    o1.get().closeStream();
-                    o2.get().closeStream();
-                }
-        );
+        assertSplitter(i -> {
+            i.closeStream();
+        }, (o1, o2) -> {
+            o1.get().closeStream();
+            o2.get().closeStream();
+        });
     }
 
-    private void assertSplitter(final Consumer<Splitter> in, final BiConsumer<Supplier<StreamReceiver>, Supplier<StreamReceiver>> out) {
+    private void assertSplitter(final Consumer<Splitter> in,
+            final BiConsumer<Supplier<StreamReceiver>, Supplier<StreamReceiver>> out) {
         final InOrder ordered = Mockito.inOrder(receiver1, receiver2);
 
         final Splitter splitter = new Splitter("org/metafacture/metamorph/splitter-test.xml");

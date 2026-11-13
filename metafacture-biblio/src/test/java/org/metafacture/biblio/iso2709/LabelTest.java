@@ -40,17 +40,10 @@ public final class LabelTest {
     private static final char RESERVED_CHAR = 'R';
     private static final int BASE_ADDRESS = 25;
 
-    private static final String RECORD_LABEL =
-            String.format("%05d", RECORD_LENGTH) +
-            RECORD_STATUS +
-            String.valueOf(IMPL_CODES) +
-            INDICATOR_LENGTH +
-            IDENTIFIER_LENGTH +
-            String.format("%05d", BASE_ADDRESS) +
-            String.valueOf(SYSTEM_CHARS) +
-            FIELD_LENGTH_LENGTH +
-            FIELD_START_LENGTH +
-            IMPL_DEFINED_PART_LENGTH + RESERVED_CHAR;
+    private static final String RECORD_LABEL = String.format("%05d", RECORD_LENGTH) + RECORD_STATUS
+            + String.valueOf(IMPL_CODES) + INDICATOR_LENGTH + IDENTIFIER_LENGTH
+            + String.format("%05d", BASE_ADDRESS) + String.valueOf(SYSTEM_CHARS)
+            + FIELD_LENGTH_LENGTH + FIELD_START_LENGTH + IMPL_DEFINED_PART_LENGTH + RESERVED_CHAR;
 
     private Label label;
 
@@ -59,8 +52,7 @@ public final class LabelTest {
 
     @Before
     public void createSystemUnderTest() {
-        final byte[] recordLabelBytes = RECORD_LABEL.getBytes(
-                Iso646Constants.CHARSET);
+        final byte[] recordLabelBytes = RECORD_LABEL.getBytes(Iso646Constants.CHARSET);
         final Iso646ByteBuffer buffer = new Iso646ByteBuffer(recordLabelBytes);
         label = new Label(buffer);
     }
@@ -71,12 +63,9 @@ public final class LabelTest {
 
         Assert.assertNotNull(recordFormat);
         final RecordFormat expectedFormat = RecordFormat.create()
-                .withIndicatorLength(INDICATOR_LENGTH)
-                .withIdentifierLength(IDENTIFIER_LENGTH)
-                .withFieldStartLength(FIELD_START_LENGTH)
-                .withFieldLengthLength(FIELD_LENGTH_LENGTH)
-                .withImplDefinedPartLength(IMPL_DEFINED_PART_LENGTH)
-                .build();
+                .withIndicatorLength(INDICATOR_LENGTH).withIdentifierLength(IDENTIFIER_LENGTH)
+                .withFieldStartLength(FIELD_START_LENGTH).withFieldLengthLength(FIELD_LENGTH_LENGTH)
+                .withImplDefinedPartLength(IMPL_DEFINED_PART_LENGTH).build();
         Assert.assertEquals(expectedFormat, recordFormat);
     }
 

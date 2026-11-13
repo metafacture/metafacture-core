@@ -38,7 +38,8 @@ import java.util.regex.Pattern;
 public final class LineSplitter extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
     private static final char NEWLINE = '\n';
-    private static final Pattern LINE_PATTERN = Pattern.compile(String.valueOf(NEWLINE), Pattern.LITERAL);
+    private static final Pattern LINE_PATTERN = Pattern.compile(String.valueOf(NEWLINE),
+            Pattern.LITERAL);
 
     /**
      * Creates an instance of {@link LineSplitter}.

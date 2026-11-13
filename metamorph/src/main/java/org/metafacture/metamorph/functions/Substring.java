@@ -42,7 +42,7 @@ public final class Substring extends AbstractSimpleStatelessFunction {
             return null;
         }
         final int adjEnd;
-        if (end == 0  || end > length) {
+        if (end == 0 || end > length) {
             adjEnd = length;
         }
         else {
@@ -65,7 +65,7 @@ public final class Substring extends AbstractSimpleStatelessFunction {
      * Sets the end of the substring.
      *
      * @param end end of substring, if end==0 the the complete remaining string is
-     *            returned
+     *                returned
      *
      */
     public void setEnd(final String end) {

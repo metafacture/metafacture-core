@@ -28,11 +28,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 /**
- * Wraps the call to the process method of the downstream module
- * in a try catch block with Exception as the catch-block's
- * argument type. This module is supposed to stop any exception
- * from downstream modules to travel further upstream. If an
- * exception is caught, a log message with log level "error" is
+ * Wraps the call to the process method of the downstream module in a try catch
+ * block with Exception as the catch-block's argument type. This module is
+ * supposed to stop any exception from downstream modules to travel further
+ * upstream. If an exception is caught, a log message with log level "error" is
  * written.
  *
  * @param <T> object type
@@ -43,10 +42,10 @@ import java.io.StringWriter;
 @In(Object.class)
 @Out(Object.class)
 @FluxCommand("catch-object-exception")
-public final class ObjectExceptionCatcher<T> extends
-        DefaultObjectPipe<T, ObjectReceiver<T>> {
+public final class ObjectExceptionCatcher<T> extends DefaultObjectPipe<T, ObjectReceiver<T>> {
 
-    private static final MetafactureLogger LOG = new MetafactureLogger(ObjectExceptionCatcher.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(
+            ObjectExceptionCatcher.class);
 
     private String logPrefix;
     private boolean logStackTrace;
@@ -92,7 +91,7 @@ public final class ObjectExceptionCatcher<T> extends
      * Sets the log messages to stack trace level.
      *
      * @param logStackTrace true if the log messages should be set to stack trace
-     *                      level.
+     *                          level.
      */
     public void setLogStackTrace(final boolean logStackTrace) {
         this.logStackTrace = logStackTrace;
@@ -107,7 +106,7 @@ public final class ObjectExceptionCatcher<T> extends
         return logStackTrace;
     }
 
-    /*package-private*/ void setLogExceptionMessage(final boolean logExceptionMessage) {
+    /* package-private */ void setLogExceptionMessage(final boolean logExceptionMessage) {
         this.logExceptionMessage = logExceptionMessage;
     }
 
@@ -118,7 +117,8 @@ public final class ObjectExceptionCatcher<T> extends
         }
         catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             if (logExceptionMessage) {
-                LOG.externalError("{}'{}' while processing object: {}", logPrefix, e.getMessage(), obj);
+                LOG.externalError("{}'{}' while processing object: {}", logPrefix, e.getMessage(),
+                        obj);
             }
 
             if (logStackTrace) {

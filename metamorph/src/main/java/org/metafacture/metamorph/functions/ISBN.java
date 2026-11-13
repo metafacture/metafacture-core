@@ -157,8 +157,7 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
      */
     public static String isbn13to10(final String isbn) {
         if (isbn.length() != ISBN13_SIZE) {
-            throw new IllegalArgumentException(
-                    "isbn must be 13 characters long");
+            throw new IllegalArgumentException("isbn must be 13 characters long");
         }
         final String isbn10Data = isbn.substring(3, 12);
 
@@ -173,8 +172,7 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
      */
     public static String isbn10to13(final String isbn) {
         if (isbn.length() != ISBN10_SIZE) {
-            throw new IllegalArgumentException(
-                    "isbn must be 10 characters long");
+            throw new IllegalArgumentException("isbn must be 10 characters long");
         }
 
         final String isbn13Data = "978" + isbn.substring(0, ISBN10_SIZE - 1);
@@ -192,12 +190,10 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
         boolean result = false;
 
         if (isbn.length() == ISBN10_SIZE) {
-            result = check10(isbn.substring(0, ISBN10_SIZE - 1)) == isbn
-                    .charAt(ISBN10_SIZE - 1);
+            result = check10(isbn.substring(0, ISBN10_SIZE - 1)) == isbn.charAt(ISBN10_SIZE - 1);
         }
         else if (isbn.length() == ISBN13_SIZE) {
-            result = check13(isbn.substring(0, ISBN13_SIZE - 1)) == isbn
-                    .charAt(ISBN13_SIZE - 1);
+            result = check13(isbn.substring(0, ISBN13_SIZE - 1)) == isbn.charAt(ISBN13_SIZE - 1);
         }
         return result;
     }

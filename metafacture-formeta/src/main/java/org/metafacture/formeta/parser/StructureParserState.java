@@ -22,13 +22,14 @@ import org.metafacture.framework.FormatException;
 /**
  * FSA (which additionally keeps track of its nesting level) for parsing records
  * and literals/entities on a structural level. The initial parser state is
- * {@code ITEM_NAME}. The parser has no final state
- * as the sequence of records or literals/entities is theoretically unlimited.
+ * {@code ITEM_NAME}. The parser has no final state as the sequence of records
+ * or literals/entities is theoretically unlimited.
  */
 enum StructureParserState {
 
     ITEM_NAME {
-        protected StructureParserState delimiterReached(final char ch, final StructureParserContext ctx) {
+        protected StructureParserState delimiterReached(final char ch,
+                final StructureParserContext ctx) {
             final StructureParserState newState;
             switch (ch) {
                 case Formeta.GROUP_START:
@@ -37,17 +38,19 @@ enum StructureParserState {
                     break;
                 case Formeta.NAME_VALUE_SEPARATOR:
                     ctx.startLiteral();
-                    newState =  LITERAL_VALUE;
+                    newState = LITERAL_VALUE;
                     break;
                 case Formeta.ITEM_SEPARATOR:
                     if (!ctx.isTextEmpty()) {
-                        throw new FormatException(getUnexpectedCharMsg(NAME_DELIMITER_EXPECTED, ch));
+                        throw new FormatException(
+                                getUnexpectedCharMsg(NAME_DELIMITER_EXPECTED, ch));
                     }
                     newState = ITEM_NAME;
                     break;
                 case Formeta.GROUP_END:
                     if (!ctx.isTextEmpty() || !ctx.isNested()) {
-                        throw new FormatException(getUnexpectedCharMsg(NAME_DELIMITER_EXPECTED, ch));
+                        throw new FormatException(
+                                getUnexpectedCharMsg(NAME_DELIMITER_EXPECTED, ch));
                     }
                     ctx.endGroup();
                     newState = ITEM_NAME;
@@ -64,9 +67,11 @@ enum StructureParserState {
                 throw new FormatException(UNEXPECTED_EOI);
             }
         }
+
     },
     LITERAL_VALUE {
-        protected StructureParserState delimiterReached(final char ch, final StructureParserContext ctx) {
+        protected StructureParserState delimiterReached(final char ch,
+                final StructureParserContext ctx) {
             final StructureParserState newState;
             switch (ch) {
                 case Formeta.ITEM_SEPARATOR:
@@ -75,7 +80,8 @@ enum StructureParserState {
                     break;
                 case Formeta.GROUP_END:
                     if (!ctx.isNested()) {
-                        throw new FormatException(getUnexpectedCharMsg(ITEM_SEPARATOR_EXPECTED, ch));
+                        throw new FormatException(
+                                getUnexpectedCharMsg(ITEM_SEPARATOR_EXPECTED, ch));
                     }
                     ctx.endLiteral();
                     ctx.endGroup();
@@ -94,6 +100,7 @@ enum StructureParserState {
             }
             ctx.endLiteral();
         }
+
     };
 
     private static final String NAME_DELIMITER_EXPECTED = "'{' or ':'";

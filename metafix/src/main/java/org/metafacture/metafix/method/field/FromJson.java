@@ -40,20 +40,19 @@ public class FromJson implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         final String errorString = options.get(ERROR_STRING_OPTION);
         final JsonValue.Parser parser = new JsonValue.Parser();
 
-        record.transform(params.get(0), (m, c) -> m
-                .ifString(s -> {
-                    try {
-                        c.accept(parser.parse(s));
-                    }
-                    catch (final IOException e) {
-                        c.accept(errorString != null ? new Value(errorString) : null);
-                    }
-                })
-        );
+        record.transform(params.get(0), (m, c) -> m.ifString(s -> {
+            try {
+                c.accept(parser.parse(s));
+            }
+            catch (final IOException e) {
+                c.accept(errorString != null ? new Value(errorString) : null);
+            }
+        }));
     }
 
 }

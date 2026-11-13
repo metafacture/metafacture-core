@@ -49,7 +49,7 @@ public final class StreamMergerTest {
     }
 
     @Test
-    public  void shouldMergeSequencesOfRecordsWithTheSameId() {
+    public void shouldMergeSequencesOfRecordsWithTheSameId() {
         streamMerger.startRecord("1");
         streamMerger.startEntity("entity-1");
         streamMerger.endEntity();
@@ -74,7 +74,7 @@ public final class StreamMergerTest {
     }
 
     @Test
-    public  void shouldNoMergeRecordsWithDifferentIds() {
+    public void shouldNoMergeRecordsWithDifferentIds() {
         streamMerger.startRecord("1");
         streamMerger.literal("literal-1", "value-1");
         streamMerger.endRecord();

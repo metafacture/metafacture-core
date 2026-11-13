@@ -34,10 +34,8 @@ import org.mockito.MockitoAnnotations;
 public final class LiteralToObjectTest {
 
     private static final String LITERAL_NAME = "extract_this";
-    private static final String LITERAL_VALUE1 =
-            "I've been extracted from a record";
-    private static final String LITERAL_VALUE2 =
-            "I've been extracted from a record, too";
+    private static final String LITERAL_VALUE1 = "I've been extracted from a record";
+    private static final String LITERAL_VALUE2 = "I've been extracted from a record, too";
 
     @Mock
     private ObjectReceiver<String> receiver;

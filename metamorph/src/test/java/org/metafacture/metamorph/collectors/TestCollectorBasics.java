@@ -67,13 +67,11 @@ public final class TestCollectorBasics {
                     i.literal("d2", "b");
                     i.literal("d3", "c ");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("d", "abc");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -109,15 +107,13 @@ public final class TestCollectorBasics {
                     i.literal("ch", "X");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("result", "ab");
                     o.get().literal("result", "BM");
                     o.get().literal("result", "de");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -141,14 +137,12 @@ public final class TestCollectorBasics {
                     i.literal("f", "");
                     i.literal("d", "6");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("d", "12");
                     o.get().literal("d", "345");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -169,15 +163,13 @@ public final class TestCollectorBasics {
                     i.literal("d", "a");
                     i.literal("f", "3");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("d", "1");
                     o.get().literal("d", "2");
                     o.get().literal("d", "a3");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

@@ -211,12 +211,9 @@ public final class YamlDecoder extends DefaultObjectPipe<String, StreamReceiver>
         }
 
         if (yamlParser.currentToken() != null) {
-            throw new MetafactureException(new StringBuilder()
-                    .append("Unexpected token '")
-                    .append(yamlParser.currentToken())
-                    .append("' at ")
-                    .append(yamlParser.currentLocation())
-                    .toString());
+            throw new MetafactureException(new StringBuilder().append("Unexpected token '")
+                    .append(yamlParser.currentToken()).append("' at ")
+                    .append(yamlParser.currentLocation()).toString());
         }
     }
 

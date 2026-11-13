@@ -40,26 +40,26 @@ import java.util.Arrays;
  * <p>
  * The {@code Marc21Encoder} encodes a stream as follows:
  * <ul>
- *   <li>Top-level literals are encoded as reference fields. Their name must
- *   match the requirements for reference field tags in ISO 2709:2008 records.
+ * <li>Top-level literals are encoded as reference fields. Their name must match
+ * the requirements for reference field tags in ISO 2709:2008 records.
  *
- *   <li>Entities are encoded as data fields. Only one level of entities is
- *   supported. The entity name must consist of a three letter tag name followed
- *   by two indicator characters. The tag name must follow the requirements for
- *   data field tags in ISO 2709:2008 records.
+ * <li>Entities are encoded as data fields. Only one level of entities is
+ * supported. The entity name must consist of a three letter tag name followed
+ * by two indicator characters. The tag name must follow the requirements for
+ * data field tags in ISO 2709:2008 records.
  *
- *   <li>Literals in entities are encoded as subfields. The literal name is used
- *   as subfield indicator and must therefore be a single character.
+ * <li>Literals in entities are encoded as subfields. The literal name is used
+ * as subfield indicator and must therefore be a single character.
  *
- *   <li>Top level literals named &quot;type&quot;, which may be produced by
- *   {@link MarcXmlHandler} are ignored.
+ * <li>Top level literals named &quot;type&quot;, which may be produced by
+ * {@link MarcXmlHandler} are ignored.
  * </ul>
  * The stream expected by the encoder is compatible to the streams emitted by
  * the {@link Marc21Decoder} and the {@link MarcXmlHandler}.
  * <p>
- * The record identifier in {@code startRecord} is ignored by default. The
- * event stream is expected to contain  a <i>literal</i> event named
- * &quot;001&quot; with the record id. Alternatively, setting
+ * The record identifier in {@code startRecord} is ignored by default. The event
+ * stream is expected to contain a <i>literal</i> event named &quot;001&quot;
+ * with the record id. Alternatively, setting
  * {@link #setGenerateIdField(boolean)} to true enables generation of a record
  * identifier field from the record id.
  *
@@ -70,11 +70,10 @@ import java.util.Arrays;
 @Out(String.class)
 @Description("Encodes MARC21 records")
 @FluxCommand("encode-marc21")
-public final class Marc21Encoder extends
-        DefaultStreamPipe<ObjectReceiver<String>> {
+public final class Marc21Encoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
-    private static final int NAME_LENGTH = RecordFormat.TAG_LENGTH +
-            Marc21Constants.MARC21_FORMAT.getIndicatorLength();
+    private static final int NAME_LENGTH = RecordFormat.TAG_LENGTH
+            + Marc21Constants.MARC21_FORMAT.getIndicatorLength();
 
     private final RecordBuilder builder;
 
@@ -92,16 +91,16 @@ public final class Marc21Encoder extends
     }
 
     /**
-     * Controls whether the record identifier field (&quot;001&quot;) is
-     * generated from the record id in the <i>start-record</i> event. If id field
-     * generation is enabled the event stream should not contain a <i>literal
+     * Controls whether the record identifier field (&quot;001&quot;) is generated
+     * from the record id in the <i>start-record</i> event. If id field generation
+     * is enabled the event stream should not contain a <i>literal
      * &quot;001&quot;</i> event as this would result in two record identifier
      * fields being written into the MARC 21 record.
      * <p>
      * The default value of {@code generatedFieldId} is false.
      * <p>
-     * The parameter can be changed at anytime. It becomes effective with the
-     * next record being processed.
+     * The parameter can be changed at anytime. It becomes effective with the next
+     * record being processed.
      *
      * @param generateIdField if true a record identifier field is generated.
      */
@@ -210,23 +209,30 @@ public final class Marc21Encoder extends
 
     private void processLeaderAsOneLiteral(final String value) {
         if (value.length() != Iso2709Constants.RECORD_LABEL_LENGTH) {
-            throw new FormatException(
-                    "leader literal must contain " + Iso2709Constants.RECORD_LABEL_LENGTH + "  characters: " + value);
+            throw new FormatException("leader literal must contain "
+                    + Iso2709Constants.RECORD_LABEL_LENGTH + "  characters: " + value);
         }
-        processLeaderAsSubfields(Marc21EventNames.RECORD_STATUS_LITERAL, value.charAt(Iso2709Constants.RECORD_STATUS_POS));
-        processLeaderAsSubfields(Marc21EventNames.RECORD_TYPE_LITERAL, value.charAt(Iso2709Constants.IMPL_CODES_START));
-        processLeaderAsSubfields(Marc21EventNames.BIBLIOGRAPHIC_LEVEL_LITERAL, value.charAt(Iso2709Constants.IMPL_CODES_START + 1));
-        processLeaderAsSubfields(Marc21EventNames.TYPE_OF_CONTROL_LITERAL, value.charAt(Iso2709Constants.IMPL_CODES_START + 2));
-        processLeaderAsSubfields(Marc21EventNames.CHARACTER_CODING_LITERAL, value.charAt(Iso2709Constants.RECORD_STATUS_POS + Iso2709Constants.IMPL_CODES_LENGTH));
-        processLeaderAsSubfields(Marc21EventNames.ENCODING_LEVEL_LITERAL, value.charAt(Iso2709Constants.SYSTEM_CHARS_START));
-        processLeaderAsSubfields(Marc21EventNames.CATALOGING_FORM_LITERAL, value.charAt(Iso2709Constants.SYSTEM_CHARS_START + 1));
-        processLeaderAsSubfields(Marc21EventNames.MULTIPART_LEVEL_LITERAL, value.charAt(Iso2709Constants.SYSTEM_CHARS_START + 2));
+        processLeaderAsSubfields(Marc21EventNames.RECORD_STATUS_LITERAL,
+                value.charAt(Iso2709Constants.RECORD_STATUS_POS));
+        processLeaderAsSubfields(Marc21EventNames.RECORD_TYPE_LITERAL,
+                value.charAt(Iso2709Constants.IMPL_CODES_START));
+        processLeaderAsSubfields(Marc21EventNames.BIBLIOGRAPHIC_LEVEL_LITERAL,
+                value.charAt(Iso2709Constants.IMPL_CODES_START + 1));
+        processLeaderAsSubfields(Marc21EventNames.TYPE_OF_CONTROL_LITERAL,
+                value.charAt(Iso2709Constants.IMPL_CODES_START + 2));
+        processLeaderAsSubfields(Marc21EventNames.CHARACTER_CODING_LITERAL, value
+                .charAt(Iso2709Constants.RECORD_STATUS_POS + Iso2709Constants.IMPL_CODES_LENGTH));
+        processLeaderAsSubfields(Marc21EventNames.ENCODING_LEVEL_LITERAL,
+                value.charAt(Iso2709Constants.SYSTEM_CHARS_START));
+        processLeaderAsSubfields(Marc21EventNames.CATALOGING_FORM_LITERAL,
+                value.charAt(Iso2709Constants.SYSTEM_CHARS_START + 1));
+        processLeaderAsSubfields(Marc21EventNames.MULTIPART_LEVEL_LITERAL,
+                value.charAt(Iso2709Constants.SYSTEM_CHARS_START + 2));
     }
 
     private void processLeaderAsSubfields(final String name, final String value) {
         if (value.length() != 1) {
-            throw new FormatException(
-                    "literal must only contain a single character:" + name);
+            throw new FormatException("literal must only contain a single character:" + name);
         }
         processLeaderAsSubfields(name, value.charAt(0));
     }
@@ -277,7 +283,8 @@ public final class Marc21Encoder extends
                     return;
                 }
             }
-            throw new FormatException("invalid code '" + code + "'; allowed codes are: " + Arrays.toString(validCodes));
+            throw new FormatException("invalid code '" + code + "'; allowed codes are: "
+                    + Arrays.toString(validCodes));
         }
     }
 

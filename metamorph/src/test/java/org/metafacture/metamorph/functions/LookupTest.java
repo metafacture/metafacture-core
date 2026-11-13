@@ -110,15 +110,13 @@ public final class LookupTest {
                     i.literal("2", "a");
                     i.literal("2", "b");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("1", "A");
                     o.get().literal("2", "A");
                     o.get().literal("2", "B");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -149,15 +147,13 @@ public final class LookupTest {
                     i.literal("2", "a");
                     i.literal("2", "b");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("1", "A");
                     o.get().literal("2", "A");
                     o.get().literal("2", "B");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -177,13 +173,11 @@ public final class LookupTest {
                     i.startRecord("1");
                     i.literal("data", "name");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data", "Hawaii");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
@@ -205,13 +199,11 @@ public final class LookupTest {
                     i.literal("litA", "dog");
                     i.literal("litA", "dragon");
                     i.endRecord();
-                },
-                (o, f) -> {
+                }, (o, f) -> {
                     o.get().startRecord("1");
                     f.apply(2).literal("litA", "mammal");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

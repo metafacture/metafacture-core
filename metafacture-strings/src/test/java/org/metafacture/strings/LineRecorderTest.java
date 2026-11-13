@@ -69,21 +69,15 @@ public final class LineRecorderTest {
         lineRecorder.process(RECORD1_ENDMARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
-        ordered.verify(receiver).process(
-                RECORD1_PART1 +
-                LINE_SEPARATOR +
-                RECORD1_PART2 +
-                LINE_SEPARATOR);
+        ordered.verify(receiver)
+                .process(RECORD1_PART1 + LINE_SEPARATOR + RECORD1_PART2 + LINE_SEPARATOR);
 
         lineRecorder.process(RECORD2_PART1);
         lineRecorder.process(RECORD2_PART2);
         lineRecorder.process(RECORD2_ENDMARKER);
 
-        ordered.verify(receiver).process(
-                RECORD2_PART1 +
-                LINE_SEPARATOR +
-                RECORD2_PART2 +
-                LINE_SEPARATOR);
+        ordered.verify(receiver)
+                .process(RECORD2_PART1 + LINE_SEPARATOR + RECORD2_PART2 + LINE_SEPARATOR);
         ordered.verifyNoMoreInteractions();
     }
 
@@ -95,11 +89,8 @@ public final class LineRecorderTest {
         lineRecorder.process(RECORD3_ENDMARKER);
 
         final InOrder ordered = Mockito.inOrder(receiver);
-        ordered.verify(receiver).process(
-                RECORD3_PART1 +
-                LINE_SEPARATOR +
-                RECORD3_PART2 +
-                LINE_SEPARATOR);
+        ordered.verify(receiver)
+                .process(RECORD3_PART1 + LINE_SEPARATOR + RECORD3_PART2 + LINE_SEPARATOR);
         ordered.verifyNoMoreInteractions();
     }
 
@@ -109,11 +100,8 @@ public final class LineRecorderTest {
         lineRecorder.process(RECORD3_PART2);
         lineRecorder.closeStream();
         final InOrder ordered = Mockito.inOrder(receiver);
-        ordered.verify(receiver).process(
-                RECORD3_PART1 +
-                LINE_SEPARATOR +
-                RECORD3_PART2 +
-                LINE_SEPARATOR);
+        ordered.verify(receiver)
+                .process(RECORD3_PART1 + LINE_SEPARATOR + RECORD3_PART2 + LINE_SEPARATOR);
         ordered.verify(receiver).closeStream();
         ordered.verifyNoMoreInteractions();
     }

@@ -34,8 +34,7 @@ import java.util.Set;
  */
 public class ObjectFactory<T> {
 
-    private final Map<String, ConfigurableClass<? extends T>> classes =
-            new HashMap<>();
+    private final Map<String, ConfigurableClass<? extends T>> classes = new HashMap<>();
 
     /**
      * Creates an instance of {@link ObjectFactory}.
@@ -74,7 +73,8 @@ public class ObjectFactory<T> {
      * @param key         the key associcated with the ConfigurableClass
      * @param objectClass the ConfigurableClass
      */
-    public final void registerClass(final String key, final ConfigurableClass<? extends T> objectClass) {
+    public final void registerClass(final String key,
+            final ConfigurableClass<? extends T> objectClass) {
         classes.put(key, objectClass);
     }
 
@@ -97,7 +97,8 @@ public class ObjectFactory<T> {
      * @param constructorArgs the args of the constructor
      * @return a new instance
      */
-    public final T newInstance(final String key, final Map<String, String> values, final Object... constructorArgs) {
+    public final T newInstance(final String key, final Map<String, String> values,
+            final Object... constructorArgs) {
         if (!classes.containsKey(key)) {
             throw new NoSuchElementException("no registered class for: " + key);
         }

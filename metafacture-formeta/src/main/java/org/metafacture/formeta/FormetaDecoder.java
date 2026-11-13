@@ -36,8 +36,7 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @In(String.class)
 @Out(StreamReceiver.class)
 @FluxCommand("decode-formeta")
-public final class FormetaDecoder extends
-        DefaultObjectPipe<String, StreamReceiver> {
+public final class FormetaDecoder extends DefaultObjectPipe<String, StreamReceiver> {
 
     private final FormetaParser parser = new FormetaParser();
     private final Emitter emitter = new FullRecordEmitter();

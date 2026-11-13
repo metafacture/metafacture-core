@@ -24,9 +24,7 @@ import org.openjdk.jmh.annotations.Param;
 public class MetafixBenchmark extends AbstractMetafixBenchmark {
 
     @Param({ // checkstyle-disable-line AnnotationUseStyle
-        "empty",
-        "alma-small"
-    })
+            "empty", "alma-small"})
     private String input;
 
     /**
