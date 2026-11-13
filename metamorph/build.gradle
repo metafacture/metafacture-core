@@ -27,9 +27,9 @@ dependencies {
   implementation project(':metafacture-javaintegration')
   implementation "com.google.guava:guava:${versions.guava}"
   implementation "org.openjdk.nashorn:nashorn-core:${versions.nashorn}"
-  testRuntimeOnly slf4j_provider
   testImplementation "junit:junit:${versions.junit}"
   testImplementation "org.mockito:mockito-core:${versions.mockito}"
+  testImplementation "org.simplify4u:slf4j2-mock:${versions.slf4j_mock}"
 }
 
 sourceSets {

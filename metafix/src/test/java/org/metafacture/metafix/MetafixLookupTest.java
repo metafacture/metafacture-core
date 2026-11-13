@@ -28,8 +28,11 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,6 +61,9 @@ public class MetafixLookupTest {
     private static final String LOOKUP = "lookup('title.*',";
 
     private static final WireMockServer WIRE_MOCK_SERVER = new WireMockRule(WireMockConfiguration.wireMockConfig().dynamicPort());
+
+    @Mock(name = "external.org.metafacture.metamorph.maps.FileMap")
+    private Logger fileMapLogger;
 
     @Mock
     private StreamReceiver streamReceiver;
@@ -1045,6 +1051,33 @@ public class MetafixLookupTest {
                 o -> {
                 }
             )
+        );
+    }
+
+    @Test
+    public void shouldIgnoreLookupInUnknownExternalMap() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                LOOKUP + " 'testMap.csv', ignore_unreadable: 'true')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Hey");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Aloha");
+                o.get().literal("title", "Moin");
+                o.get().literal("title", "Hey");
+                o.get().endRecord();
+
+                Mockito.verify(fileMapLogger).warn(ArgumentMatchers.eq("{}: {}"), new Object[]{
+                    ArgumentMatchers.eq("filemap: cannot read map file"),
+                    ArgumentMatchers.matches("File not found: .*/metafacture-core/metafix/testMap.csv")});
+                Mockito.verifyNoMoreInteractions(fileMapLogger);
+            }
         );
     }
 

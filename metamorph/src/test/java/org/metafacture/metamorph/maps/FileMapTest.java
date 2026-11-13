@@ -18,13 +18,16 @@ package org.metafacture.metamorph.maps;
 
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.metamorph.TestHelpers;
+import org.metafacture.metamorph.api.MorphExecutionException;
 
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.slf4j.Logger;
 
 import java.util.function.Consumer;
 
@@ -50,6 +53,9 @@ public final class FileMapTest {
 
     @Rule
     public final MockitoRule mockitoRule = MockitoJUnit.rule();
+
+    @Mock(name = "external.org.metafacture.metamorph.maps.FileMap")
+    private Logger logger;
 
     @Mock
     private StreamReceiver receiver;
@@ -366,6 +372,46 @@ public final class FileMapTest {
         assertMap(0, i -> {
             i.setExpectedColumns(99);
         });
+    }
+
+    @Test
+    public void shouldNotLoadMissingFile() {
+        final FileMap fileMap = new FileMap();
+        fileMap.setFile("missing");
+        Assert.assertThrows(MorphExecutionException.class, () -> fileMap.keySet());
+    }
+
+    @Test
+    public void shouldIgnoreMissingFile() {
+        final FileMap fileMap = new FileMap();
+        fileMap.setFile("missing");
+        fileMap.setIgnoreUnreadableFiles(true);
+
+        Assert.assertEquals(0, fileMap.keySet().size());
+        Assert.assertEquals(0, fileMap.keySet().size()); // warning only logged once
+
+        assertLog();
+    }
+
+    @Test
+    public void shouldNotProvideMapIfAnyFileMissing() {
+        Assert.assertThrows(MorphExecutionException.class, () -> assertMap(-1, i -> i.setFile("missing")));
+    }
+
+    @Test
+    public void shouldProvideMapIfIgnoringMissingFile() {
+        assertMap(379, i -> {
+            i.setFile("missing");
+            i.setIgnoreUnreadableFiles(true);
+        });
+
+        assertLog();
+    }
+
+    private void assertLog() {
+        final Object[] arguments = new Object[]{"filemap: cannot read map file", "File not found: missing"};
+        Mockito.verify(logger).warn("{}: {}", arguments);
+        Mockito.verifyNoMoreInteractions(logger);
     }
 
     private void assertMap(final int size, final Consumer<FileMap> consumer) {

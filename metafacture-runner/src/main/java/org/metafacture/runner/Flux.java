@@ -84,10 +84,10 @@ public class Flux implements Callable<Integer> {
     @ArgGroup(exclusive = true) // TODO: Add `multiplicity = "1"` after deprecation period is over.
     private FluxInput fluxInput;
 
-    @Option(names = {"-v", "--var"}, paramLabel = "<name>=<value>", description = "Assign Flux variables (repeatable).")
-    private final Map<String, String> vars = new HashMap<>();
+    @Option(names = {"-v", "--var"}, paramLabel = "<name>=<value>", defaultValue = Option.NULL_VALUE, description = "Assign Flux variables (repeatable).")
+    private Map<String, String> vars;
 
-    @Option(names = {"-l", "--list-commands"}, help = true, description = "List all available Flux commands and exit.")
+    @Option(names = {"-l", "--list-commands"}, help = true, defaultValue = "false", description = "List all available Flux commands and exit.")
     private boolean listCommands;
 
     @Parameters(hidden = true) // TODO: Remove catch-all parameter after deprecation period is over.
@@ -96,30 +96,48 @@ public class Flux implements Callable<Integer> {
     @Spec
     private Model.CommandSpec commandSpec;
 
-    /*package-private*/ Flux() {
-        // No (public) instances allowed
+    /**
+     * Creates an instance of {@link Flux}.
+     */
+    public Flux() {
     }
 
     /**
-     * Runs the Flux.
+     * Runs the Flux and exits the process with an appropriate status code.
      *
-     * @param args the pathname of the flux file to run
+     * @param args the command line options
      * @throws IOException if an I/O error occurs
      * @throws RecognitionException if an ANTLR error occurs
      */
     public static void main(final String[] args) throws IOException, RecognitionException {
+        System.exit(new Flux().run(args));
+    }
+
+    /**
+     * Runs the Flux and returns an appropriate status code.
+     *
+     * @param args the command line options
+     * @return the exit status
+     * @throws IOException if an I/O error occurs
+     * @throws RecognitionException if an ANTLR error occurs
+     */
+    public int run(final String[] args) throws IOException, RecognitionException {
         loadCustomJars();
 
-        final CommandLine commandLine = new CommandLine(new Flux());
+        final CommandLine commandLine = new CommandLine(this);
         commandLine.setUsageHelpLongOptionsMaxWidth(LONG_OPTIONS_MAX_WIDTH);
 
-        System.exit(commandLine.execute(args));
+        return commandLine.execute(args);
     }
 
     @Override // checkstyle-disable-line CyclomaticComplexity|ReturnCount
     public Integer call() throws Exception {
         final CommandLine commandLine = commandSpec.commandLine();
         final File fluxFile;
+
+        if (vars == null) {
+            vars = new HashMap<>();
+        }
 
         if (fluxInput != null || !vars.isEmpty() || listCommands) {
             // Mixed options and legacy arguments

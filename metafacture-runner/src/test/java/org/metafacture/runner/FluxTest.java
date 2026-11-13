@@ -16,6 +16,7 @@
 
 package org.metafacture.runner;
 
+import org.antlr.runtime.RecognitionException;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
@@ -26,6 +27,8 @@ import picocli.CommandLine;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UncheckedIOException;
@@ -39,7 +42,7 @@ import java.util.stream.Stream;
  *
  * @author Jens Wille
  */
-public class FluxTest {
+public class FluxTest { // checkstyle-disable-line ClassDataAbstractionCoupling
 
     private static final String DEPRECATION_NOTICE = "DEPRECATION NOTICE";
     private static final String FILE_NOT_FOUND = "File not found: ";
@@ -173,6 +176,35 @@ public class FluxTest {
         }
 
         assertCommand(new CommandLine(flux), expectedExitCode, expectedOut, expectedErr, args);
+        Assert.assertEquals(expectedRanFlux, ranFlux.get());
+
+        ranFlux.set(false); // reset
+
+        final PrintStream oldOut = System.out;
+        final PrintStream oldErr = System.err;
+        final PrintStream devNull = new PrintStream(new OutputStream() {
+            @Override
+            public void write(final int b) {
+                // nothing to do
+            }
+        });
+
+        int actualExitCode = -1;
+        try {
+            System.setOut(devNull);
+            System.setErr(devNull);
+
+            actualExitCode = flux.run(args);
+        }
+        catch (final IOException | RecognitionException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            System.setOut(oldOut);
+            System.setErr(oldErr);
+        }
+
+        Assert.assertEquals(expectedExitCode, actualExitCode);
         Assert.assertEquals(expectedRanFlux, ranFlux.get());
     }
 
