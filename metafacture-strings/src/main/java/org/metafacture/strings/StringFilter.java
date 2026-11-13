@@ -37,8 +37,7 @@ import java.util.regex.Pattern;
 @In(String.class)
 @Out(String.class)
 @FluxCommand("filter-strings")
-public final class StringFilter extends
-        DefaultObjectPipe<String, ObjectReceiver<String>> {
+public final class StringFilter extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
     private final Matcher matcher;
     private boolean passMatches = true;

@@ -24,45 +24,46 @@ package org.metafacture.formeta.formatter;
 public enum FormatterStyle {
 
     /**
-     * Dense and concise output style with minimal quotation and
-     * item separation and without any unnecessary whitespace.
-     * Good for automatic processing.
+     * Dense and concise output style with minimal quotation and item separation and
+     * without any unnecessary whitespace. Good for automatic processing.
      */
     CONCISE {
         @Override
         public Formatter createFormatter() {
             return new ConciseFormatter();
         }
+
     },
 
     /**
-     * Output style which aims to be easy to read. Inserts
-     * additional whitespace and item separators. Uses
-     * quotation marks extensively.
+     * Output style which aims to be easy to read. Inserts additional whitespace and
+     * item separators. Uses quotation marks extensively.
      */
     VERBOSE {
         @Override
         public Formatter createFormatter() {
             return new VerboseFormatter();
         }
+
     },
 
     /**
-     * Similar to the {@code VERBOSE} style but additionally
-     * adds line breaks and indents to support readability.
+     * Similar to the {@code VERBOSE} style but additionally adds line breaks and
+     * indents to support readability.
      */
     MULTILINE {
         @Override
         public Formatter createFormatter() {
             return new MultilineFormatter();
         }
+
     };
 
     /**
      * Create a Formatter with various output styles for formeta,
      *
      * @see Formatter
-     * @see  org.metafacture.formeta.Formeta
+     * @see org.metafacture.formeta.Formeta
      * @return the Formatter
      */
     public abstract Formatter createFormatter();

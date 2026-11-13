@@ -42,14 +42,14 @@ import java.security.NoSuchAlgorithmException;
 @In(String.class)
 @Out(Triple.class)
 @FluxCommand("digest-file")
-public final class FileDigestCalculator extends
-        DefaultObjectPipe<String, ObjectReceiver<Triple>> {
+public final class FileDigestCalculator extends DefaultObjectPipe<String, ObjectReceiver<Triple>> {
 
     private static final int BUFFER_SIZE = 1024;
 
     private static final int HIGH_NIBBLE = 0xf0;
     private static final int LOW_NIBBLE = 0x0f;
-    private static final char[] NIBBLE_TO_HEX = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+    private static final char[] NIBBLE_TO_HEX = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            'a', 'b', 'c', 'd', 'e', 'f'};
 
     private static final int NIBBLE_TO_HEX_SHIFT_WIDTH = 4;
 
@@ -99,7 +99,8 @@ public final class FileDigestCalculator extends
         getReceiver().process(new Triple(file, algorithm.name(), digest));
     }
 
-    private static byte[] getDigest(final InputStream stream, final MessageDigest messageDigest) throws IOException {
+    private static byte[] getDigest(final InputStream stream, final MessageDigest messageDigest)
+            throws IOException {
         final byte[] buffer = new byte[BUFFER_SIZE];
 
         int read = stream.read(buffer, 0, BUFFER_SIZE);
@@ -126,12 +127,8 @@ public final class FileDigestCalculator extends
      */
     public enum DigestAlgorithm {
 
-        MD2("MD2"),
-        MD5("MD5"),
-        SHA1("SHA-1"),
-        SHA256("SHA-256"),
-        SHA384("SHA-384"),
-        SHA512("SHA-512");
+        MD2("MD2"), MD5("MD5"), SHA1("SHA-1"), SHA256("SHA-256"), SHA384("SHA-384"), SHA512(
+                "SHA-512");
 
         private final String identifier;
 

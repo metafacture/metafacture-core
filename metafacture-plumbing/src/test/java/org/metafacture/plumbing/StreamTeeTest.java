@@ -49,9 +49,7 @@ public final class StreamTeeTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         streamTee = new StreamTee();
-        streamTee
-                .addReceiver(receiver1)
-                .addReceiver(receiver2);
+        streamTee.addReceiver(receiver1).addReceiver(receiver2);
     }
 
     @Test

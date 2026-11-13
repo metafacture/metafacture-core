@@ -45,7 +45,8 @@ public class ElementExtractor extends DefaultObjectPipe<Reader, ObjectReceiver<S
     private String selector;
 
     /**
-     * @param selector The CSS-style jsoup selector, see https://jsoup.org/cookbook/extracting-data/selector-syntax
+     * @param selector The CSS-style jsoup selector, see
+     *                     https://jsoup.org/cookbook/extracting-data/selector-syntax
      */
     public ElementExtractor(final String selector) {
         this.selector = selector;

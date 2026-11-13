@@ -34,7 +34,8 @@ import org.mockito.MockitoAnnotations;
  */
 public final class ObjectThreaderTest {
 
-    private static final int ACTIVE_THREADS_AT_BEGINNING = Thread.getAllStackTraces().keySet().size();
+    private static final int ACTIVE_THREADS_AT_BEGINNING = Thread.getAllStackTraces().keySet()
+            .size();
 
     @Mock
     private ObjectReceiver<String> receiverThread1;
@@ -55,13 +56,17 @@ public final class ObjectThreaderTest {
     }
 
     @Test
-    public void shouldSplitAllObjectsToAllThreadedDownStreamReceivers() throws InterruptedException {
+    public void shouldSplitAllObjectsToAllThreadedDownStreamReceivers()
+            throws InterruptedException {
         objectThreader.process("a");
         objectThreader.process("b");
         objectThreader.process("a");
         objectThreader.process("c");
         // check if two more threads were indeed created
-        Assertions.assertThat(Thread.getAllStackTraces().keySet().size() - ACTIVE_THREADS_AT_BEGINNING).isEqualTo(2);
+        Assertions
+                .assertThat(
+                        Thread.getAllStackTraces().keySet().size() - ACTIVE_THREADS_AT_BEGINNING)
+                .isEqualTo(2);
         objectThreader.closeStream();
         // verify thread 1
         Mockito.verify(receiverThread1, Mockito.atLeast(2)).process("a");

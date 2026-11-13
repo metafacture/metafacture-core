@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Defines an internal map for {@link org.metafacture.metafix.method.field.Lookup}
- * from key/value pairs.
+ * Defines an internal map for
+ * {@link org.metafacture.metafix.method.field.Lookup} from key/value pairs.
  */
 @FixCommand("put_map")
 public class PutMap implements FixFunction {
@@ -38,7 +38,8 @@ public class PutMap implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         metafix.putMap(params.get(0), options);
     }
 

@@ -125,7 +125,8 @@ public final class BeaconReader extends DefaultObjectPipe<java.io.Reader, Stream
                         }
                         else {
                             if (target == null || target.isEmpty()) {
-                                throw new MetafactureException("Error in BEACON file: target missing");
+                                throw new MetafactureException(
+                                        "Error in BEACON file: target missing");
                             }
                             final Matcher matcher = ID_PATTERN.matcher(target);
                             url = matcher.replaceFirst(parts[0]);

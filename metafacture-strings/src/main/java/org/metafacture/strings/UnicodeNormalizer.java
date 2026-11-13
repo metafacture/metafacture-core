@@ -58,8 +58,8 @@ public final class UnicodeNormalizer extends DefaultObjectPipe<String, ObjectRec
      * <p>
      * The default value is NFC.
      * <p>
-     * This parameter may be set at any time during processing. It becomes
-     * effective with the next string that is received.
+     * This parameter may be set at any time during processing. It becomes effective
+     * with the next string that is received.
      *
      * @param normalizationForm the normalisation form to use.
      *

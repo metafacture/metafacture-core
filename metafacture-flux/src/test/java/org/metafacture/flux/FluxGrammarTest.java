@@ -56,8 +56,7 @@ public final class FluxGrammarTest {
     }
 
     @Test
-    public void shouldAllowEmptyCommentInLastLineOfFile()
-            throws RecognitionException, IOException {
+    public void shouldAllowEmptyCommentInLastLineOfFile() throws RecognitionException, IOException {
         final String script = "\"test\"|print; //";
 
         FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
@@ -67,8 +66,7 @@ public final class FluxGrammarTest {
     }
 
     @Test
-    public void shouldAllowEmptyCommentInFile()
-            throws RecognitionException, IOException {
+    public void shouldAllowEmptyCommentInFile() throws RecognitionException, IOException {
         final String script = "\"test\"|print; //\n";
 
         FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
@@ -78,14 +76,12 @@ public final class FluxGrammarTest {
     }
 
     @Test
-    public void shouldReplaceJavaEscapeSequences()
-            throws IOException, RecognitionException {
-        final String script =
-                "\"quot=\\\" octal1=\\7 octal2=\\60 octal3=\\103 unicode=\\u00f8 tab=[\\t]\"" +
-                        "|print;";
+    public void shouldReplaceJavaEscapeSequences() throws IOException, RecognitionException {
+        final String script = "\"quot=\\\" octal1=\\7 octal2=\\60 octal3=\\103 unicode=\\u00f8 tab=[\\t]\""
+                + "|print;";
 
-        final FluxProgramm program = FluxCompiler.compile(
-                createInputStream(script), Collections.emptyMap());
+        final FluxProgramm program = FluxCompiler.compile(createInputStream(script),
+                Collections.emptyMap());
         program.start();
 
         Assert.assertEquals("", stderrBuffer.toString());
@@ -95,7 +91,7 @@ public final class FluxGrammarTest {
 
     @Test(expected = FluxParseException.class)
     public void issue421_shouldThrowFluxParseExceptionWhenSemicolonInFlowIsMissing()
-        throws RecognitionException, IOException {
+            throws RecognitionException, IOException {
         final String script = "\"test\"|print";
         try {
             FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
@@ -108,7 +104,7 @@ public final class FluxGrammarTest {
 
     @Test(expected = FluxParseException.class)
     public void issue421_shouldThrowFluxParseExceptionWhenSemicolonInVarDefIsMissing()
-        throws RecognitionException, IOException {
+            throws RecognitionException, IOException {
         final String script = "foo=42";
         try {
             FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
@@ -121,7 +117,7 @@ public final class FluxGrammarTest {
 
     @Test(expected = ReflectionException.class)
     public void issue421_shouldThrowReflectionExceptionWhenCommandIsNotFound()
-        throws RecognitionException, IOException {
+            throws RecognitionException, IOException {
         final String script = "\"test\"|prin;";
         try {
             FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
@@ -134,8 +130,8 @@ public final class FluxGrammarTest {
 
     @Test(expected = FluxParseException.class)
     public void issue421_shouldThrowFluxParseExceptionWhenInputIsMissingAfterPipe1()
-        throws RecognitionException, IOException {
-        final String script =  "\"test\"|";
+            throws RecognitionException, IOException {
+        final String script = "\"test\"|";
         try {
             FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
         }
@@ -147,8 +143,8 @@ public final class FluxGrammarTest {
 
     @Test(expected = FluxParseException.class)
     public void issue421_shouldThrowFluxParseExceptionWhenInputIsMissingAfterPipe2()
-        throws RecognitionException, IOException {
-        final String script =  "\"test\"|;";
+            throws RecognitionException, IOException {
+        final String script = "\"test\"|;";
         try {
             FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
         }
@@ -160,7 +156,7 @@ public final class FluxGrammarTest {
 
     @Test(expected = FluxParseException.class)
     public void issue421_shouldThrowFluxParseExceptionWhenTeeStructureOccursWithouATeeCommand()
-        throws RecognitionException, IOException {
+            throws RecognitionException, IOException {
         final String script = "\"test\"|{print}{print} ;";
         try {
             FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
@@ -173,21 +169,22 @@ public final class FluxGrammarTest {
 
     @Test(expected = FluxParseException.class)
     public void issue421_shouldThrowFluxParseExceptionWhenTeeIsNotASender()
-        throws RecognitionException, IOException {
-        final String script =  "\"test\"|print|object-tee|{print}{print} ;";
+            throws RecognitionException, IOException {
+        final String script = "\"test\"|print|object-tee|{print}{print} ;";
         try {
             FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
         }
         catch (final FluxParseException e) {
-            Assert.assertEquals("org.metafacture.io.ObjectStdoutWriter is not a sender", e.getMessage());
+            Assert.assertEquals("org.metafacture.io.ObjectStdoutWriter is not a sender",
+                    e.getMessage());
             throw e;
         }
     }
 
     @Test(expected = FluxParseException.class)
     public void issue421_shouldInsertMissingSymbolsWhenTeeIsStructurallyInvalid()
-        throws RecognitionException, IOException {
-        final String script =  "\"test\"|object-tee|{object-tee{print{print} ;";
+            throws RecognitionException, IOException {
+        final String script = "\"test\"|object-tee|{object-tee{print{print} ;";
         try {
             FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
             final String tmp = stdoutBuffer.toString();

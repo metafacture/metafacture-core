@@ -35,8 +35,7 @@ import org.jdom2.output.SAXOutputter;
 @In(Document.class)
 @Out(StreamReceiver.class)
 @FluxCommand("from-jdom-document")
-public final class JDomDocumentToStream
-        implements ObjectPipe<Document, StreamReceiver> {
+public final class JDomDocumentToStream implements ObjectPipe<Document, StreamReceiver> {
 
     private final SAXOutputter saxOutputer;
     private final XmlPipe<StreamReceiver> xmlPipe;

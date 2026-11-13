@@ -37,17 +37,22 @@ public final class TestHelpers {
     private TestHelpers() {
     }
 
-    public static void assertMorph(final StreamReceiver receiver, final String morphDef, final Consumer<Metamorph> in, final Consumer<Supplier<StreamReceiver>> out) {
+    public static void assertMorph(final StreamReceiver receiver, final String morphDef,
+            final Consumer<Metamorph> in, final Consumer<Supplier<StreamReceiver>> out) {
         assertMorph(receiver, morphDef, in, (s, f) -> out.accept(s));
     }
 
-    public static void assertMorph(final StreamReceiver receiver, final String morphDef, final Consumer<Metamorph> in, final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out) {
-        final Metamorph metamorph = InlineMorph.in(TestHelpers.class).with(morphDef).createConnectedTo(receiver);
+    public static void assertMorph(final StreamReceiver receiver, final String morphDef,
+            final Consumer<Metamorph> in,
+            final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out) {
+        final Metamorph metamorph = InlineMorph.in(TestHelpers.class).with(morphDef)
+                .createConnectedTo(receiver);
         final InOrder ordered = Mockito.inOrder(receiver);
 
         try {
             in.accept(metamorph);
-            out.accept(() -> ordered.verify(receiver), i -> ordered.verify(receiver, Mockito.times(i)));
+            out.accept(() -> ordered.verify(receiver),
+                    i -> ordered.verify(receiver, Mockito.times(i)));
 
             ordered.verifyNoMoreInteractions();
             Mockito.verifyNoMoreInteractions(receiver);

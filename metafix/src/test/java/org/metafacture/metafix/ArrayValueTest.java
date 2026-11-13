@@ -27,8 +27,7 @@ public class ArrayValueTest {
     @Test
     public void shouldSatisfyEqualsContract() {
         EqualsVerifier.forClass(Value.Array.class)
-            .withPrefabValues(Value.class, Value.newArray(), Value.newHash())
-            .verify();
+                .withPrefabValues(Value.class, Value.newArray(), Value.newHash()).verify();
     }
 
 }

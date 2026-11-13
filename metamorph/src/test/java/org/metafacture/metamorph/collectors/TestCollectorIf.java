@@ -46,6 +46,7 @@ public final class TestCollectorIf {
     @Test
     public void shouldOnlyFireIfConditionIsMet() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='combined' value='${data1}-${data2}'>" +
                 "    <if>" +
@@ -55,6 +56,7 @@ public final class TestCollectorIf {
                 "    <data source='data2' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "a");
@@ -66,20 +68,19 @@ public final class TestCollectorIf {
                     i.literal("data2", "b");
                     i.literal("data4", "c");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("combined", "a-b");
                     o.get().endRecord();
                     o.get().startRecord("2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldAllowToUseSameSourceInbodyAndCondition() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='combined' value='${data1}-${data2}'>" +
                 "    <if>" +
@@ -91,6 +92,7 @@ public final class TestCollectorIf {
                 "    <data source='data2' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "a");
@@ -100,20 +102,19 @@ public final class TestCollectorIf {
                     i.literal("data1", "a");
                     i.literal("data2", "c");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("combined", "a-b");
                     o.get().endRecord();
                     o.get().startRecord("2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldAllowQuantorsInIfStatements() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='combined' value='${data1}-${data2}'>" +
                 "    <if>" +
@@ -126,6 +127,7 @@ public final class TestCollectorIf {
                 "    <data source='data2' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "a");
@@ -142,8 +144,7 @@ public final class TestCollectorIf {
                     i.literal("data2", "b");
                     i.literal("data5", "c");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("combined", "a-b");
                     o.get().endRecord();
@@ -152,13 +153,13 @@ public final class TestCollectorIf {
                     o.get().endRecord();
                     o.get().startRecord("3");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldResetConditionWithCollector() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='result' value='${VAL}' reset='true'>" +
                 "    <if>" +
@@ -167,6 +168,7 @@ public final class TestCollectorIf {
                 "    <data source='entity.data1' name='VAL' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -178,18 +180,17 @@ public final class TestCollectorIf {
                     i.literal("data3", "X");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("result", "output");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldResetConditionWithCollectorOnFlushWith() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='result' value='${VAL1}${VAL2}' reset='true' flushWith='entity'>" +
                 "    <if>" +
@@ -199,6 +200,7 @@ public final class TestCollectorIf {
                 "    <data source='entity.data4' name='VAL2' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -210,18 +212,17 @@ public final class TestCollectorIf {
                     i.literal("data3", "X");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("result", "output");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldResetConditionWithCollectorOnSameEntity() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='result' value='${VAL1}+${VAL2}' sameEntity='true'>" +
                 "    <if>" +
@@ -231,6 +232,7 @@ public final class TestCollectorIf {
                 "    <data source='entity.data4' name='VAL2' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -243,17 +245,16 @@ public final class TestCollectorIf {
                     i.literal("data4", "extra-output");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldResetOnFlushWithIfConditionWasNotMet() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='result' value='${V1}${V2}' flushWith='entity' reset='true'>" +
                 "    <if>" +
@@ -265,6 +266,7 @@ public final class TestCollectorIf {
                 "    <data source='entity.literal2' name='V2' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -276,13 +278,11 @@ public final class TestCollectorIf {
                     i.literal("literal2", "value2");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("result", "value2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

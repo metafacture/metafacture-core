@@ -45,12 +45,14 @@ public final class ConcatTest {
     @Test
     public void shouldConcatenateValues() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <concat delimiter=', ' name='concat' prefix='{' postfix='}'>" +
                 "    <data source='data1' />" +
                 "    <data source='data2' />" +
                 "  </concat>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "a");
@@ -62,26 +64,26 @@ public final class ConcatTest {
                     i.literal("data1", "e");
                     i.literal("data2", "f");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("concat", "{a, b, c}");
                     o.get().endRecord();
                     o.get().startRecord("2");
                     o.get().literal("concat", "{d, e, f}");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldEmitConcatenatedValueOnFlushEvent() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <concat delimiter=', ' name='concat' prefix='{' postfix='}' flushWith='d' reset='true'>" +
                 "    <data source='d.1' />" +
                 "  </concat>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("d");
@@ -96,108 +98,106 @@ public final class ConcatTest {
                     i.literal("2", "e");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("concat", "{a, b}");
                     o.get().literal("concat", "{e, f}");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldEmitEmptyValues() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <concat name='concat' delimiter=', '>" +
                 "    <data source='litA' />" +
                 "    <data source='litB' />" +
                 "  </concat>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("litA", "");
                     i.literal("litB", "a");
                     i.literal("litA", "b");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("concat", ", a, b");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldReverseConcatenationIfReverseIsTrue() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <concat name='concat' delimiter=', ' reverse='true'>" +
                 "    <data source='litA' />" +
                 "    <data source='litB' />" +
                 "  </concat>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("litA", "1");
                     i.literal("litB", "2");
                     i.literal("litA", "3");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("concat", "3, 2, 1");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void prefixAndPostfixShouldWorkAsNormalIfReverseIsTrue() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <concat name='concat' delimiter=', ' prefix='(' postfix=')' reverse='true'>" +
                 "    <data source='litA' />" +
                 "    <data source='litB' />" +
                 "  </concat>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("litA", "1");
                     i.literal("litB", "2");
                     i.literal("litA", "3");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("concat", "(3, 2, 1)");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void issue187_shouldUseEmptyDelimiterAsDefault() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <concat name='concat'>" +
                 "    <data source='lit' />" +
                 "  </concat>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("lit", "data1");
                     i.literal("lit", "data2");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("concat", "data1data2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

@@ -47,6 +47,7 @@ public final class TestVariousFunctions {
     @Test
     public void testRegexpFunction() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='data' name='island'>" +
                 "    <regexp match='(\\w*) island' format='${1}' />" +
@@ -55,27 +56,27 @@ public final class TestVariousFunctions {
                 "    <regexp match='\\d\\d\\d\\d' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data", "Aloha!");
                     i.literal("data", "Oahu island, Hawaii island, Maui island");
                     i.literal("data", "year 1960!");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("island", "Oahu");
                     o.get().literal("island", "Hawaii");
                     o.get().literal("island", "Maui");
                     o.get().literal("year", "1960");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void testIsbnFunction() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='isbn' name='withError'>" +
                 "    <isbn to='isbn13' errorString='error' />" +
@@ -84,87 +85,87 @@ public final class TestVariousFunctions {
                 "    <isbn to='isbn13' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("isbn", "123 invalid");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("withError", "error");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void testSplitFunction() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='data' name='island'>" +
                 "    <split delimiter=',' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data", "Oahu,Hawaii,Maui");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("island", "Oahu");
                     o.get().literal("island", "Hawaii");
                     o.get().literal("island", "Maui");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void testSubstringFunction() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='a'>" +
                 "    <substring start='3' end='5' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("a", "012345");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("a", "34");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void testConstantFunction() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='data'>" +
                 "    <constant value='Hawaii' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data", "Aloha");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data", "Hawaii");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void testSetReplaceFunction() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='data'>" +
                 "    <setreplace>" +
@@ -174,22 +175,22 @@ public final class TestVariousFunctions {
                 "    </setreplace>" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data", "dt., frz. und eng.");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data", "deutsch, französich und englisch");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void testCaseFunction() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='data'>" +
                 "    <case to='upper' />" +
@@ -198,23 +199,23 @@ public final class TestVariousFunctions {
                 "    <case to='lower' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data", "Aloha");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data", "ALOHA");
                     o.get().literal("data", "aloha");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void testEqualsFunction() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='data' name='data1'>" +
                 "    <equals string='Aloha' />" +
@@ -223,24 +224,24 @@ public final class TestVariousFunctions {
                 "    <not-equals string='Aloha' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data", "Aloha");
                     i.literal("data", "Hawaii");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data1", "Aloha");
                     o.get().literal("data2", "Hawaii");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void testContainsFunction() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='data' name='data1'>" +
                 "    <contains string='Periodical' />" +
@@ -249,24 +250,24 @@ public final class TestVariousFunctions {
                 "    <not-contains string='Periodical' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data", "1990 Periodical MultiVolumeBook");
                     i.literal("data", "2013 BibliographicResource Book Series");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data1", "1990 Periodical MultiVolumeBook");
                     o.get().literal("data2", "2013 BibliographicResource Book Series");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void testBufferFunction() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='greeting' value='${greet} ${island}' reset='false'>" +
                 "    <data source='d1' name='greet' />" +
@@ -275,6 +276,7 @@ public final class TestVariousFunctions {
                 "    </data>" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("0");
                     i.literal("d1", "Aloha");
@@ -293,8 +295,7 @@ public final class TestVariousFunctions {
                     i.literal("d2", "to all");
                     i.literal("d1", "Aloha");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("0");
                     o.get().endRecord();
                     o.get().startRecord("1");
@@ -308,13 +309,13 @@ public final class TestVariousFunctions {
                     o.get().startRecord("4");
                     o.get().literal("greeting", "Aloha to all");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void testOccurrenceFunction() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='data' name='l2'>" +
                 "    <occurrence only='lessThan 2' />" +
@@ -326,6 +327,7 @@ public final class TestVariousFunctions {
                 "    <occurrence only='moreThan 2' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data", "1");
@@ -337,8 +339,7 @@ public final class TestVariousFunctions {
                     i.literal("data", "2");
                     i.literal("data", "3");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("l2", "1");
                     o.get().literal("2", "2");
@@ -349,13 +350,13 @@ public final class TestVariousFunctions {
                     o.get().literal("2", "2");
                     o.get().literal("g2", "3");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void testOccurrenceFunctionWithSameEntity() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='e.data' name='l2'>" +
                 "    <occurrence only='lessThan 2' sameEntity='true' />" +
@@ -367,6 +368,7 @@ public final class TestVariousFunctions {
                 "    <occurrence only='moreThan 2' sameEntity='true' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("e");
@@ -380,8 +382,7 @@ public final class TestVariousFunctions {
                     i.literal("data", "3");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("l2", "1");
                     o.get().literal("2", "2");
@@ -390,13 +391,13 @@ public final class TestVariousFunctions {
                     o.get().literal("2", "2");
                     o.get().literal("g2", "3");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void testOccurrenceFunctionWithSameEntityInNestedEntitiesShouldChangeWithInnerEntities() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='o.i.data' name='l2'>" +
                 "    <occurrence only='lessThan 2' sameEntity='true' />" +
@@ -408,6 +409,7 @@ public final class TestVariousFunctions {
                 "    <occurrence only='moreThan 2' sameEntity='true' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("o");
@@ -423,8 +425,7 @@ public final class TestVariousFunctions {
                     i.endEntity();
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("l2", "1");
                     o.get().literal("2", "2");
@@ -433,13 +434,13 @@ public final class TestVariousFunctions {
                     o.get().literal("2", "2");
                     o.get().literal("g2", "3");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void testCountFunction() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='data' name='count'>" +
                 "    <count />" +
@@ -450,6 +451,7 @@ public final class TestVariousFunctions {
                 "    </data>" +
                 "  </choose>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("0");
                     i.literal("datax", "1");
@@ -468,8 +470,7 @@ public final class TestVariousFunctions {
                     i.literal("datax", "1");
                     i.literal("datax", "2");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("0");
                     o.get().literal("count", "2");
                     o.get().endRecord();
@@ -485,13 +486,13 @@ public final class TestVariousFunctions {
                     o.get().startRecord("3");
                     o.get().literal("count", "2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void testNestedCountFunction() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='count' value='${count}' flushWith='record'>" +
                 "    <data source='data' name='count'>" +
@@ -500,6 +501,7 @@ public final class TestVariousFunctions {
                 "    <data source='fantasy' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data", "1");
@@ -510,16 +512,14 @@ public final class TestVariousFunctions {
                     i.literal("data", "1");
                     i.literal("data", "2");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("count", "3");
                     o.get().endRecord();
                     o.get().startRecord("2");
                     o.get().literal("count", "2");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

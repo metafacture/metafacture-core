@@ -171,8 +171,7 @@ public class PojoDecoderTest { // checkstyle-disable-line ClassDataAbstractionCo
         final PojoDecoder<SimpleSetPojo> pojoDecoder = new PojoDecoder<>();
         pojoDecoder.setReceiver(receiver);
 
-        final Set<String> valueSet = new HashSet<>(Arrays.asList(
-                "set-value1", "set-value2"));
+        final Set<String> valueSet = new HashSet<>(Arrays.asList("set-value1", "set-value2"));
         final SimpleSetPojo simpleSetPojo = new SimpleSetPojo();
         simpleSetPojo.setSetField(valueSet);
         pojoDecoder.process(simpleSetPojo);
@@ -196,15 +195,13 @@ public class PojoDecoderTest { // checkstyle-disable-line ClassDataAbstractionCo
         simpleMapPojo.setMapField(mapField);
         pojoDecoder.process(simpleMapPojo);
 
-        final ArgumentCaptor<String> nameCaptor =
-                ArgumentCaptor.forClass(String.class);
-        final ArgumentCaptor<String> valueCaptor =
-                ArgumentCaptor.forClass(String.class);
+        final ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
+        final ArgumentCaptor<String> valueCaptor = ArgumentCaptor.forClass(String.class);
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("mapField");
-        ordered.verify(receiver, Mockito.times(2)).literal(
-                nameCaptor.capture(), valueCaptor.capture());
+        ordered.verify(receiver, Mockito.times(2)).literal(nameCaptor.capture(),
+                valueCaptor.capture());
         Assert.assertEquals(mapField.get(nameCaptor.getAllValues().get(0)),
                 valueCaptor.getAllValues().get(0));
         Assert.assertEquals(mapField.get(nameCaptor.getAllValues().get(1)),
@@ -253,6 +250,7 @@ public class PojoDecoderTest { // checkstyle-disable-line ClassDataAbstractionCo
         public final void setInnerPojo(final SimplePojo innerPojo) {
             this.innerPojo = innerPojo;
         }
+
     }
 
     private static class MetafactureSourcePojo {
@@ -266,8 +264,7 @@ public class PojoDecoderTest { // checkstyle-disable-line ClassDataAbstractionCo
             return metafactureSourceField;
         }
 
-        public void setMetafactureSourceField(
-                final MetafactureSource metafactureSourceField) {
+        public void setMetafactureSourceField(final MetafactureSource metafactureSourceField) {
             this.metafactureSourceField = metafactureSourceField;
         }
 

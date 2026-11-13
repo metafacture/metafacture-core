@@ -45,7 +45,8 @@ class FieldValueSetter implements ValueSetter {
             field.set(object, value);
         }
         catch (final IllegalArgumentException e) {
-            throw new MetafactureException("The given object don't have a field named " + field.getName(), e);
+            throw new MetafactureException(
+                    "The given object don't have a field named " + field.getName(), e);
         }
         catch (final IllegalAccessException e) {
             throw new MetafactureException("Can't access the field named " + field.getName(), e);

@@ -45,37 +45,39 @@ public final class CombineTest {
     @Test
     public void shouldCombineTwoValues() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='combination' value='${one}${two}'>" +
                 "    <data source='data2' name='one' />" +
                 "    <data source='data1' name='two' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "a");
                     i.literal("data2", "b");
                     i.literal("data2", "c");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("combination", "ba");
                     o.get().literal("combination", "ca");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldOnlyCombineValuesFromTheSameEntityIfSet() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='combination' value='${A}${B}' sameEntity='true'>" +
                 "    <data source='entity.data1' name='B' />" +
                 "    <data source='entity.data2' name='A' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -94,25 +96,25 @@ public final class CombineTest {
                     i.literal("data1", "g");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("combination", "ab");
                     o.get().literal("combination", "fg");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldResetCombinedValueIfResetIsTrue() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='combination' value='${A}${B}' reset='true'>" +
                 "    <data source='data1' name='B' />" +
                 "    <data source='data2' name='A' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "b");
@@ -121,25 +123,25 @@ public final class CombineTest {
                     i.literal("data2", "d");
                     i.literal("data1", "e");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("combination", "ab");
                     o.get().literal("combination", "de");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldEmitCurrentValueOnFlushEvent() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='combi' value='${one}${two}' flushWith='e' reset='true'>" +
                 "    <data source='e.l' name='one' />" +
                 "    <data source='e.m' name='two' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("e");
@@ -153,26 +155,26 @@ public final class CombineTest {
                     i.literal("l", "3");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("combi", "1");
                     o.get().literal("combi", "22");
                     o.get().literal("combi", "3");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldNotEmitCurrentValueOnFlushEventIfIncomplete() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='combi' value='${one}${two}' flushWith='e' flushIncomplete='false' reset='true'>" +
                 "    <data source='e.l' name='one' />" +
                 "    <data source='e.m' name='two' />" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("e");
@@ -186,18 +188,17 @@ public final class CombineTest {
                     i.literal("l", "3");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("combi", "22");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldPostprocessCombinedValue() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='outLit' value='${V}' flushWith='record'>" +
                 "    <data name='V' source='inLit' />" +
@@ -206,17 +207,16 @@ public final class CombineTest {
                 "    </postprocess>" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("inLit", "value");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("outLit", "VALUE");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

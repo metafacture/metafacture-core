@@ -27,8 +27,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Defines an external RDF map for {@link org.metafacture.metafix.method.field.Lookup}
- * from a file or an HTTP(S) resource.
+ * Defines an external RDF map for
+ * {@link org.metafacture.metafix.method.field.Lookup} from a file or an HTTP(S)
+ * resource.
  */
 @FixCommand("put_rdfmap")
 public class PutRdfMap implements FixFunction {
@@ -40,7 +41,8 @@ public class PutRdfMap implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         final String fileName = params.get(0);
         final RdfMap rdfMap = new RdfMap();
 

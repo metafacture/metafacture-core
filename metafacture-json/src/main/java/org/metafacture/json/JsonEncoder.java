@@ -39,9 +39,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 /**
- * Serialises an object as JSON. Records and entities are represented
- * as objects unless their name ends with []. If the name ends with [],
- * an array is created.
+ * Serialises an object as JSON. Records and entities are represented as objects
+ * unless their name ends with []. If the name ends with [], an array is
+ * created.
  *
  * @author Christoph Böhme
  * @author Michael Büchner
@@ -58,6 +58,7 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         public void writeRootValueSeparator(final JsonGenerator gen) {
             // do nothing
         }
+
     };
 
     public static final String ARRAY_MARKER = "[]";
@@ -75,8 +76,8 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
     private String numberMarker = NUMBER_MARKER;
 
     /**
-     * Constructs a JsonEncoder if no IOException occurs. The root value
-     * separator of the JsonGenerator is set to null.
+     * Constructs a JsonEncoder if no IOException occurs. The root value separator
+     * of the JsonGenerator is set to null.
      */
     public JsonEncoder() {
         try {
@@ -162,14 +163,15 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     /**
      * By default JSON output does only have escaping where it is strictly
-     * necessary. This is recommended in the most cases. Nevertheless it can
-     * be sometimes useful to have some more escaping.
+     * necessary. This is recommended in the most cases. Nevertheless it can be
+     * sometimes useful to have some more escaping.
      *
      * @param escapeCharacters an array which defines which characters should be
-     *                         escaped and how it will be done. See
-     *                         {@link CharacterEscapes}. In most cases this should
-     *                         be null. Use like this:
-     *                         <pre>{@code int[] esc = CharacterEscapes.standardAsciiEscapesForJSON();
+     *                             escaped and how it will be done. See
+     *                             {@link CharacterEscapes}. In most cases this
+     *                             should be null. Use like this:
+     * 
+     *                             <pre>{@code int[] esc = CharacterEscapes.standardAsciiEscapesForJSON();
      *                            // and force escaping of a few others:
      *                            esc['\''] = CharacterEscapes.ESCAPE_STANDARD;
      *                         JsonEncoder.useEscapeJavaScript(esc);
@@ -316,7 +318,11 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     private String escapeChar(final char ch) {
         final String namedEscape = namedEscape(ch);
-        return namedEscape != null ? namedEscape : (ch < ESCAPE_CHAR_LOW || ESCAPE_CHAR_HIGH < ch) ? unicodeEscape(ch) : Character.toString(ch);
+        return namedEscape != null
+                ? namedEscape
+                : (ch < ESCAPE_CHAR_LOW || ESCAPE_CHAR_HIGH < ch)
+                        ? unicodeEscape(ch)
+                        : Character.toString(ch);
     }
 
     private String namedEscape(final char ch) {

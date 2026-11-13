@@ -34,14 +34,14 @@ public final class RecordFormat {
     public static final int TAG_LENGTH = Iso2709Constants.TAG_LENGTH;
 
     /**
-     * The number of characters in the implementation codes element of the
-     * record leader.
+     * The number of characters in the implementation codes element of the record
+     * leader.
      */
     public static final int IMPL_CODES_LENGTH = Iso2709Constants.IMPL_CODES_LENGTH;
 
     /**
-     * The number of characters in the system characters element of the
-     * record leader.
+     * The number of characters in the system characters element of the record
+     * leader.
      */
     public static final int SYSTEM_CHARS_LENGTH = Iso2709Constants.SYSTEM_CHARS_LENGTH;
 
@@ -101,8 +101,7 @@ public final class RecordFormat {
      * @return Builder
      */
     public static Builder createFrom(final RecordFormat source) {
-        return create()
-                .withIndicatorLength(source.indicatorLength)
+        return create().withIndicatorLength(source.indicatorLength)
                 .withIdentifierLength(source.identifierLength)
                 .withFieldLengthLength(source.fieldLengthLength)
                 .withFieldStartLength(source.fieldStartLength)
@@ -161,29 +160,27 @@ public final class RecordFormat {
         }
         if (obj instanceof RecordFormat) {
             final RecordFormat other = (RecordFormat) obj;
-            return indicatorLength == other.indicatorLength &&
-                    identifierLength == other.identifierLength &&
-                    fieldLengthLength == other.fieldLengthLength &&
-                    fieldStartLength == other.fieldStartLength &&
-                    implDefinedPartLength == other.implDefinedPartLength;
+            return indicatorLength == other.indicatorLength
+                    && identifierLength == other.identifierLength
+                    && fieldLengthLength == other.fieldLengthLength
+                    && fieldStartLength == other.fieldStartLength
+                    && implDefinedPartLength == other.implDefinedPartLength;
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        final int[] items = {indicatorLength, identifierLength, fieldLengthLength,
-            fieldStartLength, implDefinedPartLength};
+        final int[] items = {indicatorLength, identifierLength, fieldLengthLength, fieldStartLength,
+                implDefinedPartLength};
         return Arrays.hashCode(items);
     }
 
     @Override
     public String toString() {
-        return "(indicatorLength=" + indicatorLength + ", " +
-                "identifierLength=" + identifierLength + ", " +
-                "fieldLengthLength=" + fieldLengthLength + ", " +
-                "fieldStartLength= " + fieldStartLength + ", " +
-                "implDefinedPartLength=" + implDefinedPartLength + ")";
+        return "(indicatorLength=" + indicatorLength + ", " + "identifierLength=" + identifierLength
+                + ", " + "fieldLengthLength=" + fieldLengthLength + ", " + "fieldStartLength= "
+                + fieldStartLength + ", " + "implDefinedPartLength=" + implDefinedPartLength + ")";
     }
 
     /**
@@ -273,8 +270,8 @@ public final class RecordFormat {
          * @return RecordFormat
          */
         public RecordFormat build() {
-            return new RecordFormat(indicatorLength, identifierLength,
-                    fieldLengthLength, fieldStartLength, implDefinedPartLength);
+            return new RecordFormat(indicatorLength, identifierLength, fieldLengthLength,
+                    fieldStartLength, implDefinedPartLength);
         }
 
     }

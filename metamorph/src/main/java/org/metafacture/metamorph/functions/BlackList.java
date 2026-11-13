@@ -17,8 +17,7 @@
 package org.metafacture.metamorph.functions;
 
 /**
- * A function which checks whether the received value
- * is blacklisted.
+ * A function which checks whether the received value is blacklisted.
  *
  * @author Markus Michael Geipel
  */

@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Creates (or replaces) a field with a random number (less than the
- * specified maximum).
+ * Creates (or replaces) a field with a random number (less than the specified
+ * maximum).
  */
 @FixCommand("random")
 public class Random implements FixFunction {
@@ -41,7 +41,8 @@ public class Random implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         final String field = params.get(0);
         final int max = getInteger(params, 1);
         record.set(field, new Value(String.valueOf(RANDOM.nextInt(max))));

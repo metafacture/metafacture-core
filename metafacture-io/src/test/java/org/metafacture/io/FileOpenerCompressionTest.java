@@ -37,7 +37,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 
 /**
- * Tests for file compression in  class {@link FileOpener}.
+ * Tests for file compression in class {@link FileOpener}.
  *
  * @author Christoph Böhme
  *
@@ -45,8 +45,7 @@ import java.util.Arrays;
 @RunWith(Parameterized.class)
 public final class FileOpenerCompressionTest {
 
-    private static final String DATA =
-            "This could have been a remarkable sentence.";
+    private static final String DATA = "This could have been a remarkable sentence.";
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -67,8 +66,7 @@ public final class FileOpenerCompressionTest {
 
     @Parameters
     public static Iterable<Object[]> data() {
-        return Arrays.asList(new Object[][] {
-                {"compressed.txt", FileCompression.AUTO},
+        return Arrays.asList(new Object[][]{{"compressed.txt", FileCompression.AUTO},
                 {"compressed.txt.bgzf", FileCompression.AUTO},
                 {"compressed.txt.bz2", FileCompression.AUTO},
                 {"compressed.txt.bzip2", FileCompression.AUTO},
@@ -81,8 +79,7 @@ public final class FileOpenerCompressionTest {
                 {"compressed.txt.bgzf", FileCompression.GZIP},
                 {"compressed.txt.gz", FileCompression.GZIP},
                 {"compressed.txt.gzip", FileCompression.GZIP},
-                {"compressed.txt.xz", FileCompression.XZ}
-            });
+                {"compressed.txt.xz", FileCompression.XZ}});
     }
 
     @Test

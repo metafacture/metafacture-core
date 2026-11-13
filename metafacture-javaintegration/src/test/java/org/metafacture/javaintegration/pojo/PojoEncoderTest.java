@@ -42,8 +42,7 @@ public class PojoEncoderTest {
     @Test
     public void shouldEncodeEmptyEntityStreamToEmptyPojo() {
         final ObjectReceiver<EmptyPojo> receiver = createObjectReceiverMock();
-        final PojoEncoder<EmptyPojo> pojoEncoder = new PojoEncoder<>(
-                EmptyPojo.class);
+        final PojoEncoder<EmptyPojo> pojoEncoder = new PojoEncoder<>(EmptyPojo.class);
         pojoEncoder.setReceiver(receiver);
 
         pojoEncoder.startRecord("identifier");
@@ -55,8 +54,7 @@ public class PojoEncoderTest {
     @Test
     public void shouldEncodeEntityStreamToSimplePojo() {
         final ObjectReceiver<SimplePojo> receiver = createObjectReceiverMock();
-        final PojoEncoder<SimplePojo> pojoEncoder = new PojoEncoder<>(
-                SimplePojo.class);
+        final PojoEncoder<SimplePojo> pojoEncoder = new PojoEncoder<>(SimplePojo.class);
         pojoEncoder.setReceiver(receiver);
 
         pojoEncoder.startRecord("identifier");
@@ -66,8 +64,7 @@ public class PojoEncoderTest {
         pojoEncoder.literal("intField2", "23");
         pojoEncoder.endRecord();
 
-        final ArgumentCaptor<SimplePojo> objectCaptor =
-                ArgumentCaptor.forClass(SimplePojo.class);
+        final ArgumentCaptor<SimplePojo> objectCaptor = ArgumentCaptor.forClass(SimplePojo.class);
         Mockito.verify(receiver).process(objectCaptor.capture());
         final SimplePojo encodedPojo = objectCaptor.getValue();
         Assert.assertNotNull(encodedPojo);
@@ -79,10 +76,8 @@ public class PojoEncoderTest {
 
     @Test
     public void shouldEncodeEntityStreamToDoubleNestedPojo() {
-        final ObjectReceiver<DoubleNestedPojo> receiver =
-                createObjectReceiverMock();
-        final PojoEncoder<DoubleNestedPojo> pojoEncoder =
-                new PojoEncoder<>(DoubleNestedPojo.class);
+        final ObjectReceiver<DoubleNestedPojo> receiver = createObjectReceiverMock();
+        final PojoEncoder<DoubleNestedPojo> pojoEncoder = new PojoEncoder<>(DoubleNestedPojo.class);
         pojoEncoder.setReceiver(receiver);
 
         pojoEncoder.startRecord("identifier");
@@ -95,8 +90,8 @@ public class PojoEncoderTest {
         pojoEncoder.endEntity();
         pojoEncoder.endRecord();
 
-        final ArgumentCaptor<DoubleNestedPojo> objectCaptor =
-                ArgumentCaptor.forClass(DoubleNestedPojo.class);
+        final ArgumentCaptor<DoubleNestedPojo> objectCaptor = ArgumentCaptor
+                .forClass(DoubleNestedPojo.class);
         Mockito.verify(receiver).process(objectCaptor.capture());
         final DoubleNestedPojo encodedPojo = objectCaptor.getValue();
         Assert.assertNotNull(encodedPojo);
@@ -110,8 +105,7 @@ public class PojoEncoderTest {
     @Test
     public void shouldEncodeEntityStreamToPojoWithStringList() {
         final ObjectReceiver<StringListPojo> receiver = createObjectReceiverMock();
-        final PojoEncoder<StringListPojo> pojoEncoder =
-                new PojoEncoder<>(StringListPojo.class);
+        final PojoEncoder<StringListPojo> pojoEncoder = new PojoEncoder<>(StringListPojo.class);
         pojoEncoder.setReceiver(receiver);
 
         pojoEncoder.startRecord("identifier");
@@ -122,8 +116,8 @@ public class PojoEncoderTest {
         pojoEncoder.literal("attribute", "value3");
         pojoEncoder.endRecord();
 
-        final ArgumentCaptor<StringListPojo> objectCaptor =
-                ArgumentCaptor.forClass(StringListPojo.class);
+        final ArgumentCaptor<StringListPojo> objectCaptor = ArgumentCaptor
+                .forClass(StringListPojo.class);
         Mockito.verify(receiver).process(objectCaptor.capture());
         final StringListPojo encodedPojo = objectCaptor.getValue();
         Assert.assertNotNull(encodedPojo);
@@ -137,8 +131,7 @@ public class PojoEncoderTest {
     @Test
     public void shouldEncodeEntityStreamToPojoWithIntegerList() {
         final ObjectReceiver<IntegerListPojo> receiver = createObjectReceiverMock();
-        final PojoEncoder<IntegerListPojo> pojoEncoder =
-                new PojoEncoder<>(IntegerListPojo.class);
+        final PojoEncoder<IntegerListPojo> pojoEncoder = new PojoEncoder<>(IntegerListPojo.class);
         pojoEncoder.setReceiver(receiver);
 
         pojoEncoder.startRecord("identifier");
@@ -148,8 +141,8 @@ public class PojoEncoderTest {
         pojoEncoder.endEntity();
         pojoEncoder.endRecord();
 
-        final ArgumentCaptor<IntegerListPojo> objectCaptor =
-                ArgumentCaptor.forClass(IntegerListPojo.class);
+        final ArgumentCaptor<IntegerListPojo> objectCaptor = ArgumentCaptor
+                .forClass(IntegerListPojo.class);
         Mockito.verify(receiver).process(objectCaptor.capture());
         final IntegerListPojo encodedPojo = objectCaptor.getValue();
         Assert.assertNotNull(encodedPojo);
@@ -161,10 +154,9 @@ public class PojoEncoderTest {
 
     @Test
     public void shouldEncodeEntityStreamToPojoWithSimplePojoList() {
-        final ObjectReceiver<SimplePojoListPojo> receiver =
-                createObjectReceiverMock();
-        final PojoEncoder<SimplePojoListPojo> pojoEncoder =
-                new PojoEncoder<>(SimplePojoListPojo.class);
+        final ObjectReceiver<SimplePojoListPojo> receiver = createObjectReceiverMock();
+        final PojoEncoder<SimplePojoListPojo> pojoEncoder = new PojoEncoder<>(
+                SimplePojoListPojo.class);
         pojoEncoder.setReceiver(receiver);
 
         pojoEncoder.startRecord("identifier");
@@ -179,8 +171,8 @@ public class PojoEncoderTest {
         pojoEncoder.endEntity();
         pojoEncoder.endRecord();
 
-        final ArgumentCaptor<SimplePojoListPojo> objectCaptor =
-                ArgumentCaptor.forClass(SimplePojoListPojo.class);
+        final ArgumentCaptor<SimplePojoListPojo> objectCaptor = ArgumentCaptor
+                .forClass(SimplePojoListPojo.class);
         Mockito.verify(receiver).process(objectCaptor.capture());
         final SimplePojoListPojo encodedPojo = objectCaptor.getValue();
         Assert.assertNotNull(encodedPojo);
@@ -193,10 +185,9 @@ public class PojoEncoderTest {
 
     @Test
     public void shouldEncodeEntityStreamToPojoWithStringMap() {
-        final ObjectReceiver<StringMapPojo> receiver =
-                createObjectReceiverMock();
-        final PojoEncoder<StringMapPojo> pojoEncoder =
-                new PojoEncoder<StringMapPojo>(StringMapPojo.class);
+        final ObjectReceiver<StringMapPojo> receiver = createObjectReceiverMock();
+        final PojoEncoder<StringMapPojo> pojoEncoder = new PojoEncoder<StringMapPojo>(
+                StringMapPojo.class);
         pojoEncoder.setReceiver(receiver);
 
         pojoEncoder.startRecord("identifier");
@@ -206,8 +197,8 @@ public class PojoEncoderTest {
         pojoEncoder.endEntity();
         pojoEncoder.endRecord();
 
-        final ArgumentCaptor<StringMapPojo> objectCaptor =
-                ArgumentCaptor.forClass(StringMapPojo.class);
+        final ArgumentCaptor<StringMapPojo> objectCaptor = ArgumentCaptor
+                .forClass(StringMapPojo.class);
         Mockito.verify(receiver).process(objectCaptor.capture());
         final StringMapPojo encodedPojo = objectCaptor.getValue();
         Assert.assertNotNull(encodedPojo);
@@ -219,10 +210,9 @@ public class PojoEncoderTest {
 
     @Test
     public void shouldEncodeEntityStreamToPojoWithSimplePojoMap() {
-        final ObjectReceiver<SimplePojoMapPojo> receiver =
-                createObjectReceiverMock();
-        final PojoEncoder<SimplePojoMapPojo> pojoEncoder =
-                new PojoEncoder<>(SimplePojoMapPojo.class);
+        final ObjectReceiver<SimplePojoMapPojo> receiver = createObjectReceiverMock();
+        final PojoEncoder<SimplePojoMapPojo> pojoEncoder = new PojoEncoder<>(
+                SimplePojoMapPojo.class);
         pojoEncoder.setReceiver(receiver);
 
         pojoEncoder.startRecord("identifier");
@@ -238,21 +228,17 @@ public class PojoEncoderTest {
         pojoEncoder.endEntity();
         pojoEncoder.endRecord();
 
-        final ArgumentCaptor<SimplePojoMapPojo> objectCaptor =
-                ArgumentCaptor.forClass(SimplePojoMapPojo.class);
+        final ArgumentCaptor<SimplePojoMapPojo> objectCaptor = ArgumentCaptor
+                .forClass(SimplePojoMapPojo.class);
         Mockito.verify(receiver).process(objectCaptor.capture());
         final SimplePojoMapPojo encodedPojo = objectCaptor.getValue();
         Assert.assertNotNull(encodedPojo);
         Assert.assertNotNull(encodedPojo.simplePojoMap);
         Assert.assertEquals(2, encodedPojo.simplePojoMap.size());
-        Assert.assertEquals("stringValueA1", encodedPojo.simplePojoMap.get("mapKeyA")
-                .stringField1);
-        Assert.assertEquals("stringValueA2", encodedPojo.simplePojoMap.get("mapKeyA")
-                .stringField2);
-        Assert.assertEquals("stringValueB1", encodedPojo.simplePojoMap.get("mapKeyB")
-                .stringField1);
-        Assert.assertEquals("stringValueB2", encodedPojo.simplePojoMap.get("mapKeyB")
-                .stringField2);
+        Assert.assertEquals("stringValueA1", encodedPojo.simplePojoMap.get("mapKeyA").stringField1);
+        Assert.assertEquals("stringValueA2", encodedPojo.simplePojoMap.get("mapKeyA").stringField2);
+        Assert.assertEquals("stringValueB1", encodedPojo.simplePojoMap.get("mapKeyB").stringField1);
+        Assert.assertEquals("stringValueB2", encodedPojo.simplePojoMap.get("mapKeyB").stringField2);
     }
 
     @SuppressWarnings("unchecked")

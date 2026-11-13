@@ -35,8 +35,8 @@ public interface KnowsSourceLocation {
     void setSourceLocation(SourceLocation sourceLocation);
 
     /**
-     * Gets the location object for the location in the morph definition file
-     * where the implementing object instance is defined.
+     * Gets the location object for the location in the morph definition file where
+     * the implementing object instance is defined.
      *
      * @return a source location
      */

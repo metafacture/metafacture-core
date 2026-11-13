@@ -37,8 +37,10 @@ public class Capitalize implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-        record.transform(params.get(0), s -> s.isEmpty() ? s : s.substring(0, 1).toUpperCase() + s.substring(1));
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
+        record.transform(params.get(0),
+                s -> s.isEmpty() ? s : s.substring(0, 1).toUpperCase() + s.substring(1));
     }
 
 }

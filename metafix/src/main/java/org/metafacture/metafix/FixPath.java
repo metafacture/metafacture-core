@@ -24,7 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Our goal here is something like https://metacpan.org/pod/Catmandu::Path::simple
+ * Our goal here is something like
+ * https://metacpan.org/pod/Catmandu::Path::simple
  *
  * With all get/set/update/create/delete logic collected here.
  *
@@ -34,8 +35,10 @@ public class FixPath {
 
     private static final String ASTERISK = "*";
 
-    private static final String INDEX_SUBPATH_PATTERN = Value.FIELD_PATH_SEPARATOR_PATTERN + "\\d+" + Value.FIELD_PATH_SEPARATOR_PATTERN;
-    private static final String ASTERISK_SUBPATH = Value.FIELD_PATH_SEPARATOR + ASTERISK + Value.FIELD_PATH_SEPARATOR;
+    private static final String INDEX_SUBPATH_PATTERN = Value.FIELD_PATH_SEPARATOR_PATTERN + "\\d+"
+            + Value.FIELD_PATH_SEPARATOR_PATTERN;
+    private static final String ASTERISK_SUBPATH = Value.FIELD_PATH_SEPARATOR + ASTERISK
+            + Value.FIELD_PATH_SEPARATOR;
 
     private String[] path;
 
@@ -52,11 +55,11 @@ public class FixPath {
         this.path = path;
     }
 
-    /*package-private*/ Value findIn(final Hash hash) {
+    /* package-private */ Value findIn(final Hash hash) {
         return findIn(hash, false);
     }
 
-    /*package-private*/ Value findIn(final Hash hash, final boolean enforceStringValue) {
+    /* package-private */ Value findIn(final Hash hash, final boolean enforceStringValue) {
         final String currentSegment = path[0];
         final FixPath remainingPath = new FixPath(tail(path));
         if (currentSegment.equals(ASTERISK) && remainingPath.size() > 0) {
@@ -64,14 +67,14 @@ public class FixPath {
             return remainingPath.findIn(hash, enforceStringValue);
         }
         final Value value = hash.get(currentSegment, enforceStringValue && path.length == 1);
-        return value == null || path.length == 1 ? value : value.extractType((m, c) -> m
-                .ifArray(a -> c.accept(remainingPath.findIn(a)))
-                .ifHash(h -> c.accept(remainingPath.findIn(h, enforceStringValue)))
-                .orElseThrow()
-        );
+        return value == null || path.length == 1
+                ? value
+                : value.extractType((m, c) -> m.ifArray(a -> c.accept(remainingPath.findIn(a)))
+                        .ifHash(h -> c.accept(remainingPath.findIn(h, enforceStringValue)))
+                        .orElseThrow());
     }
 
-    /*package-private*/ Value findIn(final Array array) {
+    /* package-private */ Value findIn(final Array array) {
         final Value result;
 
         if (path.length == 0) {
@@ -84,9 +87,9 @@ public class FixPath {
                     final Value findInValue = findInValue(v, tail(path));
                     if (findInValue != null) {
                         findInValue.matchType()
-                            // flatten result arrays (use Value#path for structure)
-                            .ifArray(a -> a.forEach(t -> resultArray.add(t, false)))
-                            .orElse(c -> resultArray.add(findInValue, false));
+                                // flatten result arrays (use Value#path for structure)
+                                .ifArray(a -> a.forEach(t -> resultArray.add(t, false)))
+                                .orElse(c -> resultArray.add(findInValue, false));
                     }
                 }));
             }
@@ -110,11 +113,13 @@ public class FixPath {
 
     private Value findInValue(final Value value, final String[] p) {
         // TODO: move impl into enum elements, here call only value.find
-        return p.length == 0 ? value : value == null ? null : value.extractType((m, c) -> m
-                .ifArray(a -> c.accept(new FixPath(p).findIn(a)))
-                .ifHash(h -> c.accept(new FixPath(p).findIn(h)))
-                .orElse(c)
-        );
+        return p.length == 0
+                ? value
+                : value == null
+                        ? null
+                        : value.extractType(
+                                (m, c) -> m.ifArray(a -> c.accept(new FixPath(p).findIn(a)))
+                                        .ifHash(h -> c.accept(new FixPath(p).findIn(h))).orElse(c));
     }
 
     @Override
@@ -122,7 +127,7 @@ public class FixPath {
         return String.join(Value.FIELD_PATH_SEPARATOR, path);
     }
 
-    /*package-private*/ int size() {
+    /* package-private */ int size() {
         return path.length;
     }
 
@@ -130,7 +135,7 @@ public class FixPath {
     // try to replace this with consistent usage of Value#getPath
     // (e.g. take care of handling repeated fields and their paths)
 
-    /*package-private*/ FixPath to(final Value value, final int i) {
+    /* package-private */ FixPath to(final Value value, final int i) {
         final FixPath result;
 
         // One *, no matching path: replace with index of current result
@@ -149,24 +154,25 @@ public class FixPath {
     }
 
     private boolean matches(final String thatPath) {
-        return thatPath != null && thatPath
-            .replaceAll(INDEX_SUBPATH_PATTERN, ASTERISK_SUBPATH)
-            .equals(String.join(Value.FIELD_PATH_SEPARATOR, this.path));
+        return thatPath != null && thatPath.replaceAll(INDEX_SUBPATH_PATTERN, ASTERISK_SUBPATH)
+                .equals(String.join(Value.FIELD_PATH_SEPARATOR, this.path));
     }
 
     private String[] replaceInPath(final String find, final int i) {
-        return Arrays.asList(path).stream().map(s -> s.equals(find) ? String.valueOf(i + 1) : s).toArray(String[]::new);
+        return Arrays.asList(path).stream().map(s -> s.equals(find) ? String.valueOf(i + 1) : s)
+                .toArray(String[]::new);
     }
 
     private boolean hasWildcard() {
-        return Arrays.asList(path).stream().filter(s -> s.contains("*") || s.contains("?") || s.contains("|") || s.matches(".*?\\[.+?\\].*?")).findAny().isPresent();
+        return Arrays.asList(path).stream().filter(s -> s.contains("*") || s.contains("?")
+                || s.contains("|") || s.matches(".*?\\[.+?\\].*?")).findAny().isPresent();
     }
 
     private long countAsterisks() {
         return Arrays.asList(path).stream().filter(s -> s.equals(ASTERISK)).count();
     }
 
-    /*package-private*/ enum InsertMode {
+    /* package-private */ enum InsertMode {
 
         REPLACE {
             @Override
@@ -204,6 +210,7 @@ public class FixPath {
                     throw new IllegalStateException("Expected Hash, got Array", e);
                 }
             }
+
         },
         APPEND {
             @Override
@@ -215,6 +222,7 @@ public class FixPath {
             void apply(final Array array, final String field, final Value value) {
                 array.add(value);
             }
+
         };
 
         abstract void apply(Hash hash, String field, Value value);
@@ -223,12 +231,13 @@ public class FixPath {
 
     }
 
-    /*package-private*/ void removeNestedFrom(final Array array) {
+    /* package-private */ void removeNestedFrom(final Array array) {
         if (path.length >= 1 && path[0].equals(ASTERISK)) {
             array.removeAll();
         }
         else if (path.length >= 1 && Value.isNumber(path[0])) {
-            final int index = Integer.parseInt(path[0]) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
+            final int index = Integer.parseInt(path[0]) - 1; // TODO: 0-based Catmandu vs. 1-based
+                                                             // Metafacture
             if (index >= 0 && index < array.size()) {
                 if (path.length == 1) {
                     array.remove(index);
@@ -240,7 +249,7 @@ public class FixPath {
         }
     }
 
-    /*package-private*/ void removeNestedFrom(final Hash hash) {
+    /* package-private */ void removeNestedFrom(final Hash hash) {
         final String field = path[0];
 
         if (path.length == 1) {
@@ -254,10 +263,8 @@ public class FixPath {
     private void removeNestedFrom(final Value value) {
         // TODO: impl and call just value.remove
         if (value != null) {
-            value.matchType()
-                .ifArray(a -> new FixPath(tail(path)).removeNestedFrom(a))
-                .ifHash(h -> new FixPath(tail(path)).removeNestedFrom(h))
-                .orElseThrow();
+            value.matchType().ifArray(a -> new FixPath(tail(path)).removeNestedFrom(a))
+                    .ifHash(h -> new FixPath(tail(path)).removeNestedFrom(h)).orElseThrow();
         }
     }
 
@@ -273,14 +280,16 @@ public class FixPath {
                 array.forEach(value -> insertInto(value, mode, newValue.copy(), field, tail(path)));
             }
             else if (isReference(field)) {
-                insertInto(getReferencedValue(array, field, newValue.getPath()), mode, newValue, field, tail(path));
+                insertInto(getReferencedValue(array, field, newValue.getPath()), mode, newValue,
+                        field, tail(path));
             }
         }
 
         return new Value(array);
     }
 
-    /*package-private*/ Value insertInto(final Hash hash, final InsertMode mode, final Value newValue) {
+    /* package-private */ Value insertInto(final Hash hash, final InsertMode mode,
+            final Value newValue) {
         // basic idea: reuse findIn logic here? setIn(findIn(hash), newValue)
         final String field = path[0];
 
@@ -289,20 +298,21 @@ public class FixPath {
         }
         else {
             final String[] tail = tail(path);
-            insertInto(getContainerValue(hash, field, newValue.getPath(), tail[0]), mode, newValue, field, tail);
+            insertInto(getContainerValue(hash, field, newValue.getPath(), tail[0]), mode, newValue,
+                    field, tail);
         }
 
         return new Value(hash);
     }
 
-    private Value insertInto(final Value value, final InsertMode mode, final Value newValue, final String field, final String[] tail) {
+    private Value insertInto(final Value value, final InsertMode mode, final Value newValue,
+            final String field, final String[] tail) {
         if (value != null) {
             final FixPath fixPath = new FixPath(tail);
             newValue.withPathSet(value.getPath());
             return value.extractType((m, c) -> m
                     .ifArray(a -> c.accept(fixPath.insertInto(a, mode, newValue)))
-                    .ifHash(h -> c.accept(fixPath.insertInto(h, mode, newValue)))
-                    .orElseThrow());
+                    .ifHash(h -> c.accept(fixPath.insertInto(h, mode, newValue))).orElseThrow());
         }
         else {
             throw new IllegalArgumentException("Can't find: " + field + " in: " + value);
@@ -317,7 +327,8 @@ public class FixPath {
      * @return true if the given field is adding to an array
      */
     public static boolean isAddingToArray(final String field) {
-        return field.equals(ReservedField.$prepend.name()) || field.equals(ReservedField.$append.name());
+        return field.equals(ReservedField.$prepend.name())
+                || field.equals(ReservedField.$append.name());
     }
 
     /**
@@ -329,7 +340,8 @@ public class FixPath {
         return Arrays.stream(path).anyMatch(FixPath::isAddingToArray);
     }
 
-    private Value getContainerValue(final Hash hash, final String field, final String newPath, final String nextField) {
+    private Value getContainerValue(final Hash hash, final String field, final String newPath,
+            final String nextField) {
         Value result = hash.get(field);
         final boolean isAddingToArray = isAddingToArray(nextField);
         if (result == null) {
@@ -353,7 +365,8 @@ public class FixPath {
     /**
      * Creates an instance of {@link FixPath} based on the parent path.
      *
-     * @return an instance of {@link FixPath}, or {@code null} if already at the top level
+     * @return an instance of {@link FixPath}, or {@code null} if already at the top
+     *         level
      */
     public FixPath getParentPath() {
         return path.length > 1 ? new FixPath(Arrays.copyOfRange(path, 0, path.length - 1)) : null;
@@ -373,6 +386,7 @@ public class FixPath {
         static ReservedField fromString(final String string) {
             return STRING_TO_ENUM.get(string);
         }
+
     }
 
     private boolean isReference(final String field) {

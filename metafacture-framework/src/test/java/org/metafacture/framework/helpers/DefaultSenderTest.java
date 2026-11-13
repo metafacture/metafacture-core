@@ -36,8 +36,7 @@ public final class DefaultSenderTest {
 
     @Test
     public void shouldCallOnCloseStreamOnlyOnce() {
-        final DefaultSender<StreamReceiver> defaultSender =
-                Mockito.spy(new DefaultSender<>());
+        final DefaultSender<StreamReceiver> defaultSender = Mockito.spy(new DefaultSender<>());
 
         Mockito.verify(defaultSender, Mockito.never()).onCloseStream();
         Assert.assertFalse(defaultSender.isClosed());

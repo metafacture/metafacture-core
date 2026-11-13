@@ -35,16 +35,14 @@ public class ResourceUtilTest {
     }
 
     @Test
-    public void readAllShouldReturnEmptyStringIfStreamIsEmpty()
-            throws IOException {
+    public void readAllShouldReturnEmptyStringIfStreamIsEmpty() throws IOException {
         final String result = ResourceUtil.readAll(new StringReader(""));
 
         Assert.assertTrue(result.isEmpty());
     }
 
     @Test
-    public void readAllShouldReadStreamThatFitsIntoOneBuffer()
-            throws IOException {
+    public void readAllShouldReadStreamThatFitsIntoOneBuffer() throws IOException {
         final String input = repeat("a", ResourceUtil.BUFFER_SIZE - 1);
 
         final String result = ResourceUtil.readAll(new StringReader(input));
@@ -53,8 +51,7 @@ public class ResourceUtilTest {
     }
 
     @Test
-    public void readAllShouldReadStreamThatFitsExactlyIntoOneBuffer()
-            throws IOException {
+    public void readAllShouldReadStreamThatFitsExactlyIntoOneBuffer() throws IOException {
         final String input = repeat("b", ResourceUtil.BUFFER_SIZE);
 
         final String result = ResourceUtil.readAll(new StringReader(input));
@@ -63,8 +60,7 @@ public class ResourceUtilTest {
     }
 
     @Test
-    public void readAllShouldReadStreamThatSpansMultipleBuffers()
-            throws IOException {
+    public void readAllShouldReadStreamThatSpansMultipleBuffers() throws IOException {
         final String input = repeat("c", ResourceUtil.BUFFER_SIZE * 2 + 1);
 
         final String result = ResourceUtil.readAll(new StringReader(input));
@@ -73,9 +69,7 @@ public class ResourceUtilTest {
     }
 
     private String repeat(final String string, final int times) {
-        return IntStream.range(0, times)
-                .mapToObj(i -> string)
-                .collect(Collectors.joining());
+        return IntStream.range(0, times).mapToObj(i -> string).collect(Collectors.joining());
     }
 
 }

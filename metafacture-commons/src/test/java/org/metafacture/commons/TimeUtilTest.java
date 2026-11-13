@@ -86,7 +86,8 @@ public final class TimeUtilTest {
 
     @Test
     public void testShouldRoundDownIfRemainderLessThanHalf() {
-        final long duration = 23 * TimeUtil.MINUTES + 1 * TimeUtil.SECONDS + 499 * TimeUtil.MILLISECONDS;
+        final long duration = 23 * TimeUtil.MINUTES + 1 * TimeUtil.SECONDS
+                + 499 * TimeUtil.MILLISECONDS;
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
@@ -95,7 +96,8 @@ public final class TimeUtilTest {
 
     @Test
     public void testShouldRoundDownIfNanosecondsLessThanHalf() {
-        final long duration = 23 * TimeUtil.MILLISECONDS + 1 * TimeUtil.MICROSECONDS + 499 * TimeUtil.NANOSECONDS;
+        final long duration = 23 * TimeUtil.MILLISECONDS + 1 * TimeUtil.MICROSECONDS
+                + 499 * TimeUtil.NANOSECONDS;
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
@@ -104,7 +106,8 @@ public final class TimeUtilTest {
 
     @Test
     public void testShouldIgnoreSmallerQualifiersWhenRounding() {
-        final long duration = 23 * TimeUtil.MINUTES + 1 * TimeUtil.SECONDS + 501 * TimeUtil.MICROSECONDS;
+        final long duration = 23 * TimeUtil.MINUTES + 1 * TimeUtil.SECONDS
+                + 501 * TimeUtil.MICROSECONDS;
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
@@ -113,7 +116,8 @@ public final class TimeUtilTest {
 
     @Test
     public void testShouldRoundUpIfRemainderGreaterThanHalf() {
-        final long duration = 42 * TimeUtil.MINUTES + 1 * TimeUtil.SECONDS + 501 * TimeUtil.MILLISECONDS;
+        final long duration = 42 * TimeUtil.MINUTES + 1 * TimeUtil.SECONDS
+                + 501 * TimeUtil.MILLISECONDS;
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
@@ -122,7 +126,8 @@ public final class TimeUtilTest {
 
     @Test
     public void testShouldRoundDownIfNanosecondsGreaterThanHalf() {
-        final long duration = 42 * TimeUtil.MILLISECONDS + 1 * TimeUtil.MICROSECONDS + 501 * TimeUtil.NANOSECONDS;
+        final long duration = 42 * TimeUtil.MILLISECONDS + 1 * TimeUtil.MICROSECONDS
+                + 501 * TimeUtil.NANOSECONDS;
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
@@ -131,7 +136,8 @@ public final class TimeUtilTest {
 
     @Test
     public void testShouldRoundUpIfRemainderIsMidway() {
-        final long duration = 42 * TimeUtil.MINUTES + 1 * TimeUtil.SECONDS + 500 * TimeUtil.MILLISECONDS;
+        final long duration = 42 * TimeUtil.MINUTES + 1 * TimeUtil.SECONDS
+                + 500 * TimeUtil.MILLISECONDS;
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
@@ -148,8 +154,8 @@ public final class TimeUtilTest {
     }
 
     /**
-     *  Test for issue #82: TimerBase throws ArrayIndexOutOfBoundsException
-     *  if the measured duration is longer than one hour.
+     * Test for issue #82: TimerBase throws ArrayIndexOutOfBoundsException if the
+     * measured duration is longer than one hour.
      */
     @Test
     public void testShouldNotFailIfDurationNeedsLargestQuantifier() {

@@ -50,15 +50,19 @@ import javax.xml.xpath.XPathFactory;
  * @author Pascal Christoph
  * @author Christoph Böhme
  */
+// @formatter:off
 @Description("Writes the XML into the filesystem. The filename is constructed from the XPATH given as 'property'." + // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
     " Variables are:" + "`target` (determining the output directory)" +
     ", `property` (the element in the XML entity. Constitutes the main part of the file's name.)" +
     ", `startIndex` ( a subfolder will be extracted out of the filename. This marks the index' beginning )" +
     ", `stopIndex` ( a subfolder will be extracted out of the filename. This marks the index' end )")
+// @formatter:on
 @In(StreamReceiver.class)
 @Out(Void.class)
 @FluxCommand("write-xml-files")
-public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<String>> implements FilenameExtractor {
+public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<String>>
+        implements
+            FilenameExtractor {
 
     private static final MetafactureLogger LOG = new MetafactureLogger(XmlFilenameWriter.class);
 
@@ -77,8 +81,7 @@ public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<St
     /**
      * Sets the compression. Default is no compression.
      *
-     * @param compression
-     *            The compression. At the moment only 'bz2' is possible.
+     * @param compression The compression. At the moment only 'bz2' is possible.
      */
     public void setCompression(final String compression) {
         this.compression = compression;
@@ -140,7 +143,8 @@ public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<St
     private String extractIdentifier(final String xml) {
         final String identifier;
         try {
-            identifier = xPath.evaluate(this.filenameUtil.getProperty(), new InputSource(new StringReader(xml)));
+            identifier = xPath.evaluate(this.filenameUtil.getProperty(),
+                    new InputSource(new StringReader(xml)));
         }
         catch (final XPathExpressionException e) {
             throw new MetafactureException(e);
@@ -154,23 +158,22 @@ public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<St
     }
 
     private File buildTargetFileName(final String identifier) {
-        final String directory = identifier.substring(filenameUtil.getStartIndex(), filenameUtil.getEndIndex());
-        return Paths.get(filenameUtil.getTarget())
-                .resolve(directory)
-                .resolve(identifier + filenameUtil.getFileSuffix())
-                .toFile();
+        final String directory = identifier.substring(filenameUtil.getStartIndex(),
+                filenameUtil.getEndIndex());
+        return Paths.get(filenameUtil.getTarget()).resolve(directory)
+                .resolve(identifier + filenameUtil.getFileSuffix()).toFile();
     }
 
     private void writeXml(final String xml, final File file) {
         writeXml(xml, file, Function.identity());
     }
 
-    private void writeXml(final String xml, final File file, final Function<OutputStream, OutputStream> compressorFactory) {
-        try (
-                OutputStream fileStream = new FileOutputStream(file);
+    private void writeXml(final String xml, final File file,
+            final Function<OutputStream, OutputStream> compressorFactory) {
+        try (OutputStream fileStream = new FileOutputStream(file);
                 OutputStream compressedStream = compressorFactory.apply(fileStream);
-                Writer writer = new OutputStreamWriter(compressedStream, filenameUtil.getEncoding())
-        ) {
+                Writer writer = new OutputStreamWriter(compressedStream,
+                        filenameUtil.getEncoding())) {
             writer.write(xml);
         }
         catch (final IOException | UncheckedIOException e) {

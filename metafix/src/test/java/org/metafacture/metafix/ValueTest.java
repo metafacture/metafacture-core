@@ -27,10 +27,10 @@ public class ValueTest {
     @Test
     public void shouldSatisfyEqualsContract() {
         EqualsVerifier.forClass(Value.class)
-            .withPrefabValues(Value.class, Value.newArray(), Value.newHash())
-            .withPrefabValues(Value.Hash.class, Value.newHash().asHash(), Value.newHash(h -> h.put("k", new Value("v"))).asHash())
-            .withIgnoredFields("path")
-            .verify();
+                .withPrefabValues(Value.class, Value.newArray(), Value.newHash())
+                .withPrefabValues(Value.Hash.class, Value.newHash().asHash(),
+                        Value.newHash(h -> h.put("k", new Value("v"))).asHash())
+                .withIgnoredFields("path").verify();
     }
 
 }

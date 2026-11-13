@@ -37,9 +37,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 /**
- * Serialises an object as YAML. Records and entities are represented
- * as objects unless their name ends with []. If the name ends with [],
- * an array is created.
+ * Serialises an object as YAML. Records and entities are represented as objects
+ * unless their name ends with []. If the name ends with [], an array is
+ * created.
  *
  * @author Christoph Böhme
  * @author Michael Büchner
@@ -94,9 +94,9 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     /**
      * Flags whether the data should be pretty printed.
-     * @deprecated
-     * Jackson's YAMLGenerator ignores any PrettyPrinter. It's always
-     * pretty printed.
+     * 
+     * @deprecated Jackson's YAMLGenerator ignores any PrettyPrinter. It's always
+     *             pretty printed.
      *
      * @param prettyPrinting true if the data should be pretty printed
      */
@@ -106,9 +106,9 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     /**
      * Checks whether to pretty print.
-     * @deprecated
-     * Jackson's YAMLGenerator ignores any PrettyPrinter. It's always
-     * pretty printed.
+     * 
+     * @deprecated Jackson's YAMLGenerator ignores any PrettyPrinter. It's always
+     *             pretty printed.
      *
      * @return true if the data should be pretty printed
      */
@@ -119,14 +119,15 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     /**
      * By default YAML output does only have escaping where it is strictly
-     * necessary. This is recommended in the most cases. Nevertheless it can
-     * be sometimes useful to have some more escaping.
+     * necessary. This is recommended in the most cases. Nevertheless it can be
+     * sometimes useful to have some more escaping.
      *
      * @param escapeCharacters an array which defines which characters should be
-     *                         escaped and how it will be done. See
-     *                         {@link CharacterEscapes}. In most cases this should
-     *                         be null. Use like this:
-     *                         <pre>{@code int[] esc = CharacterEscapes.standardAsciiEscapesForJSON();
+     *                             escaped and how it will be done. See
+     *                             {@link CharacterEscapes}. In most cases this
+     *                             should be null. Use like this:
+     * 
+     *                             <pre>{@code int[] esc = CharacterEscapes.standardAsciiEscapesForJSON();
      *                         // and force escaping of a few others:
      *                         esc['\''] = CharacterEscapes.ESCAPE_STANDARD;
      *                         yamlEncoder.setJavaScriptEscapeChars(esc);
@@ -139,7 +140,9 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
             @Override
             public int[] getEscapeCodesForAscii() {
-                return escapeCharacters != null ? escapeCharacters : CharacterEscapes.standardAsciiEscapesForJSON();
+                return escapeCharacters != null
+                        ? escapeCharacters
+                        : CharacterEscapes.standardAsciiEscapesForJSON();
             }
 
             @Override
@@ -213,7 +216,8 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
             if (name.endsWith(arrayMarker)) {
                 if (ctx.inObject()) {
-                    yamlGenerator.writeFieldName(name.substring(0, name.length() - arrayMarker.length()));
+                    yamlGenerator.writeFieldName(
+                            name.substring(0, name.length() - arrayMarker.length()));
                 }
 
                 yamlGenerator.writeStartArray();
@@ -255,7 +259,11 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     private String escapeChar(final char ch) {
         final String namedEscape = namedEscape(ch);
-        return namedEscape != null ? namedEscape : (ch < ESCAPE_CHAR_LOW || ESCAPE_CHAR_HIGH < ch) ? unicodeEscape(ch) : Character.toString(ch);
+        return namedEscape != null
+                ? namedEscape
+                : (ch < ESCAPE_CHAR_LOW || ESCAPE_CHAR_HIGH < ch)
+                        ? unicodeEscape(ch)
+                        : Character.toString(ch);
     }
 
     private String namedEscape(final char ch) {

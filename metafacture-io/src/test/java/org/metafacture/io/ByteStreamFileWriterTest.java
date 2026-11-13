@@ -49,9 +49,7 @@ public class ByteStreamFileWriterTest {
 
     @Test
     public void shouldStartNewOutputFileOnResetStreamEvent() throws IOException {
-        final List<File> outputFiles = Arrays.asList(
-                tempFolder.newFile(),
-                tempFolder.newFile());
+        final List<File> outputFiles = Arrays.asList(tempFolder.newFile(), tempFolder.newFile());
         byteStreamFileWriter.setFileNameSupplier(outputFiles.iterator()::next);
 
         byteStreamFileWriter.process(SOME_DATA.getBytes(StandardCharsets.UTF_8));
@@ -91,7 +89,8 @@ public class ByteStreamFileWriterTest {
         byteStreamFileWriter.closeStream();
 
         Assertions.assertThat(outputFile).isFile();
-        Assertions.assertThat(Assertions.contentOf(outputFile)).isEqualTo(SOME_DATA + SOME_MORE_DATA);
+        Assertions.assertThat(Assertions.contentOf(outputFile))
+                .isEqualTo(SOME_DATA + SOME_MORE_DATA);
     }
 
 }

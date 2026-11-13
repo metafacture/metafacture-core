@@ -55,26 +55,30 @@ public class FixRegistry {
 
     private final Registry<FixContext> binds = new Registry<>(FixContext.class, "bind");
     private final Registry<FixFunction> methods = new Registry<>(FixFunction.class, "method");
-    private final Registry<FixPredicate> conditionals = new Registry<>(FixPredicate.class, "conditional");
+    private final Registry<FixPredicate> conditionals = new Registry<>(FixPredicate.class,
+            "conditional");
 
     private final Set<Registry<?>> registries = Set.of(methods, conditionals, binds);
 
     private final ClassLoader loader = ReflectionUtil.getContextClassLoader();
 
     /**
-     * Creates an instance of {@link FixRegistry}. {@link #registerProperties(String) Registers}
-     * all Fix commands found in any {@value PROPERTIES_LOCATION} files.
+     * Creates an instance of {@link FixRegistry}.
+     * {@link #registerProperties(String) Registers} all Fix commands found in any
+     * {@value PROPERTIES_LOCATION} files.
      */
     @SuppressWarnings("this-escape")
     public FixRegistry() {
         registerProperties(PROPERTIES_LOCATION);
     }
 
-    private void registerCommands(final String key, final Function<String, Map<String, Class<?>>> function) {
+    private void registerCommands(final String key,
+            final Function<String, Map<String, Class<?>>> function) {
         loadCommands(key, function).forEach(this::registerCommand);
     }
 
-    private Map<String, Class<?>> loadCommands(final String key, final Function<String, Map<String, Class<?>>> function) {
+    private Map<String, Class<?>> loadCommands(final String key,
+            final Function<String, Map<String, Class<?>>> function) {
         return CACHE.computeIfAbsent(key, function);
     }
 
@@ -88,10 +92,10 @@ public class FixRegistry {
     }
 
     /**
-     * Registers Fix commands from the given properties file. If the property
-     * value is empty, {@link #registerPackage(String) registers} the package
-     * given in the property key, otherwise registers the class given in the
-     * property value under the Fix command name given in the property key.
+     * Registers Fix commands from the given properties file. If the property value
+     * is empty, {@link #registerPackage(String) registers} the package given in the
+     * property key, otherwise registers the class given in the property value under
+     * the Fix command name given in the property key.
      *
      * @param propertiesName the properties file
      */
@@ -130,8 +134,8 @@ public class FixRegistry {
     }
 
     /**
-     * Registers Fix commands from the given package name. Only classes
-     * annotated with the {@link FixCommand} annotation are considered.
+     * Registers Fix commands from the given package name. Only classes annotated
+     * with the {@link FixCommand} annotation are considered.
      *
      * @param packageName the package name
      */
@@ -152,20 +156,18 @@ public class FixRegistry {
                     final JarURLConnection jarConnection = (JarURLConnection) connection;
 
                     try (JarFile jarFile = jarConnection.getJarFile()) {
-                        loadPackage(map, jarFile.stream().map(JarEntry::getName)
-                                .filter(f -> {
-                                    final int index = f.lastIndexOf(FILE_SEPARATOR);
-                                    return index > 0 && directoryName.equals(f.substring(0, index));
-                                })
-                                .map(f -> f.replace(FILE_SEPARATOR, PACKAGE_SEPARATOR)));
+                        loadPackage(map, jarFile.stream().map(JarEntry::getName).filter(f -> {
+                            final int index = f.lastIndexOf(FILE_SEPARATOR);
+                            return index > 0 && directoryName.equals(f.substring(0, index));
+                        }).map(f -> f.replace(FILE_SEPARATOR, PACKAGE_SEPARATOR)));
                     }
                 }
                 else {
-                    try (
-                        InputStream stream = connection.getInputStream();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(stream))
-                    ) {
-                        loadPackage(map, reader.lines().map(l -> packageName + PACKAGE_SEPARATOR + l));
+                    try (InputStream stream = connection.getInputStream();
+                            BufferedReader reader = new BufferedReader(
+                                    new InputStreamReader(stream))) {
+                        loadPackage(map,
+                                reader.lines().map(l -> packageName + PACKAGE_SEPARATOR + l));
                     }
                 }
             }
@@ -201,15 +203,15 @@ public class FixRegistry {
     }
 
     /**
-     * Registers the given class as Fix command under the Fix command name given
-     * by the {@link FixCommand} annotation.
+     * Registers the given class as Fix command under the Fix command name given by
+     * the {@link FixCommand} annotation.
      *
      * @param clazz the class
      *
      * @return the Fix command name
      *
      * @throws IllegalArgumentException if the class is not annotated with the
-     *                                  {@link FixCommand} annotation
+     *                                      {@link FixCommand} annotation
      */
     public String registerCommand(final Class<?> clazz) {
         final String name = getCommandName(clazz);
@@ -225,14 +227,14 @@ public class FixRegistry {
     /**
      * Registers the given class as Fix command under the given Fix command name.
      *
-     * @param <T> the Fix command type
-     * @param name the Fix command name
+     * @param <T>   the Fix command type
+     * @param name  the Fix command name
      * @param clazz the class
      *
      * @return false if the class has already been registered under the name
      *
      * @throws IllegalArgumentException if a different class has already been
-     *                                  registered under the name
+     *                                      registered under the name
      *
      * @throws IllegalArgumentException if the Fix command type is not supported
      */
@@ -247,7 +249,8 @@ public class FixRegistry {
                     return false;
                 }
 
-                throw new IllegalArgumentException("Fix " + registry.getTypeName() + " already registered: " + name);
+                throw new IllegalArgumentException(
+                        "Fix " + registry.getTypeName() + " already registered: " + name);
             }
         }
 
@@ -278,7 +281,8 @@ public class FixRegistry {
     private <T> T getCommand(final Registry<T> registry, final String name) {
         final Class<? extends T> clazz = registry.get(name);
         if (clazz == null) {
-            throw new IllegalArgumentException("Unsupported Fix " + registry.getTypeName() + ": " + name);
+            throw new IllegalArgumentException(
+                    "Unsupported Fix " + registry.getTypeName() + ": " + name);
         }
 
         try {
@@ -296,8 +300,8 @@ public class FixRegistry {
      *
      * @return the Fix bind
      *
-     * @throws IllegalArgumentException if the Fix command name is not a
-     *                                  registered bind
+     * @throws IllegalArgumentException if the Fix command name is not a registered
+     *                                      bind
      */
     public FixContext getBind(final String name) {
         return getCommand(binds, name);
@@ -310,8 +314,8 @@ public class FixRegistry {
      *
      * @return the Fix conditional
      *
-     * @throws IllegalArgumentException if the Fix command name is not a
-     *                                  registered conditional
+     * @throws IllegalArgumentException if the Fix command name is not a registered
+     *                                      conditional
      */
     public FixPredicate getConditional(final String name) {
         return getCommand(conditionals, name);
@@ -324,17 +328,19 @@ public class FixRegistry {
      *
      * @return the Fix method
      *
-     * @throws IllegalArgumentException if the Fix command name is not a
-     *                                  registered method
+     * @throws IllegalArgumentException if the Fix command name is not a registered
+     *                                      method
      */
     public FixFunction getMethod(final String name) {
         return getCommand(methods, name);
     }
 
-    private <T> Class<? extends T> unregisterCommand(final Registry<T> registry, final String name) {
+    private <T> Class<? extends T> unregisterCommand(final Registry<T> registry,
+            final String name) {
         final Class<? extends T> clazz = registry.remove(name);
         if (clazz == null) {
-            throw new IllegalArgumentException("Fix " + registry.getTypeName() + " not registered: " + name);
+            throw new IllegalArgumentException(
+                    "Fix " + registry.getTypeName() + " not registered: " + name);
         }
 
         return clazz;
@@ -347,8 +353,8 @@ public class FixRegistry {
      *
      * @return the previously registered Fix bind
      *
-     * @throws IllegalArgumentException if the Fix command name is not a
-     *                                  registered bind
+     * @throws IllegalArgumentException if the Fix command name is not a registered
+     *                                      bind
      */
     public Class<? extends FixContext> unregisterBind(final String name) {
         return unregisterCommand(binds, name);
@@ -361,8 +367,8 @@ public class FixRegistry {
      *
      * @return the previously registered Fix conditional
      *
-     * @throws IllegalArgumentException if the Fix command name is not a
-     *                                  registered conditional
+     * @throws IllegalArgumentException if the Fix command name is not a registered
+     *                                      conditional
      */
     public Class<? extends FixPredicate> unregisterConditional(final String name) {
         return unregisterCommand(conditionals, name);
@@ -375,8 +381,8 @@ public class FixRegistry {
      *
      * @return the previously registered Fix method
      *
-     * @throws IllegalArgumentException if the Fix command name is not a
-     *                                  registered method
+     * @throws IllegalArgumentException if the Fix command name is not a registered
+     *                                      method
      */
     public Class<? extends FixFunction> unregisterMethod(final String name) {
         return unregisterCommand(methods, name);

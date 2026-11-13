@@ -40,29 +40,21 @@ public final class RecordBuilderTest {
 
     @Before
     public void createSystemUnderTest() {
-        format = RecordFormat.create()
-                .withIndicatorLength(2)
-                .withIdentifierLength(2)
-                .withFieldStartLength(3)
-                .withFieldLengthLength(2)
-                .withImplDefinedPartLength(2)
+        format = RecordFormat.create().withIndicatorLength(2).withIdentifierLength(2)
+                .withFieldStartLength(3).withFieldLengthLength(2).withImplDefinedPartLength(2)
                 .build();
         builder = new RecordBuilder(format);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfFormatIsNull() {
-        new RecordBuilder(null);  // Exception expected
+        new RecordBuilder(null); // Exception expected
     }
 
     @Test
     public void shouldWriteRecordFormatToRecordLabel() {
-        format = RecordFormat.create()
-                .withIndicatorLength(2)
-                .withIdentifierLength(3)
-                .withFieldStartLength(4)
-                .withFieldLengthLength(5)
-                .withImplDefinedPartLength(6)
+        format = RecordFormat.create().withIndicatorLength(2).withIdentifierLength(3)
+                .withFieldStartLength(4).withFieldLengthLength(5).withImplDefinedPartLength(6)
                 .build();
         builder = new RecordBuilder(format);
 
@@ -90,12 +82,12 @@ public final class RecordBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfRecordStatusIsNot7BitAscii() {
-        builder.setRecordStatus('\u00df');  // Exception expected
+        builder.setRecordStatus('\u00df'); // Exception expected
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfRecordStatusIsInformationSeparator() {
-        builder.setRecordStatus('\u001e');  // Exception expected
+        builder.setRecordStatus('\u001e'); // Exception expected
     }
 
     @Test
@@ -122,22 +114,22 @@ public final class RecordBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionIfLengthOfImplCodesIsLessThanFour() {
-        builder.setImplCodes(asChars("123"));  // Exception expected
+        builder.setImplCodes(asChars("123")); // Exception expected
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionIfLengthOfImplCodesIsGreaterThanFour() {
-        builder.setImplCodes(asChars("12345"));  // Exception expected
+        builder.setImplCodes(asChars("12345")); // Exception expected
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfImplCodesAreNot7BitAscii() {
-        builder.setImplCodes(asChars("12\u00df4"));  // Exception expected
+        builder.setImplCodes(asChars("12\u00df4")); // Exception expected
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionIfImplCodesIsNull() {
-        builder.setImplCodes(null);  // Exception expected
+        builder.setImplCodes(null); // Exception expected
     }
 
     @Test
@@ -162,27 +154,27 @@ public final class RecordBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionIfLengthOfSystemCharsIsLessThanThree() {
-        builder.setSystemChars(asChars("12"));  // Exception expected
+        builder.setSystemChars(asChars("12")); // Exception expected
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionIfLengthOfSystemCharsIsGreaterThanThree() {
-        builder.setSystemChars(asChars("1234"));  // Exception expected
+        builder.setSystemChars(asChars("1234")); // Exception expected
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfSystemCharsAreNot7BitAscii() {
-        builder.setSystemChars(asChars("1\u00df3"));  // Exception expected
+        builder.setSystemChars(asChars("1\u00df3")); // Exception expected
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfSystemCharIsInformationSeparator() {
-        builder.setSystemChars(asChars("1\u001e3"));  // Exception expected
+        builder.setSystemChars(asChars("1\u001e3")); // Exception expected
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionIfSystemCharsIsNull() {
-        builder.setSystemChars(null);  // Exception expected
+        builder.setSystemChars(null); // Exception expected
     }
 
     @Test
@@ -221,12 +213,12 @@ public final class RecordBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfReservedCharIsNot7BitAscii() {
-        builder.setReservedChar('\u00df');  // Exception expected
+        builder.setReservedChar('\u00df'); // Exception expected
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfReservedCharIsInformationSeparator() {
-        builder.setReservedChar('\u001d');  // Exception expected
+        builder.setReservedChar('\u001d'); // Exception expected
     }
 
     @Test
@@ -262,9 +254,7 @@ public final class RecordBuilderTest {
 
     @Test
     public void shouldAppendReferenceFieldWithoutImplDefinedPart() {
-        format = RecordFormat.createFrom(format)
-                .withImplDefinedPartLength(0)
-                .build();
+        format = RecordFormat.createFrom(format).withImplDefinedPartLength(0).build();
         builder = new RecordBuilder(format);
         builder.appendReferenceField(asChars("002"), "Value");
 
@@ -278,8 +268,8 @@ public final class RecordBuilderTest {
         final String longValue = "A".repeat(1000);
         builder.appendReferenceField(asChars("002"), asChars("IM"), longValue);
 
-        builder.appendReferenceField(asChars("003"), asChars("IM"),
-                "would not fit");  // Exception expected
+        builder.appendReferenceField(asChars("003"), asChars("IM"), "would not fit"); // Exception
+                                                                                      // expected
     }
 
     @Test(expected = FormatException.class)
@@ -447,7 +437,7 @@ public final class RecordBuilderTest {
     public void shouldThrowExceptionIfBuildIsCalledWhileAppendingDataField() {
         builder.startDataField(asChars("020"), asChars("IN"), asChars("IM"));
 
-        builder.build();  // Exception expected
+        builder.build(); // Exception expected
     }
 
     @Test(expected = IllegalStateException.class)
@@ -504,28 +494,28 @@ public final class RecordBuilderTest {
     public void shouldThrowIllegalArgumentExceptionIfIdentifierIsNull() {
         builder.startDataField(asChars("020"), asChars("IN"), asChars("IM"));
 
-        builder.appendSubfield(null, "Value");  // Exception expected
+        builder.appendSubfield(null, "Value"); // Exception expected
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfIdentifierIsNot7BitAscii() {
         builder.startDataField(asChars("020"), asChars("IN"), asChars("IM"));
 
-        builder.appendSubfield(asChars("\u00df"), "Value");  // Exception expected
+        builder.appendSubfield(asChars("\u00df"), "Value"); // Exception expected
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfIdentifierIsInformationSeparator() {
         builder.startDataField(asChars("020"), asChars("IN"), asChars("IM"));
 
-        builder.appendSubfield(asChars("\u001d"), "Value");  // Exception expected
+        builder.appendSubfield(asChars("\u001d"), "Value"); // Exception expected
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfDataFieldValueIsNull() {
         builder.startDataField(asChars("020"), asChars("IN"), asChars("IM"));
 
-        builder.appendSubfield(asChars("A"), null);  // Exception expected
+        builder.appendSubfield(asChars("A"), null); // Exception expected
     }
 
     @Test(expected = FormatException.class)
@@ -535,7 +525,7 @@ public final class RecordBuilderTest {
         builder.appendSubfield(asChars("A"), longValue);
         builder.appendSubfield(asChars("B"), "Value");
 
-        builder.endDataField();  // Exception expected
+        builder.endDataField(); // Exception expected
     }
 
     @Test
@@ -560,7 +550,7 @@ public final class RecordBuilderTest {
 
     @Test(expected = IllegalStateException.class)
     public void shouldThrowIllegalStateExceptionIfAppendSubfieldIsNotCalledWithinAppendFieldSequence() {
-        builder.appendSubfield(asChars("A"), "Value");  // Exception expected
+        builder.appendSubfield(asChars("A"), "Value"); // Exception expected
     }
 
     @Test(expected = IllegalStateException.class)
@@ -572,14 +562,14 @@ public final class RecordBuilderTest {
 
     @Test(expected = IllegalStateException.class)
     public void shouldThrowIllegalStateExceptionIfEndAppendFieldIsNotMatchedByStartAppendField() {
-        builder.endDataField();  // Exception expected
+        builder.endDataField(); // Exception expected
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfIdentifierLengthDoesNotMatchFormat() {
         builder.startDataField(asChars("200"), asChars("IN"), asChars("IM"));
 
-        builder.appendSubfield(asChars("12"), "Value");  // Exception expected
+        builder.appendSubfield(asChars("12"), "Value"); // Exception expected
     }
 
     @Test
@@ -595,9 +585,7 @@ public final class RecordBuilderTest {
 
     @Test
     public void shouldWriteOnlyIdentifierMarkerIfIdentifierLengthIsOne() {
-        format = RecordFormat.createFrom(format)
-                .withIdentifierLength(1)
-                .build();
+        format = RecordFormat.createFrom(format).withIdentifierLength(1).build();
         builder = new RecordBuilder(format);
         builder.startDataField(asChars("200"), asChars("IN"), asChars("IM"));
         builder.appendSubfield("Value");
@@ -610,9 +598,7 @@ public final class RecordBuilderTest {
 
     @Test
     public void shouldWriteNoIdentifierMarkerIfIdentifierLengthIsZero() {
-        format = RecordFormat.createFrom(format)
-                .withIdentifierLength(0)
-                .build();
+        format = RecordFormat.createFrom(format).withIdentifierLength(0).build();
         builder = new RecordBuilder(format);
         builder.startDataField(asChars("200"), asChars("IN"), asChars("IM"));
         builder.appendSubfield("Ada");
@@ -636,18 +622,15 @@ public final class RecordBuilderTest {
 
     @Test(expected = FormatException.class)
     public void shouldThrowExceptionIfBaseAddressIsNotInAddressRange() {
-        format = RecordFormat.createFrom(format)
-                .withFieldLengthLength(9)
-                .withFieldStartLength(9)
-                .withImplDefinedPartLength(9)
-                .build();
+        format = RecordFormat.createFrom(format).withFieldLengthLength(9).withFieldStartLength(9)
+                .withImplDefinedPartLength(9).build();
         builder = new RecordBuilder(format);
         final int dirEntries = Iso2709Constants.MAX_PAYLOAD_LENGTH / (9 * 3 + 3) + 1;
         for (int i = 0; i < dirEntries; ++i) {
             builder.appendReferenceField(asChars("002"), asChars("123456789"), "");
         }
 
-        builder.build();  // Exception expected
+        builder.build(); // Exception expected
     }
 
     @Test
@@ -656,20 +639,17 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        Assert.assertEquals(String.format("%05d", record.length),
-                asString(record, 0, 5));
+        Assert.assertEquals(String.format("%05d", record.length), asString(record, 0, 5));
     }
 
     @Test(expected = FormatException.class)
     public void shouldThrowExceptionIfRecordLengthIsExceeded() {
-        format = RecordFormat.createFrom(format)
-                .withFieldLengthLength(9)
-                .build();
+        format = RecordFormat.createFrom(format).withFieldLengthLength(9).build();
         builder = new RecordBuilder(format);
         final String longValue = "C".repeat(100000);
         builder.appendReferenceField(asChars("002"), asChars("  "), longValue);
 
-        builder.build();  // Exception expected
+        builder.build(); // Exception expected
     }
 
     @Test
@@ -705,10 +685,8 @@ public final class RecordBuilderTest {
         return value.toCharArray();
     }
 
-    private String asString(final byte[] record, final int beginIndex,
-            final int endIndex) {
-        return new String(record, beginIndex, endIndex - beginIndex,
-                StandardCharsets.UTF_8);
+    private String asString(final byte[] record, final int beginIndex, final int endIndex) {
+        return new String(record, beginIndex, endIndex - beginIndex, StandardCharsets.UTF_8);
     }
 
 }

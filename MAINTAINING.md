@@ -2,6 +2,7 @@
 
 Pull requests should not be rebased (as this would rewrite Git's history) but merged with the the latest master and merge as a none fast-forward merge into master.
 For example, to merge a pull request `fix-xy` from http://github.com/cboehme/metafacture-core the following Git commands should be used:
+
 ```
 # Bring master up-to-date:
 git checkout master
@@ -17,7 +18,9 @@ git merge master
 git checkout master
 git merge --no-ff cboehme-fix-xy
 ```
+
 The commit message of the merge command should follow this format:
+
 ```
 Merge pull-request #PULLREQUEST-ID from cboehme/fix-xy
 ```
@@ -31,6 +34,7 @@ Releasing involves to first make and test the release candidate before actually 
 It's good habit to use semantic versioning in release numbers `A`.`B`.`C`, i.e. increase `A` when it's a major release breaking backward compatibility; increase `B` when it got new features; increase `C` indicating bug-fixes.
 
 ## Signing
+
 You need gpg key, which is uploaded to a public key server otherwise you are not able to set a tag and upload the release to Sonatype.
 
 To upload to Sonatype we need to sign the artifacts. Adjust `gradle.properties` in the root directory that like this:
@@ -57,8 +61,8 @@ snippet you will be provided when creating the token to `~/.m2/settings.xml`.
 ## Authorize the nexus publishing plugin
 
 According to the [nexus
-  plugin](https://github.com/gradle-nexus/publish-plugin?tab=readme-ov-file#publishing-to-maven-central-via-sonatype-central)
-  you have to add the following to the `gradle.properties`:
+plugin](https://github.com/gradle-nexus/publish-plugin?tab=readme-ov-file#publishing-to-maven-central-via-sonatype-central)
+you have to add the following to the `gradle.properties`:
 
 ```
 sonatypeUsername=$usernameOfToken
@@ -84,23 +88,27 @@ In your project:
 a) It's going from your local Git repository to central.sonatype.com to Maven Central. Each station requires some manual actions so you can double check that everything is ok. b) A release should also be published to GitHub.
 
 1. Make an annotated signed tag for the release:
-    ```
-    git tag -s metafacture-core-A.B.C
-    ```
-1. When prompted, add a sensible tag message. For instance, something like:
-    ```
-    Release A.B.C
-    ```
-1. Make sure to have a *clean* Git directory (otherwise the build will fail with the error message `Working copy has modifications`):
-    ```
-    git status
-    ```
-1. Now you can build and upload the release to Sonatype:
-    ```
-    ./gradlew publishToSonatype  -PpublishVersion=A.B.C  closeSonatypeStagingRepository
-    ```
 
-###  Publish
+   ```
+   git tag -s metafacture-core-A.B.C
+   ```
+2. When prompted, add a sensible tag message. For instance, something like:
+
+   ```
+   Release A.B.C
+   ```
+3. Make sure to have a *clean* Git directory (otherwise the build will fail with the error message `Working copy has modifications`):
+
+   ```
+   git status
+   ```
+4. Now you can build and upload the release to Sonatype:
+
+   ```
+   ./gradlew publishToSonatype  -PpublishVersion=A.B.C  closeSonatypeStagingRepository
+   ```
+
+### Publish
 
 If the tests went well we can publish.
 We publish the Metafacture libraries as modules to maven central and a
@@ -111,15 +119,19 @@ Metafactur standalone runner at GitHub releases.
 This provides the standalone runner.
 
 1. Push the annotated signed tag you have created in the "Upload" section to GitHub:
-    ```
-    git push origin metafacture-core-A.B.C
-    ```
-1. Now the tag is available on GitHub. You can manually choose to [draft a new release on GitHub](https://github.com/metafacture/metafacture-core/releases/new). The signed `*-dist.*` files must be uploaded manually. They are produced like this:
-    ```
-    ./gradlew metafacture-runner:signArchive -PpublishVersion=A.B.C
-    ```
-    and can be found in `metafacture-runner/build/distributions/` (don't mind the `Source code` for that is created by GitHub automatically).
+
+   ```
+   git push origin metafacture-core-A.B.C
+   ```
+2. Now the tag is available on GitHub. You can manually choose to [draft a new release on GitHub](https://github.com/metafacture/metafacture-core/releases/new). The signed `*-dist.*` files must be uploaded manually. They are produced like this:
+
+   ```
+   ./gradlew metafacture-runner:signArchive -PpublishVersion=A.B.C
+   ```
+
+   and can be found in `metafacture-runner/build/distributions/` (don't mind the `Source code` for that is created by GitHub automatically).
 
 #### Publish to Maven Central
 
 1. Finally, go to [central.sonatype.com](https://central.sonatype.com/publishing), log in, check the namespace (if you maintain more than one repo). Attention, because once published it can't be removed. If sure, click on "Publish". The artifacts are uploaded to Maven Central (which may take some time; have a look at e.g. [metafacture-biblio](https://repo1.maven.org/maven2/org/metafacture/metafacture-biblio/)).i
+

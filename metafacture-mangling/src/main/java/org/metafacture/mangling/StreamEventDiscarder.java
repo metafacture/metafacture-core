@@ -1,18 +1,18 @@
-    /*
- * Copyright 2016 Christoph Böhme
- *
- * Licensed under the Apache License, Version 2.0 the "License";
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/*
+* Copyright 2016 Christoph Böhme
+*
+* Licensed under the Apache License, Version 2.0 the "License";
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 package org.metafacture.mangling;
 
@@ -67,11 +67,10 @@ public class StreamEventDiscarder implements StreamPipe<StreamReceiver> {
      * <p>
      * This is a convenience method for changing the set of discarded events.
      * <p>
-     * The state must not be changed while processing a stream. Doing so may
-     * result in unbalanced <i>start-record</i> and <i>end-record</i> events.
+     * The state must not be changed while processing a stream. Doing so may result
+     * in unbalanced <i>start-record</i> and <i>end-record</i> events.
      *
-     * @param discard if true record events will be discarded, otherwise passed
-     *                on.
+     * @param discard if true record events will be discarded, otherwise passed on.
      */
     public void setDiscardRecordEvents(final boolean discard) {
         setDiscardEventsByType(EventType.RECORD, discard);
@@ -83,11 +82,10 @@ public class StreamEventDiscarder implements StreamPipe<StreamReceiver> {
      * <p>
      * This is a convenience method for changing the set of discarded events.
      * <p>
-     * The state must not be changed while processing a stream. Doing so may
-     * result in unbalanced <i>start-entity</i> and <i>end-entity</i> events.
+     * The state must not be changed while processing a stream. Doing so may result
+     * in unbalanced <i>start-entity</i> and <i>end-entity</i> events.
      *
-     * @param discard if true entity events will be discarded, otherwise passed
-     *                on.
+     * @param discard if true entity events will be discarded, otherwise passed on.
      */
     public void setDiscardEntityEvents(final boolean discard) {
         setDiscardEventsByType(EventType.ENTITY, discard);
@@ -101,32 +99,30 @@ public class StreamEventDiscarder implements StreamPipe<StreamReceiver> {
      * <p>
      * The state must not be changed while processing a stream.
      *
-     * @param discard if true literal events will be discarded, otherwise passed
-     *                on.
+     * @param discard if true literal events will be discarded, otherwise passed on.
      */
     public void setDiscardLiteralEvents(final boolean discard) {
         setDiscardEventsByType(EventType.LITERAL, discard);
     }
 
     /**
-     * Sets whether to discard {@linkplain EventType#RESET_STREAM reset-stream}
-     * and {@linkplain EventType#CLOSE_STREAM close-stream} events. By default
-     * lifecycle events are not discarded.
+     * Sets whether to discard {@linkplain EventType#RESET_STREAM reset-stream} and
+     * {@linkplain EventType#CLOSE_STREAM close-stream} events. By default lifecycle
+     * events are not discarded.
      * <p>
      * This is a convenience method for changing the set of discarded events.
      * <p>
      * The state must not be changed while processing a stream.
      *
      * @param discard if true the lifecycle events will be discarded, otherwise
-     *                passed on.
+     *                    passed on.
      */
     public void setDiscardLifecycleEvents(final boolean discard) {
         setDiscardEventsByType(EventType.RESET_STREAM, discard);
         setDiscardEventsByType(EventType.CLOSE_STREAM, discard);
     }
 
-    private void setDiscardEventsByType(final EventType type,
-                                        final boolean discard) {
+    private void setDiscardEventsByType(final EventType type, final boolean discard) {
         if (discard) {
             discardedEvents.add(type);
         }
@@ -139,7 +135,7 @@ public class StreamEventDiscarder implements StreamPipe<StreamReceiver> {
      * Returns the set of currently discarded event types.
      *
      * @return a copy of the set of discarded event types. Changes to the returned
-     * set do not affect the module.
+     *         set do not affect the module.
      */
     public EnumSet<EventType> getDiscardedEvents() {
         return EnumSet.copyOf(discardedEvents);
@@ -152,9 +148,9 @@ public class StreamEventDiscarder implements StreamPipe<StreamReceiver> {
      * The set of discarded events must not be changed while processing a stream.
      * Doing so may result in unbalanced start and end events.
      *
-     * @param discardedEvents set of event types to discard. The set is copied
-     *                        into an internal representation by the method.
-     *                        Changes to the set do not affect the module.
+     * @param discardedEvents set of event types to discard. The set is copied into
+     *                            an internal representation by the method. Changes
+     *                            to the set do not affect the module.
      */
     public void setDiscardedEvents(final EnumSet<EventType> discardedEvents) {
         this.discardedEvents = EnumSet.copyOf(discardedEvents);
@@ -214,14 +210,12 @@ public class StreamEventDiscarder implements StreamPipe<StreamReceiver> {
      */
     public enum EventType {
         /**
-         * Type representing <i>start-record</i> and <i>end-record</i> stream
-         * events.
+         * Type representing <i>start-record</i> and <i>end-record</i> stream events.
          */
         RECORD,
 
         /**
-         * Type representing <i>start-entity</i> and <i>end-entity</i> stream
-         * events.
+         * Type representing <i>start-entity</i> and <i>end-entity</i> stream events.
          */
         ENTITY,
 

@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Executes the functions if/unless the field value is less than the
- * given value.
+ * Executes the functions if/unless the field value is less than the given
+ * value.
  */
 @FixCommand("less_than")
 public class LessThan implements FixPredicate {
@@ -38,7 +38,8 @@ public class LessThan implements FixPredicate {
     }
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public boolean test(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         return testConditional(record, params, ALL, LESS_THAN);
     }
 

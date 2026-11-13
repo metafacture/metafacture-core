@@ -43,7 +43,9 @@ public final class AbstractTripleSortTest { // checkstyle-disable-line AbstractC
     public void setup() {
         tripleSort = new AbstractTripleSort() {
             @Override
-            protected void sortedTriple(final Triple namedValue) { }
+            protected void sortedTriple(final Triple namedValue) {
+            }
+
         };
     }
 
@@ -55,19 +57,21 @@ public final class AbstractTripleSortTest { // checkstyle-disable-line AbstractC
     }
 
     /**
-     * This test case may throw fail unexpectedly as it relies on the
-     * garbage collector to run when calling {@code System.gc()}. This
-     * is not guaranteed by the JVM.
+     * This test case may throw fail unexpectedly as it relies on the garbage
+     * collector to run when calling {@code System.gc()}. This is not guaranteed by
+     * the JVM.
      *
      * @throws InterruptedException thrown the the waiting period for the garbage
-     * collector is interrupted.
+     *                                  collector is interrupted.
      */
     @Test
-    public void issue192ShouldUnregisterFromTheJVMToNotCauseMemoryLeak() throws InterruptedException {
+    public void issue192ShouldUnregisterFromTheJVMToNotCauseMemoryLeak()
+            throws InterruptedException {
 
         // Get weak reference for checking whether the object was actually freed later:
         final ReferenceQueue<AbstractTripleSort> refQueue = new ReferenceQueue<AbstractTripleSort>();
-        final WeakReference<AbstractTripleSort> weakRef = new WeakReference<AbstractTripleSort>(tripleSort, refQueue);
+        final WeakReference<AbstractTripleSort> weakRef = new WeakReference<AbstractTripleSort>(
+                tripleSort, refQueue);
 
         tripleSort.closeStream();
         tripleSort = null;

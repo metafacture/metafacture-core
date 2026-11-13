@@ -35,44 +35,44 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * <p>
  * This decoder extracts the following parts from MARC 21 records:
  * <ul>
- *   <li>bibliographic information in the record leader,
- *   <li>record identifier,
- *   <li>control fields,
- *   <li>data fields.
+ * <li>bibliographic information in the record leader,
+ * <li>record identifier,
+ * <li>control fields,
+ * <li>data fields.
  * </ul>
  * This decoder only supports MARC 21 records with UTF-8 encoding. Other
  * character coding schemes are not supported. A
- * {@link org.metafacture.framework.FormatException} is thrown if a record
- * with an unsupported coding scheme is encountered.
+ * {@link org.metafacture.framework.FormatException} is thrown if a record with
+ * an unsupported coding scheme is encountered.
  * <p>
  * The bibliographic information in the record leader is
  * <ul>
- *   <li>record status,
- *   <li>record type,
- *   <li>bibliographic level,
- *   <li>type of control,
- *   <li>character coding scheme,
- *   <li>encoding level,
- *   <li>descriptive cataloging form,
- *   <li>multipart resource record level.
+ * <li>record status,
+ * <li>record type,
+ * <li>bibliographic level,
+ * <li>type of control,
+ * <li>character coding scheme,
+ * <li>encoding level,
+ * <li>descriptive cataloging form,
+ * <li>multipart resource record level.
  * </ul>
  * This information is emitted as an entity named
  * {@value org.metafacture.biblio.marc21.Marc21EventNames#LEADER_ENTITY}. It is
- * emitted directly after the <i>start-record</i> event. The entity contains
- * the following literals:
+ * emitted directly after the <i>start-record</i> event. The entity contains the
+ * following literals:
  * <ol>
- *   <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#RECORD_STATUS_LITERAL}
- *   <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#RECORD_TYPE_LITERAL}
- *   <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#BIBLIOGRAPHIC_LEVEL_LITERAL}
- *   <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#TYPE_OF_CONTROL_LITERAL}
- *   <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#CHARACTER_CODING_LITERAL}
- *   <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#ENCODING_LEVEL_LITERAL}
- *   <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#CATALOGING_FORM_LITERAL}
- *   <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#MULTIPART_LEVEL_LITERAL}
+ * <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#RECORD_STATUS_LITERAL}
+ * <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#RECORD_TYPE_LITERAL}
+ * <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#BIBLIOGRAPHIC_LEVEL_LITERAL}
+ * <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#TYPE_OF_CONTROL_LITERAL}
+ * <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#CHARACTER_CODING_LITERAL}
+ * <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#ENCODING_LEVEL_LITERAL}
+ * <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#CATALOGING_FORM_LITERAL}
+ * <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#MULTIPART_LEVEL_LITERAL}
  * </ol>
  * The literals are emitted in the order in which they are listed here. The
- * values of these literals are the characters at the corresponding
- * positions in the record leader (see
+ * values of these literals are the characters at the corresponding positions in
+ * the record leader (see
  * <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
  * Standard: Record Leader</a> for a description of the allowed values). The
  * literal values are always only single characters. As this decoder only
@@ -81,10 +81,13 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * will always be &quot;a&quot;.
  * <p>
  * For example, given a record with the leader
+ * 
  * <pre>
  * 00128noa a2200073zu 4500
  * </pre>
+ * 
  * the following event stream will be emitted:
+ * 
  * <pre>
  * start-record &quot;1&quot;
  * start-entity {@value org.metafacture.biblio.marc21.Marc21EventNames#LEADER_ENTITY}
@@ -99,31 +102,32 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * end-entity
  * &hellip;
  * </pre>
+ * 
  * The record identifier is taken from field &quot;001&quot;. It is used as
- * identifier in the <i>start-record</i> event. Additionally, it is emitted as
- * a control field (since that is what it is technically). The behaviour of
- * the decoder if a record has no identifier can be configured through the
+ * identifier in the <i>start-record</i> event. Additionally, it is emitted as a
+ * control field (since that is what it is technically). The behaviour of the
+ * decoder if a record has no identifier can be configured through the
  * {@link #setIgnoreMissingId(boolean)} parameter.
  * <p>
  * Control fields are emitted as literals with their tag as literal name and
  * their field value as literal value.
  * <p>
  * Data fields are emitted as entities. The entity name consists of the tag
- * followed by the two indicator characters of the field. For each sub field
- * in the data field a <i>literal</i> event is emitted. The literal name is
- * the identifier character of the sub field and the literal value is the data
- * value of the sub field.
+ * followed by the two indicator characters of the field. For each sub field in
+ * the data field a <i>literal</i> event is emitted. The literal name is the
+ * identifier character of the sub field and the literal value is the data value
+ * of the sub field.
  * <p>
- * All fields are emitted in the order in which they appear in the directory
- * of the MARC 21 record. For overlong fields which have multiple directory
- * entries (see section 4.4.4 in the ISO 2709:2008 standard), only the tag
- * from the first entry is used, the remaining ones are ignored.
+ * All fields are emitted in the order in which they appear in the directory of
+ * the MARC 21 record. For overlong fields which have multiple directory entries
+ * (see section 4.4.4 in the ISO 2709:2008 standard), only the tag from the
+ * first entry is used, the remaining ones are ignored.
  * <p>
  * Empty control fields and sub fields are emitted as literals with an empty
- * value. Data fields without sub fields produce only a <i>start-entity</i>
- * and an <i>end-entity</i> event without any <i>literal</i> events in-between.
- * If the decoder receives an empty input string it is ignored and no stream
- * events are emitted.
+ * value. Data fields without sub fields produce only a <i>start-entity</i> and
+ * an <i>end-entity</i> event without any <i>literal</i> events in-between. If
+ * the decoder receives an empty input string it is ignored and no stream events
+ * are emitted.
  * <p>
  * If an error occurs during decoding, a
  * {@link org.metafacture.framework.FormatException} is thrown.
@@ -131,7 +135,7 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * @author Christoph Böhme
  * @see "ISO 2709:2008 Standard"
  * @see <a href="http://www.loc.gov/marc/specifications/spechome.html">MARC-21
- * Standards</a>
+ *      Standards</a>
  */
 @In(String.class)
 @Out(StreamReceiver.class)
@@ -165,7 +169,7 @@ public final class Marc21Decoder extends DefaultObjectPipe<String, StreamReceive
      * becomes effective with the next record being processed.
      *
      * @param ignoreMissingId true if missing identifiers should be silently
-     *                        ignored.
+     *                            ignored.
      */
     public void setIgnoreMissingId(final boolean ignoreMissingId) {
         this.ignoreMissingId = ignoreMissingId;
@@ -225,15 +229,14 @@ public final class Marc21Decoder extends DefaultObjectPipe<String, StreamReceive
 
     private void requireMarc21RecordFormat(final RecordFormat format) {
         if (!Marc21Constants.MARC21_FORMAT.equals(format)) {
-            throw new FormatException("invalid record format. Expected " +
-                    Marc21Constants.MARC21_FORMAT + " but got " + format);
+            throw new FormatException("invalid record format. Expected "
+                    + Marc21Constants.MARC21_FORMAT + " but got " + format);
         }
     }
 
     private void requireUTF8Encoding(final Record record) {
         if (record.getImplCodes()[Marc21Constants.CHARACTER_CODING_INDEX] != 'a') {
-            throw new FormatException(
-                    "invalid record encoding. Only UTF-8 is supported");
+            throw new FormatException("invalid record encoding. Only UTF-8 is supported");
         }
     }
 
@@ -256,22 +259,22 @@ public final class Marc21Decoder extends DefaultObjectPipe<String, StreamReceive
         else {
             final char[] implCodes = record.getImplCodes();
             final char[] systemChars = record.getSystemChars();
-            getReceiver().literal(Marc21EventNames.RECORD_STATUS_LITERAL, String.valueOf(
-                        record.getRecordStatus()));
-            getReceiver().literal(Marc21EventNames.RECORD_TYPE_LITERAL, String.valueOf(
-                        implCodes[Marc21Constants.RECORD_TYPE_INDEX]));
-            getReceiver().literal(Marc21EventNames.BIBLIOGRAPHIC_LEVEL_LITERAL, String.valueOf(
-                        implCodes[Marc21Constants.BIBLIOGRAPHIC_LEVEL_INDEX]));
-            getReceiver().literal(Marc21EventNames.TYPE_OF_CONTROL_LITERAL, String.valueOf(
-                        implCodes[Marc21Constants.TYPE_OF_CONTROL_INDEX]));
-            getReceiver().literal(Marc21EventNames.CHARACTER_CODING_LITERAL, String.valueOf(
-                        implCodes[Marc21Constants.CHARACTER_CODING_INDEX]));
-            getReceiver().literal(Marc21EventNames.ENCODING_LEVEL_LITERAL, String.valueOf(
-                        systemChars[Marc21Constants.ENCODING_LEVEL_INDEX]));
-            getReceiver().literal(Marc21EventNames.CATALOGING_FORM_LITERAL, String.valueOf(
-                        systemChars[Marc21Constants.CATALOGING_FORM_INDEX]));
-            getReceiver().literal(Marc21EventNames.MULTIPART_LEVEL_LITERAL, String.valueOf(
-                        systemChars[Marc21Constants.MULTIPART_LEVEL_INDEX]));
+            getReceiver().literal(Marc21EventNames.RECORD_STATUS_LITERAL,
+                    String.valueOf(record.getRecordStatus()));
+            getReceiver().literal(Marc21EventNames.RECORD_TYPE_LITERAL,
+                    String.valueOf(implCodes[Marc21Constants.RECORD_TYPE_INDEX]));
+            getReceiver().literal(Marc21EventNames.BIBLIOGRAPHIC_LEVEL_LITERAL,
+                    String.valueOf(implCodes[Marc21Constants.BIBLIOGRAPHIC_LEVEL_INDEX]));
+            getReceiver().literal(Marc21EventNames.TYPE_OF_CONTROL_LITERAL,
+                    String.valueOf(implCodes[Marc21Constants.TYPE_OF_CONTROL_INDEX]));
+            getReceiver().literal(Marc21EventNames.CHARACTER_CODING_LITERAL,
+                    String.valueOf(implCodes[Marc21Constants.CHARACTER_CODING_INDEX]));
+            getReceiver().literal(Marc21EventNames.ENCODING_LEVEL_LITERAL,
+                    String.valueOf(systemChars[Marc21Constants.ENCODING_LEVEL_INDEX]));
+            getReceiver().literal(Marc21EventNames.CATALOGING_FORM_LITERAL,
+                    String.valueOf(systemChars[Marc21Constants.CATALOGING_FORM_INDEX]));
+            getReceiver().literal(Marc21EventNames.MULTIPART_LEVEL_LITERAL,
+                    String.valueOf(systemChars[Marc21Constants.MULTIPART_LEVEL_INDEX]));
         }
         getReceiver().endEntity();
     }

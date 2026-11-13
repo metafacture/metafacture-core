@@ -54,7 +54,8 @@ public final class TripleReader extends DefaultObjectPipe<String, ObjectReceiver
     @Override
     public void process(final String filename) {
         try {
-            final ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename), BUFFERSIZE));
+            final ObjectInputStream in = new ObjectInputStream(
+                    new BufferedInputStream(new FileInputStream(filename), BUFFERSIZE));
 
             try {
                 while (true) {

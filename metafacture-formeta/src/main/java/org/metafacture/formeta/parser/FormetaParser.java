@@ -83,8 +83,8 @@ public final class FormetaParser {
             }
         }
         catch (final FormatException e) {
-            final String errorMsg = "Parsing error at position " +
-                (i + 1) + ": " + getErrorSnippet(data, i) + ", " + e.getMessage();
+            final String errorMsg = "Parsing error at position " + (i + 1) + ": "
+                    + getErrorSnippet(data, i) + ", " + e.getMessage();
             throw new FormatException(errorMsg, e);
         }
         try {
@@ -96,12 +96,12 @@ public final class FormetaParser {
     }
 
     /**
-     * Extracts a text snippet from the record for showing the position at
-     * which an error occurred. The exact position additionally highlighted
-     * with {@link POS_MARKER_LEFT} and {@link POS_MARKER_RIGHT}.
+     * Extracts a text snippet from the record for showing the position at which an
+     * error occurred. The exact position additionally highlighted with
+     * {@link POS_MARKER_LEFT} and {@link POS_MARKER_RIGHT}.
      *
      * @param record the record currently being parsed
-     * @param pos the position at which the error occurred
+     * @param pos    the position at which the error occurred
      * @return a text snippet.
      */
     private static String getErrorSnippet(final String record, final int pos) {

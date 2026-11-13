@@ -195,7 +195,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
      * @param writeRootTag true if the root tag should be written
      */
     public void setWriteRootTag(final boolean writeRootTag) {
-        this.writeRootTag  = writeRootTag;
+        this.writeRootTag = writeRootTag;
     }
 
     /**
@@ -220,9 +220,10 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
      * Sets the namespace(s).
      *
      * @param namespacesString the namespaces as a String. It allows Java Properties
-     *                         structure, i.e. a key-value structure where the key is separated from the value
-     *                         by an equal sign '=', a colon ':' or a white space ' '. Multiple namespaces
-     *                         are separated by a line feed '\n'
+     *                             structure, i.e. a key-value structure where the
+     *                             key is separated from the value by an equal sign
+     *                             '=', a colon ':' or a white space ' '. Multiple
+     *                             namespaces are separated by a line feed '\n'
      */
     public void setNamespaces(final String namespacesString) {
         final Properties properties = new Properties();

@@ -62,8 +62,8 @@ public final class OaiPmhOpener extends DefaultObjectPipe<String, ObjectReceiver
     }
 
     /**
-     * Sets the beginning of the retrieving of updated data. The form is
-     * YYYY-MM-DD .
+     * Sets the beginning of the retrieving of updated data. The form is YYYY-MM-DD
+     * .
      *
      * @param dateFrom The form is YYYY-MM-DD .
      */
@@ -102,7 +102,8 @@ public final class OaiPmhOpener extends DefaultObjectPipe<String, ObjectReceiver
     public void process(final String baseUrl) {
 
         try {
-            RawWrite.run(baseUrl, this.dateFrom, this.dateUntil, this.metadataPrefix, this.setSpec, outputStream);
+            RawWrite.run(baseUrl, this.dateFrom, this.dateUntil, this.metadataPrefix, this.setSpec,
+                    outputStream);
         }
         catch (final IOException e) {
             e.printStackTrace();
@@ -120,8 +121,8 @@ public final class OaiPmhOpener extends DefaultObjectPipe<String, ObjectReceiver
             e.printStackTrace();
         }
         try {
-            getReceiver().process(
-                    new InputStreamReader(new ByteArrayInputStream(outputStream.toByteArray()), encoding));
+            getReceiver().process(new InputStreamReader(
+                    new ByteArrayInputStream(outputStream.toByteArray()), encoding));
         }
         catch (final IOException e) {
             throw new MetafactureException(e);

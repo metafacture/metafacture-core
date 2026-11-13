@@ -52,6 +52,7 @@ import java.util.regex.Pattern;
  * @author Markus Michael Geipel
  * @author Christoph Böhme
  */
+// @formatter:off
 @Command( // checkstyle-disable-line ClassFanOutComplexity|ParenPad
     name = "flux",
     description = "Runs the Flux.",
@@ -63,6 +64,7 @@ import java.util.regex.Pattern;
     optionListHeading = "%nOptions:%n",
     exitCodeListHeading = "%nExit codes:%n",
     exitCodeList = { "0:Successful program execution", "1:Internal software error", "2:Usage error" }
+// @formatter:on
 )
 public class Flux implements Callable<Integer> {
 
@@ -74,20 +76,21 @@ public class Flux implements Callable<Integer> {
 
     private static final int LONG_OPTIONS_MAX_WIDTH = 42;
 
-    private static final String DEPRECATION_NOTICE =
-        "############################################################\n" +
-        "# DEPRECATION NOTICE: Legacy parameters are deprecated and #\n" +
-        "# will be removed in a future release! Please use the      #\n" +
-        "# dedicated options instead; see `--help` for details.     #\n" +
-        "############################################################\n";
+    private static final String DEPRECATION_NOTICE = "############################################################\n"
+            + "# DEPRECATION NOTICE: Legacy parameters are deprecated and #\n"
+            + "# will be removed in a future release! Please use the      #\n"
+            + "# dedicated options instead; see `--help` for details.     #\n"
+            + "############################################################\n";
 
     @ArgGroup(exclusive = true) // TODO: Add `multiplicity = "1"` after deprecation period is over.
     private FluxInput fluxInput;
 
-    @Option(names = {"-v", "--var"}, paramLabel = "<name>=<value>", defaultValue = Option.NULL_VALUE, description = "Assign Flux variables (repeatable).")
+    @Option(names = {"-v",
+            "--var"}, paramLabel = "<name>=<value>", defaultValue = Option.NULL_VALUE, description = "Assign Flux variables (repeatable).")
     private Map<String, String> vars;
 
-    @Option(names = {"-l", "--list-commands"}, help = true, defaultValue = "false", description = "List all available Flux commands and exit.")
+    @Option(names = {"-l",
+            "--list-commands"}, help = true, defaultValue = "false", description = "List all available Flux commands and exit.")
     private boolean listCommands;
 
     @Parameters(hidden = true) // TODO: Remove catch-all parameter after deprecation period is over.
@@ -106,7 +109,7 @@ public class Flux implements Callable<Integer> {
      * Runs the Flux and exits the process with an appropriate status code.
      *
      * @param args the command line options
-     * @throws IOException if an I/O error occurs
+     * @throws IOException          if an I/O error occurs
      * @throws RecognitionException if an ANTLR error occurs
      */
     public static void main(final String[] args) throws IOException, RecognitionException {
@@ -118,7 +121,7 @@ public class Flux implements Callable<Integer> {
      *
      * @param args the command line options
      * @return the exit status
-     * @throws IOException if an I/O error occurs
+     * @throws IOException          if an I/O error occurs
      * @throws RecognitionException if an ANTLR error occurs
      */
     public int run(final String[] args) throws IOException, RecognitionException {
@@ -152,8 +155,8 @@ public class Flux implements Callable<Integer> {
             }
             else if (fluxInput == null) { // TODO: Remove after deprecation period is over.
                 throw new MissingParameterException(commandLine, commandSpec.args(),
-                        "Error: Missing required argument (specify one of these): " +
-                        commandSpec.args().get(0).group().synopsis());
+                        "Error: Missing required argument (specify one of these): "
+                                + commandSpec.args().get(0).group().synopsis());
             }
             else {
                 fluxFile = fluxInput.fluxFile;
@@ -192,13 +195,15 @@ public class Flux implements Callable<Integer> {
             runFlux(fluxFile.getAbsoluteFile().getParent(), ResourceUtil.getStream(fluxFile));
         }
         else {
-            runFlux(System.getProperty("user.dir"), new ByteArrayInputStream(fluxInput.fluxScript.getBytes(StandardCharsets.UTF_8)));
+            runFlux(System.getProperty("user.dir"), new ByteArrayInputStream(
+                    fluxInput.fluxScript.getBytes(StandardCharsets.UTF_8)));
         }
 
         return CommandLine.ExitCode.OK;
     }
 
-    /*package-private*/ void runFlux(final String scriptHome, final InputStream inputStream) throws Exception {
+    /* package-private */ void runFlux(final String scriptHome, final InputStream inputStream)
+            throws Exception {
         vars.put(SCRIPT_HOME, scriptHome + System.getProperty("file.separator"));
 
         try {
@@ -235,10 +240,12 @@ public class Flux implements Callable<Integer> {
 
     private static class FluxInput {
 
-        @Option(names = {"-f", "--file"}, required = true, description = "Specify the path to the Flux file.")
+        @Option(names = {"-f",
+                "--file"}, required = true, description = "Specify the path to the Flux file.")
         private File fluxFile;
 
-        @Option(names = {"-e", "--script"}, required = true, description = "Specify the inline Flux script.")
+        @Option(names = {"-e",
+                "--script"}, required = true, description = "Specify the inline Flux script.")
         private String fluxScript;
 
         private FluxInput() {

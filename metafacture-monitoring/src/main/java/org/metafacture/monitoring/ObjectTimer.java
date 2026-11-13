@@ -26,8 +26,7 @@ import org.metafacture.framework.annotations.Out;
 /**
  * Benchmarks the execution time of the downstream modules.
  *
- * @param <T>
- *            object type.
+ * @param <T> object type.
  *
  * @author Christoph Böhme
  */
@@ -36,7 +35,8 @@ import org.metafacture.framework.annotations.Out;
 @Description("Benchmarks the execution time of the downstream modules.")
 @FluxCommand("log-time")
 public final class ObjectTimer<T> extends TimerBase<ObjectReceiver<T>>
-        implements ObjectPipe<T, ObjectReceiver<T>> {
+        implements
+            ObjectPipe<T, ObjectReceiver<T>> {
 
     /**
      * Creates an instance of {@link ObjectTimer}.

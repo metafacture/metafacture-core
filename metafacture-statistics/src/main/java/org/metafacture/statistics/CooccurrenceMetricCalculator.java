@@ -33,8 +33,8 @@ import java.util.List;
  *
  * @author Markus Michael Geipel
  */
-@Description("Calculates values for various cooccurrence metrics. The expected inputs are triples containing as subject the var name and as object the count. " +
-    "Marginal counts must appear first, joint counts second. Marinal counts must be written as 1:A, Joint counts as 2:A&B")
+@Description("Calculates values for various cooccurrence metrics. The expected inputs are triples containing as subject the var name and as object the count. "
+        + "Marginal counts must appear first, joint counts second. Marinal counts must be written as 1:A, Joint counts as 2:A&B")
 @In(Triple.class)
 @Out(Triple.class)
 @FluxCommand("calculate-metrics")
@@ -46,19 +46,23 @@ public final class CooccurrenceMetricCalculator extends AbstractCountProcessor {
     enum Metric {
         X2 {
             @Override
-            double calculate(final int countA, final int countB, final int countAandB, final int total) {
+            double calculate(final int countA, final int countB, final int countAandB,
+                    final int total) {
                 final double o12 = countA - countAandB;
                 final double o21 = countB - countAandB;
                 final double o22 = total - countAandB;
                 final double d = (countAandB * o22) - (o12 * o21);
 
-                final double x2 = total * Math.pow(d, 2) / ((countAandB + o12) * (countAandB + o21) * (o12 + o22) * (o21 + o22));
+                final double x2 = total * Math.pow(d, 2)
+                        / ((countAandB + o12) * (countAandB + o21) * (o12 + o22) * (o21 + o22));
                 return x2 * Math.signum(d);
             }
+
         },
         F {
             @Override
-            double calculate(final int countA, final int countB, final int countAandB, final int total) {
+            double calculate(final int countA, final int countB, final int countAandB,
+                    final int total) {
                 final double pa = (double) countA / total;
                 final double pb = (double) countB / total;
                 final double pab = (double) countAandB / total;
@@ -67,31 +71,39 @@ public final class CooccurrenceMetricCalculator extends AbstractCountProcessor {
 
                 return 2 * precission * recall / (precission + recall);
             }
+
         },
         PRECISSION {
             @Override
-            double calculate(final int countA, final int countB, final int countAandB, final int total) {
+            double calculate(final int countA, final int countB, final int countAandB,
+                    final int total) {
                 final double pa = (double) countA / total;
                 final double pab = (double) countAandB / total;
                 return pab / pa;
             }
+
         },
         RECALL {
             @Override
-            double calculate(final int countA, final int countB, final int countAandB, final int total) {
+            double calculate(final int countA, final int countB, final int countAandB,
+                    final int total) {
                 final double pb = (double) countB / total;
                 final double pab = (double) countAandB / total;
                 return pab / pb;
             }
+
         },
         JACCARD {
             @Override
-            double calculate(final int countA, final int countB, final int countAandB, final int total) {
+            double calculate(final int countA, final int countB, final int countAandB,
+                    final int total) {
                 return countAandB / (double) (countA + countB - countAandB);
             }
+
         };
 
         abstract double calculate(int countA, int countB, int countAandB, int total);
+
     }
 
     private static final int MIN_COUNT = 5;
@@ -123,10 +135,12 @@ public final class CooccurrenceMetricCalculator extends AbstractCountProcessor {
     }
 
     @Override
-    protected void processCount(final String varA, final String varB, final int countA, final int countB, final int countAandB) {
+    protected void processCount(final String varA, final String varB, final int countA,
+            final int countB, final int countAandB) {
         for (final Metric metric : metrics) {
             final double value = metric.calculate(countA, countB, countAandB, getTotal());
-            getReceiver().process(new Triple(varA + "&" + varB, metric.toString(), String.valueOf(value)));
+            getReceiver().process(
+                    new Triple(varA + "&" + varB, metric.toString(), String.valueOf(value)));
         }
     }
 

@@ -26,8 +26,8 @@ import java.util.Map;
 
 /**
  * Executes the functions if/unless the field value does not match the regular
- * expression pattern. If it is an array or a hash, none of the field values
- * may match the regular expression pattern.
+ * expression pattern. If it is an array or a hash, none of the field values may
+ * match the regular expression pattern.
  */
 @FixCommand("none_match")
 public class NoneMatch implements FixPredicate {
@@ -39,7 +39,8 @@ public class NoneMatch implements FixPredicate {
     }
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public boolean test(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         return !new AnyMatch().test(metafix, record, params, options);
     }
 

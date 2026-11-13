@@ -19,8 +19,7 @@ package org.metafacture.framework.helpers;
 import org.metafacture.framework.LifeCycle;
 
 /**
- * Default implementation for {@link LifeCycle} which simply
- * does nothing.
+ * Default implementation for {@link LifeCycle} which simply does nothing.
  *
  * @author Christoph Böhme
  *

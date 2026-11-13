@@ -49,27 +49,39 @@ public final class MetafixTestHelpers {
     private MetafixTestHelpers() {
     }
 
-    public static void assertExecutionException(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
-        assertThrows(FixExecutionException.class, expectedClass, expectedMessage, executable, UnaryOperator.identity());
+    public static void assertExecutionException(final Class<?> expectedClass,
+            final String expectedMessage, final Executable executable) {
+        assertThrows(FixExecutionException.class, expectedClass, expectedMessage, executable,
+                UnaryOperator.identity());
     }
 
-    public static void assertProcessException(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
-        assertProcessException(expectedClass, UnaryOperator.identity(), expectedMessage, executable);
+    public static void assertProcessException(final Class<?> expectedClass,
+            final String expectedMessage, final Executable executable) {
+        assertProcessException(expectedClass, UnaryOperator.identity(), expectedMessage,
+                executable);
     }
 
-    public static void assertProcessException(final Class<?> expectedClass, final UnaryOperator<String> operator, final String expectedMessage, final Executable executable) {
-        assertThrows(FixProcessException.class, expectedClass, expectedMessage, executable, operator);
+    public static void assertProcessException(final Class<?> expectedClass,
+            final UnaryOperator<String> operator, final String expectedMessage,
+            final Executable executable) {
+        assertThrows(FixProcessException.class, expectedClass, expectedMessage, executable,
+                operator);
     }
 
-    public static void assertThrows(final Class<? extends Throwable> expectedClass, final String expectedMessage, final Executable executable) {
+    public static void assertThrows(final Class<? extends Throwable> expectedClass,
+            final String expectedMessage, final Executable executable) {
         assertThrows(expectedClass, null, expectedMessage, executable, UnaryOperator.identity());
     }
 
-    public static void assertThrows(final Class<? extends Throwable> expectedClass, final UnaryOperator<String> operator, final String expectedMessage, final Executable executable) {
+    public static void assertThrows(final Class<? extends Throwable> expectedClass,
+            final UnaryOperator<String> operator, final String expectedMessage,
+            final Executable executable) {
         assertThrows(expectedClass, null, expectedMessage, executable, operator);
     }
 
-    private static void assertThrows(final Class<? extends Throwable> exceptionClass, final Class<?> expectedClass, final String expectedMessage, final Executable executable, final UnaryOperator<String> operator) {
+    private static void assertThrows(final Class<? extends Throwable> exceptionClass,
+            final Class<?> expectedClass, final String expectedMessage, final Executable executable,
+            final UnaryOperator<String> operator) {
         final Throwable thrownException = Assertions.assertThrows(exceptionClass, executable);
         final Throwable actualException;
 
@@ -99,7 +111,8 @@ public final class MetafixTestHelpers {
         Assertions.assertEquals(expected, outputStream.toString());
     }
 
-    public static void assertTempFile(final String expected, final Consumer<String> consumer) throws IOException {
+    public static void assertTempFile(final String expected, final Consumer<String> consumer)
+            throws IOException {
         final File tempFile = File.createTempFile("metafixTestHelpers", "");
         tempFile.deleteOnExit();
 
@@ -107,34 +120,40 @@ public final class MetafixTestHelpers {
         Assertions.assertEquals(expected, new String(Files.readAllBytes(tempFile.toPath())));
     }
 
-    public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Consumer<Metafix> in,
-            final Consumer<Supplier<StreamReceiver>> out) {
+    public static void assertFix(final StreamReceiver receiver, final List<String> fixDef,
+            final Consumer<Metafix> in, final Consumer<Supplier<StreamReceiver>> out) {
         assertFix(receiver, fixDef, in, (s, f) -> out.accept(s), Metafix.NO_VARS);
     }
 
-    public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Consumer<Metafix> in,
+    public static void assertFix(final StreamReceiver receiver, final List<String> fixDef,
+            final Consumer<Metafix> in,
             final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out) {
         assertFix(receiver, fixDef, in, out, Metafix.NO_VARS);
     }
 
-    public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Map<String, String> vars,
-            final Consumer<Metafix> in, final Consumer<Supplier<StreamReceiver>> out) {
+    public static void assertFix(final StreamReceiver receiver, final List<String> fixDef,
+            final Map<String, String> vars, final Consumer<Metafix> in,
+            final Consumer<Supplier<StreamReceiver>> out) {
         assertFix(receiver, fixDef, in, (s, f) -> out.accept(s), vars);
     }
 
-    public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Map<String, String> vars,
-            final Consumer<Metafix> in, final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out) {
+    public static void assertFix(final StreamReceiver receiver, final List<String> fixDef,
+            final Map<String, String> vars, final Consumer<Metafix> in,
+            final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out) {
         assertFix(receiver, fixDef, in, out, vars);
     }
 
-    private static void assertFix(final StreamReceiver receiver, final List<String> fixLines, final Consumer<Metafix> in,
-            final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out, final Map<String, String> vars) {
+    private static void assertFix(final StreamReceiver receiver, final List<String> fixLines,
+            final Consumer<Metafix> in,
+            final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out,
+            final Map<String, String> vars) {
         final String fixString = String.join("\n", fixLines);
         final Metafix metafix = fix(receiver, fixString, vars);
         final InOrder ordered = Mockito.inOrder(receiver);
         try {
             in.accept(metafix);
-            out.accept(() -> ordered.verify(receiver), i -> ordered.verify(receiver, Mockito.times(i)));
+            out.accept(() -> ordered.verify(receiver),
+                    i -> ordered.verify(receiver, Mockito.times(i)));
             ordered.verifyNoMoreInteractions();
             Mockito.verifyNoMoreInteractions(receiver);
         }
@@ -145,7 +164,8 @@ public final class MetafixTestHelpers {
         }
     }
 
-    private static Metafix fix(final StreamReceiver receiver, final String fix, final Map<String, String> vars) {
+    private static Metafix fix(final StreamReceiver receiver, final String fix,
+            final Map<String, String> vars) {
         Metafix metafix = null;
         try {
             metafix = new Metafix(fix, vars);
@@ -157,7 +177,8 @@ public final class MetafixTestHelpers {
         return metafix;
     }
 
-    public static void assertEmittedFields(final Value.Hash hash, final List<String> expectedFields, final List<Value> expectedValues) {
+    public static void assertEmittedFields(final Value.Hash hash, final List<String> expectedFields,
+            final List<Value> expectedValues) {
         final List<String> actualFields = new ArrayList<>();
         final List<Value> actualValues = new ArrayList<>();
 

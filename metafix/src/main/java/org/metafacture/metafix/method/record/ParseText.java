@@ -28,8 +28,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Parses a text into an array or hash of values using regular expressions
- * and grouping.
+ * Parses a text into an array or hash of values using regular expressions and
+ * grouping.
  */
 @FixCommand("parse_text")
 public class ParseText implements FixFunction {
@@ -43,7 +43,8 @@ public class ParseText implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         final String field = params.get(0);
 
         record.getList(field, a -> a.forEach(v -> {
@@ -53,11 +54,11 @@ public class ParseText implements FixFunction {
                 record.remove(field);
 
                 /**
-                 * {@code Pattern.namedGroups()} not available as API,
-                 * see https://stackoverflow.com/a/65012527.
+                 * {@code Pattern.namedGroups()} not available as API, see
+                 * https://stackoverflow.com/a/65012527.
                  *
-                 * Assumptions: 1. Named groups are not escaped/quoted;
-                 * 2. Named groups are not mixed with unnamed groups.
+                 * Assumptions: 1. Named groups are not escaped/quoted; 2. Named groups are not
+                 * mixed with unnamed groups.
                  */
                 final Matcher groupMatcher = NAMED_GROUP_PATTERN.matcher(p.pattern());
                 final Value value = Value.newHash(h -> {

@@ -47,6 +47,7 @@ public final class TestCollectorBasics {
     @Test
     public void shouldSupportNestedCollectors() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='d' value='${1}${c}'>" +
                 "    <data source='d1' name='1' />" +
@@ -59,24 +60,24 @@ public final class TestCollectorBasics {
                 "    </combine>" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("d1", "a");
                     i.literal("d2", "b");
                     i.literal("d3", "c ");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("d", "abc");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldSupportNestedSameEntity() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <combine name='result' value='${value}${ch}' sameEntity='true'>" +
                 "    <data source='rel.value' name='value' />" +
@@ -88,6 +89,7 @@ public final class TestCollectorBasics {
                 "    </choose>" +
                 "  </combine>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("rel");
@@ -105,25 +107,25 @@ public final class TestCollectorBasics {
                     i.literal("ch", "X");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("result", "ab");
                     o.get().literal("result", "BM");
                     o.get().literal("result", "de");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldAllowUsingAnArbitraryLiteralForFlush() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <concat delimiter='' name='d' flushWith='f'>" +
                 "    <data source='d' />" +
                 "  </concat>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("d", "1");
@@ -135,25 +137,25 @@ public final class TestCollectorBasics {
                     i.literal("f", "");
                     i.literal("d", "6");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("d", "12");
                     o.get().literal("d", "345");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldReceiveFlushingLiteralBeforeFlushEvent() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <concat delimiter='' name='d' flushWith='f'>" +
                 "    <data source='d' />" +
                 "    <data source='f' />" +
                 "  </concat>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("f", "1");
@@ -161,15 +163,13 @@ public final class TestCollectorBasics {
                     i.literal("d", "a");
                     i.literal("f", "3");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("d", "1");
                     o.get().literal("d", "2");
                     o.get().literal("d", "a3");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

@@ -44,19 +44,20 @@ public final class RangeTest {
     @Test
     public void shouldOutputAllnNmbersbBetweenFirstAndLastInclusive() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <range name='range' flushWith='record'>" +
                 "    <data source='first' />" +
                 "    <data source='last' />" +
                 "  </range>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1789");
                     i.literal("last", "1794");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("range", "1789");
                     o.get().literal("range", "1790");
@@ -65,42 +66,43 @@ public final class RangeTest {
                     o.get().literal("range", "1793");
                     o.get().literal("range", "1794");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldOutputFirstIfLastEqualsFirst() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <range name='range' flushWith='record'>" +
                 "    <data source='first' />" +
                 "    <data source='last' />" +
                 "  </range>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1989");
                     i.literal("last", "1989");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("range", "1989");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldOutputMultipleRanges() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <range name='range' flushWith='record'>" +
                 "    <data source='first' />" +
                 "    <data source='last' />" +
                 "  </range>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1789");
@@ -108,8 +110,7 @@ public final class RangeTest {
                     i.literal("first", "1794");
                     i.literal("last", "1799");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("range", "1789");
                     o.get().literal("range", "1790");
@@ -122,19 +123,20 @@ public final class RangeTest {
                     o.get().literal("range", "1798");
                     o.get().literal("range", "1799");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldRemoveDuplicateNumbersFromOverlappingRanges() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <range name='range' flushWith='record'>" +
                 "    <data source='first' />" +
                 "    <data source='last' />" +
                 "  </range>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1789");
@@ -142,68 +144,66 @@ public final class RangeTest {
                     i.literal("first", "1790");
                     i.literal("last", "1791");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("range", "1789");
                     o.get().literal("range", "1790");
                     o.get().literal("range", "1791");
                     o.get().literal("range", "1792");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldUseUserdefinedIncrement() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <range name='range' increment='3' flushWith='record'>" +
                 "    <data source='first' />" +
                 "    <data source='last' />" +
                 "  </range>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1789");
                     i.literal("last", "1799");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("range", "1789");
                     o.get().literal("range", "1792");
                     o.get().literal("range", "1795");
                     o.get().literal("range", "1798");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldAllowNegativeIncrements() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <range name='range' increment='-3' flushWith='record'>" +
                 "    <data source='first' />" +
                 "    <data source='last' />" +
                 "  </range>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("first", "1799");
                     i.literal("last", "1789");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("range", "1799");
                     o.get().literal("range", "1796");
                     o.get().literal("range", "1793");
                     o.get().literal("range", "1790");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

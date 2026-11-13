@@ -59,15 +59,17 @@ class ComplexTypeDecoder implements TypeDecoder {
     }
 
     static boolean supportsType(final Class<?> clazz) {
+// @formatter:off
         return !SimpleTypeDecoder.supportsType(clazz) && // checkstyle-disable-line BooleanExpressionComplexity
-            !MetafactureSourceTypeDecoder.supportsType(clazz) &&
-            !CollectionTypeDecoder.supportsType(clazz) &&
-            !ArrayTypeDecoder.supportsType(clazz) &&
-            !MapTypeDecoder.supportsType(clazz);
+// @formatter:on
+                !MetafactureSourceTypeDecoder.supportsType(clazz)
+                && !CollectionTypeDecoder.supportsType(clazz)
+                && !ArrayTypeDecoder.supportsType(clazz) && !MapTypeDecoder.supportsType(clazz);
     }
 
     @Override
-    public void decodeToStream(final StreamReceiver streamReceiver, final String name, final Object object) {
+    public void decodeToStream(final StreamReceiver streamReceiver, final String name,
+            final Object object) {
         if (name != null) {
             streamReceiver.startEntity(name);
         }

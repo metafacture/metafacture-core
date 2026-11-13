@@ -31,9 +31,7 @@ public class FixParseBenchmark extends AbstractBenchmark {
     private String fixFile;
 
     @Param({ // checkstyle-disable-line AnnotationUseStyle
-        "nothing",
-        "alma"
-    })
+            "nothing", "alma"})
     private String fixDef;
 
     /**

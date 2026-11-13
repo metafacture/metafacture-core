@@ -41,13 +41,16 @@ import java.util.Map;
  * <p>
  * For example, when receiving the following map with string keys and integer
  * values:
+ * 
  * <pre>{@literal
  * final Map<String, Integer> map = new HashMap<>();
  * map.put("_id", 1);
  * map.put("lit-A", 2);
  * map.put("lit-B", 3);
  * }</pre>
+ * 
  * Then this module will emit the following sequence of events:
+ * 
  * <pre>{@literal
  * start-record "1"
  * literal "lit-A": 2
@@ -80,7 +83,7 @@ public final class MapToStream extends DefaultObjectPipe<Map<?, ?>, StreamReceiv
      * becomes effective with the next record being processed.
      *
      * @param idKey the ID key. The object passed here is used in a call to
-     * {@link Map#get(Object)} to get the identifier value.
+     *                  {@link Map#get(Object)} to get the identifier value.
      */
     public void setIdKey(final Object idKey) {
         this.idKey = idKey;
@@ -104,9 +107,8 @@ public final class MapToStream extends DefaultObjectPipe<Map<?, ?>, StreamReceiv
         else {
             getReceiver().startRecord(id.toString());
         }
-        for (final Map.Entry<?, ?> entry: map.entrySet()) {
-            getReceiver().literal(entry.getKey().toString(),
-                    entry.getValue().toString());
+        for (final Map.Entry<?, ?> entry : map.entrySet()) {
+            getReceiver().literal(entry.getKey().toString(), entry.getValue().toString());
         }
         getReceiver().endRecord();
     }

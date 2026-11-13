@@ -34,11 +34,7 @@ import org.mockito.MockitoAnnotations;
  */
 public final class StringFilterTest {
 
-    private static final String[] RECORDS = {
-        "Record 1: Data",
-        "Record 42: Data",
-        "Record 3: Data"
-    };
+    private static final String[] RECORDS = {"Record 1: Data", "Record 42: Data", "Record 3: Data"};
 
     private static final String PATTERN = "\\d\\d";
 

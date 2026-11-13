@@ -40,15 +40,13 @@ public class Reverse implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-        record.transform(params.get(0), (m, c) -> m
-                .ifArray(a -> {
-                    final List<Value> list = a.stream().collect(Collectors.toList());
-                    Collections.reverse(list);
-                    c.accept(new Value(list));
-                })
-                .ifString(s -> c.accept(new Value(new StringBuilder(s).reverse().toString())))
-        );
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
+        record.transform(params.get(0), (m, c) -> m.ifArray(a -> {
+            final List<Value> list = a.stream().collect(Collectors.toList());
+            Collections.reverse(list);
+            c.accept(new Value(list));
+        }).ifString(s -> c.accept(new Value(new StringBuilder(s).reverse().toString()))));
     }
 
 }

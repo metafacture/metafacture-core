@@ -89,7 +89,7 @@ public class ListMap<K, V> implements Map<K, List<V>> {
      * Clears all values of all keys in the map.
      */
     public final void clearAllKeys() {
-        for (final Entry<K, List<V>> entry: map.entrySet()) {
+        for (final Entry<K, List<V>> entry : map.entrySet()) {
             entry.getValue().clear();
         }
     }

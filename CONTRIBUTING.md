@@ -19,7 +19,6 @@ The following is a set of guidelines for contributing to Metafacture and how to 
 * [Definition of Done](#definition-of-done)
 * [Releasing Metafacture](#releasing-metafacture)
 
-
 ## How can I contribute?
 
 ### Reporting Bugs
@@ -67,10 +66,10 @@ Provide the following information:
 The overall code contribution process is:
 
 1. Fork the appropriate metafacture repo and clone your fork (members with write access: clone the appropriate metafacture repo)
-1. In your local clone, switch to a new feature branch for the bug fix or feature enhancement you want to implement. The name of the feature branch should start with the corresponding issue number and contain additional info for convenience (using camelCaseFormatting, e.g. '111-featureDesciption')
-1. Implement, test, and build your bug fix or feature enhancement
-1. Commit your changes and push the feature branch to your fork (members with write access: push to the appropriate metafacture repo)
-1. Open a pull request for your feature branch to submit your changes (see details below)
+2. In your local clone, switch to a new feature branch for the bug fix or feature enhancement you want to implement. The name of the feature branch should start with the corresponding issue number and contain additional info for convenience (using camelCaseFormatting, e.g. '111-featureDesciption')
+3. Implement, test, and build your bug fix or feature enhancement
+4. Commit your changes and push the feature branch to your fork (members with write access: push to the appropriate metafacture repo)
+5. Open a pull request for your feature branch to submit your changes (see details below)
 
 #### Pull Requests
 
@@ -105,9 +104,11 @@ As a general rule, we don't change public commit history, i.e. we don’t use ``
 
 #### Code Formatting and Quality
 
-Please format your code according to [this EditorConfig file](https://github.com/metafacture/metafacture-core/blob/master/.editorconfig) and consider our current [code quality and style guidelines](https://github.com/metafacture/metafacture-core/wiki/Code-Quality-and-Style).
+Please consider our current [code quality and style guidelines](https://github.com/metafacture/metafacture-core/wiki/Code-Quality-and-Style).
 
-The [metafacture-core build](https://github.com/metafacture/metafacture-core/blob/master/build.gradle) performs automated [EditorConfig](https://github.com/metafacture/metafacture-core/blob/master/.editorconfig) and [Checkstyle](https://github.com/metafacture/metafacture-core/blob/master/config/checkstyle/checkstyle.xml) checks.
+The [metafacture-core build](https://github.com/metafacture/metafacture-core/blob/master/build.gradle) performs automated [Checkstyle](https://github.com/metafacture/metafacture-core/blob/master/config/checkstyle/checkstyle.xml) and [Spotless](https://github.com/diffplug/spotless/tree/main/plugin-gradle) checks.
+
+You can manually run Spotless checks with `./gradlew spotlessCheck`, which are configured in the Gradle build file (`build.gradle`). Apply all Spotless formatter rules to fix violations with `./gradlew spotlessApply`. To automatically format your code every time you save in an editor, run `./gradlew --continuous spotlessApply` in a separate terminal.
 
 The code is automatically [quality-checked on sonarcloud.io](https://sonarcloud.io/dashboard?id=org.metafacture%3Ametafacture-core) when pushed to GitHub.
 

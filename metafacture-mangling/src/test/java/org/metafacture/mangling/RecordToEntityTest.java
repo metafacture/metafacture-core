@@ -58,8 +58,7 @@ public class RecordToEntityTest {
         recordToEntity.closeStream();
 
         final InOrder ordered = Mockito.inOrder(receiver);
-        ordered.verify(receiver)
-                .startEntity(RecordToEntity.DEFAULT_ENTITY_NAME);
+        ordered.verify(receiver).startEntity(RecordToEntity.DEFAULT_ENTITY_NAME);
         ordered.verify(receiver).literal("literal", "value");
         ordered.verify(receiver).startEntity("entity");
         ordered.verify(receiver, Mockito.times(2)).endEntity();
@@ -89,8 +88,7 @@ public class RecordToEntityTest {
         receiver.closeStream();
 
         final InOrder ordered = Mockito.inOrder(receiver);
-        ordered.verify(receiver)
-                .startEntity(RecordToEntity.DEFAULT_ENTITY_NAME);
+        ordered.verify(receiver).startEntity(RecordToEntity.DEFAULT_ENTITY_NAME);
         ordered.verify(receiver).literal("record-id", "1");
     }
 

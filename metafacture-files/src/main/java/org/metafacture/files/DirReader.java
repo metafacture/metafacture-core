@@ -53,7 +53,7 @@ public final class DirReader extends DefaultObjectPipe<String, ObjectReceiver<St
      * Flags whether the directory should be traversered recursively.
      *
      * @param recursive true if the directory should be traversered recursively,
-     *                  otherwise false
+     *                      otherwise false
      */
     public void setRecursive(final boolean recursive) {
         this.recursive = recursive;
@@ -81,12 +81,14 @@ public final class DirReader extends DefaultObjectPipe<String, ObjectReceiver<St
 
     private void dir(final File dir) {
         final ObjectReceiver<String> receiver = getReceiver();
-        final File[] files = filenameFilterPattern == null ? dir.listFiles() :
-                dir.listFiles(new FilenameFilter() {
+        final File[] files = filenameFilterPattern == null
+                ? dir.listFiles()
+                : dir.listFiles(new FilenameFilter() {
                     @Override
                     public boolean accept(final File dir, final String name) {
                         return name.matches(filenameFilterPattern);
                     }
+
                 });
         Arrays.sort(files);
         for (final File file : files) {

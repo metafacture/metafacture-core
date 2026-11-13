@@ -40,8 +40,7 @@ import java.util.List;
 @In(Object.class)
 @Out(Object.class)
 @FluxCommand("log-object")
-public final class ObjectLogger<T>
-        extends DefaultObjectPipe<T, ObjectReceiver<T>> {
+public final class ObjectLogger<T> extends DefaultObjectPipe<T, ObjectReceiver<T>> {
 
     public static final String DEFAULT_LEVEL = "INFO";
 
@@ -64,7 +63,7 @@ public final class ObjectLogger<T>
      *
      * @param logPrefix the prefix of the log messages
      */
-    @Deprecated/*(since="9.0", forRemoval=true)*/
+    @Deprecated /* (since="9.0", forRemoval=true) */
     public ObjectLogger(final String logPrefix) {
         this.logPrefix = logPrefix;
     }

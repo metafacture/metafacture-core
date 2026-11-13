@@ -111,7 +111,8 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     /**
      * Flags whether to use decompress concatenated file compression.
      *
-     * @param decompressConcatenated true if file compression should decompress concatenated
+     * @param decompressConcatenated true if file compression should decompress
+     *                                   concatenated
      */
     public void setDecompressConcatenated(final boolean decompressConcatenated) {
         this.decompressConcatenated = decompressConcatenated;
@@ -137,9 +138,11 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
      */
     public Reader open(final InputStream stream) throws IOException {
         try {
-            final InputStream decompressor = compression.createDecompressor(stream, decompressConcatenated);
+            final InputStream decompressor = compression.createDecompressor(stream,
+                    decompressConcatenated);
             try {
-                return new InputStreamReader(BOMInputStream.builder().setInputStream(decompressor).get(), encoding);
+                return new InputStreamReader(
+                        BOMInputStream.builder().setInputStream(decompressor).get(), encoding);
             }
             catch (final IOException | MetafactureException e) {
                 decompressor.close();

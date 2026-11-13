@@ -42,7 +42,8 @@ public class HtmlToText implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         record.transform(params.get(0), s -> Jsoup.parse(s).wholeText());
     }
 

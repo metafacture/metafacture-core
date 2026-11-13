@@ -24,8 +24,8 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.ForwardingStreamPipe;
 
 /**
- * Replaces null values with replacement string, or, if replacement
- * string is null (default), discards null values entirely.
+ * Replaces null values with replacement string, or, if replacement string is
+ * null (default), discards null values entirely.
  *
  * @author Jens Wille
  *

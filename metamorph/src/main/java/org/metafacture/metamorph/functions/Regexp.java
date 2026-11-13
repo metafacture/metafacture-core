@@ -43,7 +43,8 @@ public final class Regexp extends AbstractFunction {
     }
 
     @Override
-    public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
+    public void receive(final String name, final String value, final NamedValueSource source,
+            final int recordCount, final int entityCount) {
         if (null == value) {
             return;
         }
@@ -52,8 +53,7 @@ public final class Regexp extends AbstractFunction {
             while (matcher.find()) {
                 final String group = matcher.group();
                 if (!group.isEmpty()) {
-                    getNamedValueReceiver().receive(name, group, this,
-                            recordCount, entityCount);
+                    getNamedValueReceiver().receive(name, group, this, recordCount, entityCount);
                 }
             }
         }
@@ -61,8 +61,7 @@ public final class Regexp extends AbstractFunction {
             while (matcher.find()) {
                 populateVars();
                 if (!tempVars.isEmpty()) {
-                    getNamedValueReceiver().receive(name,
-                            StringUtil.format(format, tempVars), this,
+                    getNamedValueReceiver().receive(name, StringUtil.format(format, tempVars), this,
                             recordCount, entityCount);
                 }
             }

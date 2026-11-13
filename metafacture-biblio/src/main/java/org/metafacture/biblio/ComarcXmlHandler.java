@@ -70,18 +70,15 @@ public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void startElement(final String uri, final String localName,
-            final String qName, final Attributes attributes)
-            throws SAXException {
+    public void startElement(final String uri, final String localName, final String qName,
+            final Attributes attributes) throws SAXException {
         if (SUBFIELD.equals(localName)) {
             this.builder = new StringBuilder();
             this.currentTag = attributes.getValue("code");
         }
         else if (DATAFIELD.equals(localName) && this.state == RECORD_INITIALISED) {
-            getReceiver().startEntity(
-                    attributes.getValue("tag") +
-                    attributes.getValue("ind1") +
-                    attributes.getValue("ind2"));
+            getReceiver().startEntity(attributes.getValue("tag") + attributes.getValue("ind1")
+                    + attributes.getValue("ind2"));
         }
         else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
             this.state = RECORD_NOT_INITIALISED;
@@ -90,11 +87,10 @@ public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
     @Override
     @SuppressWarnings("fallthrough")
-    public void endElement(final String uri, final String localName,
-            final String qName) throws SAXException {
+    public void endElement(final String uri, final String localName, final String qName)
+            throws SAXException {
         if (SUBFIELD.equals(localName)) {
-            this.subfieldValues.add(new Entry(this.currentTag, this.builder
-                    .toString().trim()));
+            this.subfieldValues.add(new Entry(this.currentTag, this.builder.toString().trim()));
         }
         else if (DATAFIELD.equals(localName)) {
             switch (this.state) {
@@ -111,8 +107,7 @@ public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
                     this.subfieldValues.clear();
                     break;
                 default:
-                    throw new SAXException(
-                            "State was not one of initialised or not initialised");
+                    throw new SAXException("State was not one of initialised or not initialised");
             }
         }
         else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
@@ -153,6 +148,7 @@ public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         private String getValue() {
             return value;
         }
+
     }
 
 }

@@ -33,7 +33,8 @@ final class CollectFactory extends ObjectFactory<Collect> {
 
     CollectFactory() {
         try {
-            loadClassesFromMap(ResourceUtil.loadProperties("morph-collectors.properties"), Collect.class);
+            loadClassesFromMap(ResourceUtil.loadProperties("morph-collectors.properties"),
+                    Collect.class);
         }
         catch (final IOException e) {
             throw new MetafactureException("Failed to load collectors list", e);

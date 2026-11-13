@@ -46,15 +46,15 @@ import java.util.UUID;
  * @author Fabian Steeg (fsteeg)
  *
  */
-@Description("Decode HTML to metadata events. The attrValsAsSubfields option can be used to override " +
-        "the default attribute values to be used as subfields (e.g. by default " +
-        "`link rel=\"canonical\" href=\"http://example.org\"` becomes `link.canonical`). " +
-        "It expects an HTTP-style query string specifying as key the attributes whose value should " +
-        "be used as a subfield, and as value the attribute whose value should be the subfield value, " +
-        "e.g. the default contains `link.rel=href`. To use the HTML element text as the value " +
-        "(instead of another attribute), omit the value of the query-string key-value pair, " +
-        "e.g. `title.lang`. To add to the defaults, instead of replacing them, start with an `&`, " +
-        "e.g. `&h3.class`")
+@Description("Decode HTML to metadata events. The attrValsAsSubfields option can be used to override "
+        + "the default attribute values to be used as subfields (e.g. by default "
+        + "`link rel=\"canonical\" href=\"http://example.org\"` becomes `link.canonical`). "
+        + "It expects an HTTP-style query string specifying as key the attributes whose value should "
+        + "be used as a subfield, and as value the attribute whose value should be the subfield value, "
+        + "e.g. the default contains `link.rel=href`. To use the HTML element text as the value "
+        + "(instead of another attribute), omit the value of the query-string key-value pair, "
+        + "e.g. `title.lang`. To add to the defaults, instead of replacing them, start with an `&`, "
+        + "e.g. `&h3.class`")
 @In(Reader.class)
 @Out(StreamReceiver.class)
 @FluxCommand("decode-html")
@@ -94,7 +94,8 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
             final Attributes attributes = element.attributes();
             boolean addedValueAsSubfield = false;
             for (final Attribute attribute : attributes) {
-                addedValueAsSubfield = handleAttributeValuesAsSubfields(receiver, element, attributes, attribute);
+                addedValueAsSubfield = handleAttributeValuesAsSubfields(receiver, element,
+                        attributes, attribute);
                 receiver.literal(attribute.getKey(), attribute.getValue());
             }
             final String text = element.text().trim();
@@ -107,7 +108,8 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
         }
     }
 
-    private boolean handleAttributeValuesAsSubfields(final StreamReceiver receiver, final Element element, final Attributes attributes, final Attribute attribute) {
+    private boolean handleAttributeValuesAsSubfields(final StreamReceiver receiver,
+            final Element element, final Attributes attributes, final Attribute attribute) {
         final String fullFieldKey = element.nodeName() + "." + attribute.getKey();
         if (attrValsAsSubfields.containsKey(fullFieldKey)) {
             final String configValue = attrValsAsSubfields.get(fullFieldKey);
@@ -124,20 +126,24 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
     }
 
     /**
-     * Sets attribute values as subfields. If the value(s) start with an `&amp;` they
-     * are appended to {@link #DEFAULT_ATTR_VALS_AS_SUBFIELDS}.
+     * Sets attribute values as subfields. If the value(s) start with an `&amp;`
+     * they are appended to {@link #DEFAULT_ATTR_VALS_AS_SUBFIELDS}.
      *
      * @param mapString the attributes to be added as subfields
      */
     public final void setAttrValsAsSubfields(final String mapString) {
         this.attrValsAsSubfields = new HashMap<>();
-        final String input = mapString.startsWith("&") ? DEFAULT_ATTR_VALS_AS_SUBFIELDS + mapString : mapString;
+        final String input = mapString.startsWith("&")
+                ? DEFAULT_ATTR_VALS_AS_SUBFIELDS + mapString
+                : mapString;
         for (final String nameValuePair : input.split("&")) {
             final String[] nameValue = nameValuePair.split("=");
             try {
                 final String utf8 = StandardCharsets.UTF_8.name();
                 final String key = URLDecoder.decode(nameValue[0], utf8);
-                final String val = nameValue.length > 1 ? URLDecoder.decode(nameValue[1], utf8) : "";
+                final String val = nameValue.length > 1
+                        ? URLDecoder.decode(nameValue[1], utf8)
+                        : "";
                 attrValsAsSubfields.put(key, val);
             }
             catch (final UnsupportedEncodingException e) {

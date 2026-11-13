@@ -39,8 +39,7 @@ import java.nio.file.Files;
  * @author Christoph Böhme
  *
  */
-public final class ObjectFileWriterTest
-        extends AbstractConfigurableObjectWriterTest {
+public final class ObjectFileWriterTest extends AbstractConfigurableObjectWriterTest {
 
     private static final String DATA = "Überfacture";
 
@@ -61,8 +60,9 @@ public final class ObjectFileWriterTest
 
     @Test
     public void shouldWriteUTF8EncodedOutput() throws IOException {
-        Assume.assumeFalse("Default encoding is UTF-8: It is not possible to test whether " +
-                "ObjectFileWriter sets the encoding to UTF-8 correctly.",
+        Assume.assumeFalse(
+                "Default encoding is UTF-8: It is not possible to test whether "
+                        + "ObjectFileWriter sets the encoding to UTF-8 correctly.",
                 StandardCharsets.UTF_8.equals(Charset.defaultCharset()));
 
         writer.process(DATA);
@@ -134,8 +134,10 @@ public final class ObjectFileWriterTest
 
     private void assertOutput(final String expected) throws IOException {
         final byte[] bytesWritten = Files.readAllBytes(file.toPath());
-        Assert.assertArrayEquals(expected.getBytes(StandardCharsets.UTF_8),
-                bytesWritten); // FileObjectWriter appends new lines
+        Assert.assertArrayEquals(expected.getBytes(StandardCharsets.UTF_8), bytesWritten); // FileObjectWriter
+                                                                                           // appends
+                                                                                           // new
+                                                                                           // lines
     }
 
 }

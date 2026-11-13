@@ -38,7 +38,8 @@ public class AddField implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         record.set(params.get(0), new Value(params.get(1)));
     }
 

@@ -45,22 +45,22 @@ public final class DateFormatTest {
     @Test
     public void shouldMakeOutputFormatConfigurable() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='date'>" +
                 "    <dateformat outputformat='LONG' language='en' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("date", "23.04.1564");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("date", "April 23, 1564");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

@@ -28,8 +28,8 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
- * Only keeps field values that match the regular expression pattern. Works
- * only with array of strings/repeated fields.
+ * Only keeps field values that match the regular expression pattern. Works only
+ * with array of strings/repeated fields.
  */
 @FixCommand("filter")
 public class Filter implements FixFunction {
@@ -41,15 +41,15 @@ public class Filter implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         final Pattern search = Pattern.compile(params.get(1));
         final boolean invert = getBoolean(options, "invert");
 
         final Predicate<Value> predicate = s -> search.matcher(s.asString()).find();
 
-        record.transform(params.get(0), (m, c) -> m
-                .ifArray(a -> c.accept(newArray(a.stream().filter(invert ? predicate.negate() : predicate))))
-        );
+        record.transform(params.get(0), (m, c) -> m.ifArray(a -> c
+                .accept(newArray(a.stream().filter(invert ? predicate.negate() : predicate)))));
     }
 
 }

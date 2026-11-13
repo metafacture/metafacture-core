@@ -17,10 +17,9 @@
 package org.metafacture.biblio.iso2709;
 
 /**
- * Provides access to a directory entry. A {@code DirectoryEntry} works like
- * an iterator or cursor. Use {@link #gotoNext()} to advance to the next
- * directory entry. Use {@link #rewind()} to go back to the first directory
- * entry.
+ * Provides access to a directory entry. A {@code DirectoryEntry} works like an
+ * iterator or cursor. Use {@link #gotoNext()} to advance to the next directory
+ * entry. Use {@link #rewind()} to go back to the first directory entry.
  *
  * @author Christoph Böhme
  */
@@ -47,8 +46,8 @@ class DirectoryEntry {
         fieldLengthLength = recordFormat.getFieldLengthLength();
         fieldStartLength = recordFormat.getFieldStartLength();
         implDefinedPartLength = recordFormat.getImplDefinedPartLength();
-        entryLength = Iso2709Constants.TAG_LENGTH + fieldLengthLength + fieldStartLength +
-                implDefinedPartLength;
+        entryLength = Iso2709Constants.TAG_LENGTH + fieldLengthLength + fieldStartLength
+                + implDefinedPartLength;
         rewind();
     }
 
@@ -78,15 +77,15 @@ class DirectoryEntry {
 
     int getFieldStart() {
         assert currentPosition < directoryEnd;
-        final int fieldStartStart = currentPosition + Iso2709Constants.TAG_LENGTH +
-                fieldLengthLength;
+        final int fieldStartStart = currentPosition + Iso2709Constants.TAG_LENGTH
+                + fieldLengthLength;
         return buffer.parseIntAt(fieldStartStart, fieldStartLength);
     }
 
     char[] getImplDefinedPart() {
         assert currentPosition < directoryEnd;
-        final int implDefinedPartStart = currentPosition + Iso2709Constants.TAG_LENGTH +
-                fieldLengthLength + fieldStartLength;
+        final int implDefinedPartStart = currentPosition + Iso2709Constants.TAG_LENGTH
+                + fieldLengthLength + fieldStartLength;
         return buffer.charsAt(implDefinedPartStart, implDefinedPartLength);
     }
 
@@ -109,8 +108,8 @@ class DirectoryEntry {
         if (endOfDirectoryReached()) {
             return "@END-OF-DIRECTORY";
         }
-        return String.valueOf(getTag()) + String.valueOf(getFieldLength()) +
-                String.valueOf(getFieldStart()) + String.valueOf(getImplDefinedPart());
+        return String.valueOf(getTag()) + String.valueOf(getFieldLength())
+                + String.valueOf(getFieldStart()) + String.valueOf(getImplDefinedPart());
     }
 
 }

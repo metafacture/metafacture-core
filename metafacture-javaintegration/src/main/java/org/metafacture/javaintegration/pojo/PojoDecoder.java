@@ -30,44 +30,42 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * <p>
  * The generated stream events depend on the member type:
  * <ul>
- *   <li>Simple types like Strings or the primitive types produces a literal
- *   event with the member name as literal name and the member value as literal
- *   value
+ * <li>Simple types like Strings or the primitive types produces a literal event
+ * with the member name as literal name and the member value as literal value
  *
- *   <li>Instances of {@link MetafactureSource} can insert user defined events
- *   into the stream by implementing the {@link MetafactureSource#sendToStream}
- *   method.
+ * <li>Instances of {@link MetafactureSource} can insert user defined events
+ * into the stream by implementing the {@link MetafactureSource#sendToStream}
+ * method.
  *
- *   <li>Complex types like other pojos produces an entity with the member name
- *   as entity name and the decoded pojo members as the entity's elements
+ * <li>Complex types like other pojos produces an entity with the member name as
+ * entity name and the decoded pojo members as the entity's elements
  *
- *   <li>Lists, Arrays and Sets produce events for each entry according to the
- *   rules above. Each of these events is named by the member name.
+ * <li>Lists, Arrays and Sets produce events for each entry according to the
+ * rules above. Each of these events is named by the member name.
  *
- *   <li>Maps produces an entity with the member name as entity name. Each map
- *   entry produces a sub entity with the string representation of the entry key
- *   as entity name and the entry value decoded to the rules above.
+ * <li>Maps produces an entity with the member name as entity name. Each map
+ * entry produces a sub entity with the string representation of the entry key
+ * as entity name and the entry value decoded to the rules above.
  * </ul>
  * <p>
  * Here are some examples:
  * <ul>
- *   <li>{@code String str = "abc" &rarr; literal("str", "abc")}
+ * <li>{@code String str = "abc" &rarr; literal("str", "abc")}
  *
- *   <li>{@code boolean bo = true &rarr; literal("bo", "true")}
+ * <li>{@code boolean bo = true &rarr; literal("bo", "true")}
  *
- *   <li>{@code List&lt;String&gt; li = &hellip; ("a", "b") &rarr; literal("li", "a"), literal("li", "b")}
+ * <li>{@code List&lt;String&gt; li = &hellip; ("a", "b") &rarr; literal("li", "a"), literal("li", "b")}
  *
- *   <li>{@code String[] ar = &hellip; ("a", "b") &rarr; literal("ar", "a"), literal("ar", "b")}
+ * <li>{@code String[] ar = &hellip; ("a", "b") &rarr; literal("ar", "a"), literal("ar", "b")}
  *
- *   <li>{@code Set&lt;String&gt; se = &hellip; ("a", "b") &rarr; literal("se", "a"), literal("se", "b")}
+ * <li>{@code Set&lt;String&gt; se = &hellip; ("a", "b") &rarr; literal("se", "a"), literal("se", "b")}
  *
- *   <li>{@code Map&lt;String, String&gt; ma = &hellip; ("a" : "b", "c" : "d") &rarr; startEntity("ma"), literal("a", "b"), literal("c", "d"), endEntity()}
+ * <li>{@code Map&lt;String, String&gt; ma = &hellip; ("a" : "b", "c" : "d") &rarr; startEntity("ma"), literal("a", "b"), literal("c", "d"), endEntity()}
  * </ul>
  * <p>
  * See in the test cases in {@code PojoDecoderTest} for more examples.
  *
- * @param <T>
- *            input object type
+ * @param <T> input object type
  *
  * @author Thomas Seidel
  *

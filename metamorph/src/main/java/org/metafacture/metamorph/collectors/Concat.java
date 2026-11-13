@@ -80,8 +80,8 @@ public final class Concat extends AbstractFlushingCollect {
     protected void emit() {
         if (builder.length() != 0) {
             final String value = prefix + builder.toString() + postfix;
-            getNamedValueReceiver().receive(getName(), value, this,
-                    getRecordCount(), getEntityCount());
+            getNamedValueReceiver().receive(getName(), value, this, getRecordCount(),
+                    getEntityCount());
         }
     }
 
@@ -91,8 +91,7 @@ public final class Concat extends AbstractFlushingCollect {
     }
 
     @Override
-    protected void receive(final String name, final String value,
-            final NamedValueSource source) {
+    protected void receive(final String name, final String value, final NamedValueSource source) {
 
         if (reverse) {
             builder.insert(0, currentDelimiter);

@@ -25,10 +25,10 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
 /**
- * Emits the name and value of each literal which is received as a string.
- * Name and value are separated by a separator string. The default separator
- * string is a tab. If a literal name is empty, only the value will be output
- * without a separator.
+ * Emits the name and value of each literal which is received as a string. Name
+ * and value are separated by a separator string. The default separator string
+ * is a tab. If a literal name is empty, only the value will be output without a
+ * separator.
  * <p>
  * The module ignores record and entity events. This means that literal names
  * are not prefixed by the name of the entity which contains them.
@@ -36,13 +36,13 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
  * @author Markus Michael Geipel
  *
  */
-@Description("Outputs the name and value of each literal which is received " +
-        "as a string. Name and value are separated by a separator " +
-        "string. The default separator string is a tab. If a literal " +
-        "name is empty, only the value will be output without a separator. " +
-        "The module ignores record and entity events. In particular, " +
-        "this means that literal names are not prefixed by the name " +
-        "of the entity which contains them.")
+@Description("Outputs the name and value of each literal which is received "
+        + "as a string. Name and value are separated by a separator "
+        + "string. The default separator string is a tab. If a literal "
+        + "name is empty, only the value will be output without a separator. "
+        + "The module ignores record and entity events. In particular, "
+        + "this means that literal names are not prefixed by the name "
+        + "of the entity which contains them.")
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("encode-literals")
@@ -62,8 +62,8 @@ public final class StreamLiteralFormatter extends DefaultStreamPipe<ObjectReceiv
     }
 
     /**
-     * Sets the separator between the literal name and value. The separator is
-     * only added if the literal name is not empty.
+     * Sets the separator between the literal name and value. The separator is only
+     * added if the literal name is not empty.
      * <p>
      * The default separator is &ldquo;{@link #DEFAULT_SEPARATOR}&rdquo;.
      * <p>

@@ -48,7 +48,8 @@ public final class ReflectionUtil {
      * @param baseType  the object type of the class to be wrapped
      * @return the ConfigurableClass
      */
-    public static <T> ConfigurableClass<? extends T> loadClass(final String className, final Class<T> baseType) {
+    public static <T> ConfigurableClass<? extends T> loadClass(final String className,
+            final Class<T> baseType) {
         return loadClass(getContextClassLoader(), className, baseType);
     }
 
@@ -61,7 +62,8 @@ public final class ReflectionUtil {
      * @param baseType  the object type of the class to be wrapped
      * @return the ConfigurableClass
      */
-    public static <T> ConfigurableClass<? extends T> loadClass(final ClassLoader loader, final String className, final Class<T> baseType) {
+    public static <T> ConfigurableClass<? extends T> loadClass(final ClassLoader loader,
+            final String className, final Class<T> baseType) {
         final Class<?> clazz;
         try {
             clazz = loader.loadClass(className);
@@ -70,9 +72,10 @@ public final class ReflectionUtil {
             throw new ReflectionException("Class not found: " + className, e);
         }
         if (!baseType.isAssignableFrom(clazz)) {
-            throw new ReflectionException(className + " must extend or implement " + baseType.getName());
+            throw new ReflectionException(
+                    className + " must extend or implement " + baseType.getName());
         }
-        @SuppressWarnings("unchecked")  // protected by isAssignableFrom check
+        @SuppressWarnings("unchecked") // protected by isAssignableFrom check
         final Class<? extends T> castedClass = (Class<? extends T>) clazz;
         return new ConfigurableClass<>(castedClass);
     }

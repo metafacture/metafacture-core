@@ -22,6 +22,7 @@ import java.util.Collection;
 
 /**
  * Just records the value of the last received literal.
+ * 
  * @author Markus Michael Geipel
  *
  */

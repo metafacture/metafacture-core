@@ -33,7 +33,8 @@ final class FunctionFactory extends ObjectFactory<Function> {
 
     FunctionFactory() {
         try {
-            loadClassesFromMap(ResourceUtil.loadProperties("morph-functions.properties"), Function.class);
+            loadClassesFromMap(ResourceUtil.loadProperties("morph-functions.properties"),
+                    Function.class);
         }
         catch (final IOException e) {
             throw new MetafactureException("Failed to load functions list", e);

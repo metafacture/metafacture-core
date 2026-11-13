@@ -25,13 +25,15 @@ import org.metafacture.framework.helpers.ForwardingStreamPipe;
 /**
  * Turns a record into an entity that can be embedded into another record.
  *
- * <p>The module captures the <i>start-record</i> and <i>end-record</i> events
- * and replaces them with <i>start-entity</i> and <i>end-entity</i> events. All
+ * <p>
+ * The module captures the <i>start-record</i> and <i>end-record</i> events and
+ * replaces them with <i>start-entity</i> and <i>end-entity</i> events. All
  * other events are forwarded unchanged. The name of the generated entity can be
  * set with {@link #setEntityName(String)}.
  *
- * <p>Optionally, the record identifier can be added to the generated entity.
- * This is configured with {@link #setIdLiteralName(String)}.
+ * <p>
+ * Optionally, the record identifier can be added to the generated entity. This
+ * is configured with {@link #setIdLiteralName(String)}.
  *
  * @author Christoph Böhme
  */
@@ -67,12 +69,13 @@ public class RecordToEntity extends ForwardingStreamPipe {
      * Sets the name of the entity which replaces the record. The default name is
      * {@value DEFAULT_ENTITY_NAME}.
      *
-     * <p>The entity name may be changed while processing an event stream. It
-     * becomes effective with the next record.
+     * <p>
+     * The entity name may be changed while processing an event stream. It becomes
+     * effective with the next record.
      *
      * @param entityName the new name for generated entities. Can be empty which
-     *                   results in unnamed entities being emitted. Must not be
-     *                   null.
+     *                       results in unnamed entities being emitted. Must not be
+     *                       null.
      */
     public void setEntityName(final String entityName) {
         this.entityName = entityName;
@@ -81,8 +84,8 @@ public class RecordToEntity extends ForwardingStreamPipe {
     /**
      * Returns the name of the literal that contains the record id if enabled.
      *
-     * @return the name of the id literal. If output of id literals is disabled
-     * then null is returned.
+     * @return the name of the id literal. If output of id literals is disabled then
+     *         null is returned.
      */
     public String getIdLiteralName() {
         return idLiteralName;
@@ -90,13 +93,15 @@ public class RecordToEntity extends ForwardingStreamPipe {
 
     /**
      * Enables output of a literal with the record identifier of the converted
-     * record. The literal is emitted directly after the start-entity event for
-     * the record before any other events are generated.
+     * record. The literal is emitted directly after the start-entity event for the
+     * record before any other events are generated.
      *
-     * <p>By default no id literal is generated.
+     * <p>
+     * By default no id literal is generated.
      *
-     * <p>The id literal may be changed while processing an event stream. The
-     * change becomes effective with the next record.
+     * <p>
+     * The id literal may be changed while processing an event stream. The change
+     * becomes effective with the next record.
      *
      * @param name the name of the record-id literal
      */

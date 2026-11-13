@@ -35,7 +35,9 @@ import java.util.Map.Entry;
 @In(ListMap.class)
 @Out(StreamReceiver.class)
 @FluxCommand("string-list-map-to-stream")
-public final class StringListMapToStream extends DefaultObjectPipe<ListMap<String, String>, StreamReceiver> {
+public final class StringListMapToStream
+        extends
+            DefaultObjectPipe<ListMap<String, String>, StreamReceiver> {
 
     /**
      * Creates an instance of {@link StringListMapToStream}.
@@ -55,11 +57,12 @@ public final class StringListMapToStream extends DefaultObjectPipe<ListMap<Strin
      * @param listMap  the ListMap to be read
      * @param receiver the StreamReceiver to send to
      */
-    public static void process(final ListMap<String, String> listMap, final StreamReceiver receiver) {
+    public static void process(final ListMap<String, String> listMap,
+            final StreamReceiver receiver) {
         receiver.startRecord(listMap.getId());
-        for (final Entry<String, List<String>> entry: listMap.entrySet()) {
+        for (final Entry<String, List<String>> entry : listMap.entrySet()) {
             final String name = entry.getKey();
-            for (final String value:entry.getValue()) {
+            for (final String value : entry.getValue()) {
                 receiver.literal(name, value);
             }
         }

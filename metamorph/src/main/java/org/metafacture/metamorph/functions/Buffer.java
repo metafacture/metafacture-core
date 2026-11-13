@@ -41,7 +41,8 @@ public final class Buffer extends AbstractFunction {
     }
 
     @Override
-    public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
+    public void receive(final String name, final String value, final NamedValueSource source,
+            final int recordCount, final int entityCount) {
         if (currentRecord != recordCount) {
             receipts.clear();
             currentRecord = recordCount;
@@ -68,9 +69,8 @@ public final class Buffer extends AbstractFunction {
         private final int recordCount;
         private final int entityCount;
 
-        protected Receipt(final String name, final String value,
-                final NamedValueSource source, final int recordCount,
-                final int entityCount) {
+        protected Receipt(final String name, final String value, final NamedValueSource source,
+                final int recordCount, final int entityCount) {
             this.name = name;
             this.value = value;
             this.source = source;
@@ -81,6 +81,7 @@ public final class Buffer extends AbstractFunction {
         protected void send(final NamedValueReceiver receiver) {
             receiver.receive(name, value, source, recordCount, entityCount);
         }
+
     }
 
 }

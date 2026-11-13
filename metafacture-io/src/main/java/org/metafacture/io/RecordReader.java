@@ -28,11 +28,14 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * <p>Reads data from a {@code Reader} and splits it into individual
- * records.</p>
+ * <p>
+ * Reads data from a {@code Reader} and splits it into individual records.
+ * </p>
  *
- * <p>The default separator is the global separator character (0x001d).
- * Empty records are skipped by default.</p>
+ * <p>
+ * The default separator is the global separator character (0x001d). Empty
+ * records are skipped by default.
+ * </p>
  *
  * @author Christoph Böhme
  *

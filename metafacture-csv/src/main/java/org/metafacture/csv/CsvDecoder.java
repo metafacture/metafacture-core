@@ -44,7 +44,7 @@ import java.io.StringReader;
 @In(String.class)
 @Out(StreamReceiver.class)
 @FluxCommand("decode-csv")
-public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver>  {
+public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> {
 
     public static final char DEFAULT_SEP = ',';
     private char separator = DEFAULT_SEP;
@@ -83,18 +83,14 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
     }
 
     private void initializeCsvParser() {
-        this.parser = new RFC4180ParserBuilder()
-            .withSeparator(separator)
-            .build();
+        this.parser = new RFC4180ParserBuilder().withSeparator(separator).build();
     }
 
     @Override
     public void process(final String string) {
         assert !isClosed();
-        try (
-            StringReader sr = new StringReader(string);
-            CSVReader reader = new CSVReaderBuilder(sr).withCSVParser(parser).build()
-        ) {
+        try (StringReader sr = new StringReader(string);
+                CSVReader reader = new CSVReaderBuilder(sr).withCSVParser(parser).build()) {
             String[] parts;
             while ((parts = parseCsv(reader)) != null) {
                 if (hasHeader) {
@@ -109,10 +105,9 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
                         getReceiver().endRecord();
                     }
                     else {
-                        throw new IllegalArgumentException(
-                                String.format(
-                                    "wrong number of columns (expected %s, was %s) in input line: %s",
-                                    header.length, parts.length, string));
+                        throw new IllegalArgumentException(String.format(
+                                "wrong number of columns (expected %s, was %s) in input line: %s",
+                                header.length, parts.length, string));
                     }
                 }
                 else {
@@ -151,7 +146,7 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
      * Sets the separator.
      *
      * @param separator the separator as a String. The first character is used as
-     *                  the separator.
+     *                      the separator.
      */
     public void setSeparator(final String separator) {
         this.separator = separator.charAt(0);

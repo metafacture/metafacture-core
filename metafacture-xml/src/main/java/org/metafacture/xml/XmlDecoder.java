@@ -67,12 +67,13 @@ public final class XmlDecoder extends DefaultObjectPipe<Reader, XmlReceiver> {
     }
 
     /**
-     * Sets the total entity size limit for the XML parser.
-     * See <a href="https://docs.oracle.com/en/java/javase/13/security/java-api-xml-processing-jaxp-security-guide.html#GUID-82F8C206-F2DF-4204-9544-F96155B1D258__TABLE_RQ1_3PY_HHB">java-api-xml-processing-jaxp-security-guide.html</a>
+     * Sets the total entity size limit for the XML parser. See <a href=
+     * "https://docs.oracle.com/en/java/javase/13/security/java-api-xml-processing-jaxp-security-guide.html#GUID-82F8C206-F2DF-4204-9544-F96155B1D258__TABLE_RQ1_3PY_HHB">java-api-xml-processing-jaxp-security-guide.html</a>
      *
      * Defaults to "50,000,000". Set to "0" to allow unlimited entities.
      *
-     * @param totalEntitySizeLimit the size of the allowed entities. Set to "0" if entities should be unlimited.
+     * @param totalEntitySizeLimit the size of the allowed entities. Set to "0" if
+     *                                 entities should be unlimited.
      */
     public void setTotalEntitySizeLimit(final String totalEntitySizeLimit) {
         try {

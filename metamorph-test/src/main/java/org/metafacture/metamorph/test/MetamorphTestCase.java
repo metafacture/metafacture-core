@@ -42,7 +42,9 @@ import java.io.StringReader;
  * @author Christoph Böhme
  *
  */
+// @formatter:off
 final class MetamorphTestCase extends Statement { // checkstyle-disable-line ClassDataAbstractionCoupling
+// @formatter:on
 
     private static final String NO_DATA_FOUND = "Please specify either element content or a src attribute";
 
@@ -97,12 +99,12 @@ final class MetamorphTestCase extends Statement { // checkstyle-disable-line Cla
         });
 
         final Element result = (Element) config.getElementsByTagName(RESULT_TAG).item(0);
-        validator.setStrictRecordOrder(Boolean.parseBoolean(
-                result.getAttribute(STRICT_RECORD_ORDER_ATTR)));
-        validator.setStrictKeyOrder(Boolean.parseBoolean(
-                result.getAttribute(STRICT_KEY_ORDER_ATTR)));
-        validator.setStrictValueOrder(Boolean.parseBoolean(
-                result.getAttribute(STRICT_VALUE_ORDER_ATTR)));
+        validator.setStrictRecordOrder(
+                Boolean.parseBoolean(result.getAttribute(STRICT_RECORD_ORDER_ATTR)));
+        validator.setStrictKeyOrder(
+                Boolean.parseBoolean(result.getAttribute(STRICT_KEY_ORDER_ATTR)));
+        validator.setStrictValueOrder(
+                Boolean.parseBoolean(result.getAttribute(STRICT_VALUE_ORDER_ATTR)));
 
         final Reader resultReader = getReader(RESULT_TAG);
         resultReader.setReceiver(validator);
@@ -117,7 +119,9 @@ final class MetamorphTestCase extends Statement { // checkstyle-disable-line Cla
         return new MultiFormatReader(mimeType);
     }
 
+// @formatter:off
     private StreamPipe getTransformation() throws InitializationError { // checkstyle-disable-line ReturnCount
+// @formatter:on
         final NodeList nodes = config.getElementsByTagName(TRANSFORMATION_TAG);
         if (nodes.getLength() == 0) {
             return null;
@@ -129,8 +133,8 @@ final class MetamorphTestCase extends Statement { // checkstyle-disable-line Cla
 
         if (MIME_METAMORPH.equals(type)) {
             if (src.isEmpty()) {
-                final InputSource transformationSource =
-                        new InputSource(getDataEmbedded(transformationElement));
+                final InputSource transformationSource = new InputSource(
+                        getDataEmbedded(transformationElement));
                 transformationSource.setSystemId(transformationElement.getBaseURI());
                 return new Metamorph(transformationSource);
             }
@@ -139,13 +143,11 @@ final class MetamorphTestCase extends Statement { // checkstyle-disable-line Cla
         }
         else if (MIME_JAVACLASS.equals(type)) {
             if (src.isEmpty()) {
-                throw new InitializationError(
-                        "class defining transformation not specified");
+                throw new InitializationError("class defining transformation not specified");
             }
             return ReflectionUtil.loadClass(src, StreamPipe.class).newInstance();
         }
-        throw new InitializationError("transformation of type " + type +
-                " is not supperted");
+        throw new InitializationError("transformation of type " + type + " is not supperted");
     }
 
     private java.io.Reader getInputData() throws InitializationError {
@@ -165,19 +167,17 @@ final class MetamorphTestCase extends Statement { // checkstyle-disable-line Cla
         return getDataEmbedded(result);
     }
 
-    private java.io.Reader getDataFromSource(final String src)
-            throws InitializationError {
+    private java.io.Reader getDataFromSource(final String src) throws InitializationError {
         try {
             return ResourceUtil.getReader(src);
         }
         catch (final FileNotFoundException e) {
-            throw new InitializationError("Could not find input file '" + src +
-                    "': " + e.getMessage());
+            throw new InitializationError(
+                    "Could not find input file '" + src + "': " + e.getMessage());
         }
     }
 
-    private java.io.Reader getDataEmbedded(final Element input)
-            throws InitializationError {
+    private java.io.Reader getDataEmbedded(final Element input) throws InitializationError {
         final String inputType = input.getAttribute(TYPE_ATTR);
         if (input.hasChildNodes()) {
             if (XmlUtil.isXmlMimeType(inputType)) {

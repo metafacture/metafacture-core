@@ -78,7 +78,8 @@ public final class HttpOpenerTest {
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig().dynamicPort());
+    public WireMockRule wireMockRule = new WireMockRule(
+            WireMockConfiguration.wireMockConfig().dynamicPort());
 
     @Mock
     private ObjectReceiver<Reader> receiver;
@@ -88,7 +89,8 @@ public final class HttpOpenerTest {
 
     @Test
     public void shouldPerformGetRequestWithInputAsUrlByDefault() throws IOException {
-        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> { });
+        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> {
+        });
     }
 
     @Test
@@ -141,7 +143,8 @@ public final class HttpOpenerTest {
     }
 
     @Test
-    public void shouldPerformGetRequestWithoutBodyWithAlreadyUsedInputAsBodyParameter() throws IOException {
+    public void shouldPerformGetRequestWithoutBodyWithAlreadyUsedInputAsBodyParameter()
+            throws IOException {
         shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> {
             o.setBody("@-");
         });
@@ -234,7 +237,8 @@ public final class HttpOpenerTest {
         }, "Content-Type");
     }
 
-    private void shouldPerformPostRequestWithCharsetParameter(final String expectedMessage) throws IOException {
+    private void shouldPerformPostRequestWithCharsetParameter(final String expectedMessage)
+            throws IOException {
         final String charset = "ISO-8859-1";
         final String header = "Accept-Charset";
         final StringValuePattern value = WireMock.equalTo(charset);
@@ -245,8 +249,11 @@ public final class HttpOpenerTest {
                 o.setMethod(HttpOpener.Method.POST);
                 o.setUrl(u);
                 o.setAcceptCharset(charset);
-            }, s -> s.withHeader(header, value), q -> q.withHeader(header, value), expectedMessage != null ?
-                r -> r.withHeader(HttpOpener.CONTENT_TYPE_HEADER, "text/plain; charset=" + charset) : null);
+            }, s -> s.withHeader(header, value), q -> q.withHeader(header, value),
+                    expectedMessage != null
+                            ? r -> r.withHeader(HttpOpener.CONTENT_TYPE_HEADER,
+                                    "text/plain; charset=" + charset)
+                            : null);
 
             actualMessage = null;
         }
@@ -263,24 +270,29 @@ public final class HttpOpenerTest {
     }
 
     @Test
-    public void shouldPerformPostRequestWithCharsetParameterAndContentTypeResponseHeader() throws IOException {
-        shouldPerformPostRequestWithCharsetParameter("expected:<response b[ö]dy> but was:<response b[Ã¶]dy>");
+    public void shouldPerformPostRequestWithCharsetParameterAndContentTypeResponseHeader()
+            throws IOException {
+        shouldPerformPostRequestWithCharsetParameter(
+                "expected:<response b[ö]dy> but was:<response b[Ã¶]dy>");
     }
 
     @Test
     public void shouldPerformGetRequestWithErrorResponse() throws IOException {
-        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> { },
-                null, null, WireMock.badRequest().withBody(RESPONSE_BODY), "ERROR: " + RESPONSE_BODY);
+        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> {
+        }, null, null, WireMock.badRequest().withBody(RESPONSE_BODY), "ERROR: " + RESPONSE_BODY);
     }
 
     @Test
-    public void shouldPerformGetRequestWithErrorResponseAndErrorPrefixParameter() throws IOException {
-        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> o.setErrorPrefix(TEST_STRING),
-                null, null, WireMock.badRequest().withBody(RESPONSE_BODY), TEST_STRING + RESPONSE_BODY);
+    public void shouldPerformGetRequestWithErrorResponseAndErrorPrefixParameter()
+            throws IOException {
+        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET,
+                (o, u) -> o.setErrorPrefix(TEST_STRING), null, null,
+                WireMock.badRequest().withBody(RESPONSE_BODY), TEST_STRING + RESPONSE_BODY);
     }
 
     @Test
-    public void shouldPerformGetRequestWithErrorResponseAndWithoutErrorPrefixParameter() throws IOException {
+    public void shouldPerformGetRequestWithErrorResponseAndWithoutErrorPrefixParameter()
+            throws IOException {
         shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> o.setErrorPrefix(null),
                 null, null, WireMock.badRequest().withBody(RESPONSE_BODY), RESPONSE_BODY);
     }
@@ -288,27 +300,34 @@ public final class HttpOpenerTest {
     @Test
     public void shouldPerformGetRequestWithGzippedContentEncoding() throws IOException {
         shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> o.setAcceptEncoding("gzip"),
-                null, null, WireMock.ok().withBody(GZIPPED_RESPONSE_BODY).withHeader(HttpOpener.CONTENT_ENCODING_HEADER, "gzip"), RESPONSE_BODY);
+                null, null, WireMock.ok().withBody(GZIPPED_RESPONSE_BODY)
+                        .withHeader(HttpOpener.CONTENT_ENCODING_HEADER, "gzip"),
+                RESPONSE_BODY);
     }
 
-    private void shouldPerformRequest(final String input, final HttpOpener.Method method, final BiConsumer<HttpOpener, String> consumer, final String... headers) throws IOException {
+    private void shouldPerformRequest(final String input, final HttpOpener.Method method,
+            final BiConsumer<HttpOpener, String> consumer, final String... headers)
+            throws IOException {
         shouldPerformRequest(input, method, consumer,
                 s -> Arrays.stream(headers).forEach(h -> s.withHeader(h, TEST_VALUE)),
                 q -> Arrays.stream(headers).forEach(h -> q.withHeader(h, TEST_VALUE)), null);
     }
 
+    // @formatter:off
     private void shouldPerformRequest(final String input, final HttpOpener.Method method, final BiConsumer<HttpOpener, String> consumer, final Consumer<MappingBuilder> stubConsumer, final Consumer<RequestPatternBuilder> requestConsumer, final Consumer<ResponseDefinitionBuilder> responseConsumer) throws IOException { // checkstyle-disable-line ParameterNumber
+    // @formatter:on
         final ResponseDefinitionBuilder response = WireMock.ok().withBody(RESPONSE_BODY);
         if (responseConsumer != null) {
             responseConsumer.accept(response);
         }
 
-        shouldPerformRequest(input, method,
-                consumer, stubConsumer, requestConsumer,
-                response, method.getResponseHasBody() ? RESPONSE_BODY : "");
+        shouldPerformRequest(input, method, consumer, stubConsumer, requestConsumer, response,
+                method.getResponseHasBody() ? RESPONSE_BODY : "");
     }
 
+    // @formatter:off
     private void shouldPerformRequest(final String input, final HttpOpener.Method method, final BiConsumer<HttpOpener, String> consumer, final Consumer<MappingBuilder> stubConsumer, final Consumer<RequestPatternBuilder> requestConsumer, final ResponseDefinitionBuilder response, final String responseBody) throws IOException { // checkstyle-disable-line ParameterNumber
+    // @formatter:on
         final String baseUrl = wireMockRule.baseUrl();
         final String url = String.format(TEST_URL, baseUrl);
 
@@ -324,8 +343,11 @@ public final class HttpOpenerTest {
             stubConsumer.accept(stub);
         }
 
-        final RequestPatternBuilder request = new RequestPatternBuilder(RequestMethod.fromString(methodName), urlPattern)
-            .withRequestBody(method.getRequestHasBody() ? WireMock.equalTo(REQUEST_BODY) : WireMock.absent());
+        final RequestPatternBuilder request = new RequestPatternBuilder(
+                RequestMethod.fromString(methodName), urlPattern)
+                .withRequestBody(method.getRequestHasBody()
+                        ? WireMock.equalTo(REQUEST_BODY)
+                        : WireMock.absent());
         if (requestConsumer != null) {
             requestConsumer.accept(request);
         }

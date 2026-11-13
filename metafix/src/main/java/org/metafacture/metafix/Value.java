@@ -47,13 +47,14 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
- * Represents a record value, i.e., either an {@link Array}, a {@link Hash},
- * or a {@link String}.
+ * Represents a record value, i.e., either an {@link Array}, a {@link Hash}, or
+ * a {@link String}.
  */
 public class Value implements JsonValue { // checkstyle-disable-line ClassDataAbstractionCoupling
 
     public static final String FIELD_PATH_SEPARATOR = ".";
-    /*package-private*/ static final String FIELD_PATH_SEPARATOR_PATTERN = Pattern.quote(FIELD_PATH_SEPARATOR);
+    /* package-private */ static final String FIELD_PATH_SEPARATOR_PATTERN = Pattern
+            .quote(FIELD_PATH_SEPARATOR);
 
     private final Array array;
     private final Hash hash;
@@ -248,7 +249,7 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         return value == null || value.isNull();
     }
 
-    /*package-private*/ static boolean isNumber(final String s) {
+    /* package-private */ static boolean isNumber(final String s) {
         return s.matches("\\d+");
     }
 
@@ -286,8 +287,8 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
     }
 
     /**
-     * Converts the given Value into a new Value representing an Array if it
-     * isn't already.
+     * Converts the given Value into a new Value representing an Array if it isn't
+     * already.
      *
      * @param value    the Value
      * @param consumer the consumer
@@ -359,28 +360,22 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         }
 
         final Value other = (Value) object;
-        return Objects.equals(type, other.type) &&
-            Objects.equals(array, other.array) &&
-            Objects.equals(hash, other.hash) &&
-            Objects.equals(string, other.string);
+        return Objects.equals(type, other.type) && Objects.equals(array, other.array)
+                && Objects.equals(hash, other.hash) && Objects.equals(string, other.string);
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hashCode(type) +
-            Objects.hashCode(array) +
-            Objects.hashCode(hash) +
-            Objects.hashCode(string);
+        return Objects.hashCode(type) + Objects.hashCode(array) + Objects.hashCode(hash)
+                + Objects.hashCode(string);
     }
 
     @Override
     public String toString() {
-        return isNull() ? null : extractType((m, c) -> m
-                .ifArray(a -> c.accept(a.toString()))
-                .ifHash(h -> c.accept(h.toString()))
-                .ifString(c)
-                .orElseThrow()
-        );
+        return isNull()
+                ? null
+                : extractType((m, c) -> m.ifArray(a -> c.accept(a.toString()))
+                        .ifHash(h -> c.accept(h.toString())).ifString(c).orElseThrow());
     }
 
     @Override
@@ -394,22 +389,19 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
             }
         }
         else {
-            matchType()
-                .ifArray(a -> a.toJson(jsonGenerator))
-                .ifHash(h -> h.toJson(jsonGenerator))
-                .ifString(s -> {
-                    try {
-                        jsonGenerator.writeString(s);
-                    }
-                    catch (final IOException e) {
-                        throw new UncheckedIOException(e);
-                    }
-                })
-                .orElseThrow();
+            matchType().ifArray(a -> a.toJson(jsonGenerator)).ifHash(h -> h.toJson(jsonGenerator))
+                    .ifString(s -> {
+                        try {
+                            jsonGenerator.writeString(s);
+                        }
+                        catch (final IOException e) {
+                            throw new UncheckedIOException(e);
+                        }
+                    }).orElseThrow();
         }
     }
 
-    /*package-private*/ static String[] split(final String fieldPath) {
+    /* package-private */ static String[] split(final String fieldPath) {
         return fieldPath.split(FIELD_PATH_SEPARATOR_PATTERN);
     }
 
@@ -439,28 +431,26 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
     }
 
     private Value withPathAppend(final String field) {
-        return withPathSet(path == null || path.isEmpty() ? field : path + FIELD_PATH_SEPARATOR + field);
+        return withPathSet(
+                path == null || path.isEmpty() ? field : path + FIELD_PATH_SEPARATOR + field);
     }
 
-    /*package-private*/ Value copy() {
+    /* package-private */ Value copy() {
         return extractType((m, c) -> m
-                .ifArray(oldArray -> c.accept(Value.newArray(newArray -> oldArray.forEach(v -> newArray.add(v)))))
-                .ifHash(oldHash -> c.accept(Value.newHash(newHash -> oldHash.forEach((k, v) -> newHash.put(k, v)))))
-                .ifString(s -> c.accept(new Value(s)))
-                .orElseThrow());
+                .ifArray(oldArray -> c
+                        .accept(Value.newArray(newArray -> oldArray.forEach(v -> newArray.add(v)))))
+                .ifHash(oldHash -> c.accept(
+                        Value.newHash(newHash -> oldHash.forEach((k, v) -> newHash.put(k, v)))))
+                .ifString(s -> c.accept(new Value(s))).orElseThrow());
     }
 
     private void retainFields(final Collection<String> fields) {
-        matchType()
-            .ifArray(a -> a.retainFields(fields))
-            .ifHash(h -> h.retainFields(fields))
-            .orElseThrow();
+        matchType().ifArray(a -> a.retainFields(fields)).ifHash(h -> h.retainFields(fields))
+                .orElseThrow();
     }
 
     enum Type {
-        Array,
-        Hash,
-        String
+        Array, Hash, String
     }
 
     /**
@@ -532,12 +522,14 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
          */
         public void orElseThrow() {
             orElse(v -> {
-                final String types = expected.stream().map(Type::name).collect(Collectors.joining(" or "));
+                final String types = expected.stream().map(Type::name)
+                        .collect(Collectors.joining(" or "));
                 throw new IllegalStateException("Expected " + types + ", got " + value.type);
             });
         }
 
-        private <T> TypeMatcher match(final Type type, final Consumer<T> consumer, final T rawValue) {
+        private <T> TypeMatcher match(final Type type, final Consumer<T> consumer,
+                final T rawValue) {
             if (expected.add(type)) {
                 if (value.isType(type)) {
                     consumer.accept(rawValue);
@@ -554,20 +546,16 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
 
     private abstract static class AbstractValueType implements JsonValue {
 
-        protected static final Predicate<Value> REMOVE_EMPTY_VALUES = v ->
-            v.extractType((m, c) -> m
-                .ifArray(a -> {
+        protected static final Predicate<Value> REMOVE_EMPTY_VALUES = v -> v
+                .extractType((m, c) -> m.ifArray(a -> {
                     a.removeEmptyValues();
                     c.accept(a.isEmpty());
-                })
-                .ifHash(h -> {
+                }).ifHash(h -> {
                     h.removeEmptyValues();
                     c.accept(h.isEmpty());
                 })
-                // TODO: Catmandu considers whitespace-only strings empty (`$v !~ /\S/`)
-                .ifString(s -> c.accept(s.isEmpty()))
-                .orElseThrow()
-        );
+                        // TODO: Catmandu considers whitespace-only strings empty (`$v !~ /\S/`)
+                        .ifString(s -> c.accept(s.isEmpty())).orElseThrow());
 
         @Override
         public abstract boolean equals(Object object);
@@ -581,14 +569,16 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         @Override
         public abstract void toJson(JsonGenerator jsonGenerator);
 
-        protected <T> Map<T, Collection<String>> retainFields(final Collection<String> fields, final Function<String, Set<T>> function) {
+        protected <T> Map<T, Collection<String>> retainFields(final Collection<String> fields,
+                final Function<String, Set<T>> function) {
             final Map<T, Collection<String>> retainFields = new HashMap<>();
 
             fields.forEach(p -> {
                 final String[] parts = p.split(FIELD_PATH_SEPARATOR_PATTERN, 2);
 
                 function.apply(parts[0]).forEach(f -> {
-                    final Collection<String> retainNested = retainFields.computeIfAbsent(f, k -> new HashSet<>());
+                    final Collection<String> retainNested = retainFields.computeIfAbsent(f,
+                            k -> new HashSet<>());
                     if (parts.length > 1) {
                         retainNested.add(parts[1]);
                     }
@@ -614,8 +604,7 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         }
 
         /**
-         * Adds the given Value to the Array and appends the index number to its
-         * path.
+         * Adds the given Value to the Array and appends the index number to its path.
          *
          * @param value the Value
          */
@@ -631,7 +620,8 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
             add(index, value, true);
         }
 
-        /* package-private */ void add(final int index, final Value value, final boolean appendToPath) {
+        /* package-private */ void add(final int index, final Value value,
+                final boolean appendToPath) {
             if (!isNull(value)) {
                 list.add(index, appendToPath ? value.withPathAppend(index + 1) : value);
                 updateIndexesInPathsAfter(index);
@@ -694,7 +684,8 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         }
 
         private void retainFields(final Collection<String> fields) {
-            final Map<Integer, Collection<String>> retainFields = retainFields(fields, this::findFields);
+            final Map<Integer, Collection<String>> retainFields = retainFields(fields,
+                    this::findFields);
 
             final int max = size() - 1;
             indexes().map(i -> max - i).forEach(i -> {
@@ -725,7 +716,8 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
                         index = size() - 1;
                         break;
                     default:
-                        index = Integer.parseInt(pattern) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
+                        index = Integer.parseInt(pattern) - 1; // TODO: 0-based Catmandu vs. 1-based
+                                                               // Metafacture
                 }
 
                 if (index >= 0 && index < size()) {
@@ -793,8 +785,8 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         }
 
         /**
-         * Sets the Array element at the given index to the given Value and
-         * appends the index number to its path.
+         * Sets the Array element at the given index to the given Value and appends the
+         * index number to its path.
          *
          * @param index the index
          * @param value the Value
@@ -803,11 +795,11 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
             list.set(index, value.withPathAppend(index + 1));
         }
 
-        /*package-private*/ void removeIf(final Predicate<Value> predicate) {
+        /* package-private */ void removeIf(final Predicate<Value> predicate) {
             list.removeIf(predicate);
         }
 
-        /*package-private*/ void removeAll() {
+        /* package-private */ void removeAll() {
             list.clear();
         }
 
@@ -818,14 +810,20 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
      */
     public static class Hash extends AbstractValueType {
 
-        // NOTE: Keep in sync with `WildcardTrie`/`SimpleRegexTrie` implementation in metafacture-core.
-        private static final Pattern ALTERNATION_PATTERN = Pattern.compile(WildcardTrie.OR_STRING, Pattern.LITERAL);
-        private static final ThreadLocal<Matcher> PATTERN_MATCHER = ThreadLocal.withInitial(() -> Pattern.compile("[*?]|\\[[^\\]]").matcher(""));
+        // NOTE: Keep in sync with `WildcardTrie`/`SimpleRegexTrie` implementation in
+        // metafacture-core.
+        private static final Pattern ALTERNATION_PATTERN = Pattern.compile(WildcardTrie.OR_STRING,
+                Pattern.LITERAL);
+        private static final ThreadLocal<Matcher> PATTERN_MATCHER = ThreadLocal
+                .withInitial(() -> Pattern.compile("[*?]|\\[[^\\]]").matcher(""));
 
-        private static final ThreadLocal<Map<String, String>> PREFIX_CACHE = ThreadLocal.withInitial(HashMap::new);
+        private static final ThreadLocal<Map<String, String>> PREFIX_CACHE = ThreadLocal
+                .withInitial(HashMap::new);
 
-        private static final ThreadLocal<Map<String, Map<String, Boolean>>> TRIE_CACHE = ThreadLocal.withInitial(HashMap::new);
-        private static final ThreadLocal<SimpleRegexTrie<String>> TRIE = ThreadLocal.withInitial(SimpleRegexTrie::new);
+        private static final ThreadLocal<Map<String, Map<String, Boolean>>> TRIE_CACHE = ThreadLocal
+                .withInitial(HashMap::new);
+        private static final ThreadLocal<SimpleRegexTrie<String>> TRIE = ThreadLocal
+                .withInitial(SimpleRegexTrie::new);
 
         private final Map<String, Map<String, Boolean>> trieCache = TRIE_CACHE.get();
         private final Map<String, String> prefixCache = PREFIX_CACHE.get();
@@ -901,7 +899,8 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         }
 
         /**
-         * Adds a field/value pair to this hash, provided it's not {@link #isNull(Value) null}.
+         * Adds a field/value pair to this hash, provided it's not {@link #isNull(Value)
+         * null}.
          *
          * @param field the field name
          * @param value the metadata value
@@ -911,7 +910,8 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         }
 
         /**
-         * Adds a field/value pair to this hash, provided it's not {@link #isNull(Value) null}.
+         * Adds a field/value pair to this hash, provided it's not {@link #isNull(Value)
+         * null}.
          *
          * @param field        the field name
          * @param value        the metadata value
@@ -946,15 +946,20 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
             return get(field, false);
         }
 
-        /*package-private*/ Value get(final String field, final boolean enforceStringValue) { // TODO use Type.String etc.?
+        /* package-private */ Value get(final String field, final boolean enforceStringValue) { // TODO
+                                                                                                // use
+                                                                                                // Type.String
+                                                                                                // etc.?
             // TODO: special treatment (only) for exact matches?
             final Set<String> set = findFields(field);
 
-            return set.isEmpty() ? null : set.size() == 1 ? getField(set.iterator().next(), enforceStringValue) :
-                newArray(a -> set.forEach(f -> getField(f, enforceStringValue).matchType()
-                            .ifArray(b -> b.forEach(t -> a.add(t, false)))
-                            .orElse(t -> a.add(t, false))
-                ));
+            return set.isEmpty()
+                    ? null
+                    : set.size() == 1
+                            ? getField(set.iterator().next(), enforceStringValue)
+                            : newArray(a -> set.forEach(f -> getField(f, enforceStringValue)
+                                    .matchType().ifArray(b -> b.forEach(t -> a.add(t, false)))
+                                    .orElse(t -> a.add(t, false))));
         }
 
         /**
@@ -1010,10 +1015,10 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         }
 
         /**
-         * {@link #put(String, Value) Adds} a field/value pair to this hash,
-         * potentially merging with an existing value.
+         * {@link #put(String, Value) Adds} a field/value pair to this hash, potentially
+         * merging with an existing value.
          *
-         * @param field the field name
+         * @param field    the field name
          * @param newValue the new metadata value
          */
         public void add(final String field, final Value newValue) {
@@ -1028,8 +1033,8 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
                     oldValue.withPathAppend(1);
                 }
 
-                put(field, oldValue.asList(oldVals -> newValue.asList(newVals ->
-                                newVals.forEach(newVal -> oldVals.add(newVal.withPathSet(basePath))))));
+                put(field, oldValue.asList(oldVals -> newValue.asList(newVals -> newVals
+                        .forEach(newVal -> oldVals.add(newVal.withPathSet(basePath))))));
             }
         }
 
@@ -1064,7 +1069,8 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
          * @param fields the field names
          */
         public void retainFields(final Collection<String> fields) {
-            final Map<String, Collection<String>> retainFields = retainFields(fields, this::findFields);
+            final Map<String, Collection<String>> retainFields = retainFields(fields,
+                    this::findFields);
 
             map.keySet().retainAll(retainFields.keySet());
 
@@ -1076,7 +1082,8 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         }
 
         /**
-         * Recursively removes all field/value pairs from this hash whose value is empty.
+         * Recursively removes all field/value pairs from this hash whose value is
+         * empty.
          */
         public void removeEmptyValues() {
             map.values().removeIf(REMOVE_EMPTY_VALUES);
@@ -1139,12 +1146,14 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         }
 
         /**
-         * Avoids {@link ConcurrentModificationException} when modifying the hash based on matched fields.
+         * Avoids {@link ConcurrentModificationException} when modifying the hash based
+         * on matched fields.
          *
-         * @param pattern the field name pattern
+         * @param pattern  the field name pattern
          * @param consumer the action to be performed for each value
          */
-        /*package-private*/ void modifyFields(final String pattern, final Consumer<String> consumer) {
+        /* package-private */ void modifyFields(final String pattern,
+                final Consumer<String> consumer) {
             findFields(pattern).forEach(consumer);
         }
 
@@ -1180,7 +1189,8 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
 
                 for (final String field : map.keySet()) {
                     if (!fieldCache.containsKey(field)) {
-                        final boolean matches = field.startsWith(prefix) && trie.get(field).contains(pattern);
+                        final boolean matches = field.startsWith(prefix)
+                                && trie.get(field).contains(pattern);
                         fieldCache.put(field, matches);
 
                         if (matches) {

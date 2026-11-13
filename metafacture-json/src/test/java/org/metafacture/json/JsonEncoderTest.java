@@ -95,7 +95,8 @@ public final class JsonEncoderTest {
         encoder.endEntity();
         encoder.endRecord();
 
-        Mockito.verify(receiver).process(fixQuotes("{'En1':{'L1':'V1','L2':'V2'},'En2':{'L1':'V1','L2':'V2'}}"));
+        Mockito.verify(receiver)
+                .process(fixQuotes("{'En1':{'L1':'V1','L2':'V2'},'En2':{'L1':'V1','L2':'V2'}}"));
     }
 
     @Test
@@ -139,7 +140,8 @@ public final class JsonEncoderTest {
         encoder.endEntity();
         encoder.endRecord();
 
-        Mockito.verify(receiver).process(fixQuotes("{'Li1':[{'L1':'V1','L2':'V2'},{'L3':'V3','L4':'V4'}]}"));
+        Mockito.verify(receiver)
+                .process(fixQuotes("{'Li1':[{'L1':'V1','L2':'V2'},{'L3':'V3','L4':'V4'}]}"));
     }
 
     @Test
@@ -209,14 +211,10 @@ public final class JsonEncoderTest {
         encoder.endEntity();
         encoder.endRecord();
 
-        Mockito.verify(receiver).process(
-                "{" +
-                    "\"lit1~\":\"false\"," +
-                    "\"lit2\":\"true\"," +
-                    "\"arr1\":[{\"lit3~\":\"true\",\"lit4\":\"false\"}]," +
-                    "\"arr2\":[\"false\",\"true\",\"false\"]" +
-                "}"
-        );
+        Mockito.verify(receiver)
+                .process("{" + "\"lit1~\":\"false\"," + "\"lit2\":\"true\","
+                        + "\"arr1\":[{\"lit3~\":\"true\",\"lit4\":\"false\"}],"
+                        + "\"arr2\":[\"false\",\"true\",\"false\"]" + "}");
     }
 
     @Test
@@ -239,14 +237,10 @@ public final class JsonEncoderTest {
         encoder.endEntity();
         encoder.endRecord();
 
-        Mockito.verify(receiver).process(
-                "{" +
-                    "\"lit1\":false," +
-                    "\"lit2\":\"true\"," +
-                    "\"arr1\":[{\"lit3\":true,\"lit4\":\"false\"}]," +
-                    "\"arr2\":[false,true,\"false\"]" +
-                "}"
-        );
+        Mockito.verify(receiver)
+                .process("{" + "\"lit1\":false," + "\"lit2\":\"true\","
+                        + "\"arr1\":[{\"lit3\":true,\"lit4\":\"false\"}],"
+                        + "\"arr2\":[false,true,\"false\"]" + "}");
     }
 
     @Test
@@ -267,14 +261,10 @@ public final class JsonEncoderTest {
         encoder.endEntity();
         encoder.endRecord();
 
-        Mockito.verify(receiver).process(
-                "{" +
-                    "\"lit1#\":\"23\"," +
-                    "\"lit2\":\"4.2\"," +
-                    "\"arr1\":[{\"lit3#\":\"4.2\",\"lit4\":\"23\"}]," +
-                    "\"arr2\":[\"23\",\"4.2\",\"23\"]" +
-                "}"
-        );
+        Mockito.verify(receiver)
+                .process("{" + "\"lit1#\":\"23\"," + "\"lit2\":\"4.2\","
+                        + "\"arr1\":[{\"lit3#\":\"4.2\",\"lit4\":\"23\"}],"
+                        + "\"arr2\":[\"23\",\"4.2\",\"23\"]" + "}");
     }
 
     @Test
@@ -297,14 +287,8 @@ public final class JsonEncoderTest {
         encoder.endEntity();
         encoder.endRecord();
 
-        Mockito.verify(receiver).process(
-                "{" +
-                    "\"lit1\":23," +
-                    "\"lit2\":\"4.2\"," +
-                    "\"arr1\":[{\"lit3\":4.2,\"lit4\":\"23\"}]," +
-                    "\"arr2\":[23,4.2,\"23\"]" +
-                "}"
-        );
+        Mockito.verify(receiver).process("{" + "\"lit1\":23," + "\"lit2\":\"4.2\","
+                + "\"arr1\":[{\"lit3\":4.2,\"lit4\":\"23\"}]," + "\"arr2\":[23,4.2,\"23\"]" + "}");
     }
 
     @Test
@@ -343,23 +327,25 @@ public final class JsonEncoderTest {
         encoder.endRecord();
 
         final InOrder ordered = Mockito.inOrder(receiver);
-        ordered.verify(receiver).process(useSystemSpecificLineSeparator(fixQuotes("{\n  'L1' : 'V1'\n}")));
-        ordered.verify(receiver).process(useSystemSpecificLineSeparator(fixQuotes("{\n  'L2' : 'V2'\n}")));
+        ordered.verify(receiver)
+                .process(useSystemSpecificLineSeparator(fixQuotes("{\n  'L1' : 'V1'\n}")));
+        ordered.verify(receiver)
+                .process(useSystemSpecificLineSeparator(fixQuotes("{\n  'L2' : 'V2'\n}")));
     }
 
     /*
-     * Utility method which replaces all single quotes in a string with double quotes.
-     * This allows to specify the JSON output in the test cases without having to wrap
-     * each bit of text in escaped double quotes.
+     * Utility method which replaces all single quotes in a string with double
+     * quotes. This allows to specify the JSON output in the test cases without
+     * having to wrap each bit of text in escaped double quotes.
      */
     private String fixQuotes(final String str) {
         return str.replace('\'', '"');
     }
 
     /*
-     * Utility method which replaces the new-line character with the platform-specific
-     * line separator. This is necessary since Jackson uses different line separators
-     * depending on the system environment.
+     * Utility method which replaces the new-line character with the
+     * platform-specific line separator. This is necessary since Jackson uses
+     * different line separators depending on the system environment.
      */
     private String useSystemSpecificLineSeparator(final String str) {
         return str.replace("\n", System.lineSeparator());

@@ -93,9 +93,9 @@ public final class AlephMabXmlHandler extends DefaultXmlPipe<StreamReceiver> {
             this.currentTag = attributes.getValue(AlephMabXmlHandler.SUBFIELD_ATTRIBUTE);
         }
         else if (AlephMabXmlHandler.DATAFIELD.equals(localName)) {
-            getReceiver().startEntity(attributes.getValue(AlephMabXmlHandler.DATAFIELD_ATTRIBUTE) +
-                    attributes.getValue(AlephMabXmlHandler.INDICATOR1) +
-                    attributes.getValue(AlephMabXmlHandler.INDICATOR2));
+            getReceiver().startEntity(attributes.getValue(AlephMabXmlHandler.DATAFIELD_ATTRIBUTE)
+                    + attributes.getValue(AlephMabXmlHandler.INDICATOR1)
+                    + attributes.getValue(AlephMabXmlHandler.INDICATOR2));
         }
         else if (AlephMabXmlHandler.RECORD.equals(localName)) {
             getReceiver().startRecord("");

@@ -67,8 +67,7 @@ final class MetamorphTestRunner extends ParentRunner<MetamorphTestCase> {
     }
 
     @Override
-    protected void runChild(final MetamorphTestCase child,
-            final RunNotifier notifier) {
+    protected void runChild(final MetamorphTestCase child, final RunNotifier notifier) {
         final Description description = describeChild(child);
         if (child.isIgnore()) {
             notifier.fireTestIgnored(description);

@@ -51,11 +51,9 @@ public final class MabDecoderTest {
 
     @Test
     public void shouldParseMabRecord() {
-        mabDecoder.process("00068nM2.01200024      h" +
-                "001 1234\u001E" +
-                "705a\u001FaSubfield 1\u001FbSubfield 2\u001E" +
-                "705b\u001FcSubfield 3\u001FdSubfield 4\u001E" +
-                "\u001D");
+        mabDecoder.process("00068nM2.01200024      h" + "001 1234\u001E"
+                + "705a\u001FaSubfield 1\u001FbSubfield 2\u001E"
+                + "705b\u001FcSubfield 3\u001FdSubfield 4\u001E" + "\u001D");
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1234");

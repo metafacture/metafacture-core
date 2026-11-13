@@ -30,7 +30,10 @@ import java.util.Set;
  *
  * @author Markus Michael Geipel
  */
-public final class NamedValueSet extends DefaultStreamReceiver implements Set<NamedValue>, Collector<Set<NamedValue>> {
+public final class NamedValueSet extends DefaultStreamReceiver
+        implements
+            Set<NamedValue>,
+            Collector<Set<NamedValue>> {
 
     private Collection<Set<NamedValue>> collection;
     private Set<NamedValue> set = new HashSet<>();
@@ -42,8 +45,8 @@ public final class NamedValueSet extends DefaultStreamReceiver implements Set<Na
     }
 
     /**
-     * Creates a {@code NamedValueSet} receiver which stores the received values
-     * in the passed set.
+     * Creates a {@code NamedValueSet} receiver which stores the received values in
+     * the passed set.
      *
      * @param collection is filled with the received results.
      */

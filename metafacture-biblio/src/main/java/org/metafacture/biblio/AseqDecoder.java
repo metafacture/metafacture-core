@@ -59,7 +59,8 @@ public final class AseqDecoder extends DefaultObjectPipe<String, StreamReceiver>
         for (int i = 0; i < lines.length; ++i) {
             final String field = lines[i];
             if (i == 0) {
-                getReceiver().startRecord(field.substring(RECORD_IDENTIFIER_BEGIN, RECORD_IDENTIFIER_END));
+                getReceiver().startRecord(
+                        field.substring(RECORD_IDENTIFIER_BEGIN, RECORD_IDENTIFIER_END));
             }
             final String category = field.substring(CATEGORY_BEGIN, CATEGORY_END).trim();
             final String fieldContent = field.substring(FIELD_CONTENT_BEGIN).trim();

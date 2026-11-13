@@ -42,7 +42,8 @@ public class PrintRecord implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         final boolean internal = getBoolean(options, "internal");
         final boolean pretty = getBoolean(options, "pretty");
 

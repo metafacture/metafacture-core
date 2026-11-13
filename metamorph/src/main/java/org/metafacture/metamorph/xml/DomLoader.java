@@ -52,7 +52,9 @@ import javax.xml.validation.SchemaFactory;
  * @author Christoph Böhme
  *
  */
+// @formatter:off
 public final class DomLoader { // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
+// @formatter:on
 
     private static final ErrorHandler SAX_ERROR_HANDLER = new SaxErrorHandler();
 
@@ -94,7 +96,8 @@ public final class DomLoader { // checkstyle-disable-line ClassDataAbstractionCo
         }
     }
 
-    private static XMLReader createXmlFilterPipeline(final String schemaFile, final Document document) {
+    private static XMLReader createXmlFilterPipeline(final String schemaFile,
+            final Document document) {
         XMLReader pipelineHead = createSaxReader(loadSchema(schemaFile));
         pipelineHead = new LocationAnnotator(pipelineHead, document);
         pipelineHead = new IgnorableWhitespaceFilter(pipelineHead);
@@ -106,7 +109,8 @@ public final class DomLoader { // checkstyle-disable-line ClassDataAbstractionCo
 
     private static Schema loadSchema(final String schemaFile) {
         try {
-            return SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(getSchemaUrl(schemaFile));
+            return SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+                    .newSchema(getSchemaUrl(schemaFile));
         }
         catch (final SAXException e) {
             throw new MetafactureException(e);
@@ -200,7 +204,8 @@ public final class DomLoader { // checkstyle-disable-line ClassDataAbstractionCo
         }
 
         private void handle(final SAXParseException exception) {
-            throw new MetafactureException("Error parsing xml: " + exception.getMessage(), exception);
+            throw new MetafactureException("Error parsing xml: " + exception.getMessage(),
+                    exception);
         }
 
     }
@@ -231,7 +236,8 @@ public final class DomLoader { // checkstyle-disable-line ClassDataAbstractionCo
         }
 
         private void handle(final TransformerException exception) {
-            throw new MetafactureException("Error during DOM creation: " + exception.getMessage(), exception);
+            throw new MetafactureException("Error during DOM creation: " + exception.getMessage(),
+                    exception);
         }
 
     }

@@ -68,8 +68,8 @@ public final class ConciseFormatter extends AbstractFormatter {
 
     @Override
     protected boolean shouldQuoteText(final char[] buffer, final int len) {
-        return len != 0 && (Formeta.WHITESPACE.indexOf(buffer[0]) > -1 ||
-                Formeta.WHITESPACE.indexOf(buffer[len - 1]) > -1);
+        return len != 0 && (Formeta.WHITESPACE.indexOf(buffer[0]) > -1
+                || Formeta.WHITESPACE.indexOf(buffer[len - 1]) > -1);
     }
 
 }

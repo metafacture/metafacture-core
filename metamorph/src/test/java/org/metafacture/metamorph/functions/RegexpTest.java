@@ -45,6 +45,7 @@ public final class RegexpTest {
     @Test
     public void shouldMatchAndReplaceUsingRegularExpressions() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='001.' name='subject'>" +
                 "    <regexp match='.*' format='resource:P${0}' />" +
@@ -56,65 +57,64 @@ public final class RegexpTest {
                 "    <regexp match='.*' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("001");
                     i.literal("", "184000");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("subject", "resource:P184000");
                     o.get().literal("subject", "");
                     o.get().literal("subject", "184000");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldIgnoreEmptyMatchGroups() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='s'>" +
                 "    <regexp match='aa(bb*)?(cc*)(dd*)' format='${1}${2}${3}' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("s", "aaccdd");
                     i.literal("s", "ax");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("s", "ccdd");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldIgnoreNullValues() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='s'>" +
                 "    <regexp match='a.*' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("s", "aaccdd");
                     i.literal("s", null);
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("s", "aaccdd");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

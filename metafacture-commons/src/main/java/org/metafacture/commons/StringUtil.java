@@ -55,8 +55,8 @@ public final class StringUtil {
      * {@value #DEFAULT_VAREND} the end of the variable . Unassigned variables are
      * ignored.
      *
-     * @param format            the String to be formatted
-     * @param variables         a Map of variable names and their values
+     * @param format    the String to be formatted
+     * @param variables a Map of variable names and their values
      * @return the formatted String
      */
     public static String format(final String format, final Map<String, String> variables) {
@@ -74,8 +74,8 @@ public final class StringUtil {
      * @param variables         a Map of variable names and their values
      * @return the formatted String
      */
-    public static String format(final String format, final String varStartIndicator, final String varEndIndicator,
-            final Map<String, String> variables) {
+    public static String format(final String format, final String varStartIndicator,
+            final String varEndIndicator, final Map<String, String> variables) {
         return format(format, varStartIndicator, varEndIndicator, true, variables);
     }
 
@@ -106,10 +106,11 @@ public final class StringUtil {
      * @param variables         a Map of variable names and their values
      * @return the formatted String
      */
-    public static String format(final String format, final String varStartIndicator, final String varEndIndicator,
-            final boolean ignoreMissingVars, final Map<String, String> variables) {
+    public static String format(final String format, final String varStartIndicator,
+            final String varEndIndicator, final boolean ignoreMissingVars,
+            final Map<String, String> variables) {
         if (format.indexOf(varStartIndicator) < 0) { // shortcut if there is
-                                                        // nothing to replace
+                                                     // nothing to replace
             return format;
         }
 
@@ -139,8 +140,8 @@ public final class StringUtil {
                     varValue = "";
                 }
                 else {
-                    throw new IllegalArgumentException("Variable '" + varName +
-                            "' was not assigned!\nAssigned variables:\n" + variables);
+                    throw new IllegalArgumentException("Variable '" + varName
+                            + "' was not assigned!\nAssigned variables:\n" + variables);
                 }
             }
             builder.append(varValue);
@@ -151,33 +152,35 @@ public final class StringUtil {
     }
 
     /**
-     * Copies the contents of {@code str} into the {@code currentBuffer}. If the size of
-     * the buffer is not sufficient to store the string then a new buffer is allocated.
-     * {@code copyToBuffer} is intended to be used as shown in the example:
+     * Copies the contents of {@code str} into the {@code currentBuffer}. If the
+     * size of the buffer is not sufficient to store the string then a new buffer is
+     * allocated. {@code copyToBuffer} is intended to be used as shown in the
+     * example:
+     * 
      * <pre>{@code
-     *   final int INITIAL_SIZE = 10;
-     *   char[] myBuffer = new char[INITIAL_SIZE];
+     * final int INITIAL_SIZE = 10;
+     * char[] myBuffer = new char[INITIAL_SIZE];
      *
-     *   List<String> strings = getAListOfStringsFromSomewhere();
-     *   for (String str : strings) {
+     * List<String> strings = getAListOfStringsFromSomewhere();
+     * for (String str : strings) {
      *     myBuffer = StringUtil.copyToBuffer(str, myBuffer);
      *     dataLen = str.length();
      *     // Process data in myBuffer in the range from 0 to dataLen
-     *   }
-     *   myBuffer = null;
+     * }
+     * myBuffer = null;
      * }</pre>
      *
      * This allows the buffer to be reused but at the same time frees the user from
      * having to manage the size of the buffer.
      *
-     * @param str string to copy. Must not be null.
-     * @param currentBuffer array to store the string in. If it is too small a new buffer
-     *                      is allocated.  currentBuffer must not be null.
-     *                      The length of the current buffer must not be 0.
-     * @return either currentBuffer or a new buffer if one was allocated. The returned
-     *                      buffer may be larger than the string. Users should call
-     *                      {@code str.length()} to retrieve the actual length of the
-     *                      data in the returned buffer.
+     * @param str           string to copy. Must not be null.
+     * @param currentBuffer array to store the string in. If it is too small a new
+     *                          buffer is allocated. currentBuffer must not be null.
+     *                          The length of the current buffer must not be 0.
+     * @return either currentBuffer or a new buffer if one was allocated. The
+     *         returned buffer may be larger than the string. Users should call
+     *         {@code str.length()} to retrieve the actual length of the data in the
+     *         returned buffer.
      */
     public static char[] copyToBuffer(final String str, final char[] currentBuffer) {
         assert str != null;

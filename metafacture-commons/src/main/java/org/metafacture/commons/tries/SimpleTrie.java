@@ -106,6 +106,7 @@ public final class SimpleTrie<P> {
         public Node<P> getNext(final char key) {
             return links.get(key);
         }
+
     }
 
 }

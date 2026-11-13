@@ -36,7 +36,9 @@ import java.util.function.Function;
  * @author markus geipel
  *
  */
-public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> implements MemoryWarningSystem.Listener {
+public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>>
+        implements
+            MemoryWarningSystem.Listener {
 
     /**
      * The comparators.
@@ -54,12 +56,14 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
             public int order(final int indicator) {
                 return indicator;
             }
+
         },
         DECREASING {
             @Override
             public int order(final int indicator) {
                 return -indicator;
             }
+
         };
 
         /**
@@ -70,6 +74,7 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
          * @return the indicator dependent of the order
          */
         public abstract int order(int indicator);
+
     }
 
     private final List<Triple> buffer = new ArrayList<>();
@@ -154,7 +159,8 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
         }
         else {
             final Comparator<Triple> comparator = createComparator();
-            final PriorityQueue<SortedTripleFileFacade> queue = new PriorityQueue<>(11, (o1, o2) -> comparator.compare(o1.peek(), o2.peek()));
+            final PriorityQueue<SortedTripleFileFacade> queue = new PriorityQueue<>(11,
+                    (o1, o2) -> comparator.compare(o1.peek(), o2.peek()));
 
             try {
                 nextBatch();
@@ -222,10 +228,11 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
      * @param compare one of {@link #Compare}
      * @param order   the {@link #Order}
      * @param numeric "true" if comparison should be numeric. "false" if comparison
-     *                should be alphanumeric. Defaults to "false".
+     *                    should be alphanumeric. Defaults to "false".
      * @return a Comparator of type Triple
      */
-    private static Comparator<Triple> createComparator(final Compare compare, final Order order, final boolean numeric) {
+    private static Comparator<Triple> createComparator(final Compare compare, final Order order,
+            final boolean numeric) {
         final Function<Triple, String> tripleFunction;
         switch (compare) {
             case ALL:
@@ -243,9 +250,11 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
         }
 
         final Function<Triple, Integer> numericFunction = tripleFunction.andThen(Integer::valueOf);
-        return numeric ?
-            (o1, o2) -> order.order(numericFunction.apply(o1).compareTo(numericFunction.apply(o2))) :
-            (o1, o2) -> order.order(tripleFunction.apply(o1).compareTo(tripleFunction.apply(o2)));
+        return numeric
+                ? (o1, o2) -> order
+                        .order(numericFunction.apply(o1).compareTo(numericFunction.apply(o2)))
+                : (o1, o2) -> order
+                        .order(tripleFunction.apply(o1).compareTo(tripleFunction.apply(o2)));
     }
 
     @Override

@@ -29,6 +29,7 @@ import java.util.List;
 
 /**
  * Writes objects to stdout or a file
+ * 
  * @param <T> object type
  *
  * @author Christoph Böhme
@@ -42,17 +43,18 @@ public final class ObjectWriter<T> implements ConfigurableObjectWriter<T> {
 
     public static final String STDOUT = "stdout";
 
-    private static final List<String> ARGUMENTS = Collections.unmodifiableList(Arrays.asList(STDOUT, "PATH"));
+    private static final List<String> ARGUMENTS = Collections
+            .unmodifiableList(Arrays.asList(STDOUT, "PATH"));
 
     private final ConfigurableObjectWriter<T> objectWriter;
 
     /**
      * Sets the destination to write objects to. If the destination is set to
-     * {@value #STDOUT} the object is written to the standard output. Otherwise
-     * it's written to a file of that name.
+     * {@value #STDOUT} the object is written to the standard output. Otherwise it's
+     * written to a file of that name.
      *
      * @param destination the path to be written to or standard out if it's
-     *                    {@value #STDOUT}
+     *                        {@value #STDOUT}
      */
     public ObjectWriter(final String destination) {
         if (STDOUT.equals(destination)) {
@@ -133,8 +135,8 @@ public final class ObjectWriter<T> implements ConfigurableObjectWriter<T> {
      *
      * @see ObjectFileWriter#setAppendIfFileExists
      *
-     * @param appendIfFileExists true if new data should be appended,
-     *                           false to overwrite the existing file
+     * @param appendIfFileExists true if new data should be appended, false to
+     *                               overwrite the existing file
      */
     public void setAppendIfFileExists(final boolean appendIfFileExists) {
         if (objectWriter instanceof ObjectFileWriter) {

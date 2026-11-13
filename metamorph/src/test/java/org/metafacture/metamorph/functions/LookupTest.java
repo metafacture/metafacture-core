@@ -89,6 +89,7 @@ public final class LookupTest {
     @Test
     public void shouldLookupValuesInLocalMap() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='1'>" +
                 "    <lookup>" +
@@ -101,6 +102,7 @@ public final class LookupTest {
                 "    </lookup>" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "a");
@@ -108,20 +110,19 @@ public final class LookupTest {
                     i.literal("2", "a");
                     i.literal("2", "b");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("1", "A");
                     o.get().literal("2", "A");
                     o.get().literal("2", "B");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldLookupValuesInReferencedMap() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='1'>" +
                 "    <lookup in='map1' />" +
@@ -138,6 +139,7 @@ public final class LookupTest {
                 "    <entry name='a' value='A' />" +
                 "  </map>" +
                 "</maps>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "a");
@@ -145,20 +147,19 @@ public final class LookupTest {
                     i.literal("2", "a");
                     i.literal("2", "b");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("1", "A");
                     o.get().literal("2", "A");
                     o.get().literal("2", "B");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldLookupValuesInMetadata() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<meta>" +
                 "  <name>Hawaii</name>" +
                 "</meta>" +
@@ -167,22 +168,22 @@ public final class LookupTest {
                 "    <lookup in='__meta' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data", "name");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data", "Hawaii");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void issue372_shouldFilterMissingValue() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='litA'>" +
                 "    <lookup>" +
@@ -191,19 +192,18 @@ public final class LookupTest {
                 "    </lookup>" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("litA", "cat");
                     i.literal("litA", "dog");
                     i.literal("litA", "dragon");
                     i.endRecord();
-                },
-                (o, f) -> {
+                }, (o, f) -> {
                     o.get().startRecord("1");
                     f.apply(2).literal("litA", "mammal");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

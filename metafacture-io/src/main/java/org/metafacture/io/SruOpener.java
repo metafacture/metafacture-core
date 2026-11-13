@@ -42,22 +42,26 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
- * Opens an SRU (Search Retrieval by URL) stream and passes a reader to the receiver. Pages through the SRU.
+ * Opens an SRU (Search Retrieval by URL) stream and passes a reader to the
+ * receiver. Pages through the SRU.
  *
  * @author Pascal Christoph (dr0i)
  */
+// @formatter:off
 @Description(// checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
         "Opens a SRU stream and passes a reader to the receiver. The input is the base URL of the SRU service " +
                 "to be retrieved from. Mandatory argument is: QUERY.\n" +
                 "The output is an XML document holding the user defined \"maximumRecords\" as documents - or all, if not set." +
                 " If there are more documents than defined by \"maximumRecords\" and there are more documents wanted (defined by " +
                 "\"totalRecords\") there will be consecutive XML documents output as it pages through the SRU.")
+// @formatter:on
 @In(String.class)
 @Out(java.io.Reader.class)
 @FluxCommand("open-sru")
 public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
-    private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+    private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory
+            .newInstance();
     private static final String DEFAULT_QUERY = "cql.allRecords = 1";
     private static final String OPERATION = "searchRetrieve";
     private static final String USER_AGENT = "metafacture-core";
@@ -89,7 +93,8 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     }
 
     /**
-     * Sets the User Agent to use. <strong>Default value: {@value USER_AGENT}</strong>.
+     * Sets the User Agent to use. <strong>Default value:
+     * {@value USER_AGENT}</strong>.
      *
      * @param userAgent a user agent to be used when opening a URL
      */
@@ -108,8 +113,8 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     }
 
     /**
-     * Sets total number of records to be retrieved. <strong>Default value: indefinite (as in "all")
-     * </strong>.
+     * Sets total number of records to be retrieved. <strong>Default value:
+     * indefinite (as in "all") </strong>.
      *
      * @param totalRecords total number of records to be retrieved
      */
@@ -118,8 +123,8 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     }
 
     /**
-     * Sets the maximum of records returned in one lookup.
-     * The lookup is repeated as long as {@code maximumRecords} is less than {@code totalRecords}.
+     * Sets the maximum of records returned in one lookup. The lookup is repeated as
+     * long as {@code maximumRecords} is less than {@code totalRecords}.
      *
      * @param maximumRecords maximum of records returned in one lookup
      */
@@ -128,7 +133,8 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     }
 
     /**
-     * Sets where to start when retrieving records. <strong>Default value: {@value START_RECORD}</strong>.
+     * Sets where to start when retrieving records. <strong>Default value:
+     * {@value START_RECORD}</strong>.
      *
      * @param startRecord where to start when retrieving records
      */
@@ -146,7 +152,8 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     }
 
     /**
-     * Sets the kind of operation of the lookup. <strong>Default value: {@value OPERATION}</strong>.
+     * Sets the kind of operation of the lookup. <strong>Default value:
+     * {@value OPERATION}</strong>.
      *
      * @param operation the kind of operation of the lookup
      */
@@ -155,7 +162,8 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     }
 
     /**
-     * Sets the version of the lookup. <strong>Default value: {@value VERSION}</strong>.
+     * Sets the version of the lookup. <strong>Default value:
+     * {@value VERSION}</strong>.
      *
      * @param version the version of the lookup
      */
@@ -192,8 +200,10 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
                     final Document xmldoc = docBuilder.parse(new InputSource(reader));
 
                     numberOfRecords = getIntegerValueFromElement(xmldoc, "numberOfRecords", 0);
-                    final int recordPosition = getIntegerValueFromElement(xmldoc, "recordPosition", 0);
-                    final int nextRecordPosition = getIntegerValueFromElement(xmldoc, "nextRecordPosition", totalRecords);
+                    final int recordPosition = getIntegerValueFromElement(xmldoc, "recordPosition",
+                            0);
+                    final int nextRecordPosition = getIntegerValueFromElement(xmldoc,
+                            "nextRecordPosition", totalRecords);
 
                     recordsRetrieved = recordsRetrieved + nextRecordPosition - recordPosition;
                     startRecord = nextRecordPosition;
@@ -213,7 +223,8 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
         }
     }
 
-    private int getIntegerValueFromElement(final Document xmlDoc, final String tagName, final int fallback) {
+    private int getIntegerValueFromElement(final Document xmlDoc, final String tagName,
+            final int fallback) {
         final Node node = xmlDoc.getElementsByTagName(tagName).item(0);
         return node != null ? Integer.parseInt(node.getTextContent()) : fallback;
     }

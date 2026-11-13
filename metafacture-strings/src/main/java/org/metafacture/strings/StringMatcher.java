@@ -27,8 +27,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Matches the incoming strings against a regular expression and replaces
- * the matching parts.
+ * Matches the incoming strings against a regular expression and replaces the
+ * matching parts.
  *
  * @author Christoph Böhme
  */

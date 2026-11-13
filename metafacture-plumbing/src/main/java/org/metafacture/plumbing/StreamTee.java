@@ -34,7 +34,9 @@ import org.metafacture.framework.helpers.DefaultTee;
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("stream-tee")
-public final class StreamTee extends DefaultTee<StreamReceiver> implements StreamPipe<StreamReceiver> {
+public final class StreamTee extends DefaultTee<StreamReceiver>
+        implements
+            StreamPipe<StreamReceiver> {
 
     /**
      * Creates an instance of {@link StreamTee}.

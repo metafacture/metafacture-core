@@ -42,6 +42,7 @@ public final class Unique extends AbstractStatefulFunction {
         public String createKey(final String name, final String value) {
             return name + "\0" + value;
         }
+
     };
 
     /**
@@ -80,8 +81,8 @@ public final class Unique extends AbstractStatefulFunction {
     }
 
     /**
-     * Sets the Unique part to be processed. Possible values are {@value #NAME}
-     * or {@value #VALUE}.
+     * Sets the Unique part to be processed. Possible values are {@value #NAME} or
+     * {@value #VALUE}.
      *
      * @param part the part
      */
@@ -92,6 +93,7 @@ public final class Unique extends AbstractStatefulFunction {
                 public String createKey(final String name, final String value) {
                     return name;
                 }
+
             };
         }
         else if (VALUE.equals(part)) {
@@ -100,6 +102,7 @@ public final class Unique extends AbstractStatefulFunction {
                 public String createKey(final String name, final String value) {
                     return value;
                 }
+
             };
         }
     }
@@ -109,6 +112,7 @@ public final class Unique extends AbstractStatefulFunction {
      */
     private interface KeyGenerator {
         String createKey(String name, String value);
+
     }
 
 }

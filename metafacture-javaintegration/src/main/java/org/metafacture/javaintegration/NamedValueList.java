@@ -31,7 +31,10 @@ import java.util.ListIterator;
  * @author Markus Michael Geipel
  *
  */
-public final class NamedValueList extends DefaultStreamReceiver implements List<NamedValue>, Collector<List<NamedValue>> {
+public final class NamedValueList extends DefaultStreamReceiver
+        implements
+            List<NamedValue>,
+            Collector<List<NamedValue>> {
 
     private Collection<List<NamedValue>> collection;
     private List<NamedValue> list = new ArrayList<>();
@@ -112,7 +115,8 @@ public final class NamedValueList extends DefaultStreamReceiver implements List<
     }
 
     @Override
-    public boolean addAll(final int index, final Collection<? extends NamedValue> currentCollection) {
+    public boolean addAll(final int index,
+            final Collection<? extends NamedValue> currentCollection) {
         return list.addAll(index, currentCollection);
     }
 

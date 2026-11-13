@@ -150,7 +150,7 @@ public final class WildcardTrie<P> {
      */
     private final class Node<T> {
 
-        private Set<T> values =  Collections.emptySet();
+        private Set<T> values = Collections.emptySet();
         private final CharMap<Node<T>> links = new CharMap<Node<T>>();
 
         protected Node() {
@@ -180,6 +180,7 @@ public final class WildcardTrie<P> {
         public Node<T> getNext(final char key) {
             return links.get(key);
         }
+
     }
 
 }

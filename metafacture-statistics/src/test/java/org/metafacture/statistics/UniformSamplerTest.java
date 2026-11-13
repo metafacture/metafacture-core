@@ -39,7 +39,7 @@ import java.util.Arrays;
 @RunWith(Parameterized.class)
 public final class UniformSamplerTest {
 
-    private static final long SEED = 1;  // Use a fixed random seed to make the test repeatable
+    private static final long SEED = 1; // Use a fixed random seed to make the test repeatable
     private static final int SAMPLE_SIZE = 5;
 
     private static final int LARGE_SET = 100;
@@ -60,10 +60,8 @@ public final class UniformSamplerTest {
 
     @Parameters
     public static Iterable<Object[]> data() {
-        return Arrays.asList(new Object[][] {
-                {LARGE_SET, new String[]{"93", "43", "78", "35", "42"}},
-                {SMALL_SET, new String[]{"0", "1", "2"}}
-            });
+        return Arrays.asList(new Object[][]{{LARGE_SET, new String[]{"93", "43", "78", "35", "42"}},
+                {SMALL_SET, new String[]{"0", "1", "2"}}});
     }
 
     @Before

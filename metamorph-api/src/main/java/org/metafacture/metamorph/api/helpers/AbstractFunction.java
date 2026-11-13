@@ -27,8 +27,7 @@ import java.util.Map;
  *
  * @author Markus Michael Geipel
  */
-public abstract class AbstractFunction extends AbstractNamedValuePipe
-        implements Function {
+public abstract class AbstractFunction extends AbstractNamedValuePipe implements Function {
 
     private Maps maps;
     private Map<String, String> localMap;
@@ -55,8 +54,8 @@ public abstract class AbstractFunction extends AbstractNamedValuePipe
     }
 
     /**
-     * Gets the {@link #localMap} or, if unset, a Map with the name of {@link
-     * #mapName}.
+     * Gets the {@link #localMap} or, if unset, a Map with the name of
+     * {@link #mapName}.
      *
      * @return the Map
      */

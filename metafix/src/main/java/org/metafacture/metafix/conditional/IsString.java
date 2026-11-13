@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Executes the functions if/unless the field value is a string (and not
- * a number).
+ * Executes the functions if/unless the field value is a string (and not a
+ * number).
  */
 @FixCommand("is_string")
 public class IsString implements FixPredicate {
@@ -39,8 +39,10 @@ public class IsString implements FixPredicate {
     }
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-        return testConditional(record, params, Value::isString) && !new IsNumber().test(metafix, record, params, options);
+    public boolean test(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
+        return testConditional(record, params, Value::isString)
+                && !new IsNumber().test(metafix, record, params, options);
     }
 
 }

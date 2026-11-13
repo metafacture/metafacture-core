@@ -29,7 +29,10 @@ import java.util.Set;
  * @author Markus Michael Geipel
  *
  */
-public final class ValueSet extends DefaultStreamReceiver implements Set<String>, Collector<Set<String>> {
+public final class ValueSet extends DefaultStreamReceiver
+        implements
+            Set<String>,
+            Collector<Set<String>> {
 
     private Collection<Set<String>> collection = new HashSet<>();
     private Set<String> set;

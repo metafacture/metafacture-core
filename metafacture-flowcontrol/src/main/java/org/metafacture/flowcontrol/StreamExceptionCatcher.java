@@ -34,10 +34,10 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("catch-stream-exception")
-public final class StreamExceptionCatcher extends
-        DefaultStreamPipe<StreamReceiver> {
+public final class StreamExceptionCatcher extends DefaultStreamPipe<StreamReceiver> {
 
-    private static final MetafactureLogger LOG = new MetafactureLogger(StreamExceptionCatcher.class);
+    private static final MetafactureLogger LOG = new MetafactureLogger(
+            StreamExceptionCatcher.class);
     private static final String MSG_PATTERN = "{}{}";
 
     private final String logPrefix;

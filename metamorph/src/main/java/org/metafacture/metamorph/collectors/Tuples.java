@@ -63,8 +63,7 @@ public final class Tuples extends AbstractFlushingCollect {
     }
 
     @Override
-    protected void receive(final String name, final String value,
-            final NamedValueSource source) {
+    protected void receive(final String name, final String value, final NamedValueSource source) {
         listMap.add(name, value);
     }
 
@@ -105,8 +104,7 @@ public final class Tuples extends AbstractFlushingCollect {
         }
 
         for (final String string : temp) {
-            getNamedValueReceiver().receive(getName(),
-                    string.substring(separator.length()), this,
+            getNamedValueReceiver().receive(getName(), string.substring(separator.length()), this,
                     getRecordCount(), getEntityCount());
         }
         clear();

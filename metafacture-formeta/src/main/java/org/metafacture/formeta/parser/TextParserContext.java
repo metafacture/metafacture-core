@@ -26,13 +26,9 @@ import org.metafacture.framework.FormatException;
  */
 class TextParserContext {
 
-    private static final String ESCAPABLE_CHARS = Formeta.WHITESPACE +
-        Formeta.QUOT_CHAR +
-        Formeta.ESCAPE_CHAR +
-        Formeta.GROUP_START +
-        Formeta.GROUP_END +
-        Formeta.ITEM_SEPARATOR +
-        Formeta.NAME_VALUE_SEPARATOR;
+    private static final String ESCAPABLE_CHARS = Formeta.WHITESPACE + Formeta.QUOT_CHAR
+            + Formeta.ESCAPE_CHAR + Formeta.GROUP_START + Formeta.GROUP_END + Formeta.ITEM_SEPARATOR
+            + Formeta.NAME_VALUE_SEPARATOR;
 
     private final StringBuilder text = new StringBuilder();
 

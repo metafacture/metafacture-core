@@ -45,6 +45,7 @@ public final class ScriptTest {
     @Test
     public void shouldExecuteJavascriptFunctions() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='data1'>" +
                 "    <script file='org/metafacture/metamorph/functions/script-test.js' invoke='process' />" +
@@ -53,19 +54,18 @@ public final class ScriptTest {
                 "    <script file='org/metafacture/metamorph/functions/script-test.js' invoke='process2' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "ABC");
                     i.literal("data2", "ABC");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data1", "ABC!");
                     o.get().literal("data2", "ABCABC");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

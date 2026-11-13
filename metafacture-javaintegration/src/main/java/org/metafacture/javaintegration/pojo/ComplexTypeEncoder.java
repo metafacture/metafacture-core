@@ -71,9 +71,8 @@ class ComplexTypeEncoder implements TypeEncoder {
     }
 
     static boolean supportsType(final Class<?> clazz) {
-        return !clazz.isPrimitive() && !clazz.equals(String.class) &&
-            !MapTypeEncoder.supportsType(clazz) &&
-            !ListTypeEncoder.supportsType(clazz);
+        return !clazz.isPrimitive() && !clazz.equals(String.class)
+                && !MapTypeEncoder.supportsType(clazz) && !ListTypeEncoder.supportsType(clazz);
     }
 
     @Override

@@ -24,6 +24,7 @@ import org.metafacture.framework.objects.Triple;
 
 /**
  * Sorts triples
+ * 
  * @author markus geipel
  *
  */

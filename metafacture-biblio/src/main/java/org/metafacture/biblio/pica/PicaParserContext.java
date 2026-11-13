@@ -22,9 +22,9 @@ import java.text.Normalizer;
 import java.text.Normalizer.Form;
 
 /**
- * Parser context for the PICA+ parser.The context implements
- * support for normalising the UTF8 encoding of values into NFC
- * on the fly and for skipping fields without any subfields.
+ * Parser context for the PICA+ parser.The context implements support for
+ * normalising the UTF8 encoding of values into NFC on the fly and for skipping
+ * fields without any subfields.
  *
  * @author Christoph Böhme
  *

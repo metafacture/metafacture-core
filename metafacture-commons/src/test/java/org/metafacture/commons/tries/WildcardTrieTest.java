@@ -45,7 +45,8 @@ public final class WildcardTrieTest {
     private static final String CCB = "ccb";
     private static final String EMPTY = "";
     private static final String X = "x";
-    private static final List<String> ALL = List.of(A, AABB, AACBB, AB, ABBC, ABC, ACB, B, CCB, EMPTY, X);
+    private static final List<String> ALL = List.of(A, AABB, AACBB, AB, ABBC, ABC, ACB, B, CCB,
+            EMPTY, X);
 
     private static final String AAQBB = "aa?bb";
     private static final String AA_STAR_BB = "aa*bb";

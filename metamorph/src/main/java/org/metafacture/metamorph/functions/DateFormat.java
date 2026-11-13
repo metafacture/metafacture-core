@@ -34,22 +34,22 @@ import java.util.Set;
  * The Attribute removeLeadingZeros will remove all leading zeros from all
  * numbers in the output date.
  * <p>
- * The attribute era is used to specify if the date is BC or AD. Default
- * value is AUTO. To understand that, three short examples:
+ * The attribute era is used to specify if the date is BC or AD. Default value
+ * is AUTO. To understand that, three short examples:
  * <ul>
- *   <li>Input: 20.07.356 (era=BC)
- *   <li>Output (German location): 20. Juli 0356 v. Chr.
- *   <li>Input: 20.07.356 (era=AD,removeLeadingZeros=true)
- *   <li>Output (German location): 20. Juli 356
- *   <li>Input: 20.07.-356 (era=AUTO)
- *   <li>Output (German location): 20. Juli 0357 v. Chr. (there is NO year 0;
- *       see ISO 8601, Proleptic Gregorian Calendar)
+ * <li>Input: 20.07.356 (era=BC)
+ * <li>Output (German location): 20. Juli 0356 v. Chr.
+ * <li>Input: 20.07.356 (era=AD,removeLeadingZeros=true)
+ * <li>Output (German location): 20. Juli 356
+ * <li>Input: 20.07.-356 (era=AUTO)
+ * <li>Output (German location): 20. Juli 0357 v. Chr. (there is NO year 0; see
+ * ISO 8601, Proleptic Gregorian Calendar)
  * </ul>
  * Examples of using this function in Metamorph:
  * <ul>
- *   <li>Default date format: {@code <dateformat />}
- *   <li>Read ISO-dates and generate German style dates:
- *   {@code <dateformat inputformat="yyyy-MM-dd" outputformat="dd.MM.yyyy" />}
+ * <li>Default date format: {@code <dateformat />}
+ * <li>Read ISO-dates and generate German style dates:
+ * {@code <dateformat inputformat="yyyy-MM-dd" outputformat="dd.MM.yyyy" />}
  * </ul>
  *
  * @author Michael Büchner
@@ -76,10 +76,8 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
      * @author Christoph Böhme
      */
     public enum DateFormats {
-        FULL(java.text.DateFormat.FULL),
-        LONG(java.text.DateFormat.LONG),
-        MEDIUM(java.text.DateFormat.MEDIUM),
-        SHORT(java.text.DateFormat.SHORT);
+        FULL(java.text.DateFormat.FULL), LONG(java.text.DateFormat.LONG), MEDIUM(
+                java.text.DateFormat.MEDIUM), SHORT(java.text.DateFormat.SHORT);
 
         private final int formatId;
 
@@ -100,9 +98,7 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
      * @author Michael Büchner
      */
     public enum Era {
-        AD(GregorianCalendar.AD),
-        BC(GregorianCalendar.BC),
-        AUTO(-1);
+        AD(GregorianCalendar.AD), BC(GregorianCalendar.BC), AUTO(-1);
 
         private final int eraId;
 
@@ -142,7 +138,8 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
                 c.set(Calendar.ERA, GregorianCalendar.AD);
             }
 
-            final SimpleDateFormat sdfp = (SimpleDateFormat) java.text.DateFormat.getDateInstance(outputFormat.getFormatId(), outputLocale);
+            final SimpleDateFormat sdfp = (SimpleDateFormat) java.text.DateFormat
+                    .getDateInstance(outputFormat.getFormatId(), outputLocale);
             String p = sdfp.toPattern();
             if (c.get(Calendar.ERA) == GregorianCalendar.BC) {
                 p = p.replace("yyyy", "yyyy G");

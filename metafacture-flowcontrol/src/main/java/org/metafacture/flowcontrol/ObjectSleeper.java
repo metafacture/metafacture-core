@@ -48,13 +48,13 @@ public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<
 
     /**
      * Creates an instance of {@link ObjectSleeper}.
-    */
+     */
     public ObjectSleeper() {
     }
 
     /**
-     * Sets the amount of time for the sleep phase (measured in {@link
-     * #setTimeUnit time unit}).
+     * Sets the amount of time for the sleep phase (measured in {@link #setTimeUnit
+     * time unit}).
      *
      * @param sleepTime the time to sleep
      */
@@ -64,8 +64,8 @@ public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<
     }
 
     /**
-     * Sets the amount of time for the sleep phase (measured in {@link
-     * #setTimeUnit time unit}).
+     * Sets the amount of time for the sleep phase (measured in {@link #setTimeUnit
+     * time unit}).
      *
      * @param sleepTime the time to sleep
      */
@@ -74,8 +74,8 @@ public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<
     }
 
     /**
-     * Gets the amount of time for the sleep phase (measured in {@link
-     * #setTimeUnit time unit}).
+     * Gets the amount of time for the sleep phase (measured in {@link #setTimeUnit
+     * time unit}).
      *
      * @return the time to sleep
      */
@@ -84,8 +84,8 @@ public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<
     }
 
     /**
-     * Sets the time unit for the sleep phase. See {@link TimeUnit available
-     * time units}, case-insensitive, trailing "s" optional.
+     * Sets the time unit for the sleep phase. See {@link TimeUnit available time
+     * units}, case-insensitive, trailing "s" optional.
      *
      * @param timeUnit the time unit
      */
@@ -93,7 +93,9 @@ public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<
         // NOTE: Adds NANOSECONDS and DAYS over Catmandu's supported time units.
 
         final String timeUnitName = timeUnit.toUpperCase();
-        final String timeUnitSuffix = timeUnitName.endsWith(TIME_UNIT_SUFFIX) ? "" : TIME_UNIT_SUFFIX;
+        final String timeUnitSuffix = timeUnitName.endsWith(TIME_UNIT_SUFFIX)
+                ? ""
+                : TIME_UNIT_SUFFIX;
 
         setTimeUnit(TimeUnit.valueOf(timeUnitName + timeUnitSuffix));
     }

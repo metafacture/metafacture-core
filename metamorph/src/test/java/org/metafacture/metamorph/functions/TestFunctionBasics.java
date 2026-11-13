@@ -45,6 +45,7 @@ public final class TestFunctionBasics {
     @Test
     public void shouldSupportFunctionChainingInDataStatements() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='data'>" +
                 "    <trim />" +
@@ -53,6 +54,7 @@ public final class TestFunctionBasics {
                 "    <regexp match='Abc' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data", " abc ");
@@ -60,21 +62,20 @@ public final class TestFunctionBasics {
                     i.startRecord("2");
                     i.literal("data", " abc ");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data", "Abc");
                     o.get().endRecord();
                     o.get().startRecord("2");
                     o.get().literal("data", "Abc");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldSupportFunctionChainingInEntities() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <choose>" +
                 "    <data source='data'>" +
@@ -85,6 +86,7 @@ public final class TestFunctionBasics {
                 "    </data>" +
                 "  </choose>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data", " abc ");
@@ -92,37 +94,35 @@ public final class TestFunctionBasics {
                     i.startRecord("2");
                     i.literal("data", " abc ");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data", "Abc");
                     o.get().endRecord();
                     o.get().startRecord("2");
                     o.get().literal("data", "Abc");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldUseJavaClassesAsFunctions() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <data source='data'>" +
                 "    <java class='org.metafacture.metamorph.functions.Compose' prefix='Hula ' />" +
                 "  </data>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data", "Aloha");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("data", "Hula Aloha");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

@@ -52,7 +52,8 @@ public final class FluxProgramm {
                     .getResources(PROPERTIES_LOCATION);
             while (enumeration.hasMoreElements()) {
                 final URL url = enumeration.nextElement();
-                COMMAND_FACTORY.loadClassesFromMap(ResourceUtil.loadProperties(url), Receiver.class);
+                COMMAND_FACTORY.loadClassesFromMap(ResourceUtil.loadProperties(url),
+                        Receiver.class);
             }
         }
         catch (final IOException e) {
@@ -80,14 +81,15 @@ public final class FluxProgramm {
 
         }
         else {
-            final ConfigurableClass<? extends Receiver> elementClass =
-                    ReflectionUtil.loadClass(name, Receiver.class);
+            final ConfigurableClass<? extends Receiver> elementClass = ReflectionUtil
+                    .loadClass(name, Receiver.class);
             newElement = elementClass.newInstance(namedArgs, cArgs.toArray());
         }
         return newElement;
     }
 
-    protected void addElement(final String name, final Map<String, String> namedArgs, final List<Object> cArgs) {
+    protected void addElement(final String name, final Map<String, String> namedArgs,
+            final List<Object> cArgs) {
         currentFlow.addElement(createElement(name, namedArgs, cArgs));
     }
 
@@ -151,7 +153,8 @@ public final class FluxProgramm {
 
         for (final Wormhole wormhole : wormholeNameMapping.values()) {
             if (wormhole.getOut() == null) {
-                throw new FluxParseException("Wormhole " + wormhole.getName() + " is going nowhere");
+                throw new FluxParseException(
+                        "Wormhole " + wormhole.getName() + " is going nowhere");
             }
 
             for (final Flow flow : wormhole.getIns()) {
@@ -235,6 +238,7 @@ public final class FluxProgramm {
                 }
             }
         }
+
     }
 
 }

@@ -28,11 +28,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Emits the values of literals matching {@literal #setPattern(String)}
- * as objects.
+ * Emits the values of literals matching {@literal #setPattern(String)} as
+ * objects.
  * <p>
- * The matcher does only match the literal name and does not
- * take the enclosing entities into account.
+ * The matcher does only match the literal name and does not take the enclosing
+ * entities into account.
  *
  * @author Christoph Böhme
  *
@@ -57,8 +57,8 @@ public final class LiteralToObject extends DefaultStreamPipe<ObjectReceiver<Stri
     }
 
     /**
-     * Sets the pattern against which literal names are matched. Only the
-     * values of matching literals are converted into objects.
+     * Sets the pattern against which literal names are matched. Only the values of
+     * matching literals are converted into objects.
      * <p>
      * The parameter can be changed at any time during processing. It becomes
      * effective with the next literal being processed.

@@ -33,8 +33,7 @@ class ReaderBase implements Reader {
     private final ObjectPipe<java.io.Reader, ObjectReceiver<String>> recordReader;
     private final ObjectPipe<String, StreamReceiver> decoder;
 
-    ReaderBase(
-            final ObjectPipe<java.io.Reader, ObjectReceiver<String>> recordReader,
+    ReaderBase(final ObjectPipe<java.io.Reader, ObjectReceiver<String>> recordReader,
             final ObjectPipe<String, StreamReceiver> decoder) {
         this.recordReader = recordReader;
         this.decoder = decoder;

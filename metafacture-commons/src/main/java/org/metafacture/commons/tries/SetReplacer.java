@@ -77,6 +77,7 @@ public final class SetReplacer {
                 final int delta = o1.getStart() - o2.getStart();
                 return delta < 0 ? -1 : delta > 0 ? 1 : o1.getLength() > o2.getLength() ? -1 : 1;
             }
+
         });
 
         for (final SetMatcher.Match<String> match : matches) {

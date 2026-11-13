@@ -44,8 +44,8 @@ public final class ObjectExceptionCatcherTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        Mockito.doThrow(new TestException("Exception Message"))
-                .when(exceptionThrowingModule).process(ArgumentMatchers.anyString());
+        Mockito.doThrow(new TestException("Exception Message")).when(exceptionThrowingModule)
+                .process(ArgumentMatchers.anyString());
         exceptionCatcher = new ObjectExceptionCatcher<>();
         exceptionCatcher.setReceiver(exceptionThrowingModule);
         exceptionCatcher.setLogExceptionMessage(false);

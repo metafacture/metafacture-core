@@ -211,7 +211,8 @@ public class RecordTest {
 
         record.put(FIELD, OTHER_VALUE);
 
-        MetafixTestHelpers.assertEmittedFields(record, Arrays.asList(FIELD), Arrays.asList(OTHER_VALUE));
+        MetafixTestHelpers.assertEmittedFields(record, Arrays.asList(FIELD),
+                Arrays.asList(OTHER_VALUE));
     }
 
     @Test
@@ -297,7 +298,7 @@ public class RecordTest {
     public void shouldFindArrayIndexSubfieldAfterTransformingOtherSubfield() {
         shouldFindArrayIndexSubfield(record -> {
             final String path = String.join(".", FIELD, "1", OTHER_FIELD);
-            final String value =  "transformed value";
+            final String value = "transformed value";
 
             record.transform(path, s -> value);
             Assertions.assertEquals(new Value(value), record.get(path));
@@ -350,8 +351,10 @@ public class RecordTest {
             }));
             a.add(Value.newHash(h -> {
                 h.put(FIELD, VALUE);
-                // For proper transformation, we have to explicitly set the path (as in Metafix.java):
-                h.put(OTHER_FIELD, OTHER_VALUE.withPathSet(String.format(path, a.size() + 1)), false);
+                // For proper transformation, we have to explicitly set the path (as in
+                // Metafix.java):
+                h.put(OTHER_FIELD, OTHER_VALUE.withPathSet(String.format(path, a.size() + 1)),
+                        false);
             }));
         }));
 

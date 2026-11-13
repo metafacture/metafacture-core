@@ -37,11 +37,11 @@ public final class Split extends AbstractFunction {
     }
 
     @Override
-    public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
+    public void receive(final String name, final String value, final NamedValueSource source,
+            final int recordCount, final int entityCount) {
         final String[] parts = delimiterPattern.split(value);
         for (final String part : parts) {
-            getNamedValueReceiver().receive(name, part, this, recordCount,
-                    entityCount);
+            getNamedValueReceiver().receive(name, part, this, recordCount, entityCount);
         }
     }
 

@@ -29,6 +29,7 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
  * <i>start-entity</i> and <i>end-entity</i> events.
  * <p>
  * For example, take the following sequence of events:
+ * 
  * <pre>{@literal
  * start-record "1"
  * literal "top-level": literal-value
@@ -40,6 +41,7 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
  *
  * These events are transformed by the {@code StreamFlattener} into the
  * following sequence of events:
+ * 
  * <pre>{@literal
  * start-record "1"
  * literal "top-level": literal-value

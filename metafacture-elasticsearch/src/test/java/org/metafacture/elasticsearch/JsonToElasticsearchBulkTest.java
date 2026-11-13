@@ -42,7 +42,7 @@ public final class JsonToElasticsearchBulkTest {
     private static final String ENTITY2 = "En2";
     private static final String ENTITY3 = "En3";
 
-    private static final String TYPE1  = "T1";
+    private static final String TYPE1 = "T1";
     private static final String INDEX1 = "I1";
 
     private static final String METADATA = "{'index':{'_index':'I1','_type':'T1'%s}}";
@@ -248,9 +248,9 @@ public final class JsonToElasticsearchBulkTest {
     }
 
     /*
-     * Utility method which replaces all single quotes in a string with double quotes.
-     * This allows to specify the JSON output in the test cases without having to wrap
-     * each bit of text in escaped double quotes.
+     * Utility method which replaces all single quotes in a string with double
+     * quotes. This allows to specify the JSON output in the test cases without
+     * having to wrap each bit of text in escaped double quotes.
      */
     private String fixQuotes(final String str) {
         return str.replace('\'', '"');

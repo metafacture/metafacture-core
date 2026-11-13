@@ -22,8 +22,8 @@ import org.xml.sax.Locator;
 import org.xml.sax.helpers.LocatorImpl;
 
 /**
- * Stores location information about element start and element
- * end positions in a document.
+ * Stores location information about element start and element end positions in
+ * a document.
  *
  * @author Christoph Böhme
  *

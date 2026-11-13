@@ -27,8 +27,8 @@ import java.util.function.Consumer;
  * {@link #DEFAULT_ERROR_HANDLER} does nothing.
  * <p>
  * Errors caused by an invalid order of the event stream have no effect on the
- * state of {@code WellformednessChecker}. The module behaves as if the
- * invalid event was never received.
+ * state of {@code WellformednessChecker}. The module behaves as if the invalid
+ * event was never received.
  * <p>
  * Errors caused by invalid data are reported but otherwise handled as valid
  * events. This means that <i>start-record</i> or <i>start-entity</i> events
@@ -41,10 +41,11 @@ import java.util.function.Consumer;
 public final class WellformednessChecker implements StreamReceiver {
 
     /**
-     * The default error handler which is used if no other error handler was set
-     * via {@link #setErrorHandler(Consumer)}. It does nothing.
+     * The default error handler which is used if no other error handler was set via
+     * {@link #setErrorHandler(Consumer)}. It does nothing.
      */
-    public static final Consumer<String> DEFAULT_ERROR_HANDLER = msg -> { /* do nothing */ };
+    public static final Consumer<String> DEFAULT_ERROR_HANDLER = msg -> {
+        /* do nothing */ };
 
     private static final String ID_MUST_NOT_BE_NULL = "id must not be null";
     private static final String NAME_MUST_NOT_BE_NULL = "name must not be null";

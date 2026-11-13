@@ -44,8 +44,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * Prints Flux help for a given {@link ObjectFactory}.
- * If the file at {@value #PATH_TO_EXAMPLES} exists it's taken to insert links to examples and to the source code.
+ * Prints Flux help for a given {@link ObjectFactory}. If the file at
+ * {@value #PATH_TO_EXAMPLES} exists it's taken to insert links to examples and
+ * to the source code.
  *
  * @author Markus Michael Geipel
  */
@@ -79,7 +80,8 @@ public final class HelpPrinter {
      * @param out     the PrintStream to print to
      * @throws IOException when an I/O error occurs
      */
-    public static void print(final ObjectFactory<?> factory, final PrintStream out) throws IOException {
+    public static void print(final ObjectFactory<?> factory, final PrintStream out)
+            throws IOException {
         try (PrintWriter pw = new PrintWriter(out)) {
             print(factory, pw);
         }
@@ -93,7 +95,8 @@ public final class HelpPrinter {
      * @param out     the PrintWriter to print to
      * @throws IOException when an I/O error occurs
      */
-    public static void print(final ObjectFactory<?> factory, final PrintWriter out) throws IOException {
+    public static void print(final ObjectFactory<?> factory, final PrintWriter out)
+            throws IOException {
         out.println("Welcome to Metafacture");
         out.println("======================");
         out.println();
@@ -119,7 +122,9 @@ public final class HelpPrinter {
         }
     }
 
+// @formatter:off
     private static <T> void describe(final String name, final ObjectFactory<T> factory, final PrintWriter out) { // checkstyle-disable-line ExecutableStatementCount
+// @formatter:on
         final ConfigurableClass<? extends T> configurableClass = factory.get(name);
         final Class<? extends T> moduleClass = configurableClass.getPlainClass();
         final Description desc = moduleClass.getAnnotation(Description.class);
@@ -151,7 +156,8 @@ public final class HelpPrinter {
             out.println("- [" + builder + "]" + "(" + examplesEntry[2] + ")");
         }
         if (examplesEntry != null && examplesEntry.length > 1) {
-            out.println("- java class:\t[" + moduleClass.getCanonicalName() + "](" + examplesEntry[1] + ")");
+            out.println("- java class:\t[" + moduleClass.getCanonicalName() + "]("
+                    + examplesEntry[1] + ")");
         }
         else {
             out.println("- java class:\t" + moduleClass.getCanonicalName());
@@ -159,7 +165,8 @@ public final class HelpPrinter {
         out.println();
     }
 
-    private static <T> void printSignature(final PrintWriter out, final Class<? extends T> moduleClass) {
+    private static <T> void printSignature(final PrintWriter out,
+            final Class<? extends T> moduleClass) {
         String inString = "<unknown>";
         String outString = "";
         final In inClass = moduleClass.getAnnotation(In.class);
@@ -173,7 +180,9 @@ public final class HelpPrinter {
         out.println("- signature:\t" + inString + " -> " + outString);
     }
 
-    private static <T> void printAttributes(final PrintWriter out, final ConfigurableClass<? extends T> configurableClass, final Map<String, Method> attributes) {
+    private static <T> void printAttributes(final PrintWriter out,
+            final ConfigurableClass<? extends T> configurableClass,
+            final Map<String, Method> attributes) {
         if (!attributes.isEmpty()) {
             out.print("- options:\t");
             final StringBuilder builder = new StringBuilder();
@@ -186,15 +195,11 @@ public final class HelpPrinter {
                 }
 
                 if (type.isEnum()) {
-                    builder.append(entry.getKey())
-                            .append(" ")
-                            .append(Arrays.asList(type.getEnumConstants()))
-                            .append(", ");
+                    builder.append(entry.getKey()).append(" ")
+                            .append(Arrays.asList(type.getEnumConstants())).append(", ");
                 }
                 else {
-                    builder.append(entry.getKey())
-                            .append(" (")
-                            .append(type.getSimpleName())
+                    builder.append(entry.getKey()).append(" (").append(type.getSimpleName())
                             .append("), ");
                 }
 
@@ -210,7 +215,8 @@ public final class HelpPrinter {
                 try {
                     return (Collection<String>) method.invoke(moduleClass);
                 }
-                catch (final IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
+                catch (final IllegalAccessException | InvocationTargetException
+                        | IllegalArgumentException e) {
                     // silently ignore
                 }
             }

@@ -17,8 +17,7 @@
 package org.metafacture.metamorph.functions;
 
 /**
- * Uses the received value as a key for looking up
- * the output value in a map.
+ * Uses the received value as a key for looking up the output value in a map.
  *
  * @author Markus Michael Geipel
  */

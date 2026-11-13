@@ -79,9 +79,11 @@ public final class TripleCollectTest {
 
     @Test
     public void testShouldDecodeEntities() {
-        collect.process(new Triple(REC_ID,  ENTITY_NAME, Formeta.GROUP_START + NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE +
-                Formeta.ITEM_SEPARATOR + ENTITY_NAME + Formeta.GROUP_START + NAME +
-                Formeta.NAME_VALUE_SEPARATOR + VALUE + Formeta.GROUP_END + Formeta.GROUP_END,
+        collect.process(new Triple(REC_ID, ENTITY_NAME,
+                Formeta.GROUP_START + NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE
+                        + Formeta.ITEM_SEPARATOR + ENTITY_NAME + Formeta.GROUP_START + NAME
+                        + Formeta.NAME_VALUE_SEPARATOR + VALUE + Formeta.GROUP_END
+                        + Formeta.GROUP_END,
                 ObjectType.ENTITY));
         collect.closeStream();
 

@@ -47,7 +47,8 @@ public final class SimpleTrieTest {
     public void testMultiAdd() {
         final SimpleTrie<String> trie = new SimpleTrie<String>();
 
-        final String[] megacities =  {"Brisbane", "Sydney", "Melbourne", "Adelaide", "Perth", "Berlin", "Berlin Center", "Bremen", "Petersburg"};
+        final String[] megacities = {"Brisbane", "Sydney", "Melbourne", "Adelaide", "Perth",
+                "Berlin", "Berlin Center", "Bremen", "Petersburg"};
 
         for (int i = 0; i < megacities.length; ++i) {
             final String city = megacities[i];

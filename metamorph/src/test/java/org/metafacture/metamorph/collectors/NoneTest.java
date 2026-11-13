@@ -44,12 +44,14 @@ public final class NoneTest {
     @Test
     public void shouldFireOnlyifNoElementFired() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <none>" +
                 "    <data source='data1' />" +
                 "    <data source='data2' />" +
                 "  </none>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "A");
@@ -60,8 +62,7 @@ public final class NoneTest {
                     i.startRecord("3");
                     i.literal("data3", "C");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().endRecord();
                     o.get().startRecord("2");
@@ -69,40 +70,41 @@ public final class NoneTest {
                     o.get().startRecord("3");
                     o.get().literal("", "true");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldSupportUserdefinedNameAndValue() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <none name='NONE' value='found none'>" +
                 "    <data source='data1' />" +
                 "    <data source='data2' />" +
                 "  </none>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data3", "A");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("NONE", "found none");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldNotFireAgainIfFlushedTwoTimesAndResetIsFalse() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <none flushWith='entity'>" +
                 "    <data source='data2' />" +
                 "  </none>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -112,23 +114,23 @@ public final class NoneTest {
                     i.literal("data1", "A");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("", "true");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldFireAgainIfFlushedTwoTimesAndTesetIsTrue() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <none flushWith='entity' reset='true'>" +
                 "    <data source='data2' />" +
                 "  </none>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -138,23 +140,23 @@ public final class NoneTest {
                     i.literal("data1", "A");
                     i.endEntity();
                     i.endRecord();
-                },
-                (o, f) -> {
+                }, (o, f) -> {
                     o.get().startRecord("1");
                     f.apply(2).literal("", "true");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldResetWhenEntityChangesIfSameEntity() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <none sameEntity='true'>" +
                 "    <data source='entity.data2' />" +
                 "  </none>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("entity");
@@ -164,13 +166,11 @@ public final class NoneTest {
                     i.literal("data1", "A");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("", "true");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

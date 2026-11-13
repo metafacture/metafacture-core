@@ -26,8 +26,7 @@ import org.metafacture.metamorph.api.NamedValueSource;
  * @author Christoph Böhme
  *
  */
-public abstract class AbstractCollect extends AbstractNamedValuePipe
-        implements Collect {
+public abstract class AbstractCollect extends AbstractNamedValuePipe implements Collect {
 
     private int oldRecord;
     private int oldEntity;
@@ -112,15 +111,13 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
     }
 
     /**
-     * @param value
-     *            the value to set
+     * @param value the value to set
      */
     public final void setValue(final String value) {
         this.value = value;
     }
 
-    protected final void updateCounts(final int currentRecord,
-            final int currentEntity) {
+    protected final void updateCounts(final int currentRecord, final int currentEntity) {
         if (!isSameRecord(currentRecord)) {
             resetCondition();
             clear();
@@ -147,8 +144,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 
     @Override
     public final void receive(final String currentName, final String currentValue,
-            final NamedValueSource source, final int recordCount,
-            final int entityCount) {
+            final NamedValueSource source, final int recordCount, final int entityCount) {
 
         updateCounts(recordCount, entityCount);
 
@@ -168,7 +164,8 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
         }
     }
 
-    protected abstract void receive(String currentName, String currentValue, NamedValueSource source);
+    protected abstract void receive(String currentName, String currentValue,
+            NamedValueSource source);
 
     protected abstract boolean isComplete();
 

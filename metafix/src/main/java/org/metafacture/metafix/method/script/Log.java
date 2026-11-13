@@ -40,8 +40,10 @@ public class Log implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-        // does not support Catmandu log level option FATAL, but does (incidentally) support TRACE
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
+        // does not support Catmandu log level option FATAL, but does (incidentally)
+        // support TRACE
         LOG.externalLog(options.getOrDefault("level", "INFO"), params.get(0));
     }
 

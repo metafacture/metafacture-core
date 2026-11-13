@@ -67,16 +67,9 @@ public final class JsonDecoderTest {
 
     @Test
     public void testShouldProcessRecords() {
-        jsonDecoder.process(
-            "{" +
-                "\"lit1\":\"value 1\"," +
-                "\" ent1\":{" +
-                    "\"lit2\":\"value {x}\"," +
-                    "\"lit\\\\3\":\"value 2 \"" +
-                "}," +
-                "\"lit4\":\"value '3'\"," +
-                "\"lit5\":null" +
-            "}");
+        jsonDecoder.process("{" + "\"lit1\":\"value 1\"," + "\" ent1\":{"
+                + "\"lit2\":\"value {x}\"," + "\"lit\\\\3\":\"value 2 \"" + "},"
+                + "\"lit4\":\"value '3'\"," + "\"lit5\":null" + "}");
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
@@ -92,25 +85,10 @@ public final class JsonDecoderTest {
 
     @Test
     public void testShouldProcessArrays() {
-        jsonDecoder.process(
-            "{" +
-                "\"arr1\":[\"val1\",\"val2\"]," +
-                "\"arr2\":[" +
-                    "{" +
-                        "\"lit1\":\"val1\"," +
-                        "\"lit2\":\"val2\"" +
-                    "},{" +
-                        "\"lit3\":\"val3\"" +
-                    "}" +
-                "]," +
-                "\"arr3\":[" +
-                    "[" +
-                        "{\"lit4\":\"val4\"}" +
-                    "],[" +
-                        "{\"lit5\":\"val5\"}" +
-                    "]" +
-                "]" +
-            "}");
+        jsonDecoder.process("{" + "\"arr1\":[\"val1\",\"val2\"]," + "\"arr2\":[" + "{"
+                + "\"lit1\":\"val1\"," + "\"lit2\":\"val2\"" + "},{" + "\"lit3\":\"val3\"" + "}"
+                + "]," + "\"arr3\":[" + "[" + "{\"lit4\":\"val4\"}" + "],[" + "{\"lit5\":\"val5\"}"
+                + "]" + "]" + "}");
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
@@ -140,14 +118,9 @@ public final class JsonDecoderTest {
 
     @Test
     public void testShouldNotProcessBooleans() {
-        jsonDecoder.process(
-            "{" +
-                "\"lit1\":false," +
-                "\"lit2\":\"true\"," +
-                "\"arr1\":[{\"lit3\":true,\"lit4\":\"false\"}]," +
-                "\"arr2\":[false,true,\"false\"]" +
-            "}"
-        );
+        jsonDecoder.process("{" + "\"lit1\":false," + "\"lit2\":\"true\","
+                + "\"arr1\":[{\"lit3\":true,\"lit4\":\"false\"}],"
+                + "\"arr2\":[false,true,\"false\"]" + "}");
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
@@ -169,14 +142,9 @@ public final class JsonDecoderTest {
     @Test
     public void testShouldProcessBooleansIfEnabled() {
         jsonDecoder.setBooleanMarker("~");
-        jsonDecoder.process(
-            "{" +
-                "\"lit1\":false," +
-                "\"lit2\":\"true\"," +
-                "\"arr1\":[{\"lit3\":true,\"lit4\":\"false\"}]," +
-                "\"arr2\":[false,true,\"false\"]" +
-            "}"
-        );
+        jsonDecoder.process("{" + "\"lit1\":false," + "\"lit2\":\"true\","
+                + "\"arr1\":[{\"lit3\":true,\"lit4\":\"false\"}],"
+                + "\"arr2\":[false,true,\"false\"]" + "}");
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
@@ -197,14 +165,8 @@ public final class JsonDecoderTest {
 
     @Test
     public void testShouldNotProcessNumbers() {
-        jsonDecoder.process(
-            "{" +
-                "\"lit1\":23," +
-                "\"lit2\":\"4.2\"," +
-                "\"arr1\":[{\"lit3\":4.2,\"lit4\":\"23\"}]," +
-                "\"arr2\":[23,4.2,\"23\"]" +
-            "}"
-        );
+        jsonDecoder.process("{" + "\"lit1\":23," + "\"lit2\":\"4.2\","
+                + "\"arr1\":[{\"lit3\":4.2,\"lit4\":\"23\"}]," + "\"arr2\":[23,4.2,\"23\"]" + "}");
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
@@ -226,14 +188,8 @@ public final class JsonDecoderTest {
     @Test
     public void testShouldProcessNumbersIfEnabled() {
         jsonDecoder.setNumberMarker("#");
-        jsonDecoder.process(
-            "{" +
-                "\"lit1\":23," +
-                "\"lit2\":\"4.2\"," +
-                "\"arr1\":[{\"lit3\":4.2,\"lit4\":\"23\"}]," +
-                "\"arr2\":[23,4.2,\"23\"]" +
-            "}"
-        );
+        jsonDecoder.process("{" + "\"lit1\":23," + "\"lit2\":\"4.2\","
+                + "\"arr1\":[{\"lit3\":4.2,\"lit4\":\"23\"}]," + "\"arr2\":[23,4.2,\"23\"]" + "}");
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
@@ -254,9 +210,7 @@ public final class JsonDecoderTest {
 
     @Test
     public void testShouldProcessConcatenatedRecords() {
-        jsonDecoder.process(
-            "{\"lit\": \"record 1\"}\n" +
-                "{\"lit\": \"record 2\"}");
+        jsonDecoder.process("{\"lit\": \"record 1\"}\n" + "{\"lit\": \"record 2\"}");
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
@@ -271,8 +225,7 @@ public final class JsonDecoderTest {
     public void testShouldProcessRecordsInArrayField() {
         jsonDecoder.setRecordPath("$.data");
         jsonDecoder.process(
-                "{\"data\":[" + "{\"lit\": \"record 1\"}," +
-                        "{\"lit\": \"record 2\"}" + "]}");
+                "{\"data\":[" + "{\"lit\": \"record 1\"}," + "{\"lit\": \"record 2\"}" + "]}");
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
@@ -286,9 +239,7 @@ public final class JsonDecoderTest {
     @Test
     public void testShouldProcessRecordsInArrayRoot() {
         jsonDecoder.setRecordPath("$");
-        jsonDecoder.process(
-                "[" + "{\"lit\": \"record 1\"}," +
-                        "{\"lit\": \"record 2\"}" + "]");
+        jsonDecoder.process("[" + "{\"lit\": \"record 1\"}," + "{\"lit\": \"record 2\"}" + "]");
 
         final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
@@ -301,9 +252,7 @@ public final class JsonDecoderTest {
 
     @Test(expected = MetafactureException.class)
     public void testRootArrayNoRecordPath() {
-        jsonDecoder.process(
-                "[" + "{\"lit\": \"record 1\"}," +
-                        "{\"lit\": \"record 2\"}" + "]");
+        jsonDecoder.process("[" + "{\"lit\": \"record 1\"}," + "{\"lit\": \"record 2\"}" + "]");
     }
 
     @Test
@@ -337,13 +286,15 @@ public final class JsonDecoderTest {
 
     @Test
     public void testShouldNotParseTrailingGarbage() {
-        assertException(JsonParseException.class, "Unrecognized token 'XXX'", "{\"lit\":\"value\"}XXX");
+        assertException(JsonParseException.class, "Unrecognized token 'XXX'",
+                "{\"lit\":\"value\"}XXX");
     }
 
     @Test
     public void testShouldNotParseComments() {
         Assert.assertFalse(jsonDecoder.getAllowComments());
-        assertException(JsonParseException.class, "Unexpected character ('/' (code 47))", "//{\"lit\":\"value\"}");
+        assertException(JsonParseException.class, "Unexpected character ('/' (code 47))",
+                "//{\"lit\":\"value\"}");
     }
 
     @Test
@@ -359,7 +310,8 @@ public final class JsonDecoderTest {
     @Test
     public void testShouldNotParseInlineComments() {
         Assert.assertFalse(jsonDecoder.getAllowComments());
-        assertException(JsonParseException.class, "Unexpected character ('/' (code 47))", "{\"lit\":/*comment*/\"value\"}");
+        assertException(JsonParseException.class, "Unexpected character ('/' (code 47))",
+                "{\"lit\":/*comment*/\"value\"}");
     }
 
     @Test
@@ -375,8 +327,10 @@ public final class JsonDecoderTest {
         ordered.verify(receiver).endRecord();
     }
 
-    private void assertException(final Class<? extends Throwable> expectedClass, final String expectedMessage, final String input) {
-        final Throwable thrownException = Assert.assertThrows(MetafactureException.class, () -> jsonDecoder.process(input));
+    private void assertException(final Class<? extends Throwable> expectedClass,
+            final String expectedMessage, final String input) {
+        final Throwable thrownException = Assert.assertThrows(MetafactureException.class,
+                () -> jsonDecoder.process(input));
         final Throwable actualException;
 
         final String expectedSuffix;
@@ -392,7 +346,8 @@ public final class JsonDecoderTest {
             expectedSuffix = " at ";
         }
 
-        MatcherAssert.assertThat(actualException.getMessage(), CoreMatchers.startsWith(expectedMessage + expectedSuffix));
+        MatcherAssert.assertThat(actualException.getMessage(),
+                CoreMatchers.startsWith(expectedMessage + expectedSuffix));
     }
 
 }

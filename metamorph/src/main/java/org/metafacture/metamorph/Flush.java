@@ -44,7 +44,8 @@ public final class Flush implements NamedValueReceiver {
     }
 
     @Override
-    public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
+    public void receive(final String name, final String value, final NamedValueSource source,
+            final int recordCount, final int entityCount) {
         listener.flush(recordCount, entityCount);
     }
 

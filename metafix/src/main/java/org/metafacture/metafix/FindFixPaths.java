@@ -40,7 +40,9 @@ import java.io.IOException;
  *
  * @author Tobias Bülte
  */
+// @formatter:off
 @Description("Finds all paths that have values that match the given pattern. Allows for regex. These paths can be used in a Fix to address fields.") // checkstyle-disable-line ClassDataAbstractionCoupling
+// @formatter:on
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("find-fix-paths")
@@ -72,14 +74,10 @@ public class FindFixPaths extends DefaultStreamPipe<ObjectReceiver<String>> {
         tripleFilter.setObjectPattern(objectPattern);
         final TripleSort tripleSort = new TripleSort();
         tripleSort.setBy(Compare.PREDICATE);
-        fix
-                .setReceiver(new StreamFlattener())
-                .setReceiver(new StreamToTriples())
-                .setReceiver(tripleFilter)
-                .setReceiver(tripleSort)
+        fix.setReceiver(new StreamFlattener()).setReceiver(new StreamToTriples())
+                .setReceiver(tripleFilter).setReceiver(tripleSort)
                 .setReceiver(new ObjectTemplate<>("${p}\t|\t${o}"))
-                .setReceiver(new DuplicateObjectFilter<>())
-                .setReceiver(getReceiver());
+                .setReceiver(new DuplicateObjectFilter<>()).setReceiver(getReceiver());
     }
 
     @Override

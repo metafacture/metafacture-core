@@ -38,7 +38,8 @@ public class Array implements FixFunction {
     }
 
     @Override
-    public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+    public void apply(final Metafix metafix, final Record record, final List<String> params,
+            final Map<String, String> options) {
         final String field = params.get(0);
 
         record.getList(field, a -> a.forEach(v -> v.matchType().ifHash(h -> {

@@ -45,12 +45,14 @@ public final class SquareTest {
     @Test
     public void shouldEmitSquaresOfInputValues() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <square delimiter=',' name='square' prefix='{' postfix='}'>" +
                 "    <data source='data1' />" +
                 "    <data source='data2' />" +
                 "  </square>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.literal("data1", "b");
@@ -66,8 +68,7 @@ public final class SquareTest {
                     i.literal("data2", "6");
                     i.literal("data2", "7");
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("square", "{a,c}");
                     o.get().literal("square", "{b,c}");
@@ -96,18 +97,19 @@ public final class SquareTest {
                     o.get().literal("square", "{2,3}");
                     o.get().literal("square", "{1,2}");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
     @Test
     public void shouldEmitSquaresOnFlushEvent() {
         TestHelpers.assertMorph(receiver,
+// @formatter:off
                 "<rules>" +
                 "  <square delimiter=',' name='square' prefix='{' postfix='}' flushWith='d'>" +
                 "    <data source='d.1' />" +
                 "  </square>" +
                 "</rules>",
+// @formatter:on
                 i -> {
                     i.startRecord("1");
                     i.startEntity("d");
@@ -122,14 +124,12 @@ public final class SquareTest {
                     i.literal("2", "e");
                     i.endEntity();
                     i.endRecord();
-                },
-                o -> {
+                }, o -> {
                     o.get().startRecord("1");
                     o.get().literal("square", "{a,b}");
                     o.get().literal("square", "{e,f}");
                     o.get().endRecord();
-                }
-        );
+                });
     }
 
 }

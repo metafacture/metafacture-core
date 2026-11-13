@@ -27,8 +27,8 @@ import org.xml.sax.helpers.XMLFilterImpl;
 import java.io.IOException;
 
 /**
- * Extends {@link XMLFilterImpl} to also intercept events defined
- * in {@link LexicalHandler}.
+ * Extends {@link XMLFilterImpl} to also intercept events defined in
+ * {@link LexicalHandler}.
  *
  * @author Christoph Böhme
  *
@@ -60,7 +60,8 @@ class LexicalHandlerXmlFilter extends XMLFilterImpl implements LexicalHandler {
     }
 
     @Override
-    public void setProperty(final String name, final Object value) throws SAXNotRecognizedException, SAXNotSupportedException {
+    public void setProperty(final String name, final Object value)
+            throws SAXNotRecognizedException, SAXNotSupportedException {
         if (LEXICAL_HANDLER_PROPERTY.equals(name)) {
             lexicalHandler = (LexicalHandler) value;
         }
@@ -70,7 +71,8 @@ class LexicalHandlerXmlFilter extends XMLFilterImpl implements LexicalHandler {
     }
 
     @Override
-    public void startDTD(final String name, final String publicId, final String systemId) throws SAXException {
+    public void startDTD(final String name, final String publicId, final String systemId)
+            throws SAXException {
         if (lexicalHandler != null) {
             lexicalHandler.startDTD(name, publicId, systemId);
         }

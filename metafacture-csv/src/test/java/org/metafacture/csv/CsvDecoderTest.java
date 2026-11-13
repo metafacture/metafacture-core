@@ -86,7 +86,8 @@ public final class CsvDecoderTest {
     @Test
     public void testInvalidSyntax() {
         assertException(MetafactureException.class, CsvMalformedLineException.class,
-                "Unterminated quoted field at end of CSV line", "a,\"b1,b2,b3,c"); // missing closing "
+                "Unterminated quoted field at end of CSV line", "a,\"b1,b2,b3,c"); // missing
+                                                                                   // closing "
     }
 
     @Test
@@ -141,8 +142,7 @@ public final class CsvDecoderTest {
     }
 
     /**
-     * In: "a","b\t","c\\t","\","\cd\"
-     * Out: a, b	, c\\t, \, \cd\
+     * In: "a","b\t","c\\t","\","\cd\" Out: a, b , c\\t, \, \cd\
      */
     @Test
     public void issue496_escaping() {
@@ -158,8 +158,10 @@ public final class CsvDecoderTest {
         ordered.verify(receiver).endRecord();
     }
 
-    private void assertException(final Class<? extends Throwable> exceptionClass, final Class<?> expectedClass, final String expectedMessage, final String input) {
-        final Throwable thrownException = Assert.assertThrows(exceptionClass, () -> decoder.process(input));
+    private void assertException(final Class<? extends Throwable> exceptionClass,
+            final Class<?> expectedClass, final String expectedMessage, final String input) {
+        final Throwable thrownException = Assert.assertThrows(exceptionClass,
+                () -> decoder.process(input));
         final Throwable actualException;
 
         final String expectedSuffix;
@@ -175,7 +177,8 @@ public final class CsvDecoderTest {
             expectedSuffix = " in ";
         }
 
-        MatcherAssert.assertThat(actualException.getMessage(), CoreMatchers.startsWith(expectedMessage + expectedSuffix));
+        MatcherAssert.assertThat(actualException.getMessage(),
+                CoreMatchers.startsWith(expectedMessage + expectedSuffix));
     }
 
 }

@@ -17,12 +17,12 @@
 package org.metafacture.commons.types;
 
 /**
- * Stores an immutable name-value pair. The hash code is
- * precomputed during instantiation.
+ * Stores an immutable name-value pair. The hash code is precomputed during
+ * instantiation.
  *
  * @author Markus Michael Geipel
  */
-public final class NamedValue  implements Comparable<NamedValue> {
+public final class NamedValue implements Comparable<NamedValue> {
 
     private static final int MAGIC1 = 23;
     private static final int MAGIC2 = 31;
@@ -68,9 +68,8 @@ public final class NamedValue  implements Comparable<NamedValue> {
     public boolean equals(final Object obj) {
         if (obj instanceof NamedValue) {
             final NamedValue namedValue = (NamedValue) obj;
-            return namedValue.preCompHashCode == preCompHashCode &&
-                    namedValue.name.equals(name) &&
-                    namedValue.value.equals(value);
+            return namedValue.preCompHashCode == preCompHashCode && namedValue.name.equals(name)
+                    && namedValue.value.equals(value);
         }
         return false;
     }

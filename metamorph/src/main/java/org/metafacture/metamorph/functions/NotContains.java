@@ -19,8 +19,7 @@ package org.metafacture.metamorph.functions;
 import org.metafacture.metamorph.api.helpers.AbstractFilter;
 
 /**
- * Checks whether the received value does not contain a
- * given value.
+ * Checks whether the received value does not contain a given value.
  *
  * @author Hans-Georg Becker
  */

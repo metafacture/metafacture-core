@@ -50,7 +50,8 @@ public final class SruOpenerTest {
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig().dynamicPort());
+    public WireMockRule wireMockRule = new WireMockRule(
+            WireMockConfiguration.wireMockConfig().dynamicPort());
 
     @Mock
     private ObjectReceiver<Reader> receiver;
@@ -61,49 +62,42 @@ public final class SruOpenerTest {
     @Test
     public void testDnb() {
         assertSru(DNB_URL, "/sru/dnb", o -> {
-                o.setQuery("WVN=24A05");
-                o.setRecordSchema("MARC21plus-xml");
-                o.setVersion("1.1");
-                o.setStartRecord(1890);
-                o.setMaximumRecords(1);
-                o.setTotalRecords(3);
-            },
-            "7ba7099f-ecd2-43f2-ada5-c053f2532da3",
-            "e9396103-55d6-41c6-984a-bb656304764a",
-            "8ce72c3c-e18f-488a-855d-6dcbf320cb4f"
-        );
+            o.setQuery("WVN=24A05");
+            o.setRecordSchema("MARC21plus-xml");
+            o.setVersion("1.1");
+            o.setStartRecord(1890);
+            o.setMaximumRecords(1);
+            o.setTotalRecords(3);
+        }, "7ba7099f-ecd2-43f2-ada5-c053f2532da3", "e9396103-55d6-41c6-984a-bb656304764a",
+                "8ce72c3c-e18f-488a-855d-6dcbf320cb4f");
     }
 
     @Test
     public void testDnbMaximumRecords2() {
         assertSru(DNB_URL, "/sru/dnb", o -> {
-                o.setQuery("WVN=24A05");
-                o.setRecordSchema("MARC21plus-xml");
-                o.setVersion("1.1");
-                o.setStartRecord(1890);
-                o.setMaximumRecords(2);
-                o.setTotalRecords(3);
-            },
-            "b0478aa7-2e7c-4301-a463-c189da335428",
-            "241be368-d2a1-427a-a554-667b67f69ef8"
-        );
+            o.setQuery("WVN=24A05");
+            o.setRecordSchema("MARC21plus-xml");
+            o.setVersion("1.1");
+            o.setStartRecord(1890);
+            o.setMaximumRecords(2);
+            o.setTotalRecords(3);
+        }, "b0478aa7-2e7c-4301-a463-c189da335428", "241be368-d2a1-427a-a554-667b67f69ef8");
     }
 
     @Test
     public void testZdb() {
         assertSru(DNB_URL, "/sru/zdb", o -> {
-                o.setQuery("dnb.isil=DE-Sol1");
-                o.setRecordSchema("MARC21plus-xml");
-                o.setVersion("1.1");
-                o.setStartRecord(3029);
-                o.setMaximumRecords(1);
-                o.setTotalRecords(1);
-            },
-            "23b62fc7-de7f-4603-949d-a5e12027a25d"
-        );
+            o.setQuery("dnb.isil=DE-Sol1");
+            o.setRecordSchema("MARC21plus-xml");
+            o.setVersion("1.1");
+            o.setStartRecord(3029);
+            o.setMaximumRecords(1);
+            o.setTotalRecords(1);
+        }, "23b62fc7-de7f-4603-949d-a5e12027a25d");
     }
 
-    private void assertSru(final String url, final String path, final Consumer<SruOpener> consumer, final String... ids) {
+    private void assertSru(final String url, final String path, final Consumer<SruOpener> consumer,
+            final String... ids) {
         final boolean recording = Boolean.getBoolean("org.metafacture.wiremock.record");
         if (recording) {
             System.out.println("Recording live requests to proxy: " + url);
@@ -122,14 +116,16 @@ public final class SruOpenerTest {
                 System.err.println("WireMock mapping not found: " + i);
             }
             else {
-                final String fileName = String.format(FILE_PATH, mapping.getResponse().getBodyFileName());
+                final String fileName = String.format(FILE_PATH,
+                        mapping.getResponse().getBodyFileName());
 
                 try (InputStream inputStream = getClass().getResourceAsStream(fileName)) {
                     if (inputStream == null) {
                         System.err.println("Response body not found for " + i + ": " + fileName);
                     }
                     else {
-                        responseBodies.add(ResourceUtil.readAll(inputStream, Charset.defaultCharset()));
+                        responseBodies
+                                .add(ResourceUtil.readAll(inputStream, Charset.defaultCharset()));
                     }
                 }
                 catch (final IOException e) {

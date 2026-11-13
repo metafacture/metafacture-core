@@ -41,8 +41,7 @@ import org.metafacture.framework.objects.Triple.ObjectType;
 @In(Triple.class)
 @Out(StreamReceiver.class)
 @FluxCommand("triples-to-stream")
-public final class TriplesToStream extends
-        DefaultObjectPipe<Triple, StreamReceiver> {
+public final class TriplesToStream extends DefaultObjectPipe<Triple, StreamReceiver> {
 
     private final FormetaParser parser = new FormetaParser();
     private final PartialRecordEmitter emitter = new PartialRecordEmitter();
@@ -65,7 +64,8 @@ public final class TriplesToStream extends
             parser.parse(triple.getObject());
         }
         else {
-            throw new UnsupportedOperationException(triple.getObjectType() + " can not yet be decoded");
+            throw new UnsupportedOperationException(
+                    triple.getObjectType() + " can not yet be decoded");
         }
         getReceiver().endRecord();
     }

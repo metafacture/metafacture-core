@@ -45,265 +45,122 @@ public final class TripleSortTest {
 
     @Test
     public void shouldSortByIncreasingSubject() {
-        assertSort(
-                t -> {
-                },
-                "s0 p1 o2",
-                "s2 p1 o0",
-                "s0 p1 o1",
-                "s1 p0 o2",
-                "s0 p2 o1",
+        assertSort(t -> {
+        }, "s0 p1 o2", "s2 p1 o0", "s0 p1 o1", "s1 p0 o2", "s0 p2 o1",
                 //
-                "s0 p1 o2",
-                "s0 p1 o1",
-                "s0 p2 o1",
-                "s1 p0 o2",
-                "s2 p1 o0"
-        );
+                "s0 p1 o2", "s0 p1 o1", "s0 p2 o1", "s1 p0 o2", "s2 p1 o0");
     }
 
     @Test
     public void shouldSortByDecreasingSubject() {
-        assertSort(
-                t -> {
-                    t.setOrder(AbstractTripleSort.Order.DECREASING);
-                },
-                "s0 p1 o2",
-                "s2 p1 o0",
-                "s0 p1 o1",
-                "s1 p0 o2",
-                "s0 p2 o1",
+        assertSort(t -> {
+            t.setOrder(AbstractTripleSort.Order.DECREASING);
+        }, "s0 p1 o2", "s2 p1 o0", "s0 p1 o1", "s1 p0 o2", "s0 p2 o1",
                 //
-                "s2 p1 o0",
-                "s1 p0 o2",
-                "s0 p1 o2",
-                "s0 p1 o1",
-                "s0 p2 o1"
-        );
+                "s2 p1 o0", "s1 p0 o2", "s0 p1 o2", "s0 p1 o1", "s0 p2 o1");
     }
 
     @Test
     public void shouldSortByIncreasingPredicate() {
-        assertSort(
-                t -> {
-                    t.setBy(AbstractTripleSort.Compare.PREDICATE);
-                },
-                "s0 p1 o2",
-                "s2 p1 o0",
-                "s0 p1 o1",
-                "s1 p0 o2",
-                "s0 p2 o1",
+        assertSort(t -> {
+            t.setBy(AbstractTripleSort.Compare.PREDICATE);
+        }, "s0 p1 o2", "s2 p1 o0", "s0 p1 o1", "s1 p0 o2", "s0 p2 o1",
                 //
-                "s1 p0 o2",
-                "s0 p1 o2",
-                "s2 p1 o0",
-                "s0 p1 o1",
-                "s0 p2 o1"
-        );
+                "s1 p0 o2", "s0 p1 o2", "s2 p1 o0", "s0 p1 o1", "s0 p2 o1");
     }
 
     @Test
     public void shouldSortByDecreasingPredicate() {
-        assertSort(
-                t -> {
-                    t.setBy(AbstractTripleSort.Compare.PREDICATE);
-                    t.setOrder(AbstractTripleSort.Order.DECREASING);
-                },
-                "s0 p1 o2",
-                "s2 p1 o0",
-                "s0 p1 o1",
-                "s1 p0 o2",
-                "s0 p2 o1",
+        assertSort(t -> {
+            t.setBy(AbstractTripleSort.Compare.PREDICATE);
+            t.setOrder(AbstractTripleSort.Order.DECREASING);
+        }, "s0 p1 o2", "s2 p1 o0", "s0 p1 o1", "s1 p0 o2", "s0 p2 o1",
                 //
-                "s0 p2 o1",
-                "s0 p1 o2",
-                "s2 p1 o0",
-                "s0 p1 o1",
-                "s1 p0 o2"
-        );
+                "s0 p2 o1", "s0 p1 o2", "s2 p1 o0", "s0 p1 o1", "s1 p0 o2");
     }
 
     @Test
     public void shouldSortByIncreasingObject() {
-        assertSort(
-                t -> {
-                    t.setBy(AbstractTripleSort.Compare.OBJECT);
-                },
-                "s0 p1 o2",
-                "s2 p1 o0",
-                "s0 p1 o1",
-                "s1 p0 o2",
-                "s0 p2 o1",
+        assertSort(t -> {
+            t.setBy(AbstractTripleSort.Compare.OBJECT);
+        }, "s0 p1 o2", "s2 p1 o0", "s0 p1 o1", "s1 p0 o2", "s0 p2 o1",
                 //
-                "s2 p1 o0",
-                "s0 p1 o1",
-                "s0 p2 o1",
-                "s0 p1 o2",
-                "s1 p0 o2"
-        );
+                "s2 p1 o0", "s0 p1 o1", "s0 p2 o1", "s0 p1 o2", "s1 p0 o2");
     }
 
     @Test
     public void shouldSortByDecreasingObject() {
-        assertSort(
-                t -> {
-                    t.setBy(AbstractTripleSort.Compare.OBJECT);
-                    t.setOrder(AbstractTripleSort.Order.DECREASING);
-                },
-                "s0 p1 o2",
-                "s2 p1 o0",
-                "s0 p1 o1",
-                "s1 p0 o2",
-                "s0 p2 o1",
+        assertSort(t -> {
+            t.setBy(AbstractTripleSort.Compare.OBJECT);
+            t.setOrder(AbstractTripleSort.Order.DECREASING);
+        }, "s0 p1 o2", "s2 p1 o0", "s0 p1 o1", "s1 p0 o2", "s0 p2 o1",
                 //
-                "s0 p1 o2",
-                "s1 p0 o2",
-                "s0 p1 o1",
-                "s0 p2 o1",
-                "s2 p1 o0"
-        );
+                "s0 p1 o2", "s1 p0 o2", "s0 p1 o1", "s0 p2 o1", "s2 p1 o0");
     }
 
     @Test
     public void shouldSortByIncreasingTriple() {
-        assertSort(
-                t -> {
-                    t.setBy(AbstractTripleSort.Compare.ALL);
-                },
-                "s0 p1 o2",
-                "s2 p1 o0",
-                "s0 p1 o1",
-                "s1 p0 o2",
-                "s0 p2 o1",
+        assertSort(t -> {
+            t.setBy(AbstractTripleSort.Compare.ALL);
+        }, "s0 p1 o2", "s2 p1 o0", "s0 p1 o1", "s1 p0 o2", "s0 p2 o1",
                 //
-                "s0 p1 o1",
-                "s0 p1 o2",
-                "s0 p2 o1",
-                "s1 p0 o2",
-                "s2 p1 o0"
-        );
+                "s0 p1 o1", "s0 p1 o2", "s0 p2 o1", "s1 p0 o2", "s2 p1 o0");
     }
 
     @Test
     public void shouldSortByDecreasingTriple() {
-        assertSort(
-                t -> {
-                    t.setBy(AbstractTripleSort.Compare.ALL);
-                    t.setOrder(AbstractTripleSort.Order.DECREASING);
-                },
-                "s0 p1 o2",
-                "s2 p1 o0",
-                "s0 p1 o1",
-                "s1 p0 o2",
-                "s0 p2 o1",
+        assertSort(t -> {
+            t.setBy(AbstractTripleSort.Compare.ALL);
+            t.setOrder(AbstractTripleSort.Order.DECREASING);
+        }, "s0 p1 o2", "s2 p1 o0", "s0 p1 o1", "s1 p0 o2", "s0 p2 o1",
                 //
-                "s2 p1 o0",
-                "s1 p0 o2",
-                "s0 p2 o1",
-                "s0 p1 o2",
-                "s0 p1 o1"
-        );
+                "s2 p1 o0", "s1 p0 o2", "s0 p2 o1", "s0 p1 o2", "s0 p1 o1");
     }
 
     @Test
     public void shouldNotSortNumerically() {
-        assertSort(
-                t -> {
-                },
-                "10  p1 o2",
-                "2   p1 o0",
-                "0   p1 o1",
-                "101 p0 o2",
-                "11  p2 o1",
+        assertSort(t -> {
+        }, "10  p1 o2", "2   p1 o0", "0   p1 o1", "101 p0 o2", "11  p2 o1",
                 //
-                "0   p1 o1",
-                "10  p1 o2",
-                "101 p0 o2",
-                "11  p2 o1",
-                "2   p1 o0"
-        );
+                "0   p1 o1", "10  p1 o2", "101 p0 o2", "11  p2 o1", "2   p1 o0");
     }
 
     @Test
     public void issue380_shouldOptionallySortNumericallyByIncreasingSubject() {
-        assertSort(
-                t -> {
-                    t.setNumeric(true);
-                },
-                "10  p1 o2",
-                "2   p1 o0",
-                "0   p1 o1",
-                "101 p0 o2",
-                "11  p2 o1",
+        assertSort(t -> {
+            t.setNumeric(true);
+        }, "10  p1 o2", "2   p1 o0", "0   p1 o1", "101 p0 o2", "11  p2 o1",
                 //
-                "0   p1 o1",
-                "2   p1 o0",
-                "10  p1 o2",
-                "11  p2 o1",
-                "101 p0 o2"
-        );
+                "0   p1 o1", "2   p1 o0", "10  p1 o2", "11  p2 o1", "101 p0 o2");
     }
 
     @Test
     public void issue380_shouldOptionallySortNumericallyByDecreasingSubject() {
-        assertSort(
-                t -> {
-                    t.setNumeric(true);
-                    t.setOrder(AbstractTripleSort.Order.DECREASING);
-                },
-                "10  p1 o2",
-                "2   p1 o0",
-                "0   p1 o1",
-                "101 p0 o2",
-                "11  p2 o1",
+        assertSort(t -> {
+            t.setNumeric(true);
+            t.setOrder(AbstractTripleSort.Order.DECREASING);
+        }, "10  p1 o2", "2   p1 o0", "0   p1 o1", "101 p0 o2", "11  p2 o1",
                 //
-                "101 p0 o2",
-                "11  p2 o1",
-                "10  p1 o2",
-                "2   p1 o0",
-                "0   p1 o1"
-        );
+                "101 p0 o2", "11  p2 o1", "10  p1 o2", "2   p1 o0", "0   p1 o1");
     }
 
     @Test(expected = NumberFormatException.class)
     public void shouldFailToSortNumericallyWithInvalidNumber() {
-        assertSort(
-                t -> {
-                    t.setNumeric(true);
-                },
-                "10  p1 o2",
-                "2   p1 o0",
-                "0   p1 o1",
-                "1x1 p0 o2",
-                "11  p2 o1",
+        assertSort(t -> {
+            t.setNumeric(true);
+        }, "10  p1 o2", "2   p1 o0", "0   p1 o1", "1x1 p0 o2", "11  p2 o1",
                 //
-                "",
-                "",
-                "",
-                "",
-                ""
-        );
+                "", "", "", "", "");
     }
 
     @Test
     public void shouldNotSortNumericallyByTriple() {
-        assertSort(
-                t -> {
-                    t.setNumeric(true);
-                    t.setBy(AbstractTripleSort.Compare.ALL);
-                },
-                "10  p1 o2",
-                "2   p1 o0",
-                "0   p1 o1",
-                "101 p0 o2",
-                "11  p2 o1",
+        assertSort(t -> {
+            t.setNumeric(true);
+            t.setBy(AbstractTripleSort.Compare.ALL);
+        }, "10  p1 o2", "2   p1 o0", "0   p1 o1", "101 p0 o2", "11  p2 o1",
                 //
-                "0   p1 o1",
-                "10  p1 o2",
-                "101 p0 o2",
-                "11  p2 o1",
-                "2   p1 o0"
-        );
+                "0   p1 o1", "10  p1 o2", "101 p0 o2", "11  p2 o1", "2   p1 o0");
     }
 
     public void assertSort(final Consumer<TripleSort> consumer, final String... triples) {

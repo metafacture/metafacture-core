@@ -23,13 +23,12 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
 /**
- * Merges records based on their id. The module compares the id
- * of each record it receives with the one of previous record; if
- * both records have got the same id, then the end-record and
- * start-record events that would normally separate the records
- * are suppressed in the output stream of {@code StreamMerger}.
- * This effectively merges the two records. Of course, this only
- * works if the records which are to be merged follow each other
+ * Merges records based on their id. The module compares the id of each record
+ * it receives with the one of previous record; if both records have got the
+ * same id, then the end-record and start-record events that would normally
+ * separate the records are suppressed in the output stream of
+ * {@code StreamMerger}. This effectively merges the two records. Of course,
+ * this only works if the records which are to be merged follow each other
  * directly.
  *
  * @author Christoph Böhme

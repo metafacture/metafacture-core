@@ -55,259 +55,200 @@ public final class YamlDecoderTest {
 
     @Test
     public void testShouldProcessEmptyStrings() {
-        assertDecode(
-                i -> {
-                    i.process("");
-                },
-                o -> {
-                }
-        );
+        assertDecode(i -> {
+            i.process("");
+        }, o -> {
+        });
     }
 
     @Test
     public void testShouldProcessRecords() {
-        assertDecode(
-                i -> {
-                    i.process(
-                            "\"lit1\": \"value 1\"\n" +
-                            "\" ent1\":\n" +
-                            "  \"lit2\": \"value {x}\"\n" +
-                            "  \"lit\\\\3\": \"value 2 \"\n" +
-                            "\"lit4\": \"value '3'\"\n" +
-                            "\"lit5\": null\n"
-                    );
-                },
-                o -> {
-                    o.get().startRecord("1");
-                    o.get().literal("lit1", "value 1");
-                    o.get().startEntity(" ent1");
-                    o.get().literal("lit2", "value {x}");
-                    o.get().literal("lit\\3", "value 2 ");
-                    o.get().endEntity();
-                    o.get().literal("lit4", "value '3'");
-                    o.get().literal("lit5", null);
-                    o.get().endRecord();
-                }
-        );
+        assertDecode(i -> {
+            i.process("\"lit1\": \"value 1\"\n" + "\" ent1\":\n" + "  \"lit2\": \"value {x}\"\n"
+                    + "  \"lit\\\\3\": \"value 2 \"\n" + "\"lit4\": \"value '3'\"\n"
+                    + "\"lit5\": null\n");
+        }, o -> {
+            o.get().startRecord("1");
+            o.get().literal("lit1", "value 1");
+            o.get().startEntity(" ent1");
+            o.get().literal("lit2", "value {x}");
+            o.get().literal("lit\\3", "value 2 ");
+            o.get().endEntity();
+            o.get().literal("lit4", "value '3'");
+            o.get().literal("lit5", null);
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void testShouldProcessArrays() {
-        assertDecode(
-                i -> {
-                    i.process(
-                            "\"arr1\": [\"val1\",\"val2\"]\n" +
-                            "\"arr2\":\n" +
-                            "- \"lit1\": \"val1\"\n" +
-                            "  \"lit2\": \"val2\"\n" +
-                            "- \"lit3\": \"val3\"\n" +
-                            "\"arr3\":\n" +
-                            "- - \"lit4\": \"val4\"\n" +
-                            "- - \"lit5\": \"val5\"\n"
-                    );
-                },
-                (o, f) -> {
-                    o.get().startRecord("1");
-                    o.get().startEntity("arr1[]");
-                    o.get().literal("1", "val1");
-                    o.get().literal("2", "val2");
-                    o.get().endEntity();
-                    o.get().startEntity("arr2[]");
-                    o.get().startEntity("1");
-                    o.get().literal("lit1", "val1");
-                    o.get().literal("lit2", "val2");
-                    o.get().endEntity();
-                    o.get().startEntity("2");
-                    o.get().literal("lit3", "val3");
-                    f.apply(2).endEntity();
-                    o.get().startEntity("arr3[]");
-                    o.get().startEntity("1[]");
-                    o.get().startEntity("1");
-                    o.get().literal("lit4", "val4");
-                    f.apply(2).endEntity();
-                    o.get().startEntity("2[]");
-                    o.get().startEntity("1");
-                    o.get().literal("lit5", "val5");
-                    f.apply(3).endEntity();
-                    o.get().endRecord();
-                }
-        );
+        assertDecode(i -> {
+            i.process("\"arr1\": [\"val1\",\"val2\"]\n" + "\"arr2\":\n" + "- \"lit1\": \"val1\"\n"
+                    + "  \"lit2\": \"val2\"\n" + "- \"lit3\": \"val3\"\n" + "\"arr3\":\n"
+                    + "- - \"lit4\": \"val4\"\n" + "- - \"lit5\": \"val5\"\n");
+        }, (o, f) -> {
+            o.get().startRecord("1");
+            o.get().startEntity("arr1[]");
+            o.get().literal("1", "val1");
+            o.get().literal("2", "val2");
+            o.get().endEntity();
+            o.get().startEntity("arr2[]");
+            o.get().startEntity("1");
+            o.get().literal("lit1", "val1");
+            o.get().literal("lit2", "val2");
+            o.get().endEntity();
+            o.get().startEntity("2");
+            o.get().literal("lit3", "val3");
+            f.apply(2).endEntity();
+            o.get().startEntity("arr3[]");
+            o.get().startEntity("1[]");
+            o.get().startEntity("1");
+            o.get().literal("lit4", "val4");
+            f.apply(2).endEntity();
+            o.get().startEntity("2[]");
+            o.get().startEntity("1");
+            o.get().literal("lit5", "val5");
+            f.apply(3).endEntity();
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void testShouldProcessConcatenatedRecords() {
-        assertDecode(
-                i -> {
-                    i.process(
-                            "\"lit\": \"record 1\"\n" +
-                            "---\n" +
-                            "\"lit\": \"record 2\"\n"
-                    );
-                },
-                o -> {
-                    o.get().startRecord("1");
-                    o.get().literal("lit", "record 1");
-                    o.get().endRecord();
-                    o.get().startRecord("2");
-                    o.get().literal("lit", "record 2");
-                    o.get().endRecord();
-                }
-        );
+        assertDecode(i -> {
+            i.process("\"lit\": \"record 1\"\n" + "---\n" + "\"lit\": \"record 2\"\n");
+        }, o -> {
+            o.get().startRecord("1");
+            o.get().literal("lit", "record 1");
+            o.get().endRecord();
+            o.get().startRecord("2");
+            o.get().literal("lit", "record 2");
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void testShouldNotProcessRecordsInArrayField() {
-        assertDecode(
-                i -> {
-                    i.process(
-                            "\"data\":\n" +
-                            "- \"lit\": \"record 1\"\n" +
-                            "- \"lit\": \"record 2\"\n"
-                    );
-                },
-                (o, f) -> {
-                    o.get().startRecord("1");
-                    o.get().startEntity("data[]");
-                    o.get().startEntity("1");
-                    o.get().literal("lit", "record 1");
-                    o.get().endEntity();
-                    o.get().startEntity("2");
-                    o.get().literal("lit", "record 2");
-                    f.apply(2).endEntity();
-                    o.get().endRecord();
-                }
-        );
+        assertDecode(i -> {
+            i.process("\"data\":\n" + "- \"lit\": \"record 1\"\n" + "- \"lit\": \"record 2\"\n");
+        }, (o, f) -> {
+            o.get().startRecord("1");
+            o.get().startEntity("data[]");
+            o.get().startEntity("1");
+            o.get().literal("lit", "record 1");
+            o.get().endEntity();
+            o.get().startEntity("2");
+            o.get().literal("lit", "record 2");
+            f.apply(2).endEntity();
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void testRootArrayNoRecordPath() {
-        assertException("Unexpected token 'START_ARRAY'",
-                i -> {
-                    i.process(
-                            "- \"lit\": \"record 1\"\n" +
-                            "- \"lit\": \"record 2\"\n"
-                    );
-                }
-        );
+        assertException("Unexpected token 'START_ARRAY'", i -> {
+            i.process("- \"lit\": \"record 1\"\n" + "- \"lit\": \"record 2\"\n");
+        });
     }
 
     @Test
     public void testShouldProcessMultipleRecords() {
-        assertDecode(
-                i -> {
-                    i.process("\"lit\": \"record 1\"\n");
-                    i.process("\"lit\": \"record 2\"\n");
-                },
-                o -> {
-                    o.get().startRecord("1");
-                    o.get().literal("lit", "record 1");
-                    o.get().endRecord();
-                    o.get().startRecord("2");
-                    o.get().literal("lit", "record 2");
-                    o.get().endRecord();
-                }
-        );
+        assertDecode(i -> {
+            i.process("\"lit\": \"record 1\"\n");
+            i.process("\"lit\": \"record 2\"\n");
+        }, o -> {
+            o.get().startRecord("1");
+            o.get().literal("lit", "record 1");
+            o.get().endRecord();
+            o.get().startRecord("2");
+            o.get().literal("lit", "record 2");
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void testShouldOnlyParseObjects() {
-        assertException("Unexpected token 'VALUE_NULL'",
-                i -> {
-                    i.process("null");
-                }
-        );
+        assertException("Unexpected token 'VALUE_NULL'", i -> {
+            i.process("null");
+        });
     }
 
     @Test
     public void testShouldNotParseMalformedObjects() {
-        assertException("Unexpected token 'VALUE_STRING'",
-                i -> {
-                    i.process("\"lit\":\"value\"");
-                }
-        );
+        assertException("Unexpected token 'VALUE_STRING'", i -> {
+            i.process("\"lit\":\"value\"");
+        });
     }
 
     @Test
     public void testShouldNotParseTrailingContent() {
-        assertException("Unexpected token 'VALUE_NULL'",
-                i -> {
-                    i.process("\"lit\": \"value\"\n---\nnull");
-                }
-        );
+        assertException("Unexpected token 'VALUE_NULL'", i -> {
+            i.process("\"lit\": \"value\"\n---\nnull");
+        });
     }
 
     @Test
     public void testShouldNotParseTrailingGarbage() {
-        assertException("Unexpected token 'VALUE_STRING'",
-                i -> {
-                    i.process("\"lit\": \"value\"\n---\nXXX");
-                }
-        );
+        assertException("Unexpected token 'VALUE_STRING'", i -> {
+            i.process("\"lit\": \"value\"\n---\nXXX");
+        });
     }
 
     @Test
     public void testShouldNotParseCStyleComments() {
-        assertDecode(
-                i -> {
-                    i.process("//\"lit\": \"value\"");
-                },
-                o -> {
-                    o.get().startRecord("1");
-                    o.get().literal("//\"lit\"", "value");
-                    o.get().endRecord();
-                }
-        );
+        assertDecode(i -> {
+            i.process("//\"lit\": \"value\"");
+        }, o -> {
+            o.get().startRecord("1");
+            o.get().literal("//\"lit\"", "value");
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void testShouldParseShellStyleComments() {
-        assertDecode(
-                i -> {
-                    i.process("#\"lit\": \"value\"");
-                },
-                o -> {
-                }
-        );
+        assertDecode(i -> {
+            i.process("#\"lit\": \"value\"");
+        }, o -> {
+        });
     }
 
     @Test
     public void testShouldNotParseInlineCStyleComments() {
-        assertDecode(
-                i -> {
-                    i.process("\"lit\": /*comment*/\"value\"");
-                },
-                o -> {
-                    o.get().startRecord("1");
-                    o.get().literal("lit", "/*comment*/\"value\"");
-                    o.get().endRecord();
-                }
-        );
+        assertDecode(i -> {
+            i.process("\"lit\": /*comment*/\"value\"");
+        }, o -> {
+            o.get().startRecord("1");
+            o.get().literal("lit", "/*comment*/\"value\"");
+            o.get().endRecord();
+        });
     }
 
     @Test
     public void testShouldParseInlineShellStyleComments() {
-        assertDecode(
-                i -> {
-                    i.process("\"lit\": #\"value\"");
-                },
-                o -> {
-                    o.get().startRecord("1");
-                    o.get().literal("lit", null);
-                    o.get().endRecord();
-                }
-        );
+        assertDecode(i -> {
+            i.process("\"lit\": #\"value\"");
+        }, o -> {
+            o.get().startRecord("1");
+            o.get().literal("lit", null);
+            o.get().endRecord();
+        });
     }
 
     private void assertException(final String message, final Consumer<YamlDecoder> in) {
-        final Throwable ex = Assert.assertThrows(MetafactureException.class, () -> assertDecode(in, o -> { }));
+        final Throwable ex = Assert.assertThrows(MetafactureException.class,
+                () -> assertDecode(in, o -> {
+                }));
         MatcherAssert.assertThat(ex.getMessage(), CoreMatchers.startsWith(message + " at "));
     }
 
-    private void assertDecode(final Consumer<YamlDecoder> in, final Consumer<Supplier<StreamReceiver>> out) {
+    private void assertDecode(final Consumer<YamlDecoder> in,
+            final Consumer<Supplier<StreamReceiver>> out) {
         assertDecode(in, (s, f) -> out.accept(s));
     }
 
-    private void assertDecode(final Consumer<YamlDecoder> in, final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out) {
+    private void assertDecode(final Consumer<YamlDecoder> in,
+            final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out) {
         final InOrder ordered = Mockito.inOrder(receiver);
 
         final YamlDecoder yamlDecoder = new YamlDecoder();
@@ -315,7 +256,8 @@ public final class YamlDecoderTest {
         in.accept(yamlDecoder);
 
         try {
-            out.accept(() -> ordered.verify(receiver), i -> ordered.verify(receiver, Mockito.times(i)));
+            out.accept(() -> ordered.verify(receiver),
+                    i -> ordered.verify(receiver, Mockito.times(i)));
 
             ordered.verifyNoMoreInteractions();
             Mockito.verifyNoMoreInteractions(receiver);

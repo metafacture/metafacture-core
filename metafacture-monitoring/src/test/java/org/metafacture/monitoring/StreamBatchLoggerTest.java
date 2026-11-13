@@ -114,7 +114,8 @@ public final class StreamBatchLoggerTest extends TestHelpers {
 
     @Test
     public void shouldLogWithCustomFormat() {
-        streamBatchLogger = new StreamBatchLogger("records=${records}, totalRecords=${totalRecords}, batches=${batches}, batchSize=${batchSize}");
+        streamBatchLogger = new StreamBatchLogger(
+                "records=${records}, totalRecords=${totalRecords}, batches=${batches}, batchSize=${batchSize}");
         streamBatchLogger.setReceiver(receiver);
 
         streamBatchLogger.startRecord("1");

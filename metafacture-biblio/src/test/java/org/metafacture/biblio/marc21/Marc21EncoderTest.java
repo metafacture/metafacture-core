@@ -63,8 +63,8 @@ public final class Marc21EncoderTest {
         marc21Encoder.literal("001", "identifier");
         marc21Encoder.endRecord();
 
-        Mockito.verify(receiver).process(
-                ArgumentMatchers.matches(".*001001100000\u001eidentifier\u001e.*"));
+        Mockito.verify(receiver)
+                .process(ArgumentMatchers.matches(".*001001100000\u001eidentifier\u001e.*"));
     }
 
     @Test
@@ -74,7 +74,8 @@ public final class Marc21EncoderTest {
         marc21Encoder.endEntity();
         marc21Encoder.endRecord();
 
-        Mockito.verify(receiver).process(ArgumentMatchers.matches(".*021000300000\u001ea \u001e.*"));
+        Mockito.verify(receiver)
+                .process(ArgumentMatchers.matches(".*021000300000\u001ea \u001e.*"));
     }
 
     @Test
@@ -124,7 +125,8 @@ public final class Marc21EncoderTest {
         marc21Encoder.endEntity();
         marc21Encoder.endRecord();
 
-        Mockito.verify(receiver).process(ArgumentMatchers.matches("00026pam a2200025 c 4500\u001e\u001d"));
+        Mockito.verify(receiver)
+                .process(ArgumentMatchers.matches("00026pam a2200025 c 4500\u001e\u001d"));
     }
 
     @Test
@@ -133,7 +135,8 @@ public final class Marc21EncoderTest {
         marc21Encoder.literal(Marc21EventNames.LEADER_ENTITY, "02602pam a2200529 c 4500");
         marc21Encoder.endRecord();
 
-        Mockito.verify(receiver).process(ArgumentMatchers.matches("00026pam a2200025 c 4500\u001e\u001d"));
+        Mockito.verify(receiver)
+                .process(ArgumentMatchers.matches("00026pam a2200025 c 4500\u001e\u001d"));
     }
 
     @Test
@@ -146,7 +149,8 @@ public final class Marc21EncoderTest {
         marc21Encoder.endEntity();
         marc21Encoder.endRecord();
 
-        Mockito.verify(receiver).process(ArgumentMatchers.matches("00055pam a2200037 c 4500021001700000\u001e.*\u001d"));
+        Mockito.verify(receiver).process(
+                ArgumentMatchers.matches("00055pam a2200037 c 4500021001700000\u001e.*\u001d"));
     }
 
     @Test(expected = FormatException.class)
@@ -164,7 +168,8 @@ public final class Marc21EncoderTest {
         marc21Encoder.literal(Marc21EventNames.LEADER_ENTITY, BAD_LEADER);
         marc21Encoder.endRecord();
 
-        Mockito.verify(receiver).process(ArgumentMatchers.matches("00026ny  a22000253n 4500\u001e\u001d"));
+        Mockito.verify(receiver)
+                .process(ArgumentMatchers.matches("00026ny  a22000253n 4500\u001e\u001d"));
     }
 
 }

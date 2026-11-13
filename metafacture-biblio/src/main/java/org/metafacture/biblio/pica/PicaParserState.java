@@ -22,12 +22,12 @@ package org.metafacture.biblio.pica;
  * states are valid end states. The parser processes any input, there is no
  * error state.
  *
- * The parser ignores spaces in field names. They are not included in the
- * field name.
+ * The parser ignores spaces in field names. They are not included in the field
+ * name.
  *
- * Empty subfields are skipped. For instance, parsing the following input
- * would NOT produce an empty literal: 003@ \u001f\u001e. The parser also
- * skips unnamed fields without any subfields.
+ * Empty subfields are skipped. For instance, parsing the following input would
+ * NOT produce an empty literal: 003@ \u001f\u001e. The parser also skips
+ * unnamed fields without any subfields.
  *
  * @author Christoph Böhme
  * @author Pascal Christoph (dr0i) (add support for non-normalized pica+)
@@ -37,7 +37,8 @@ enum PicaParserState {
 
     FIELD_NAME {
         @Override
-        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx, final boolean normalized) {
+        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx,
+                final boolean normalized) {
             final PicaParserState next;
             switch (PicaConstants.from(normalized, ch)) {
                 case RECORD_MARKER:
@@ -63,10 +64,12 @@ enum PicaParserState {
             ctx.emitStartEntity();
             ctx.emitEndEntity();
         }
+
     },
     SUBFIELD_NAME {
         @Override
-        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx, final boolean normalized) {
+        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx,
+                final boolean normalized) {
             final PicaParserState next;
             switch (PicaConstants.from(normalized, ch)) {
                 case RECORD_MARKER:
@@ -89,10 +92,12 @@ enum PicaParserState {
         protected void endOfInput(final PicaParserContext ctx) {
             ctx.emitEndEntity();
         }
+
     },
     SUBFIELD_VALUE {
         @Override
-        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx, final boolean normalized) {
+        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx,
+                final boolean normalized) {
             final PicaParserState next;
             switch (PicaConstants.from(normalized, ch)) {
                 case RECORD_MARKER:
@@ -118,9 +123,11 @@ enum PicaParserState {
             ctx.emitLiteral();
             ctx.emitEndEntity();
         }
+
     };
 
-    protected abstract PicaParserState parseChar(char ch, PicaParserContext ctx, boolean normalized);
+    protected abstract PicaParserState parseChar(char ch, PicaParserContext ctx,
+            boolean normalized);
 
     protected abstract void endOfInput(PicaParserContext ctx);
 

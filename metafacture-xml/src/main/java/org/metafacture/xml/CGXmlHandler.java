@@ -32,6 +32,7 @@ import org.xml.sax.Attributes;
  * <p>
  * The GG-XML format is a simple XML schema for writing event streams into XML
  * documents. The following example shows a complete CG-XML document:
+ * 
  * <pre>{@literal
  * <?xml version="1.0" encoding="UTF-8"?>
  * <cgxml xmlns="http://www.culturegraph.org/cgxml" version="1.0">
@@ -84,8 +85,8 @@ public final class CGXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void startElement(final String uri, final String localName,
-            final String qName, final Attributes attributes) {
+    public void startElement(final String uri, final String localName, final String qName,
+            final Attributes attributes) {
         if (!CGXML_NAMESPACE.equals(uri)) {
             return;
         }
@@ -145,8 +146,7 @@ public final class CGXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void endElement(final String uri, final String localName,
-            final String qName) {
+    public void endElement(final String uri, final String localName, final String qName) {
         if (!CGXML_NAMESPACE.equals(uri)) {
             return;
         }

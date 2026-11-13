@@ -30,8 +30,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 /**
- * A map which queries an sql database provided as jndi
- * resource.
+ * A map which queries an sql database provided as jndi resource.
  *
  * @author Daniel Schäfer
  *
@@ -75,10 +74,8 @@ public final class JndiSqlMap extends AbstractReadOnlyMap<String, String> implem
     @Override
     public String get(final Object key) {
         String resultString = null;
-        try (
-                Connection connection = datasource.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)
-        ) {
+        try (Connection connection = datasource.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, key.toString());
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.first()) {

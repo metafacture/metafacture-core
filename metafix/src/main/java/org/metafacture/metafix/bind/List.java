@@ -26,8 +26,8 @@ import org.metafacture.metafix.api.FixContext;
 import java.util.Map;
 
 /**
- * Iterates over each element of an array. In contrast to Catmandu, it can
- * also iterate over a single object or string.
+ * Iterates over each element of an array. In contrast to Catmandu, it can also
+ * iterate over a single object or string.
  */
 @FixCommand("list")
 public class List implements FixContext {
@@ -39,7 +39,9 @@ public class List implements FixContext {
     }
 
     @Override
-    public void execute(final Metafix metafix, final Record record, final java.util.List<String> params, final Map<String, String> options, final RecordTransformer recordTransformer) {
+    public void execute(final Metafix metafix, final Record record,
+            final java.util.List<String> params, final Map<String, String> options,
+            final RecordTransformer recordTransformer) {
         final String scopeVariable = options.get("var");
         Value.asList(record.get(options.get("path")), a -> {
             for (int i = 0; i < a.size(); ++i) {
@@ -55,16 +57,16 @@ public class List implements FixContext {
                 else {
                     final int index = i;
 
-                    value.matchType()
-                        .ifHash(h -> {
-                            final Record scopeRecord = new Record();
-                            scopeRecord.addAll(h);
+                    value.matchType().ifHash(h -> {
+                        final Record scopeRecord = new Record();
+                        scopeRecord.addAll(h);
 
-                            recordTransformer.transform(scopeRecord);
-                            a.set(index, new Value(scopeRecord));
-                        })
-                        // TODO: bind to arrays (if that makes sense) and strings (access with '.')
-                        .orElseThrow();
+                        recordTransformer.transform(scopeRecord);
+                        a.set(index, new Value(scopeRecord));
+                    })
+                            // TODO: bind to arrays (if that makes sense) and strings (access with
+                            // '.')
+                            .orElseThrow();
                 }
             }
         });

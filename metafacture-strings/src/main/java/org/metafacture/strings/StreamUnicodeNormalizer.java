@@ -26,16 +26,16 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 import java.text.Normalizer;
 
 /**
- * Normalises Unicode characters in record identifiers, entity and literal
- * names and literal values. Unicode normalisation converts between precomposed
+ * Normalises Unicode characters in record identifiers, entity and literal names
+ * and literal values. Unicode normalisation converts between precomposed
  * characters and composed characters. There are four different forms of
  * conversion which can be selected using
  * {@link #setNormalizationForm(Normalizer.Form)}.
  * <p>
- * In the default configuration only literal values are
- * converted. The {@link #setNormalizeIds(boolean)},
- * {@link #setNormalizeKeys(boolean)} and {@link #setNormalizeValues(boolean)}
- * parameters can be used to change this behaviour.
+ * In the default configuration only literal values are converted. The
+ * {@link #setNormalizeIds(boolean)}, {@link #setNormalizeKeys(boolean)} and
+ * {@link #setNormalizeValues(boolean)} parameters can be used to change this
+ * behaviour.
  *
  * @author Christoph Böhme
  */
@@ -66,9 +66,8 @@ public final class StreamUnicodeNormalizer extends DefaultStreamPipe<StreamRecei
      * Controls whether to normalize record identifiers. By default record
      * identifiers are not normalized.
      * <p>
-     * This parameter may be changed at any time. It becomes immediately
-     * effective and affects all subsequently received <i>start-record</i>
-     * events.
+     * This parameter may be changed at any time. It becomes immediately effective
+     * and affects all subsequently received <i>start-record</i> events.
      *
      * @param normalizeIds if true identifiers are normalized, otherwise not.
      */
@@ -86,15 +85,15 @@ public final class StreamUnicodeNormalizer extends DefaultStreamPipe<StreamRecei
     }
 
     /**
-     * Controls whether to normalize literal and entity names. By default these
-     * are not normalized.
+     * Controls whether to normalize literal and entity names. By default these are
+     * not normalized.
      * <p>
-     * This parameter may be changed at any time. It becomes immediately
-     * effective and affects all subsequently received <i>start-entity</i> and
-     * <i>literal</i> events.
+     * This parameter may be changed at any time. It becomes immediately effective
+     * and affects all subsequently received <i>start-entity</i> and <i>literal</i>
+     * events.
      *
      * @param normalizeKeys if true literal and entity names are normalized,
-     * otherwise not.
+     *                          otherwise not.
      */
     public void setNormalizeKeys(final boolean normalizeKeys) {
         this.normalizeKeys = normalizeKeys;
@@ -113,11 +112,10 @@ public final class StreamUnicodeNormalizer extends DefaultStreamPipe<StreamRecei
      * Controls whether to normalise literal values. By default these are
      * normalized.
      * <p>
-     * This parameter may be changed at any time. It becomes immediately
-     * effective and affects all subsequently received <i>literal</i> events.
+     * This parameter may be changed at any time. It becomes immediately effective
+     * and affects all subsequently received <i>literal</i> events.
      *
-     * @param normalizeValues if true literal values are normalized, otherwise
-     * not.
+     * @param normalizeValues if true literal values are normalized, otherwise not.
      */
     public void setNormalizeValues(final boolean normalizeValues) {
         this.normalizeValues = normalizeValues;
@@ -144,8 +142,7 @@ public final class StreamUnicodeNormalizer extends DefaultStreamPipe<StreamRecei
      * @param normalizationForm the normalisation form to use.
      *
      */
-    public void setNormalizationForm(
-            final Normalizer.Form normalizationForm) {
+    public void setNormalizationForm(final Normalizer.Form normalizationForm) {
         this.normalizationForm = normalizationForm;
     }
 
@@ -160,8 +157,7 @@ public final class StreamUnicodeNormalizer extends DefaultStreamPipe<StreamRecei
 
     @Override
     public void startRecord(final String identifier) {
-        final String normalizedIdentifier =
-                normalizeIds ? normalize(identifier) : identifier;
+        final String normalizedIdentifier = normalizeIds ? normalize(identifier) : identifier;
 
         getReceiver().startRecord(normalizedIdentifier);
     }
@@ -173,8 +169,7 @@ public final class StreamUnicodeNormalizer extends DefaultStreamPipe<StreamRecei
 
     @Override
     public void startEntity(final String name) {
-        final String normalizedName =
-                normalizeKeys ? normalize(name) : name;
+        final String normalizedName = normalizeKeys ? normalize(name) : name;
 
         getReceiver().startEntity(normalizedName);
     }

@@ -46,8 +46,7 @@ import java.util.regex.Pattern;
 @In(StreamReceiver.class)
 @Out(Document.class)
 @FluxCommand("to-jdom-document")
-public final class StreamToJDomDocument
-        extends DefaultStreamPipe<ObjectReceiver<Document>> {
+public final class StreamToJDomDocument extends DefaultStreamPipe<ObjectReceiver<Document>> {
 
     private static final String ATTRIBUTE_MARKER = "~";
     private static final Pattern NAMESPACE_DELIMITER = Pattern.compile(":", Pattern.LITERAL);
@@ -76,7 +75,8 @@ public final class StreamToJDomDocument
             throw new MetafactureException("Cannot load namespaces list", e);
         }
         for (final Entry<Object, Object> entry : properties.entrySet()) {
-            namespaces.put(entry.getKey().toString(), Namespace.getNamespace(entry.getKey().toString(), entry.getValue().toString()));
+            namespaces.put(entry.getKey().toString(),
+                    Namespace.getNamespace(entry.getKey().toString(), entry.getValue().toString()));
         }
     }
 

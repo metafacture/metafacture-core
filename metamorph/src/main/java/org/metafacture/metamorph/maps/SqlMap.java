@@ -62,7 +62,8 @@ public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
             preparedStatement = getMySqlConnection().prepareStatement(query);
         }
         catch (final SQLException e) {
-            throw new MorphExecutionException("sqlmap: could not create prepared statement for query", e);
+            throw new MorphExecutionException(
+                    "sqlmap: could not create prepared statement for query", e);
         }
         isUninitialized = false;
     }
@@ -83,8 +84,8 @@ public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
         try {
             Class.forName(driver);
 
-            conn = DriverManager.getConnection("jdbc:mysql://" + host + "/" +
-                    database + "?" + "user=" + login + "&" + "password=" + password);
+            conn = DriverManager.getConnection("jdbc:mysql://" + host + "/" + database + "?"
+                    + "user=" + login + "&" + "password=" + password);
         }
         catch (final ClassNotFoundException | SQLException e) {
             throw new MorphExecutionException("sqlmap: cannot create db connection", e);

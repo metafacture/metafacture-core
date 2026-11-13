@@ -66,214 +66,145 @@ public final class YamlEncoderTest {
 
     @Test
     public void testShouldEncodeLiterals() {
-        assertEncode(
-                i -> {
-                    i.startRecord("");
-                    i.literal(LITERAL1, VALUE1);
-                    i.literal(LITERAL2, VALUE2);
-                    i.literal(LITERAL3, VALUE3);
-                    i.endRecord();
-                },
-                "---\n" +
-                "L1: 'V1'\n" +
-                "L2: 'V2'\n" +
-                "L3: 'V3'"
-        );
+        assertEncode(i -> {
+            i.startRecord("");
+            i.literal(LITERAL1, VALUE1);
+            i.literal(LITERAL2, VALUE2);
+            i.literal(LITERAL3, VALUE3);
+            i.endRecord();
+        }, "---\n" + "L1: 'V1'\n" + "L2: 'V2'\n" + "L3: 'V3'");
     }
 
     @Test
     public void testShouldEncodeEntities() {
-        assertEncode(
-                i -> {
-                    i.startRecord("");
-                    i.startEntity(ENTITY1);
-                    i.literal(LITERAL1, VALUE1);
-                    i.literal(LITERAL2, VALUE2);
-                    i.endEntity();
-                    i.startEntity(ENTITY2);
-                    i.literal(LITERAL1, VALUE1);
-                    i.literal(LITERAL2, VALUE2);
-                    i.endEntity();
-                    i.endRecord();
-                },
-                "---\n" +
-                "En1:\n" +
-                "  L1: 'V1'\n" +
-                "  L2: 'V2'\n" +
-                "En2:\n" +
-                "  L1: 'V1'\n" +
-                "  L2: 'V2'"
-        );
+        assertEncode(i -> {
+            i.startRecord("");
+            i.startEntity(ENTITY1);
+            i.literal(LITERAL1, VALUE1);
+            i.literal(LITERAL2, VALUE2);
+            i.endEntity();
+            i.startEntity(ENTITY2);
+            i.literal(LITERAL1, VALUE1);
+            i.literal(LITERAL2, VALUE2);
+            i.endEntity();
+            i.endRecord();
+        }, "---\n" + "En1:\n" + "  L1: 'V1'\n" + "  L2: 'V2'\n" + "En2:\n" + "  L1: 'V1'\n"
+                + "  L2: 'V2'");
     }
 
     @Test
     public void testShouldEncodeNestedEntities() {
-        assertEncode(
-                i -> {
-                    i.startRecord("");
-                    i.startEntity(ENTITY1);
-                    i.startEntity(ENTITY2);
-                    i.literal(LITERAL1, VALUE1);
-                    i.endEntity();
-                    i.endEntity();
-                    i.endRecord();
-                },
-                "---\n" +
-                "En1:\n" +
-                "  En2:\n" +
-                "    L1: 'V1'"
-        );
+        assertEncode(i -> {
+            i.startRecord("");
+            i.startEntity(ENTITY1);
+            i.startEntity(ENTITY2);
+            i.literal(LITERAL1, VALUE1);
+            i.endEntity();
+            i.endEntity();
+            i.endRecord();
+        }, "---\n" + "En1:\n" + "  En2:\n" + "    L1: 'V1'");
     }
 
     @Test
     public void testShouldEncodeMarkedEntitiesAsList() {
-        assertEncode(
-                i -> {
-                    i.startRecord("");
-                    i.startEntity(LIST1);
-                    i.literal(LITERAL1, VALUE1);
-                    i.literal(LITERAL2, VALUE2);
-                    i.literal(LITERAL3, VALUE3);
-                    i.endEntity();
-                    i.endRecord();
-                },
-                "---\n" +
-                "Li1:\n" +
-                "- 'V1'\n" +
-                "- 'V2'\n" +
-                "- 'V3'"
-        );
+        assertEncode(i -> {
+            i.startRecord("");
+            i.startEntity(LIST1);
+            i.literal(LITERAL1, VALUE1);
+            i.literal(LITERAL2, VALUE2);
+            i.literal(LITERAL3, VALUE3);
+            i.endEntity();
+            i.endRecord();
+        }, "---\n" + "Li1:\n" + "- 'V1'\n" + "- 'V2'\n" + "- 'V3'");
     }
 
     @Test
     public void testShouldEncodeEntitiesInLists() {
-        assertEncode(
-                i -> {
-                    i.startRecord("");
-                    i.startEntity(LIST1);
-                    i.startEntity(ENTITY1);
-                    i.literal(LITERAL1, VALUE1);
-                    i.literal(LITERAL2, VALUE2);
-                    i.endEntity();
-                    i.startEntity(ENTITY2);
-                    i.literal(LITERAL3, VALUE3);
-                    i.literal(LITERAL4, VALUE4);
-                    i.endEntity();
-                    i.endEntity();
-                    i.endRecord();
-                },
-                "---\n" +
-                "Li1:\n" +
-                "- L1: 'V1'\n" +
-                "  L2: 'V2'\n" +
-                "- L3: 'V3'\n" +
-                "  L4: 'V4'"
-        );
+        assertEncode(i -> {
+            i.startRecord("");
+            i.startEntity(LIST1);
+            i.startEntity(ENTITY1);
+            i.literal(LITERAL1, VALUE1);
+            i.literal(LITERAL2, VALUE2);
+            i.endEntity();
+            i.startEntity(ENTITY2);
+            i.literal(LITERAL3, VALUE3);
+            i.literal(LITERAL4, VALUE4);
+            i.endEntity();
+            i.endEntity();
+            i.endRecord();
+        }, "---\n" + "Li1:\n" + "- L1: 'V1'\n" + "  L2: 'V2'\n" + "- L3: 'V3'\n" + "  L4: 'V4'");
     }
 
     @Test
     public void testShouldEncodeNestedLists() {
-        assertEncode(
-                i -> {
-                    i.startRecord("");
-                    i.startEntity(LIST1);
-                    i.startEntity(LIST2);
-                    i.literal(LITERAL1, VALUE1);
-                    i.literal(LITERAL2, VALUE2);
-                    i.endEntity();
-                    i.startEntity(LIST3);
-                    i.literal(LITERAL3, VALUE3);
-                    i.literal(LITERAL4, VALUE4);
-                    i.endEntity();
-                    i.endEntity();
-                    i.endRecord();
-                },
-                "---\n" +
-                "Li1:\n" +
-                "- - 'V1'\n" +
-                "  - 'V2'\n" +
-                "- - 'V3'\n" +
-                "  - 'V4'"
-        );
+        assertEncode(i -> {
+            i.startRecord("");
+            i.startEntity(LIST1);
+            i.startEntity(LIST2);
+            i.literal(LITERAL1, VALUE1);
+            i.literal(LITERAL2, VALUE2);
+            i.endEntity();
+            i.startEntity(LIST3);
+            i.literal(LITERAL3, VALUE3);
+            i.literal(LITERAL4, VALUE4);
+            i.endEntity();
+            i.endEntity();
+            i.endRecord();
+        }, "---\n" + "Li1:\n" + "- - 'V1'\n" + "  - 'V2'\n" + "- - 'V3'\n" + "  - 'V4'");
     }
 
     @Test
     public void testShouldNotEncodeEntitiesWithDifferentMarkerAsList() {
-        assertEncode(
-                i -> {
-                    i.setArrayMarker("*");
+        assertEncode(i -> {
+            i.setArrayMarker("*");
 
-                    i.startRecord("");
-                    i.startEntity(LIST1);
-                    i.literal(LITERAL1, VALUE1);
-                    i.literal(LITERAL2, VALUE2);
-                    i.literal(LITERAL3, VALUE3);
-                    i.endEntity();
-                    i.endRecord();
-                },
-                "---\n" +
-                "Li1[]:\n" +
-                "  L1: 'V1'\n" +
-                "  L2: 'V2'\n" +
-                "  L3: 'V3'"
-        );
+            i.startRecord("");
+            i.startEntity(LIST1);
+            i.literal(LITERAL1, VALUE1);
+            i.literal(LITERAL2, VALUE2);
+            i.literal(LITERAL3, VALUE3);
+            i.endEntity();
+            i.endRecord();
+        }, "---\n" + "Li1[]:\n" + "  L1: 'V1'\n" + "  L2: 'V2'\n" + "  L3: 'V3'");
     }
 
     @Test
     public void testShouldEncodeMarkedEntitiesWithConfiguredMarkerAsList() {
-        assertEncode(
-                i -> {
-                    final String marker = "*";
-                    i.setArrayMarker(marker);
+        assertEncode(i -> {
+            final String marker = "*";
+            i.setArrayMarker(marker);
 
-                    i.startRecord("");
-                    i.startEntity(LIST1.replace(YamlEncoder.ARRAY_MARKER, marker));
-                    i.literal(LITERAL1, VALUE1);
-                    i.literal(LITERAL2, VALUE2);
-                    i.literal(LITERAL3, VALUE3);
-                    i.endEntity();
-                    i.endRecord();
-                },
-                "---\n" +
-                "Li1:\n" +
-                "- 'V1'\n" +
-                "- 'V2'\n" +
-                "- 'V3'"
-        );
+            i.startRecord("");
+            i.startEntity(LIST1.replace(YamlEncoder.ARRAY_MARKER, marker));
+            i.literal(LITERAL1, VALUE1);
+            i.literal(LITERAL2, VALUE2);
+            i.literal(LITERAL3, VALUE3);
+            i.endEntity();
+            i.endRecord();
+        }, "---\n" + "Li1:\n" + "- 'V1'\n" + "- 'V2'\n" + "- 'V3'");
     }
 
     @Test
     public void testShouldOutputDuplicateNames() {
-        assertEncode(
-                i -> {
-                    i.startRecord("");
-                    i.literal(LITERAL1, VALUE1);
-                    i.literal(LITERAL1, VALUE2);
-                    i.endRecord();
-                },
-                "---\n" +
-                "L1: 'V1'\n" +
-                "L1: 'V2'"
-        );
+        assertEncode(i -> {
+            i.startRecord("");
+            i.literal(LITERAL1, VALUE1);
+            i.literal(LITERAL1, VALUE2);
+            i.endRecord();
+        }, "---\n" + "L1: 'V1'\n" + "L1: 'V2'");
     }
 
     @Test
     public void testShouldPrefixOutputWithNewline() {
-        assertEncode(
-                i -> {
-                    i.startRecord("");
-                    i.literal(LITERAL1, VALUE1);
-                    i.endRecord();
-                    i.startRecord("");
-                    i.literal(LITERAL2, VALUE2);
-                    i.endRecord();
-                },
-                "---\n" +
-                "L1: 'V1'",
-                "\n" +
-                "---\n" +
-                "L2: 'V2'"
-        );
+        assertEncode(i -> {
+            i.startRecord("");
+            i.literal(LITERAL1, VALUE1);
+            i.endRecord();
+            i.startRecord("");
+            i.literal(LITERAL2, VALUE2);
+            i.endRecord();
+        }, "---\n" + "L1: 'V1'", "\n" + "---\n" + "L2: 'V2'");
     }
 
     private void assertEncode(final Consumer<YamlEncoder> in, final String... out) {
@@ -284,7 +215,8 @@ public final class YamlEncoderTest {
         in.accept(yamlEncoder);
 
         try {
-            Arrays.stream(out).forEach(s -> ordered.verify(receiver).process(useSystemSpecificLineSeparator(fixQuotes(s))));
+            Arrays.stream(out).forEach(s -> ordered.verify(receiver)
+                    .process(useSystemSpecificLineSeparator(fixQuotes(s))));
 
             ordered.verifyNoMoreInteractions();
             Mockito.verifyNoMoreInteractions(receiver);
@@ -296,18 +228,18 @@ public final class YamlEncoderTest {
     }
 
     /*
-     * Utility method which replaces all single quotes in a string with double quotes.
-     * This allows to specify the YAML output in the test cases without having to wrap
-     * each bit of text in escaped double quotes.
+     * Utility method which replaces all single quotes in a string with double
+     * quotes. This allows to specify the YAML output in the test cases without
+     * having to wrap each bit of text in escaped double quotes.
      */
     private String fixQuotes(final String str) {
         return str.replace('\'', '"');
     }
 
     /*
-     * Utility method which replaces the new-line character with the platform-specific
-     * line separator. This is necessary since Jackson uses different line separators
-     * depending on the system environment.
+     * Utility method which replaces the new-line character with the
+     * platform-specific line separator. This is necessary since Jackson uses
+     * different line separators depending on the system environment.
      */
     private String useSystemSpecificLineSeparator(final String str) {
         return str.replace("\n", System.lineSeparator());
