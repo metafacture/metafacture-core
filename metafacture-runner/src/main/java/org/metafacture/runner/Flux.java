@@ -21,7 +21,6 @@ import org.metafacture.flux.FluxCompiler;
 import org.metafacture.flux.parser.FluxProgramm;
 import org.metafacture.runner.util.DirectoryClassLoader;
 
-import org.antlr.runtime.RecognitionException;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -69,6 +68,8 @@ public class Flux implements Callable<Integer> {
     public static final String PLUGINS_DIR_PROPERTY = "flux.pluginsdir";
     public static final String PROVIDED_DIR_PROPERTY = "flux.provideddir";
 
+    public static final String HANDLE_EXCEPTIONS_PROPERTY = "org.metafacture.runner.handleExceptions";
+
     private static final Pattern VAR_PATTERN = Pattern.compile("([^=]*)=(.*)");
     private static final String SCRIPT_HOME = "FLUX_DIR";
 
@@ -106,28 +107,45 @@ public class Flux implements Callable<Integer> {
      * Runs the Flux and exits the process with an appropriate status code.
      *
      * @param args the command line options
-     * @throws IOException if an I/O error occurs
-     * @throws RecognitionException if an ANTLR error occurs
+     * @throws Exception if an error occurs
      */
-    public static void main(final String[] args) throws IOException, RecognitionException {
-        System.exit(new Flux().run(args));
+    public static void main(final String[] args) throws Exception {
+        System.exit(new Flux().run(args, true));
     }
 
     /**
-     * Runs the Flux and returns an appropriate status code.
+     * Runs the Flux and returns an appropriate status code. Skips exception handling by default;
+     * set system property {@value HANDLE_EXCEPTIONS_PROPERTY} to {@code true} to enable.
      *
      * @param args the command line options
      * @return the exit status
-     * @throws IOException if an I/O error occurs
-     * @throws RecognitionException if an ANTLR error occurs
+     * @throws Exception if an error occurs
      */
-    public int run(final String[] args) throws IOException, RecognitionException {
+    public int run(final String[] args) throws Exception {
+        return run(args, Boolean.getBoolean(HANDLE_EXCEPTIONS_PROPERTY));
+    }
+
+    /**
+     * Runs the Flux with optional exception handling and returns an appropriate status code.
+     *
+     * @param args the command line options
+     * @param handleExceptions whether to handle exceptions
+     * @return the exit status
+     * @throws Exception if an error occurs
+     */
+    public int run(final String[] args, final boolean handleExceptions) throws Exception {
         loadCustomJars();
 
         final CommandLine commandLine = new CommandLine(this);
         commandLine.setUsageHelpLongOptionsMaxWidth(LONG_OPTIONS_MAX_WIDTH);
 
-        return commandLine.execute(args);
+        if (handleExceptions) {
+            return commandLine.execute(args);
+        }
+        else {
+            final Integer helpExitCode = CommandLine.executeHelpRequest(commandLine.parseArgs(args));
+            return helpExitCode != null ? helpExitCode : call();
+        }
     }
 
     @Override // checkstyle-disable-line CyclomaticComplexity|ReturnCount

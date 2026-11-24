@@ -16,7 +16,8 @@
 
 package org.metafacture.runner;
 
-import org.antlr.runtime.RecognitionException;
+import org.metafacture.flux.FluxParseException;
+
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
@@ -125,8 +126,34 @@ public class FluxTest { // checkstyle-disable-line ClassDataAbstractionCoupling
     }
 
     @Test
-    public void shouldThrowException() {
+    public void shouldHandleExceptionImplicitly() {
+        // exception handled via `CommandLine.execute()`
         assertCommand(new CommandLine(new Flux()), 1, null, List.of("mismatched input '<EOF>' expecting '|'"), "-e", "invalid");
+    }
+
+    @Test
+    public void shouldThrowExceptionImplicitly() {
+        // exception thrown by default (system property unset)
+        final Throwable ex = Assert.assertThrows(FluxParseException.class, () -> new Flux().run(new String[]{"-e", "invalid"}));
+        Assert.assertEquals("mismatched input '<EOF>' expecting '|' in Flux", ex.getMessage());
+    }
+
+    @Test
+    public void shouldHandleExceptionExplicitlyWithProperty() {
+        System.setProperty(Flux.HANDLE_EXCEPTIONS_PROPERTY, "true");
+
+        try {
+            Assert.assertEquals(1, runSilently(() -> new Flux().run(new String[]{"-e", "invalid"})));
+        }
+        finally {
+            System.clearProperty(Flux.HANDLE_EXCEPTIONS_PROPERTY);
+        }
+    }
+
+    @Test
+    public void shouldThrowExceptionExplicitlyWithArgument() {
+        final Throwable ex = Assert.assertThrows(FluxParseException.class, () -> new Flux().run(new String[]{"-e", "invalid"}, false));
+        Assert.assertEquals("mismatched input '<EOF>' expecting '|' in Flux", ex.getMessage());
     }
 
     @Test
@@ -180,29 +207,7 @@ public class FluxTest { // checkstyle-disable-line ClassDataAbstractionCoupling
 
         ranFlux.set(false); // reset
 
-        final PrintStream oldOut = System.out;
-        final PrintStream oldErr = System.err;
-        final PrintStream devNull = new PrintStream(new OutputStream() {
-            @Override
-            public void write(final int b) {
-                // nothing to do
-            }
-        });
-
-        int actualExitCode = -1;
-        try {
-            System.setOut(devNull);
-            System.setErr(devNull);
-
-            actualExitCode = flux.run(args);
-        }
-        catch (final IOException | RecognitionException e) {
-            throw new RuntimeException(e);
-        }
-        finally {
-            System.setOut(oldOut);
-            System.setErr(oldErr);
-        }
+        final int actualExitCode = runSilently(() -> flux.run(args, true));
 
         Assert.assertEquals(expectedExitCode, actualExitCode);
         Assert.assertEquals(expectedRanFlux, ranFlux.get());
@@ -241,6 +246,36 @@ public class FluxTest { // checkstyle-disable-line ClassDataAbstractionCoupling
         catch (final IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    private int runSilently(final ExitCodeSupplier supplier) {
+        final PrintStream oldOut = System.out;
+        final PrintStream oldErr = System.err;
+        final PrintStream devNull = new PrintStream(new OutputStream() {
+            @Override
+            public void write(final int b) {
+                // nothing to do
+            }
+        });
+
+        try {
+            System.setOut(devNull);
+            System.setErr(devNull);
+
+            return supplier.get();
+        }
+        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
+            throw new RuntimeException(e);
+        }
+        finally {
+            System.setOut(oldOut);
+            System.setErr(oldErr);
+        }
+    }
+
+    @FunctionalInterface
+    private interface ExitCodeSupplier {
+        int get() throws Exception;
     }
 
 }
